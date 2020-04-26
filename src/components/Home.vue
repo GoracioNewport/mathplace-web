@@ -24,17 +24,17 @@ export default {
       topics: [
         {
           'id': 1,
-          'title': 'Gordey sosi',
+          'title': 'Ivan sosi',
           'completed': 100
         },
         {
           'id': 2,
-          'title': 'Test Task',
+          'title': 'Ivan sosi',
           'completed': 100
         },
         {
           'id': 3,
-          'title': 'Test Task',
+          'title': 'Ivan Task',
           'completed': 100
         },
         {
