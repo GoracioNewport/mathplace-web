@@ -24,7 +24,7 @@ export default {
       topics: [
         {
           'id': 1,
-          'title': 'Test Task',
+          'title': 'Gordey sosi',
           'completed': 100
         },
         {

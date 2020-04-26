@@ -12,12 +12,6 @@ import 'firebase/messaging'
 
 Vue.config.productionTip = false
 
-// db.collection('task2').get().then((querySnapshot) => {
-//   querySnapshot.forEach((doc) => {
-//     topics.push(`${doc.id}`)
-//   })
-// })
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
