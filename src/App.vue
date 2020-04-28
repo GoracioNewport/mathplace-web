@@ -35,7 +35,6 @@ export default {
   data () {
     return {
       topics: [
-
       ],
       menuShow: false,
       linkMenu: [
