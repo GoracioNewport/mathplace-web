@@ -18,77 +18,49 @@
 </template>
 
 <script>
+
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/firestore'
+import 'firebase/storage'
+import 'firebase/messaging'
+
 export default {
   data () {
     return {
-      topics: [
-        {
-          'id': 1,
-          'title': 'Ivan sosi',
-          'completed': 100
-        },
-        {
-          'id': 2,
-          'title': 'Ivan sosi',
-          'completed': 100
-        },
-        {
-          'id': 3,
-          'title': 'Ivan Task',
-          'completed': 100
-        },
-        {
-          'id': 4,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        }
-      ]
+      topics: []
     }
+  },
+
+  mounted () {
+    var firebaseConfig = {
+      apiKey: 'AIzaSyAwxefCuoxvrMYCWbgQcJVUgTvL6CPEErA',
+      authDomain: 'mathplace-842f7.firebaseapp.com',
+      databaseURL: 'https://mathplace-842f7.firebaseio.com',
+      projectId: 'mathplace-842f7',
+      storageBucket: 'mathplace-842f7.appspot.com',
+      messagingSenderId: '832330186047',
+      appId: '1:832330186047:web:d9cbd636e61d42a459678a',
+      measurementId: 'G-7P4W9J6CKS'
+    }
+
+    firebase.initializeApp(firebaseConfig)
+
+    const db = firebase.firestore()
+
+    db.collection('task2').get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          this.topics.push({
+            'id': 1,
+            'title': doc.id,
+            'completed': 0
+          })
+        })
+      })
+      .catch((err) => {
+        console.log('Error getting documents', err)
+      })
   }
 }
 </script>

@@ -34,9 +34,6 @@
 export default {
   data () {
     return {
-      topics: [
-
-      ],
       menuShow: false,
       linkMenu: [
         {title: 'Home', url: '/'},

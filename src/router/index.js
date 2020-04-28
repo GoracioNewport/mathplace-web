@@ -11,6 +11,7 @@ Vue.use(VueFirestore)
 Vue.use(Uimini)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
