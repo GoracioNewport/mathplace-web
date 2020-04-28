@@ -6,7 +6,7 @@
           .navbar-content
             router-link.header-logo(
               to = "/"
-            ) MathPlace
+            ) <strong class="mathplace-logo"> MathPlace </strong>
             .button-burger(
               @click = "menuShow = !menuShow"
               :class="{ active: menuShow}"
@@ -36,9 +36,9 @@ export default {
     return {
       menuShow: false,
       linkMenu: [
-        {title: 'Home', url: '/'},
-        {title: 'Login', url: '/login'},
-        {title: 'Registration', url: '/registration'}
+        {title: 'Темы', url: '/'},
+        {title: 'Войти', url: '/login'},
+        {title: 'Регистрация', url: '/registration'}
       ]
     }
   }
@@ -46,4 +46,19 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+  .mathplace-logo
+    color #763DCA
+    font-size 1.8em
+  .navbar-content
+    margin-top 2%
+    margin-bottom 2%
+  .wrapper
+    margin 0
+    margin-bottom 5%
+    max-width 9999px
+  .span
+    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+  .header-logo
+    font-size 2em
+    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
 </style>

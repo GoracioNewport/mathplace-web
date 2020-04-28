@@ -43,15 +43,15 @@ export default {
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-size 1.2em
     color #FFFFFF
-    background-color #9e68d1
-    border-color #cccccc
+    background-color #763DCA
+    border solid #cccccc
+    border-width 0 3px
     border-radius 10%
-    border-width 2px
     padding-left 5%
     padding-right 5%
     padding-bottom 5%
     height 200px
-    margin 10px
+    margin 5%
 
   .topic-item__info
     padding 5%
