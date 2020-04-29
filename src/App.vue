@@ -26,7 +26,7 @@
                 )
                   router-link.navbar-link(
                     :to = " `${link.url}`"
-                  ) {{ link.title }}
+                  ) <strong class="router-link-title"> {{ link.title }} </strong>
     router-view
 </template>
 
@@ -46,8 +46,15 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+  header
+    background-color #763DCA
+
+  .navbar
+    background-color #763DCA
+    border-bottom-width 1px
+    border-bottom-color #000000
   .mathplace-logo
-    color #763DCA
+    color #FFFFFF
     font-size 1.8em
   .navbar-content
     margin-top 2%
@@ -61,4 +68,7 @@ export default {
   .header-logo
     font-size 2em
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+  .router-link-title
+    font-size 1.3em
+    color #ffffff
 </style>

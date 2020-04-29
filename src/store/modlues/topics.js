@@ -30,7 +30,8 @@ export default {
             topics.push({
               'id': 1,
               'title': doc.id,
-              'completed': 0
+              'completed': Math.floor(Math.random() * 100),
+              'theme': doc.data().theme
             })
           })
         })
