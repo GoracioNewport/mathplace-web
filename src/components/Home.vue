@@ -4,6 +4,11 @@
       .container
         h1.ui-title-1
           strong Темы
+        .loading-indicator(
+          v-if = isLoading
+        )
+          loading(
+            :is-full-page='false')
     section
       .container
         .topic-list
@@ -23,13 +28,21 @@
 <script>
 
 import Topic from './Topic.vue'
+import Loading from 'vue-loading-overlay'
 import { mapGetters, mapActions } from 'vuex'
+import 'vue-loading-overlay/dist/vue-loading.css'
 
 export default {
   components: {
-    Topic
+    Topic,
+    Loading
   },
-  computed: mapGetters(['getTopics']),
+  data () {
+    return {
+      isLoading: true
+    }
+  },
+  computed: mapGetters(['getTopics', 'isTopicsLoaded']),
   async mounted () {
     this.fetchTopics()
   },

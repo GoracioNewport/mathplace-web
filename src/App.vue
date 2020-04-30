@@ -1,7 +1,7 @@
 <template lang="pug">
   .wrapper
     header
-      .navbar
+      .navbar.navbar--fixed
         .container
           .navbar-content
             router-link.header-logo(
