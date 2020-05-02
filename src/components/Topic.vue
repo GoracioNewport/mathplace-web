@@ -9,7 +9,7 @@
           :size='60',
           :reverse='false',
           line-cap='round',
-          :fill={ color: 'rgba(107, 204, 38, 1)' },
+          :fill="{ color: 'rgba(107, 204, 38, 1)' }",
           empty-fill='rgba(204, 204, 204, .4)',
           :animation-start-value='0.0',
           :start-angle='-90',
@@ -31,6 +31,7 @@
 <script>
 import VueCircle from 'vue2-circle-progress'
 export default {
+
   components: {
     VueCircle
   },
@@ -39,7 +40,6 @@ export default {
       default: 0,
       type: Number
     },
-
     title: {
       default: 'Null',
       type: String
@@ -53,17 +53,12 @@ export default {
       type: String
     }
   },
-  data () {
-    return {
-      CircleFill : { color: 'rgba(107, 204, 38, 1)' }
-    }
-  },
   methods: {
-    progress(event,progress,stepValue){
-      console.log(stepValue)
+    progress (event, progress, stepValue) {
+      // console.log(stepValue)
     },
-    progress_end(event){
-      console.log("Circle progress end")
+    progress_end (event) {
+      // console.log('Circle progress end')
     }
   }
 }

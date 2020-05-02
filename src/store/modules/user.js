@@ -15,14 +15,14 @@ export default {
   actions: {
     async registerUser ({commit}, {email, password}) {
       commit('clearErrors')
-      commit('updateLoading', true)
+      commit('setLoading', true)
       try {
         const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
-        commit('updateLoading', false)
+        commit('setLoading', false)
         commit('setUser', new User(user.user.uid))
       } catch (error) {
-        commit('updateLoading', false)
-        commit('updateErrors', error.message)
+        commit('setLoading', false)
+        commit('setErrors', error.message)
         throw error
       }
     }

@@ -47,12 +47,12 @@
                   span(v-if="loading") Загрузка...
                   span(v-else) Зарегистрироватся
 
-              .buttons-list.buttons-list-agreement
-                p
-                  | Регистрируя аккаунт вы соглашаетесь с
-                  a(href='http://ledokolpro.tilda.ws/policy')  Политикой Кофеденциальности
-                  |  и
-                  a(href='http://ledokolpro.tilda.ws/rulesy')  Условиями пользования
+              //- .buttons-list.buttons-list-agreement
+                //- p
+                //-   | Регистрируя аккаунт вы соглашаетесь с
+                //-   a(href='http://ledokolpro.tilda.ws/policy')  Политикой Кофеденциальности
+                //-   |  и
+                //-   a(href='http://ledokolpro.tilda.ws/rulesy')  Условиями пользования
 
               .buttons-list.buttons-list-info
                 p.errorMsg(v-if="submitStatus === 'OK'") Успешно зарегистрирован

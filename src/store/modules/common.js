@@ -4,10 +4,10 @@ export default {
     errors: null
   },
   mutations: {
-    updateLoading (state, payload) {
+    setLoading (state, payload) {
       state.loading = payload
     },
-    updateErrors (state, payload) {
+    setErrors (state, payload) {
       state.errors = payload
     },
     clearErrors (state) {
@@ -16,10 +16,10 @@ export default {
   },
   actions: {
     setLoading ({commit}, payload) {
-      commit('updateLoading', payload)
+      commit('setLoading', payload)
     },
     setErrors ({commit}, payload) {
-      commit('updateErrors', payload)
+      commit('setErrors', payload)
     },
     clearErrors ({commit}, payload) {
       commit('clearErrors')

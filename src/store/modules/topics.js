@@ -4,6 +4,8 @@ import 'firebase/firestore'
 export default {
   actions: {
     async fetchTopics (ctx) {
+      ctx.commit('updateTopicsLoaded', false)
+
       var topics = []
       const db = firebase.firestore()
 
@@ -23,14 +25,14 @@ export default {
         })
 
       ctx.commit('updateTopics', topics)
-      ctx.commit('updateLoaded', true)
+      ctx.commit('updateTopicsLoaded', true)
     }
   },
   mutations: {
     updateTopics (state, topics) {
       state.topics = topics
     },
-    updateLoaded (state, isLoaded) {
+    updateTopicsLoaded (state, isLoaded) {
       state.topicsLoaded = isLoaded
     }
   },

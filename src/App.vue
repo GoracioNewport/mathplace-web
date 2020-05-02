@@ -6,7 +6,7 @@
           .navbar-content
             router-link.header-logo(
               to = "/"
-            ) <strong class="mathplace-logo"> MathPlace </strong>
+            ) <strong class="mathplace-logo">MathPlace</strong>
             .button-burger(
               @click = "menuShow = !menuShow"
               :class="{ active: menuShow}"
@@ -26,7 +26,7 @@
                 )
                   router-link.navbar-link(
                     :to = " `${link.url}`"
-                  ) <strong class="router-link-title"> {{ link.title }} </strong>
+                  ) <strong class="router-link-title"> {{ link.title }}</strong>
     router-view
 </template>
 
