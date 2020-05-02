@@ -2,112 +2,65 @@
   .content-wrapper
     section
       .container
-        h1.ui-title-1 Home
+        h1.ui-title-1 Темы
     section
       .container
         .topic-list
           .topic-item(
-            v-for = "topic in topics"
+            v-for = "topic in getTopics"
             :key = "topic.id"
           )
-            .ui-card.ui-card--shadow
-              .topic-item__info
-                //span {{topic.completed}}%
-                a(href="#")
-                  strong {{topic.title}}
+            .topic-item__info
+              span.topic-item__percentage {{topic.completed}}%
+              a.topic-item__title
+                strong {{topic.title}}
 </template>
 
 <script>
+
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
-  data () {
-    return {
-      topics: [
-        {
-          'id': 1,
-          'title': 'Gordey sosi',
-          'completed': 100
-        },
-        {
-          'id': 2,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 3,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 4,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        },
-        {
-          'id': 5,
-          'title': 'Test Task',
-          'completed': 100
-        }
-      ]
-    }
-  }
+  computed: mapGetters(['getTopics']),
+  async mounted () {
+    this.fetchTopics()
+  },
+  methods: mapActions(['fetchTopics'])
 }
 </script>
 
 <style lang="stylus" scoped>
 
+  .ui-title-1
+    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+
   .topic-list
     display grid
     grid-template-columns repeat(auto-fit, minmax(300px, 1fr))
+    margin-top 0px
 
   .topic-item
+    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-size 1.2em
+    color #FFFFFF
+    background-color #763DCA
+    border solid #cccccc
+    border-width 0 3px
+    border-radius 10%
     padding-left 5%
     padding-right 5%
     padding-bottom 5%
     height 200px
+    margin 5%
 
-  a
-    color #763DCA
+  .topic-item__info
+    padding 5%
 
-  .ui-card
-    border-width 1px
+  .topic-item__percentage
+    font-size 2em
+
+  .topic-item__title
+    display flex
+    color #ffffff
+
 </style>
