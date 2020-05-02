@@ -52,6 +52,19 @@ export default {
       default: '',
       type: String
     }
+  },
+  data () {
+    return {
+      CircleFill : { color: 'rgba(107, 204, 38, 1)' }
+    }
+  },
+  methods: {
+    progress(event,progress,stepValue){
+      console.log(stepValue)
+    },
+    progress_end(event){
+      console.log("Circle progress end")
+    }
   }
 }
 </script>
