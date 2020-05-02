@@ -20,7 +20,7 @@
   </div>
 
   <div class="container signin">
-    <p>Уже есть аккаунт <a href="/login">Войти</a>.</p>
+    <p>Уже есть аккаунт <router-link to="/login">Войти</router-link>.</p>
   </div>
 </form>
   <!-- .content-wrapper

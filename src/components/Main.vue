@@ -1,0 +1,709 @@
+<template lang="pug">
+div
+  a(href='#MenuBlock')
+    #BackToMenuButton
+  #Main
+    #design3.gradient
+    #DownloadButton.gradient
+      a(href='#Download')
+        #DownloadButtonText
+  #MenuBlock.gradient
+    a(href='#Algebra')
+      #AlgebraMenuButton
+    a(href='#Geometry')
+      #FeatureMenuButton
+    a(href='#Komba')
+      #TopicsMenuButton
+    a(href='#OGE')
+      #TaskMenuButton
+    a(href='#Logika')
+      #DownloadMenuButton
+    a(href='#Graf')
+      #AboutDevelopersMenuButton
+    a(href='#AboutUs')
+      #AboutUsMenuButton
+  #Feature
+    #design6.gradient
+    #design5.gradient
+  #Topics.gradient
+    #design4.gradient
+    #design5.gradient
+    a(href='PreviousTopic')
+      #PreviousTopics
+    #FirstTopic.Topics
+    #SecondTopic.Topics
+    #ThirdTopic.Topics
+    //
+      <div id="FourthTopic" class="Topics">
+      </div>
+    // <a href="NextTopic"> <div id="NextTopics"></div> </a>
+  #Task
+    #design4.gradient
+    #design3.gradient
+    a(href='#Task-Text')
+      #TaskText
+    a(href='#Task-Button')
+      #TaskButton.gradient
+        #TaskButtonText
+    input#TaskIn(type='text')
+  #TaskResultSucsessful
+  #TaskResultnotSucsessful
+  #Download.gradient
+    #GooglePlayBox
+      a.abutton(href='www.helllab.ru')
+        #GooglePlay_DownloadButton
+    #AppStoreBox
+      a.abutton(href='www.helllab.ru')
+        #AppStore_DownloadButton
+    #DownloadAPKBox
+      a.abutton(href='www.helllab.ru')
+        #DownloadAPK_DownloadButton
+  #AboutDevelopers
+    #design3.gradient
+    #design6.gradient
+  #AboutUs.gradient
+    #headerAboutUs
+    a(href='vk.com')
+      #vkontakte
+    a(href='instagram.com')
+      #instagram
+    a(href='facebook.com')
+      #facebook
+    a(href='telegam.com')
+      #telegram
+
+</template>
+
+<script>
+
+// export default {
+//     data: () => ({
+//     //   ......data of your component
+//     }),
+//     mounted() {
+//     //   let recaptchaScript = document.createElement('script')
+//     //   recaptchaScript.setAttribute('src', 'https://www.google.com/recaptcha/api.js')
+//     //   document.head.appendChild(recaptchaScript)
+//     },
+//     methods: {
+//     //   ......methods of your component
+//     }
+//   }
+// import { mapGetters, mapActions } from 'vuex'
+
+// export default {
+//   computed: mapGetters(['getTopics']),
+//   async mounted () {
+//     this.fetchTopics()
+//   },
+//   methods: mapActions(['fetchTopics'])
+// }
+</script>
+<style lang="stylus" scoped>
+
+#BackToMenuButton
+    z-index 10
+    position fixed
+    left 95%
+    top 90%
+    width 0%
+    height 0%
+    border-radius 50%
+    box-shadow rgba(0, 0, 0, 0.5) 5px 5px
+    background-image url(./images/Down.png)
+    background-size 100%
+
+#Main
+    height 100%
+    width 100%
+    background-color #ffffff
+
+#DownloadButton
+    position absolute
+    left 60%
+    top 75%
+    height 7%
+    width 20%
+    border-radius 50px 50px
+    box-shadow rgba(0, 0, 0, 0.85) 5px 5px
+
+#DownloadButtonText
+    height 100%
+    width 100%
+    background-image url(./images/Download.png)
+    background-repeat no-repeat
+    background-size 100%
+
+#MenuBlock
+    position absolute
+    height 30%
+    width 100%
+    top 100%
+
+#AlgebraMenuButton
+    position absolute
+    left 3%
+    top 20%
+    height 60%
+    width 9%
+    // background-image url(./images/information.png)
+    background-size 100%
+    border-radius 50%
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+#FeatureMenuButton
+    position absolute
+    left 17%
+    top 20%
+    height 60%
+    width 9%
+    // background-image url(./images/features.png)
+    background-size 100%
+    border-radius 50%
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+#TopicsMenuButton
+    position absolute
+    left 31%
+    top 20%
+    height 60%
+    width 9%
+    // background-image url(./images/topics.png)
+    background-size 100%
+    border-radius 50%
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+#TaskMenuButton
+    position absolute
+    left 45%
+    top 20%
+    height 60%
+    width 9%
+    background-color #ffffff
+    border-radius 50%
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+#DownloadMenuButton
+    position absolute
+    left 59%
+    top 20%
+    height 60%
+    width 9%
+    background-image url(./images/Download.png)
+    background-size 100%
+    border-radius 50%
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+#AboutDevelopersMenuButton
+    position absolute
+    left 73%
+    top 20%
+    height 60%
+    width 9%
+    background-color #ffffff
+    border-radius 50%
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+#AboutUsMenuButton
+    position absolute
+    left 87%
+    top 20%
+    height 60%
+    width 9%
+    background-color #ffffff
+    background-image url(./images/AboutUs.png)
+    background-size 100%
+    border-radius 50%
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+#Feature
+    position absolute
+    height 100%
+    width 100%
+    top 130%
+
+#Topics
+    z-index 3
+    position absolute
+    height 100%
+    width 100%
+    top 230%
+
+#FirstTopic
+    z-index 2
+    position absolute
+    left 10%
+    top 25%
+    width 20%
+    height 60%
+    border-radius 10px
+    background-color #ffffff
+    box-shadow rgba(0, 0, 0, 0.8) 10px 10px
+
+#SecondTopic
+    position absolute
+    left 40%
+    top 20%
+    width 20%
+    height 60%
+    border-radius 10px
+    background-color #ffffff
+    box-shadow rgba(0, 0, 0, 0.8) 10px 10px
+
+#ThirdTopic
+    position absolute
+    left 70%
+    top 15%
+    width 20%
+    height 60%
+    background-color #ffffff
+    border-radius 10px
+    box-shadow rgba(0, 0, 0, 0.8) 10px 10px
+
+#FourthTopic
+    position absolute
+    left 100%
+    top 10%
+    width 20%
+    height 60%
+    background-color #ffffff
+    border-radius 10px
+    box-shadow rgba(0, 0, 0, 0.8) 10px 10px
+
+#NextTopics
+    z-index 9
+    position absolute
+    top 25%
+    left 96%
+    height 35%
+    width 4%
+    border-bottom-left-radius 100%
+    border-top-left-radius 100%
+    background-image url(./images/Button_right.png)
+    background-size 100%
+
+#PreviousTopics
+    z-index 9
+    position absolute
+    top 40%
+    left 0%
+    height 35%
+    width 4%
+    border-bottom-right-radius 100%
+    border-top-right-radius 100%
+    background-image url(./images/Button_left.png)
+    background-size 100%
+
+#Task
+    position absolute
+    height 100%
+    width 100%
+    top 330%
+
+#TaskButton
+    position absolute
+    top 75%
+    left 75%
+    height 7%
+    width 15%
+    border-radius 50px 50px
+    box-shadow rgba(0, 0, 0, 0.75) 5px 5px
+
+#TaskButtonText
+    width 90%
+    height 90%
+    background-image url(./images/input.png)
+    background-size 100%
+    margin 2.5% 5%
+
+#TaskIn
+    position absolute
+    top 65%
+    left 70%
+    height 7%
+    width 20%
+    padding 1%
+    border-style groove
+    border-radius 50px
+    font-size 30pt
+    text-align center
+
+#TaskText
+    position absolute
+    top 15%
+    left 10%
+    width 50%
+    height 70%
+    background-color #00ff00
+
+#TaskResultSucsessful
+    z-index 6
+    position absolute
+    display none
+    left 32.5%
+    width 35%
+    height 70%
+    border-radius 50%
+    background-image url(./images/sucsessful.png)
+    background-size 100%
+
+#TaskResultnotSucsessful
+    z-index 6
+    position absolute
+    display none
+    left 32.5%
+    width 35%
+    height 70%
+    border-radius 50%
+    background-image url(./images/notsucsessful.png)
+    background-size 100%
+
+#Download
+    position absolute
+    top 430%
+    height 100%
+    width 100%
+
+#GooglePlayBox
+    position absolute
+    left 10%
+    top 10%
+    bottom 10%
+    width 20%
+    height 80%
+    background-repeat no-repeat
+    background-size 100%
+    background-image url(./images/GooglePlay.jpg)
+    border-radius 10px
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+#GooglePlay_DownloadButton
+    position absolute
+    left 45%
+    top 85%
+    height 10%
+    width 50%
+    border-radius 50px 50px
+    background-image url(./images/downloadGooglePlay.png)
+    background-size 100%
+    box-shadow rgba(0, 0, 0, 0.5) 5px 5px
+    color #64D597
+
+#AppStoreBox
+    position absolute
+    left 40%
+    top 10%
+    bottom 10%
+    width 20%
+    height 80%
+    background-repeat no-repeat
+    background-size 100%
+    background-image url(./images/AppStore.jpg)
+    border-radius 10px
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+#AppStore_DownloadButton
+    position absolute
+    left 45%
+    top 85%
+    height 10%
+    width 50%
+    border-radius 50px 50px
+    background-image url(./images/downloadAppStore.png)
+    background-size 100%
+    box-shadow rgba(0, 0, 0, 0.5) 5px 5px
+    color #00AAF0
+
+#DownloadAPKBox
+    position absolute
+    left 70%
+    top 10%
+    bottom 10%
+    width 20%
+    height 80%
+    background-repeat no-repeat
+    background-size 100%
+    background-image url(./images/Android.jpg)
+    background-color #ffffff
+    border-radius 10px
+    box-shadow rgba(0, 0, 0, 0.50) 10px 10px
+
+#DownloadAPK_DownloadButton
+    position absolute
+    left 45%
+    top 85%
+    height 10%
+    width 50%
+    border-radius 50px 50px
+    background-image url(./images/downloadAPK.png)
+    background-size 100%
+    box-shadow rgba(0, 0, 0, 0.5) 5px 5px
+    color #00AAF0
+
+#AboutDevelopers
+    position absolute
+    top 530%
+    height 100%
+    width 100%
+
+#AboutDevelopersHeader
+    position absolute
+    top 14%
+    left 30%
+    width 45%
+    height 10%
+    background-image url(./images/AboutDevelopersHeader.png)
+    background-size 100%
+    background-repeat no-repeat
+
+#Web1
+    z-index 2
+    position absolute
+    top 27.5%
+    left 25%
+    height 20%
+    width 10%
+    background-image url(./images/Web.jpg)
+    background-size 100%
+    border-radius 50%
+    box-shadow rgba(0, 0, 0, 0.8) 7px 7px
+
+#Web1Text
+    z-index 1
+    position absolute
+    top 46%
+    left 17.5%
+    height 9%
+    width 15%
+    background-image url(./images/Developer_BoyarnikovA.png)
+    background-size 100%
+
+#Web2
+    z-index 2
+    position absolute
+    top 27.5%
+    left 47.5%
+    height 20%
+    width 10%
+    background-color #00ff00
+    border-radius 50%
+
+#Web2Text
+    z-index 1
+    position absolute
+    top 46%
+    left 40%
+    height 9%
+    width 15%
+    background-image url(./images/Developer_BoyarnikovE.png)
+    background-size 100%
+
+#Web3
+    z-index 2
+    position absolute
+    top 27.5%
+    left 70%
+    height 20%
+    width 10%
+    background-color #00ff00
+    border-radius 50%
+
+#Web3Text
+    z-index 1
+    position absolute
+    top 46%
+    left 62.5%
+    height 10%
+    width 15%
+    background-color rgba(0, 0, 0, 0.8)
+
+#Web4
+    z-index 2
+    position absolute
+    top 57.5%
+    left 12.5%
+    height 20%
+    width 10%
+    background-color #00ff00
+    border-radius 50%
+
+#Web4Text
+    z-index 1
+    position absolute
+    top 76%
+    left 5%
+    height 10%
+    width 15%
+    background-color rgba(0, 0, 0, 0.8)
+
+#Web5
+    z-index 2
+    position absolute
+    top 57.5%
+    left 35%
+    height 20%
+    width 10%
+    background-color #00ff00
+    border-radius 50%
+
+#Web5Text
+    z-index 1
+    position absolute
+    top 76%
+    left 27.5%
+    height 10%
+    width 15%
+    background-color rgba(0, 0, 0, 0.8)
+
+#Web6
+    z-index 2
+    position absolute
+    top 57.5%
+    left 60%
+    height 20%
+    width 10%
+    background-color #00ff00
+    border-radius 50%
+
+#Web6Text
+    z-index 1
+    position absolute
+    top 76%
+    left 52.5%
+    height 10%
+    width 15%
+    background-color rgba(0, 0, 0, 0.8)
+
+#Web7
+    z-index 2
+    position absolute
+    top 57.5%
+    left 82.5%
+    height 20%
+    width 10%
+    background-color #00ff00
+    border-radius 50%
+
+#Web7Text
+    z-index 1
+    position absolute
+    top 76%
+    left 75%
+    height 10%
+    width 15%
+    background-color rgba(0, 0, 0, 0.8)
+
+#AboutUs
+    position absolute
+    top 630%
+    height 40%
+    width 100%
+
+#headerAboutUs
+    position absolute
+    left 30%
+    height 30%
+    width 45%
+    background-image url(./images/AboutUs.png)
+    background-repeat no-repeat
+    background-size 100%
+
+#vkontakte
+    position absolute
+    top 30%
+    left 25%
+    height 55%
+    width 11%
+    border-radius 50%
+    background-image url(./images/vk.png)
+    background-size 100%
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+#instagram
+    position absolute
+    top 30%
+    left 40%
+    height 55%
+    width 11%
+    border-radius 50%
+    background-image url(./images/instagram.png)
+    background-size 100%
+    background-color #ffffff
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+#facebook
+    position absolute
+    top 30%
+    left 55%
+    height 55%
+    width 11%
+    border-radius 50%
+    background-image url(./images/facebook1.png)
+    background-size 100%
+    background-color #ffffff
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+#telegram
+    position absolute
+    top 30%
+    left 70%
+    height 55%
+    width 11%
+    border-radius 50%
+    background-image url(/images/telegram.png)
+    background-size 100%
+    background-color #ffffff
+    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+
+.gradient
+    background linear-gradient(to left, #b837fd, #14B4DC)
+
+body
+    margin 0px 0px
+    overflow-x hidden
+
+#design1
+    position absolute
+    left 80%
+    width 20%
+    height 40%
+    border-radius 50%
+
+#design2
+    position absolute
+    top 10%
+    left 60%
+    width 20%
+    height 20%
+    background-color #ffffff
+    border-radius 50%
+
+#design3
+    position absolute
+    top 90%
+    width 100%
+    height 10%
+    border-top-right-radius 100%
+    border-top-left-radius 90%
+
+#design4
+    z-index 3
+    position absolute
+    width 100%
+    height 10%
+    border-bottom-right-radius 100%
+
+#design5
+    position absolute
+    top 90%
+    width 100%
+    height 10%
+    border-top-left-radius 100%
+
+#design6
+    position absolute
+    width 100%
+    height 10%
+    border-bottom-left-radius 100%
+    border-bottom-right-radius 100%
+</style>
