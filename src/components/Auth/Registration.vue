@@ -137,7 +137,39 @@ export default {
     },
     registerUserInDatabase (name, user) {
       const db = firebase.firestore()
-      db.collection('account').document(user.getUid())
+
+      var achivmentCount = 8
+      var taskCount = db.collection('task2').doc('ОГЭ Вариант 1').items
+
+      var achievements = []
+      for (let i = 0; i < achivmentCount; i++) {
+        achievements.push(0)
+      }
+
+      var tasks = []
+      for (let i = 0; i < taskCount; i++) {
+        taskCount.push(1)
+      }
+
+      var data = {
+        name: this.name,
+        password: this.password,
+        bookmark: [],
+        like: [],
+        submit: 0,
+        right: 0,
+        email: this.email,
+        money: 100,
+        "game score": 0,
+        achiv: achievements,
+        lastTheme: 'ОГЭ Вариант 1',
+        "ОГЭ Вариант 1": tasks,
+        "ОГЭ Вариант 1Solution": tasks
+
+      }
+
+      db.collection('account').doc(this.$store.state.user.user).set(data)
+
     }
   }
 }
