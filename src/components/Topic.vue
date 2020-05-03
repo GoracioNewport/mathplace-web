@@ -59,6 +59,14 @@ export default {
     },
     progress_end (event) {
       // console.log('Circle progress end')
+    },
+    greet: function (event) {
+      // `this` внутри методов указывает на экземпляр Vue
+      alert('Привет, ' + this.title + '!')
+      // `event` — нативное событие DOM
+      // if (event) {
+      //   alert(event.target.tagName)
+      // }
     }
   }
 }

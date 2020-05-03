@@ -18,7 +18,7 @@
           )
             Topic(
               v-bind:id='topic.id',
-              v-bind:title='topic.title'
+              v-bind:title='topic.title+" "+counter'
               v-bind:percentage='topic.completed'
               v-bind:theme='topic.theme'
             )
@@ -42,6 +42,11 @@ export default {
       isLoading: true
     }
   },
+  // methods: {
+  //   reverseMessage: function () {
+  //     this.title = this.title.split('').reverse().join('')
+  //   }
+  // },
   computed: mapGetters(['getTopics', 'isTopicsLoaded']),
   async mounted () {
     this.fetchTopics()
