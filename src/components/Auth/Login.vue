@@ -33,7 +33,15 @@
                 button.button.button-primary(
                   type="submit"
                   :disabled="submitStatus === 'PENDING'"
-                ) Вход
+                )
+                  span(v-if="loading") Загрузка...
+                  span(v-else) Войти
+
+              .buttons-list.buttons-list-info
+                p.errorMsg(v-if="submitStatus === 'OK'") Успешно вошли
+                p.errorMsg.error(v-else-if="submitStatus === 'There is no user record corresponding to this identifier. The user may have been deleted.'") Пользователь не найден
+                p.errorMsg.error(v-else-if="submitStatus === 'ERROR'") Пожалуйста, проверьте правильность заполнения полей
+                p.errorMsg.error(v-else) {{submitStatus}}
               .buttons-list-reference
                 span Нет аккаунта?
                   router-link(to='/registration')  Создайте его!
@@ -60,6 +68,11 @@ export default {
       minLength: minLength(6)
     }
   },
+  computed: {
+    loading () {
+      return this.$store.state.common.loading
+    }
+  },
   methods: {
     onSubmit () {
       this.$v.$touch()
@@ -70,11 +83,14 @@ export default {
           email: this.email,
           password: this.password
         }
-        console.log(user)
-        this.submitStatus = 'PENDING'
-        setTimeout(() => {
-          this.submitStatus = 'OK'
-        }, 500)
+        this.$store.dispatch('loginUser', user)
+          .then(() => {
+            this.submitStatus = 'OK'
+            this.$router.push('/')
+          })
+          .catch(err => {
+            this.submitStatus = err.message
+          })
       }
     }
   }
@@ -117,5 +133,8 @@ export default {
 
   .buttons-list-reference
     text-align center
+
+  .error
+    color #fc5c65
 
 </style>

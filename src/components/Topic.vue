@@ -9,7 +9,7 @@
           :size='60',
           :reverse='false',
           line-cap='round',
-          :fill="{ color: 'rgba(107, 204, 38, 1)' }",
+          :fill="{ color: 'rgba(38, 222, 129, 1)' }",
           empty-fill='rgba(204, 204, 204, .4)',
           :animation-start-value='0.0',
           :start-angle='-90',
@@ -26,6 +26,9 @@
       .topic-item-body
         a.topic-item-title
           strong {{title}}
+      .topic-item-solve
+        .button.button--round.button-success Решать
+
 </template>
 
 <script>
@@ -66,6 +69,9 @@ export default {
 
 <style lang="stylus" scoped>
 
+  .content-wrapper
+    max-height 400px
+
   .circle
     margin 5%
 
@@ -76,6 +82,7 @@ export default {
     border-top-right-radius 30px
 
   .topic-item-body
+    height 45%
     padding 7%
 
   .topic-item
@@ -98,4 +105,11 @@ export default {
     float right
     font-size 0.8em
     margin 7%
+
+  .topic-item-solve
+    display flex
+    float right
+    margin-bottom 70px
+    margin-right 20px
+
 </style>

@@ -1,15 +1,14 @@
 <template lang="pug">
   .content-wrapper
-    section.header-title
+    section.header-title(v-if="this.isLoading")
       .container
         h1.ui-title-1
           strong Темы
-        .loading-indicator(
-          v-if = isLoading
-        )
+        .loading-indicator
           loading(
+            :active.sync="this.isLoading",
             :is-full-page='false')
-    section
+    section(v-if="!this.isLoading")
       .container
         .topic-list
           .topic-item-wrapper(
@@ -44,16 +43,34 @@ export default {
   },
   computed: mapGetters(['getTopics', 'isTopicsLoaded']),
   async mounted () {
-    this.fetchTopics()
+    await this.fetchTopics()
+    this.isLoading = false
   },
   methods: mapActions(['fetchTopics'])
+  // methods: {
+
+  //   doAjax () {
+  //     this.isLoading = true
+  //     // simulate AJAX
+  //     setTimeout(() => {
+  //       this.isLoading = false
+  //     }, 1000)
+  //   }
+  // }
 }
 </script>
 
 <style lang="stylus" scoped>
 
+  .ui-title-1
+    font-size 4em
+
   .header-title
+    margin-top 10px
     padding 0
+
+  .loading-indicator
+    padding-top 300px
 
   .topic-item-wrapper
     height 400px

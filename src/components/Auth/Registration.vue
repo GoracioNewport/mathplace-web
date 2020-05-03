@@ -8,6 +8,18 @@
           .auth-form
             span.ui-title-2 Регистрация
             form(@submit.prevent="onSubmit")
+
+              .form-item(:class="{ 'errorInput': $v.name.$error }")
+                input(
+                  type="text"
+                  placeholder="Имя пользователя"
+                  v-model="name"
+                  :class="{ 'error': $v.name.$error }"
+                  @change="$v.name.$touch()"
+                )
+                .error(v-if="!$v.name.required") Это поле обязательно
+                .error(v-if="!$v.name.maxLength") Максимальная длина имени - {{ $v.name.$params.maxLength.max }} символов
+
               .form-item(:class="{ 'errorInput': $v.email.$error }")
                 input(
                   type="email"
@@ -56,8 +68,9 @@
 
               .buttons-list.buttons-list-info
                 p.errorMsg(v-if="submitStatus === 'OK'") Успешно зарегистрирован
-                p.errorMsg(v-if="submitStatus === 'ERROR'") Пожалуйста, проверьте правильность заполнения полей
-                p.errorMsg(v-else) {{submitStatus}}
+                p.errorMsg.error(v-else-if="submitStatus === 'The email address is already in use by another account.'") Данный email адрес уже используется.
+                p.errorMsg.error(v-else-if="submitStatus === 'ERROR'") Пожалуйста, проверьте правильность заполнения полей
+                p.errorMsg.error(v-else) {{submitStatus}}
 
               .buttons-list-reference
                 span Уже есть аккаунт?
@@ -65,10 +78,13 @@
 </template>
 
 <script>
-import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
+import { required, email, minLength, sameAs, maxLength } from 'vuelidate/lib/validators'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 export default {
   data () {
     return {
+      name: '',
       email: '',
       password: '',
       repeatPassword: '',
@@ -76,6 +92,10 @@ export default {
     }
   },
   validations: {
+    name: {
+      required,
+      maxLength: maxLength(25)
+    },
     email: {
       required,
       email
@@ -91,7 +111,7 @@ export default {
   },
   computed: {
     loading () {
-      return this.$store.getters.loading
+      return this.$store.state.common.loading
     }
   },
   methods: {
@@ -107,12 +127,17 @@ export default {
         this.$store.dispatch('registerUser', user)
           .then(() => {
             this.submitStatus = 'OK'
+            this.registerUserInDatabase(this.name, user)
             this.$router.push('/')
           })
           .catch(err => {
             this.submitStatus = err.message
           })
       }
+    },
+    registerUserInDatabase (name, user) {
+      const db = firebase.firestore()
+      db.collection('account').document(user.getUid())
     }
   }
 }
@@ -154,5 +179,8 @@ export default {
 
   .buttons-list-reference
     text-align center
+
+  .error
+    color #fc5c65
 
 </style>

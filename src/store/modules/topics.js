@@ -7,13 +7,14 @@ export default {
       ctx.commit('updateTopicsLoaded', false)
 
       var topics = []
+      var innderId = 0
       const db = firebase.firestore()
 
-      db.collection('task2').get()
+      await db.collection('task2').get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             topics.push({
-              'id': 1,
+              'id': innderId++,
               'title': doc.id,
               'completed': Math.floor(Math.random() * 100),
               'theme': doc.data().theme
