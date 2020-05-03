@@ -139,43 +139,47 @@ export default {
       const db = firebase.firestore()
 
       var achivmentCount = 8
-      var taskCount = db.collection('task2').doc('ОГЭ Вариант 1').items
+      var taskCount = 0
+      var tasksDb = db.collection('task2').doc('ОГЭ Вариант 1')
+      tasksDb.get()
+        .then(doc => {
+          taskCount = doc.data().items
+          var achievements = []
+          for (let i = 0; i < achivmentCount; i++) {
+            achievements.push(0)
+          }
 
-      var achievements = []
-      for (let i = 0; i < achivmentCount; i++) {
-        achievements.push(0)
-      }
+          var tasks = []
+          for (let i = 0; i < taskCount; i++) {
+            tasks.push(1)
+          }
 
-      var tasks = []
-      for (let i = 0; i < taskCount; i++) {
-        taskCount.push(1)
-      }
+          var data = {
+            name: this.name,
+            password: this.password,
+            bookmark: [],
+            like: [],
+            submit: 0,
+            right: 0,
+            email: this.email,
+            money: 100,
+            'game score': 0,
+            achiv: achievements,
+            lastTheme: 'ОГЭ Вариант 1',
+            'ОГЭ Вариант 1': tasks,
+            'ОГЭ Вариант 1Solution': tasks
+          }
 
-      var data = {
-        name: this.name,
-        password: this.password,
-        bookmark: [],
-        like: [],
-        submit: 0,
-        right: 0,
-        email: this.email,
-        money: 100,
-        "game score": 0,
-        achiv: achievements,
-        lastTheme: 'ОГЭ Вариант 1',
-        "ОГЭ Вариант 1": tasks,
-        "ОГЭ Вариант 1Solution": tasks
-
-      }
-
-      db.collection('account').doc(this.$store.state.user.user).set(data)
-
+          db.collection('account').doc(this.$store.state.user.user.id).set(data)
+        })
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+  .navbar
+    display none
   .auth
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     display flex
