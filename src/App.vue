@@ -34,9 +34,20 @@
 export default {
   data () {
     return {
-      menuShow: false,
-      linkMenu: [
-        {title: 'Темы', url: '/'},
+      menuShow: false
+    }
+  },
+  computed: {
+    linkMenu () {
+      if (this.$store.getters.checkUser) {
+        return [
+          {title: 'Главная', url: '/main'},
+          {title: 'Темы', url: '/'},
+          {title: 'Выйти', url: '/logout'}
+        ]
+      }
+      return [
+        {title: 'Главная', url: '/Main'},
         {title: 'Войти', url: '/login'},
         {title: 'Регистрация', url: '/registration'}
       ]
