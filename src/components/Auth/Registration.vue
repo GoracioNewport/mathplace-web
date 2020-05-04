@@ -1,39 +1,90 @@
-<template lang="html">
-  <form action="action_page.php">
-  <div class="container">
-    <h1 id="registr">Регистрация</h1>
-    <p>Создайте свой аккаунт</p>
-    <hr>
-    <label for="psw-repeat"><b>Введите имя</b></label>
-    <input type="password" placeholder="Повторите пароль" name="psw-repeat" required>
-
-    <label for="email"><b>Email</b></label>
-    <input type="text" placeholder="Введиет email" name="email" required>
-
-    <label for="psw"><b>Пароль</b></label>
-    <input type="password" placeholder="Введите пароль" name="psw" required>
-
-    <hr>
-
-    <p>Регистрируя аккаунт вы соглашаетесь с <a href="http://ledokolpro.tilda.ws/policy">Политикой Кофеденциальности</a> и <a href="http://ledokolpro.tilda.ws/rules">Условиями пользования</a></p>
-    <button type="submit" class="registerbtn">Зарегистрироваться</button>
-  </div>
-
-  <div class="container signin">
-    <p>Уже есть аккаунт <router-link to="/login">Войти</router-link>.</p>
-  </div>
-</form>
-  <!-- .content-wrapper
+<template lang="pug">
+  .content-wrapper
     section
       .container
-        h1.ui-title-1 Registration -->
+        .auth
+          .auth-title
+            h1.ui-title-2 Пикча
+          .auth-form
+            span.ui-title-2 Регистрация
+            form(@submit.prevent="onSubmit")
+
+              .form-item(:class="{ 'errorInput': $v.name.$error }")
+                input(
+                  type="text"
+                  placeholder="Имя пользователя"
+                  v-model="name"
+                  :class="{ 'error': $v.name.$error }"
+                  @change="$v.name.$touch()"
+                )
+                .error(v-if="!$v.name.required") Это поле обязательно
+                .error(v-if="!$v.name.maxLength") Максимальная длина имени - {{ $v.name.$params.maxLength.max }} символов
+
+              .form-item(:class="{ 'errorInput': $v.email.$error }")
+                input(
+                  type="email"
+                  placeholder="Почта"
+                  v-model="email"
+                  :class="{ 'error': $v.email.$error }"
+                  @change="$v.email.$touch()"
+                )
+                .error(v-if="!$v.email.required") Это поле обязательно
+                .error(v-if="!$v.email.email") Неверный формат Email
+
+              .form-item(:class="{ 'errorInput': $v.password.$error }")
+                input(
+                  type="password"
+                  placeholder="Пароль"
+                  v-model="password"
+                  :class="{ 'error': $v.password.$error }"
+                  @change="$v.password.$touch()"
+                )
+                .error(v-if="!$v.password.required") Это поле обязательно
+                .error(v-if="!$v.password.minLength") Минимальная длина пароля - {{ $v.password.$params.minLength.min }} символов
+
+              .form-item(:class="{ 'errorInput': $v.repeatPassword.$error }")
+                input(
+                  type="password"
+                  placeholder="Повторите пароль"
+                  v-model="repeatPassword"
+                  :class="{ 'error': $v.repeatPassword.$error }"
+                  @change="$v.repeatPassword.$touch()"
+                )
+                .error(v-if="!$v.repeatPassword.required") Это поле обязательно
+                .error(v-if="!$v.repeatPassword.sameAsPassword") Пароли не совпадают
+              .buttons-list
+                button.button.button-primary(
+                  type="submit"
+                )
+                  span(v-if="loading") Загрузка...
+                  span(v-else) Зарегистрироватся
+
+              //- .buttons-list.buttons-list-agreement
+                //- p
+                //-   | Регистрируя аккаунт вы соглашаетесь с
+                //-   a(href='http://ledokolpro.tilda.ws/policy')  Политикой Кофеденциальности
+                //-   |  и
+                //-   a(href='http://ledokolpro.tilda.ws/rulesy')  Условиями пользования
+
+              .buttons-list.buttons-list-info
+                p.errorMsg(v-if="submitStatus === 'OK'") Успешно зарегистрирован
+                p.errorMsg.error(v-else-if="submitStatus === 'The email address is already in use by another account.'") Данный email адрес уже используется.
+                p.errorMsg.error(v-else-if="submitStatus === 'ERROR'") Пожалуйста, проверьте правильность заполнения полей
+                p.errorMsg.error(v-else) {{submitStatus}}
+
+              .buttons-list-reference
+                span Уже есть аккаунт?
+                  router-link(to='/login')  Войдите
 </template>
 
 <script>
-import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
+import { required, email, minLength, sameAs, maxLength } from 'vuelidate/lib/validators'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 export default {
   data () {
     return {
+      name: '',
       email: '',
       password: '',
       repeatPassword: '',
@@ -41,6 +92,10 @@ export default {
     }
   },
   validations: {
+    name: {
+      required,
+      maxLength: maxLength(25)
+    },
     email: {
       required,
       email
@@ -56,7 +111,7 @@ export default {
   },
   computed: {
     loading () {
-      return this.$store.getters.loading
+      return this.$store.state.common.loading
     }
   },
   methods: {
@@ -72,12 +127,17 @@ export default {
         this.$store.dispatch('registerUser', user)
           .then(() => {
             this.submitStatus = 'OK'
+            this.registerUserInDatabase(this.name, user)
             this.$router.push('/')
           })
           .catch(err => {
             this.submitStatus = err.message
           })
       }
+    },
+    registerUserInDatabase (name, user) {
+      const db = firebase.firestore()
+      db.collection('account').document(user.getUid())
     }
   }
 }
@@ -137,65 +197,7 @@ export default {
   .buttons-list-reference
     text-align center
 
-* {box-sizing: border-box}
-
-/* Add padding to containers */
-.container {
-  padding: 16px;
-}
-
-/* Full-width input fields */
-input[type=text], input[type=password] {
-  width: 100%;
-  padding: 15px;
-  margin: 5px 0 22px 0;
-  display: inline-block;
-  border: none;
-  background: #f1f1f1;
-}
-
-input[type=text]:focus, input[type=password]:focus {
-  background-color: #ddd;
-  outline: none;
-}
-
-/* Overwrite default styles of hr */
-hr {
-  border: 1px solid #f1f1f1;
-  margin-bottom: 25px;
-}
-
-/* Set a style for the submit/register button */
-.registerbtn {
-  background-color: #763DCA;
-  color: white;
-  padding: 16px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  opacity: 0.9;
-}
-
-.registerbtn:hover {
-  opacity:1;
-}
-
-/* Add a blue text color to links */
-a {
-  color: dodgerblue;
-}
-
-/* Set a grey background color and center the text of the "sign in" section */
-.signin {
-  background-color: #f1f1f1;
-  text-align: center;
-}
-
-#register{
-  background-color: #f1f1f1;
-  text-color :#FFFFFF;
-  width :10px;
-}
+  .error
+    color #fc5c65
 
 </style>
