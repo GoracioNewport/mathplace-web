@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import User from './user'
 
 export default {
   actions: {
@@ -7,17 +8,86 @@ export default {
       ctx.commit('updateTopicsLoaded', false)
 
       var topics = []
+      var topicsAlgebra = []
       var innderId = 0
       const db = firebase.firestore()
 
       await db.collection('task2').get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
-            topics.push({
-              'id': innderId++,
-              'title': doc.id,
-              'completed': Math.floor(Math.random() * 100),
-              'theme': doc.data().theme
+            var right = 0
+            var all = 1
+            let theme = doc.id
+            var docRef = db.collection('account').doc(User.state.user.id)
+            docRef.get().then(function (doc2) {
+              var topic = doc2.data()[theme]
+              if (topic != null) {
+                console.log(String(theme) + ' ' + doc2.data()[theme].toString())
+                for (let i = 0; i < topic.length; i++) {
+                  console.log('Start')
+                  if (topic[i] === 2) {
+                    right++
+                  }
+                  all++
+                }
+              }
+              if (doc.data().theme === 'алгебра') {
+                topicsAlgebra.push({
+                  'id': innderId++,
+                  'title': doc.id,
+                  'completed': Math.floor(right * 100 / all),
+                  'theme': doc.data().theme
+                })
+              } else if (doc.data().theme === 'геометрия') {
+                topicsAlgebra.push({
+                  'id': innderId++,
+                  'title': doc.id,
+                  'completed': Math.floor(right * 100 / all),
+                  'theme': doc.data().theme
+                })
+              } else if (doc.data().theme === 'логика') {
+                topicsAlgebra.push({
+                  'id': innderId++,
+                  'title': doc.id,
+                  'completed': Math.floor(right * 100 / all),
+                  'theme': doc.data().theme
+                })
+              } else if (doc.data().theme === 'комбинаторика') {
+                topicsAlgebra.push({
+                  'id': innderId++,
+                  'title': doc.id,
+                  'completed': Math.floor(right * 100 / all),
+                  'theme': doc.data().theme
+                })
+              } else if (doc.data().theme === 'огэ') {
+                topicsAlgebra.push({
+                  'id': innderId++,
+                  'title': doc.id,
+                  'completed': Math.floor(right * 100 / all),
+                  'theme': doc.data().theme
+                })
+              } else if (doc.data().theme === 'школа') {
+                topicsAlgebra.push({
+                  'id': innderId++,
+                  'title': doc.id,
+                  'completed': Math.floor(right * 100 / all),
+                  'theme': doc.data().theme
+                })
+              } else if (doc.data().theme === 'идеи') {
+                topicsAlgebra.push({
+                  'id': innderId++,
+                  'title': doc.id,
+                  'completed': Math.floor(right * 100 / all),
+                  'theme': doc.data().theme
+                })
+              }
+
+              topics.push({
+                'id': innderId++,
+                'title': theme,
+                'completed': (right * 100) / all,
+                'theme': doc.data().theme
+              })
             })
           })
         })
