@@ -9,6 +9,13 @@ export default {
 
       var topics = []
       var topicsAlgebra = []
+      var topicsGeometry = []
+      var topicsOGE = []
+      var topicsSchool = []
+      var topicsLogika = []
+      var topicsGraf = []
+      var topicsKomba = []
+      var topicsIdea = []
       var innderId = 0
       const db = firebase.firestore()
 
@@ -32,6 +39,7 @@ export default {
                 }
               }
               if (doc.data().theme === 'алгебра') {
+                console.log('Add Algebra')
                 topicsAlgebra.push({
                   'id': innderId++,
                   'title': doc.id,
@@ -39,42 +47,49 @@ export default {
                   'theme': doc.data().theme
                 })
               } else if (doc.data().theme === 'геометрия') {
-                topicsAlgebra.push({
+                topicsGeometry.push({
                   'id': innderId++,
                   'title': doc.id,
                   'completed': Math.floor(right * 100 / all),
                   'theme': doc.data().theme
                 })
               } else if (doc.data().theme === 'логика') {
-                topicsAlgebra.push({
+                topicsLogika.push({
                   'id': innderId++,
                   'title': doc.id,
                   'completed': Math.floor(right * 100 / all),
                   'theme': doc.data().theme
                 })
               } else if (doc.data().theme === 'комбинаторика') {
-                topicsAlgebra.push({
+                topicsKomba.push({
                   'id': innderId++,
                   'title': doc.id,
                   'completed': Math.floor(right * 100 / all),
                   'theme': doc.data().theme
                 })
               } else if (doc.data().theme === 'огэ') {
-                topicsAlgebra.push({
+                topicsOGE.push({
                   'id': innderId++,
                   'title': doc.id,
                   'completed': Math.floor(right * 100 / all),
                   'theme': doc.data().theme
                 })
               } else if (doc.data().theme === 'школа') {
-                topicsAlgebra.push({
+                topicsSchool.push({
                   'id': innderId++,
                   'title': doc.id,
                   'completed': Math.floor(right * 100 / all),
                   'theme': doc.data().theme
                 })
               } else if (doc.data().theme === 'идеи') {
-                topicsAlgebra.push({
+                topicsIdea.push({
+                  'id': innderId++,
+                  'title': doc.id,
+                  'completed': Math.floor(right * 100 / all),
+                  'theme': doc.data().theme
+                })
+              } else if (doc.data().theme === 'графы') {
+                topicsGraf.push({
                   'id': innderId++,
                   'title': doc.id,
                   'completed': Math.floor(right * 100 / all),
@@ -95,13 +110,14 @@ export default {
           console.log('Error getting documents', err)
         })
 
-      ctx.commit('updateTopics', topics)
+      ctx.commit('updateTopics', topics, topicsAlgebra)
       ctx.commit('updateTopicsLoaded', true)
     }
   },
   mutations: {
-    updateTopics (state, topics) {
+    updateTopics (state, topics, topicsAlgebra) {
       state.topics = topics
+      state.topicsAlgebra = topicsAlgebra
     },
     updateTopicsLoaded (state, isLoaded) {
       state.topicsLoaded = isLoaded
@@ -109,7 +125,34 @@ export default {
   },
   state: {
     topicsLoaded: false,
-    topics: []
+    topics: [],
+
+    topicsLoadedOGE: false,
+    topicsOGE: [],
+
+    topicsLoadedSchool: false,
+    topicsSchool: [],
+
+    topicsLoadedAlgebra: false,
+    topicsAlgebra: [],
+
+    topicsLoadedGeometry: false,
+    topicsGeometry: [],
+
+    // topicsLoadedAlgerba: false,
+    // topicsAlgebra: [],
+
+    topicsLoadedKomba: false,
+    topicsKomba: [],
+
+    topicsLoadedIdea: false,
+    topicsIdea: [],
+
+    topicsLoadedLogika: false,
+    topicsLogika: [],
+
+    topicsLoadedGraf: false,
+    topicsGraf: []
   },
   getters: {
     getTopics (state) {
@@ -117,6 +160,54 @@ export default {
     },
     isTopicsLoaded (state) {
       return state.topicsLoaded
+    },
+    getTopicsOGE (state) {
+      return state.topicsOGE
+    },
+    isTopicsOGE (state) {
+      return state.topicsLoadedOGE
+    },
+    getTopicsAlgebra (state) {
+      return state.topicsAlgebra
+    },
+    isTopicsLoadedAlgebra (state) {
+      return state.topicsLoadedAlgebra
+    },
+    getTopicsSchool (state) {
+      return state.topicsSchool
+    },
+    isTopicsLoadedSchool (state) {
+      return state.topicsLoadedSchool
+    },
+    getTopicsGeometry (state) {
+      return state.topicsGeometry
+    },
+    isTopicsLoadedGeometry (state) {
+      return state.topicsLoadedGeometry
+    },
+    getTopicsLogika (state) {
+      return state.topicsLogika
+    },
+    isTopicsLoadedLogika (state) {
+      return state.topicsLoadedLogika
+    },
+    getTopicsIdea (state) {
+      return state.topicsIdea
+    },
+    isTopicsLoadedIdea (state) {
+      return state.topicsLoadedIdea
+    },
+    getTopicsGraf (state) {
+      return state.topicsGraf
+    },
+    isTopicsLoadedGraf (state) {
+      return state.topicsLoadedGraf
+    },
+    getTopicsKomba (state) {
+      return state.topicsKomba
+    },
+    isTopicsLoadedKomba (state) {
+      return state.topicsLoadedKomba
     }
   }
 }
