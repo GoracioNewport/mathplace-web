@@ -32,8 +32,8 @@
       .topic-item-body
         a.topic-item-title
           strong {{title}}
-      a(href='/task')
-        .topic-item-solve(v-on:click="openTopic")
+      a
+        .topic-item-solve(@click="openTopic()")
           .button.button--round.button-success Решать
 
 </template>
@@ -70,10 +70,10 @@ export default {
     progress_end (event) {
       // console.log('Circle progress end')
     },
-    openTopic: function (event) {
-      // `this` внутри методов указывает на экземпляр Vue
-      // alert('Привет, ' + this.title + '!')
-      // window.open('/login')
+    openTopic (event) {
+      console.log(this.title)
+      this.$store.commit('updateCurrentTopic', this.title)
+      this.$router.push('/task')
     }
   }
 }

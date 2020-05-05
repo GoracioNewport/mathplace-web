@@ -41,27 +41,12 @@ export default {
       isLoading: true
     }
   },
-  // methods: {
-  //   reverseMessage: function () {
-  //     this.title = this.title.split('').reverse().join('')
-  //   }
-  // },
   computed: mapGetters(['getTopics', 'isTopicsLoaded']),
   async mounted () {
     await this.fetchTopics()
     this.isLoading = false
   },
   methods: mapActions(['fetchTopics'])
-  // methods: {
-
-  //   doAjax () {
-  //     this.isLoading = true
-  //     // simulate AJAX
-  //     setTimeout(() => {
-  //       this.isLoading = false
-  //     }, 1000)
-  //   }
-  // }
 }
 </script>
 
