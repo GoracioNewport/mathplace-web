@@ -1,55 +1,63 @@
 <template lang="pug">
   .content-wrapper
-    .navbar
+    .taskbar
         .container
-          .navbar-content
-            span.line.line-1
-            span.line.line-2
-            span.line.line-3
-
-            .navbar-list__wrapper
-              ul.navbar-list
-                li.navbar-item(
-                  v-for = "link in taskList"
-                  :key = "link.title"
+          .taskbar-content
+            .taskbar-list__wrapper
+              .taskbar-list
+                .taskbar-item(
+                  v-for = "task in this.taskList"
+                  :key = "task.id"
                 )
-                  router-link.navbar-link(:to='`${link.url}`')
-                    img#img_navbar(:src="task")
-                  //- router-link.navbar-link(
-                  //-   :to = " `${link.url}`"
-                  //- ) {{ link.src }}
-    .name  Задача 1
-      img(class="star1", src='@/assets/images/star.png', alt='Звезда', height="30", width="30")
-      img(class="star2", src='@/assets/images/star.png', alt='Звезда', height="30", width="30")
-      img(class="star3", src='@/assets/images/star.png', alt='Звезда', height="30", width="30")
-    .condition
-      p В случайном эксперименте бросают две игральные кости. Найдите вероятность того, что сумма выпавших очков равна 10 Результат округлите до сотых.
-      p С точностью 2 знака после запятой
-    .answ
-      input(size="40", placeholder="Введите ответ" class="ans")
-    .enter
-      a.but(href="#zatemnenie")
-        img(src='@/assets/images/lock.png', alt='Решения',id="lock")
-      a.but(href="#")
-        img(src='@/assets/images/comment_1.png', alt='Комментарии')
-      a.but(href="#taskexp")
-        img(src='@/assets/images/like_none.png', alt='Лайк', @click='chg(this.id)')
-      input.sub(type='submit', value="Отправить")
-    #zatemnenie
-      #okno
-        .solve
-          .consolve
-            //- strong {{condition}}
-          .solsolve
-            p Решение
-          .anssolve
-            //- strong {{answer}}
-        a.close(href='#') Закрыть решение
+                  .taskbar-link(@click='changeActiveTask(task.id)')
+
+                    img.img_taskbar(
+                      v-if = 'task.type == "task"'
+                      :src = 'taskImage')
+                    img.img_taskbar(
+                      v-if = "task.type == 'theory'"
+                      :src = "theoryImage")
+    .content
+      .name
+        span(
+          v-if = 'this.taskList[this.activeTask].type == "task"'
+        ) Задача {{ this.taskList[this.activeTask].taskId }}
+        span(
+          v-if = 'this.taskList[this.activeTask].type == "theory"'
+        ) Теория
+        img.star(class="star1", src='@/assets/images/star.png', alt='Звезда')
+        img.star(class="star2", src='@/assets/images/star.png', alt='Звезда')
+        img.star(class="star3", src='@/assets/images/star.png', alt='Звезда')
+      .condition
+        .text-part(
+          v-for = "part in this.taskList[this.activeTask].text"
+        )
+          span {{ part }}
+      .answ
+        input(size="40", placeholder="Введите ответ" class="ans")
+      .enter
+        a.but(href="#zatemnenie")
+          img(src='@/assets/images/lock.png', alt='Решения',id="lock")
+        .but
+          img(src='@/assets/images/comment_1.png', alt='Комментарии')
+        .but
+          img(src='@/assets/images/like_none.png', alt='Лайк')
+        input.sub(type='submit', value="Отправить")
+      #zatemnenie
+        #okno
+          .solve
+            .consolve
+              //- strong {{condition}}
+            .solsolve
+              p Решение
+            .anssolve
+              //- strong {{answer}}
+          a.close(href='#') Закрыть решение
 </template>
 
 <script>
-import theory from '@/assets/images/theory.png'
-import task from '@/assets/images/question.png'
+import theoryImage from '@/assets/images/theory.png'
+import taskImage from '@/assets/images/question.png'
 import { mapActions } from 'vuex'
 export default {
   async mounted () {
@@ -59,19 +67,41 @@ export default {
   },
   data () {
     return {
-      theory,
-      task,
+      theoryImage,
+      taskImage,
+      activeTask: 0,
       taskList: []
     }
   },
-  methods: mapActions(['fetchTasks'])
+  methods: {
+    ...mapActions(['fetchTasks']),
+    changeActiveTask (i) {
+      this.activeTask = i
+    }
+  }
 }
 </script>
 
 <style lang="stylus" scoped>
-  #img_navbar
+
+  .star
     height 30px
     width 30px
+
+  .taskbar-list
+    margin 0 auto
+    display table
+
+  .taskbar-item
+    padding 20px
+    float left
+
+  .content
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+
+  .img_taskbar
+    height 50px
+    width 50px
 
   .name
     background #763DCA
@@ -88,6 +118,7 @@ export default {
     float right
     margin-right 5px
   .condition
+    min-height 200px
     background #ffffff
     color #000000
     border-radius 0 0 10px 10px
@@ -192,11 +223,11 @@ export default {
     cursor pointer
     &:hover
         background #5E2DA6
-  .navbar
+  .taskbar
     background-color #763DCA
     width 100%
+    height 90px
     orientation top
-    margin-top -1px
     align-items center
     diaply flex
 
