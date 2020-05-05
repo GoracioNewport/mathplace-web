@@ -17,7 +17,7 @@
           )
             Topic(
               v-bind:id='topic.id',
-              v-bind:title='topic.title+" "+counter'
+              v-bind:title='topic.title'
               v-bind:percentage='topic.completed'
               v-bind:theme='topic.theme'
             )

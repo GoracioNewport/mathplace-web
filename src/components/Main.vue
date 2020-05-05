@@ -6,13 +6,13 @@
         <div id="leftMain">
 
             <div id="leftText">
-                <p class="textMargin" style="color:#000000; letter-spacing:3; font-family: 'Roboto', sans-serif; font-size: 20px; font-weight: bold;">приложение</p>
+                <p class="textMargin" style="color:#000000; letter-spacing: 3px; font-family: 'Roboto', sans-serif; font-size: 20px; font-weight: bold;">приложение</p>
                 <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 62px; font-weight: bold;">MathPlace</p>
                 <h3 class="textMargin" style="width:30%; color:#919191; font-family: 'Roboto', sans-serif; margin-top: 15px; font-size: 22px;">место, где вы можете с легкостью поднять свой уровень в математике</h3>
-                <div id="DownloadButton" class="gradient">
+                <div id="DownloadButton" class="gradient2">
                     <a href="#Download">
                         <div id="DownloadButtonText">
-
+                            <p>Скачать</p>
                         </div>
                     </a>
                 </div>
@@ -61,23 +61,21 @@
     <div id="Topics" class="gradient">
         <div id="design4" class="gradient"></div>
         <div id="design7" class="gradient"></div>
-        <a href="PreviousTopic"> <div id="PreviousTopics"> </div> </a>
         <div id="FirstTopic" class="Topics">
-            <img class="ImageBox" src="./images/brain.png"/>
+            <img class="ImageBox" src="./images/first_block.png"/>
             <h1 class="TitleBox">Интересные задачи</h1>
             <p class="TextBox">Более 500 задач и 50 уроков, а также несколько вариантов ОГЭ</p>
         </div>
         <div id="SecondTopic" class="Topics">
-            <img class="ImageBox" src="./images/brain.png"/>
+            <img class="ImageBox" src="./images/second_block.png"/>
             <h1 class="TitleBox">Достижения</h1>
             <p class="TextBox">Вы можете выполнять достижения и соревноваться с друзьями</p>
         </div>
         <div id="ThirdTopic" class="Topics">
-            <img class="ImageBox" src="./images/brain.png"/>
+            <img class="ImageBox" src="./images/third_block.png"/>
             <h1 class="TitleBox">Простота</h1>
             <p class="TextBox">Для вашего удобства темы структурированы по классам, разделам и темам. Вы обязательно найдете то что вам нужно</p>
         </div>
-        <a href="NextTopic"> <div id="NextTopics"></div> </a>
     </div>
     <div id="Task">
         <div id="design4" class="gradient"></div>
@@ -87,20 +85,25 @@
                 <p id="TextTask2">В три коробки поровну разложили 90 чашек. В результате в каждой коробке оказалось 30 чашек. Записать выражение, которое описывает, что 90 чашек разложено в 3 коробки. Далее выполнить действие в этом выражении.</p>
             </div>
         </a>
-        <a href="#Task-Button"> <div id="TaskButton" class="gradient"> <div id="TaskButtonText"> </div> </div> </a>
+        <a href="#Task-Button">
+            <div id="TaskButton" v-on:click="sendAnswer()" class="gradient">
+                <div id="TaskButtonText">
+                </div>
+            </div>
+        </a>
         <input type="text" id="TaskIn">
     </div>
     <div id="TaskResultSucsessful"> </div>
     <div id="TaskResultnotSucsessful"> </div>
     <div id="Download" class="gradient">
         <div id="GooglePlayBox">
-            <a class="abutton" href="www.helllab.ru"> <div id="GooglePlay_DownloadButton"> </div> </a>
+            <a class="abutton" href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace&hl=ru"> <div id="GooglePlay_DownloadButton"> </div> </a>
         </div>
-        <div id="AppStoreBox">
+        <!-- <div id="AppStoreBox">
             <a class="abutton" href="www.helllab.ru"> <div id="AppStore_DownloadButton"> </div> </a>
-        </div>
+        </div> -->
         <div id="DownloadAPKBox">
-            <a class="abutton" href="www.helllab.ru"> <div id="DownloadAPK_DownloadButton"> </div></a>
+            <a class="abutton" href="/"> <div id="DownloadAPK_DownloadButton"> </div></a>
         </div>
     </div>
     <div id="AboutDevelopers">
@@ -122,6 +125,14 @@
 </template>
 
 <script>
+// import Vue from 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js'
+// import Test from '@/components/test.js'
+// export default {
+//   components: {
+//     Test
+//   }
+// }
+
 </script>
 
 <style lang="stylus" scoped>
@@ -163,7 +174,7 @@
 #imgMain
     position absolute
     height 100%
-    width 40%
+    width 50%
     left 40%
     top 00%
     z-index 10
@@ -171,8 +182,8 @@
 #DownloadButton
     position absolute
     left 0%
-    top 220px
-    height 6%
+    top 25%
+    height 5%
     width 17%
     border-radius 50px 50px
     box-shadow rgba(145, 145, 145, 1) 5px 5px
@@ -180,9 +191,14 @@
 #DownloadButtonText
     height 100%
     width 100%
-    background-image url(images/Download.png)
-    background-repeat no-repeat
-    background-size 100%
+    text-align center
+    color:#FFFFFF
+    font-family: 'Roboto', sans-serif
+    font-size: 200%
+    font-weight: bold
+    // background-image url(images/Download.png)
+    // background-repeat no-repeat
+    // background-size 100%
 
 #MenuBlock
     position absolute
@@ -191,6 +207,7 @@
     top 100%
 
 #TextBlock
+    width 100%
     margin-top 0%
     text-align center
     color #ffffff
@@ -220,51 +237,51 @@
 #AlgebraMenu
     position absolute
     left 3%
-    top 27%
+    top 35%
     height 500px
     width 170px
 
 #GeometryMenu
     position absolute
     left 17%
-    top 27%
+    top 35%
     height 400px
     width 170px
 
 #KombaMenu
     position absolute
     left 31%
-    top 27%
+    top 35%
     height 400px
     width 170px
 
 #OGEMenu
     position absolute
     left 45%
-    top 27%
+    top 35%
     height 400px
     width 170px
 
 #LogikaMenu
     position absolute
     left 59%
-    top 27%
+    top 35%
     height 400px
     width 170px
 
 #SchoolMenu
     position absolute
     left 73%
-    top 27%
+    top 35%
     height 400px
     width 170px
 
 #OlympMenu
     position absolute
     left 86%
-    top 27%
+    top 35%
     height 400px
-    width 10px
+    width 170px
 
 @import url(http://fonts.googleapis.com/css?family=Roboto:700,400&subset=latin,cyrillic);
 #Feature
@@ -463,14 +480,14 @@
 
 #GooglePlayBox
     position absolute
-    left 10%
+    left 20%
     top 10%
     bottom 10%
     width 20%
     height 80%
     background-repeat no-repeat
     background-size 100%
-    background-image url("images/GooglePlay.jpg")
+    // background-image url("images/GooglePlay.jpg")
     border-radius 10px
     box-shadow rgba(0, 0, 0, 0.5) 10px 10px
 
@@ -513,7 +530,7 @@
 
 #DownloadAPKBox
     position absolute
-    left 70%
+    left 60%
     top 10%
     bottom 10%
     width 20%
@@ -611,7 +628,11 @@
 
 .gradient
     z-index 100
-    background linear-gradient(to left, #b837fd, #14B4DC)
+    background linear-gradient(to left, #763DCA, #763DCA)
+
+.gradient2
+    z-index 100
+    background linear-gradient(to left, #26de81, #26de81)
 
 body
     margin 0px 0px

@@ -51,6 +51,8 @@ export default {
     background-color #763DCA
 
   .navbar
+    margin 0
+    height 10px
     background-color #763DCA
     border-bottom-width 0px
     border-bottom-color #000000

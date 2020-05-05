@@ -4,9 +4,19 @@
       .container
         .auth
           .auth-title
-            h1.ui-title-2 Пикча
+            span.ui-title-2
+              strong Наше приложение
+            //img(class="picture", src='@/assets/saluting.png', alt='Пикча')
+            //img(class="picture", src='@/assets/gestures.png', alt='Пикча')
+            //img(class="picture", src='@/assets/birthday-and-party.png', alt='Пикча')
+            //img(class="picture", src='@/assets/miscellaneous.png', alt='Пикча')
+            a(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+              //img(class="picture", src='@/assets/google_play.svg', alt='Пикча')
+              img(class="picture", src='@/assets/googleplay.png', alt='Пикча')
+          .auth-space
           .auth-form
-            span.ui-title-2 Регистрация
+            span.ui-title-2
+              strong Регистрация
             form(@submit.prevent="onSubmit")
 
               .form-item(:class="{ 'errorInput': $v.name.$error }")
@@ -141,23 +151,6 @@ export default {
     }
   }
 }
-// const app = new Vue({
-//     el: '#app',
-//     data: {
-//       message: 'Hello Vue!',
-//       now: new Date()
-//     },
-//     methods: {
-//       updateDate() {
-//         this.now = new Date();
-//       }
-//     },
-//     mounted() {
-//       setInterval(() => {
-//         this.updateDate();
-//       }, 1000);
-//     }
-//   })
 </script>
 
 <style lang="stylus" scoped>
@@ -165,9 +158,23 @@ export default {
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     display flex
 
-  .auth-title,
+  // .auth-title,
   .auth-form
-    width 50%
+    width 56%
+    box-shadow 0 0 10px rgba(0,0,0,0.5)
+    border-radius 10px
+    padding 10px
+
+  .auth-title
+    width 40%
+    box-shadow 0 0 10px rgba(0,0,0,0.5)
+    border-radius 10px
+    padding 10px
+    text-align center
+  .picture
+    width 80%
+  .auth-space
+    width 4%
 
   .form-item
     .error
@@ -190,14 +197,30 @@ export default {
   input
     border-radius 5px
     border-width 1px
-    border-color #000
+    border-color #763dca
     &.error
       border-color #fc5c65
 
   .buttons-list-reference
     text-align center
+    color #763DCA
+  button
+    border-radius 10px
+    background-color #763DCA
+    width 40%
 
   .error
     color #fc5c65
+
+  .ui-title-2
+    color #763DCA
+
+  @media screen and (max-width:500px)
+    .auth-title
+        display none
+    .auth-space
+      width 0%
+    .auth-form
+      width 100%
 
 </style>

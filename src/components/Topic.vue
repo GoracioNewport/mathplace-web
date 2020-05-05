@@ -19,15 +19,22 @@
           @vue-circle-progress='progress',
           @vue-circle-end='progress_end')
 
-          .topic-item-theme
+          .topic-item-theme(v-if='theme.length < 9')
             span
-              <strong> {{theme}} </strong>
+              strong  {{theme}}
+          .topic-item-theme_gey(v-if='theme.length == 9')
+            span
+              strong  {{theme}}
+          .topic-item-theme_komba(v-if='theme.length > 9')
+            span
+              strong  {{theme}}
 
       .topic-item-body
         a.topic-item-title
           strong {{title}}
-      .topic-item-solve
-        .button.button--round.button-success Решать
+      a(href='/task')
+        .topic-item-solve(v-on:click="openTopic")
+          .button.button--round.button-success Решать
 
 </template>
 
@@ -63,13 +70,10 @@ export default {
     progress_end (event) {
       // console.log('Circle progress end')
     },
-    greet: function (event) {
+    openTopic: function (event) {
       // `this` внутри методов указывает на экземпляр Vue
-      alert('Привет, ' + this.title + '!')
-      // `event` — нативное событие DOM
-      // if (event) {
-      //   alert(event.target.tagName)
-      // }
+      // alert('Привет, ' + this.title + '!')
+      // window.open('/login')
     }
   }
 }
@@ -113,6 +117,17 @@ export default {
     float right
     font-size 0.8em
     margin 7%
+
+  .topic-item-theme_gey
+    float right
+    font-size 0.7em
+    margin 8%
+
+  .topic-item-theme_komba
+    float right
+    font-size 0.55em
+    margin-top 9%
+    margin-right 5%
 
   .topic-item-solve
     display flex
