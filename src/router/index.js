@@ -2,11 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import VueFirestore from 'vue-firestore'
 import Uimini from 'uimini/dist/css/uimini.css'
+import Store from '../store'
+
 import Home from '@/components/Home'
-import Registration from '@/components/Auth/Registration'
-import Login from '@/components/Auth/Login'
 import Main from '@/components/Main'
 import Task from '@/components/Task'
+import Registration from '@/components/Auth/Registration'
+import Login from '@/components/Auth/Login'
+import Logout from '@/components/Auth/Logout'
 
 Vue.use(Router)
 Vue.use(VueFirestore)
@@ -34,6 +37,15 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: Logout,
+      beforeEnter (to, from, next) {
+        Store.state.user.user = null
+        next('/login')
+      }
     },
     {
       path: '/registration',

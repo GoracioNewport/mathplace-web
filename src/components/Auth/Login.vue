@@ -39,7 +39,8 @@
 
               .buttons-list.buttons-list-info
                 p.errorMsg(v-if="submitStatus === 'OK'") Успешно вошли
-                p.errorMsg.error(v-else-if="submitStatus === 'There is no user record corresponding to this identifier. The user may have been deleted.'") Пользователь не найден
+                p.errorMsg.error(v-else-if="submitStatus === 'There is no user record corresponding to this identifier. The user may have been deleted.'") Неверный логин или пароль
+                p.errorMsg.error(v-else-if="submitStatus === 'The password is invalid or the user does not have a password.'") Неверный логин или пароль
                 p.errorMsg.error(v-else-if="submitStatus === 'ERROR'") Пожалуйста, проверьте правильность заполнения полей
                 p.errorMsg.error(v-else) {{submitStatus}}
               .buttons-list-reference
