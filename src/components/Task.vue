@@ -1,26 +1,19 @@
 <template lang="pug">
-  div
+  .content-wrapper
     .navbar
         .container
           .navbar-content
-            .button-burger(
-              @click = "menuShow = !menuShow"
-              :class="{ active: menuShow}"
-            )
-              span.line.line-1
-              span.line.line-2
-              span.line.line-3
+            span.line.line-1
+            span.line.line-2
+            span.line.line-3
 
-            .navbar-list__wrapper(
-              :class="{ active: menuShow}"
-            )
+            .navbar-list__wrapper
               ul.navbar-list
                 li.navbar-item(
-                  v-for = "link in linkMenu"
+                  v-for = "link in taskList"
                   :key = "link.title"
-                  @click = "menuShow = false"
                 )
-                  router-link.navbar-link(:to=' `${link.url}`')
+                  router-link.navbar-link(:to='`${link.url}`')
                     img#img_navbar(:src="task")
                   //- router-link.navbar-link(
                   //-   :to = " `${link.url}`"
@@ -35,85 +28,49 @@
     .answ
       input(size="40", placeholder="Введите ответ" class="ans")
     .enter
-      a(href="#zatemnenie")
-        img(class="but", src='@/assets/images/lock.png', alt='Решения',id="lock")
-      a(href="#")
-        img(class="but", src='@/assets/images/comment_1.png', alt='Решения')
-      a(href="#taskexp")
-        img(class="but", src='@/assets/images/like_none.png', alt='Решения', v-on:click='chg(this.id)')
-      input(type='submit', value="Отправить", class="sub")
+      a.but(href="#zatemnenie")
+        img(src='@/assets/images/lock.png', alt='Решения',id="lock")
+      a.but(href="#")
+        img(src='@/assets/images/comment_1.png', alt='Комментарии')
+      a.but(href="#taskexp")
+        img(src='@/assets/images/like_none.png', alt='Лайк', @click='chg(this.id)')
+      input.sub(type='submit', value="Отправить")
     #zatemnenie
       #okno
         .solve
           .consolve
-            strong {{condition}}
+            //- strong {{condition}}
           .solsolve
             p Решение
           .anssolve
-            strong {{answer}}
+            //- strong {{answer}}
         a.close(href='#') Закрыть решение
 </template>
 
 <script>
 import theory from '@/assets/images/theory.png'
 import task from '@/assets/images/question.png'
-import VueCircle from 'vue2-circle-progress'
+import { mapActions } from 'vuex'
 export default {
-
-  components: {
-    VueCircle
-  },
-  props: {
-    id: {
-      default: 0,
-      type: Number
-    },
-    title: {
-      default: 'Null',
-      type: String
-    },
-    answer: {
-      default: 0,
-      type: Number
-    },
-    solving: {
-      default: '',
-      type: String
-    },
-    condition: {
-      default: '',
-      type: String
-    }
-  },
-  methods: {
-    progress (event, progress, stepValue) {
-      // console.log(stepValue)
-    },
-    progress_end (event) {
-      // console.log('Circle progress end')
-    }
+  async mounted () {
+    await this.fetchTasks()
+    this.taskList = this.$store.getters.getTasks
+    console.log(this.taskList)
   },
   data () {
     return {
       theory,
       task,
-      topics: [
-      ],
-      menuShow: false,
-      linkMenu: [
-        {title: 'Theory', url: '/task', src: '@/assets/images/star.png'},
-        {title: 'Task', url: '/task', src: '@/src/assets/question.png'},
-        {title: 'Task', url: '/task', src: '@/src/assets/question.png'},
-        {title: 'Task', url: '/task', src: '@/src/assets/question.png'}
-      ]
+      taskList: []
     }
-  }
+  },
+  methods: mapActions(['fetchTasks'])
 }
 </script>
 
 <style lang="stylus" scoped>
   #img_navbar
-    height 20px
+    height 30px
     width 30px
 
   .name
@@ -240,6 +197,9 @@ export default {
     width 100%
     orientation top
     margin-top -1px
+    align-items center
+    diaply flex
+
   .wrapper
     width 100vw
     max-width: 100%
