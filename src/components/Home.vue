@@ -10,13 +10,18 @@
             :is-full-page='false')
     section(v-if="!this.isLoading")
       .container
-        <div>
-          p.title_topic Популярные
-          p.all_topic См.Все
-        </div>
-        .topic-list
+        //- <div>
+        //-   p.title_topic Популярные
+        //-   p.all_topic См.Все
+        //- </div>
+        p.title_topic Популярные
+        .topic-list(
+            v-for = "array in getMapTopic",
+            v-if='topic.id<16',
+            :key = "topic.id"
+          )
           .topic-item-wrapper(
-            v-for = "topic in getTopics",
+            v-for = "topic in array",
             v-if='topic.id<16',
             :key = "topic.id"
           )
@@ -123,7 +128,7 @@ export default {
       isLoading: true
     }
   },
-  computed: mapGetters(['getTopics', 'isTopicsLoaded']),
+  computed: mapGetters(['getTopics', 'getMapTopic', 'isTopicsLoaded']),
   async mounted () {
     await this.fetchTopics()
     this.isLoading = false
