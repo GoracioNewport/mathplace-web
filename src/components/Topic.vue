@@ -72,7 +72,7 @@ export default {
     },
     openTopic (event) {
       console.log(this.title)
-      this.$store.commit('updateCurrentTopic', this.title)
+      this.$store.dispatch('changeCurrentTopic', this.title)
       this.$router.push('/task')
     }
   }

@@ -62,6 +62,9 @@ export default {
         })
 
       ctx.commit('updateTasks', tasksList)
+    },
+    changeCurrentTopic (ctx, topic) {
+      ctx.commit('updateCurrentTopic', topic)
     }
   },
   mutations: {
