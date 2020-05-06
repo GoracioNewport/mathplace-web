@@ -7,15 +7,18 @@
               .taskbar-list
                 .taskbar-item(
                   v-for = "task in this.taskList"
+                  @click = 'changeActiveTask(task.id, task)'
                   :key = "task.id"
                 )
-                  .taskbar-link(@click='changeActiveTask(task.id)')
+                  .taskbar-link
 
                     img.img_taskbar(
                       v-if = 'task.type == "task"'
+                      :class='{ thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask}'
                       :src = 'taskImage')
                     img.img_taskbar(
                       v-if = "task.type == 'theory'"
+                      :class='{ thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
                       :src = "theoryImage")
     .content
       .name
@@ -75,14 +78,32 @@ export default {
   },
   methods: {
     ...mapActions(['fetchTasks']),
-    changeActiveTask (i) {
+    changeActiveTask (i, thisTask) {
       this.activeTask = i
+      thisTask.activeTask = i
+      console.log(thisTask.activeTask)
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+  .thisButton
+    height 42px
+    width 42px
+    padding 10px
+    border 2px #ffffff solid
+    border-radius 17%
+    background-size 100%
+    background rgba(102, 102, 102, 0.5)
+  .anotherButton
+    height 42px
+    width 42px
+    padding 10px
+    border 0px #ffffff solid
+    border-radius 17%
+    background-size 100%
+    background rgba(102, 102, 102, 0.5)
   .star
     height 40px
     max-height 100px
@@ -95,14 +116,6 @@ export default {
     float left
   .content
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-  .img_taskbar
-    height 42px
-    width 42px
-    padding 10px
-    border 2px #ffffff solid
-    border-radius 17%
-    background-size 100%
-    background rgba(102, 102, 102, 0.5)
   .name
     background #763DCA
     text-align left

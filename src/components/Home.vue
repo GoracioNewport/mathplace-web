@@ -10,114 +10,29 @@
             :is-full-page='false')
     section(v-if="!this.isLoading")
       .container
-        //- <div>
-        //-   p.title_topic Популярные
-        //-   p.all_topic См.Все
-        //- </div>
-        p.title_topic Популярные
-        .topic-list(
-            v-for = "array in getMapTopic",
-            v-if='topic.id<16',
-            :key = "topic.id"
+        .sssj(
+          v-for = "array of getTopics",
           )
-          .topic-item-wrapper(
-            v-for = "topic in array",
-            v-if='topic.id<16',
-            :key = "topic.id"
-          )
-            Topic(
-              v-bind:id='topic.id',
-              v-bind:title='topic.title'
-              v-bind:percentage='topic.completed'
-              v-bind:theme='topic.theme'
+          p.title_topic {{ array[0] }}
+          .topic-list
+            .topic-item-wrapper(
+              v-for = "topic in array[1]",
+              :key = "topic.id"
             )
-        p.title_topic ОГЭ 2020
-        .topic-list
-          .topic-item-wrapper(
-            v-for = "topic in getTopics"
-            v-if='topic.id<16',
-            :key = "topic.id"
-          )
-            Topic(
-              v-bind:id='topic.id',
-              v-bind:title='topic.title'
-              v-bind:percentage='topic.completed'
-              v-bind:theme='topic.theme'
-            )
-        p.title_topic Геометрия
-        .topic-list
-          .topic-item-wrapper(
-            v-for = "topic in getTopics"
-            v-if='topic.id<16',
-            :key = "topic.id"
-          )
-            Topic(
-              v-bind:id='topic.id',
-              v-bind:title='topic.title'
-              v-bind:percentage='topic.completed'
-              v-bind:theme='topic.theme'
-            )
-        p.title_topic Алгебра
-        .topic-list
-          .topic-item-wrapper(
-            v-for = "topic in getTopics"
-            v-if='topic.id<16',
-            :key = "topic.id"
-          )
-            Topic(
-              v-bind:id='topic.id',
-              v-bind:title='topic.title'
-              v-bind:percentage='topic.completed'
-              v-bind:theme='topic.theme'
-            )
-        p.title_topic Комбинаторика
-        .topic-list
-          .topic-item-wrapper(
-            v-for = "topic in getTopics"
-            v-if='topic.id<16',
-            :key = "topic.id"
-          )
-            Topic(
-              v-bind:id='topic.id',
-              v-bind:title='topic.title'
-              v-bind:percentage='topic.completed'
-              v-bind:theme='topic.theme'
-            )
-        p.title_topic Логика
-        .topic-list
-          .topic-item-wrapper(
-            v-for = "topic in getTopics"
-            v-if='topic.id<16',
-            :key = "topic.id"
-          )
-            Topic(
-              v-bind:id='topic.id',
-              v-bind:title='topic.title'
-              v-bind:percentage='topic.completed'
-              v-bind:theme='topic.theme'
-            )
-        p.title_topic Графы
-        .topic-list
-          .topic-item-wrapper(
-            v-for = "topic in getTopics"
-            v-if='topic.id<16',
-            :key = "topic.id"
-          )
-            Topic(
-              v-bind:id='topic.id',
-              v-bind:title='topic.title'
-              v-bind:percentage='topic.completed'
-              v-bind:theme='topic.theme'
-            )
+              Topic(
+                v-bind:id='topic.id',
+                v-bind:title='topic.title'
+                v-bind:percentage='topic.completed'
+                v-bind:theme='topic.theme'
+              )
+
 </template>
 
 <script>
-
 import Topic from './Topic.vue'
 import Loading from 'vue-loading-overlay'
 import { mapGetters, mapActions } from 'vuex'
 import 'vue-loading-overlay/dist/vue-loading.css'
-
 export default {
   components: {
     Topic,
@@ -128,7 +43,7 @@ export default {
       isLoading: true
     }
   },
-  computed: mapGetters(['getTopics', 'getMapTopic', 'isTopicsLoaded']),
+  computed: mapGetters(['getTopics', 'isTopicsLoaded']),
   async mounted () {
     await this.fetchTopics()
     this.isLoading = false
