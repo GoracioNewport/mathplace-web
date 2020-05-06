@@ -70,8 +70,8 @@ export default {
 
 <style lang="stylus" scoped>
   #img_navbar
-    height 30px
-    width 30px
+    height 50px
+    width 50px
   .star
     height 40px
     max-height 100px

@@ -1,5 +1,5 @@
 <template lang="html">
-<div>
+<div class='content-wrapper'>
     <a href="#MenuBlock"> <div id="BackToMenuButton"> </div> </a>
     <div id="Main">
         <div id="design3" class="gradient"></div>

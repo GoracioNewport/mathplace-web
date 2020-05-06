@@ -7,14 +7,31 @@ export default {
       ctx.commit('updateTasksLoadingStatus', true)
       const db = firebase.firestore()
       var tasksDb = db.collection('task2').doc(this.getters.getCurrentTopic)
-      var tasksCount = 0
+      var itemCount = 0
+      var taskCount = 0
       var tasksList = []
 
       await tasksDb.get()
         .then(doc => {
-          tasksCount = doc.data().items
-          for (let i = 0; i < tasksCount; i++) {
-            tasksList.push(doc.data()['task' + String(i)])
+          itemCount = doc.data().items
+          for (let i = 0; i < itemCount; i++) {
+            let subTask = doc.data()['task' + String(i)]
+            let taskKind = ''
+            subTask[1] === 'theory' ? taskKind = 'theory' : taskKind = 'task'
+            if (taskKind === 'task') taskCount++
+            let comma = '\\'.concat('n')
+            var splittedText = subTask[0].split(comma)
+
+            var task = {
+              id: i,
+              taskId: taskCount,
+              text: splittedText,
+              type: taskKind,
+              answer: subTask[1],
+              difficulty: subTask[2],
+              solution: subTask[3]
+            }
+            tasksList.push(task)
           }
         })
 
