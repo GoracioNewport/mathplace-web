@@ -21,6 +21,10 @@
                       :class='{ thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
                       :src = "theoryImage")
     .content
+      .loading-indicator
+        loading(
+          :active.sync="this.isLoading",
+          :is-full-page='true')
       .name
         span(
           v-if = 'this.taskList[this.activeTask].type == "task"'
@@ -28,9 +32,13 @@
         span(
           v-if = 'this.taskList[this.activeTask].type == "theory"'
         ) Теория
-        img.star(class="star1", src='@/assets/images/star.png', alt='Звезда')
-        img.star(class="star2", src='@/assets/images/star.png', alt='Звезда')
-        img.star(class="star3", src='@/assets/images/star.png', alt='Звезда')
+
+        img.star(
+          class = "star1",
+          src = '@/assets/images/star.png',
+          alt = 'Звезда',
+          v-for = 'i in getDifficulty')
+
       .condition
         .text-part(
           v-for = "part in this.taskList[this.activeTask].text"
@@ -66,20 +74,28 @@
 </template>
 
 <script>
+import Loading from 'vue-loading-overlay'
 import theoryImage from '@/assets/images/theory.png'
 import taskImage from '@/assets/images/question.png'
+import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions } from 'vuex'
 export default {
+  components: {
+    Loading
+  },
   async mounted () {
+    this.isLoading = true
     await this.fetchTasks()
     this.taskList = this.$store.getters.getTasks
+    this.isLoading = false
   },
   data () {
     return {
       theoryImage,
       taskImage,
       activeTask: 0,
-      taskList: []
+      taskList: [],
+      isLoading: true
     }
   },
   methods: {
@@ -87,7 +103,13 @@ export default {
     changeActiveTask (i, thisTask) {
       this.activeTask = i
       thisTask.activeTask = i
-      console.log(thisTask.activeTask)
+    }
+  },
+  computed: {
+    getDifficulty () {
+      var dif = this.taskList[this.activeTask].difficulty
+      if (dif !== 'null') return parseInt(dif, 10)
+      else return 0
     }
   }
 }
