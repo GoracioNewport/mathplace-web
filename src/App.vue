@@ -45,12 +45,13 @@ export default {
           {title: 'Темы', url: '/'},
           {title: 'Выйти', url: '/logout'}
         ]
+      } else {
+        return [
+          {title: 'Главная', url: '/Main'},
+          {title: 'Войти', url: '/login'},
+          {title: 'Регистрация', url: '/registration'}
+        ]
       }
-      return [
-        {title: 'Главная', url: '/Main'},
-        {title: 'Войти', url: '/login'},
-        {title: 'Регистрация', url: '/registration'}
-      ]
     }
   }
 }

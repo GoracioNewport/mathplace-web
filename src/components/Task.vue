@@ -244,6 +244,10 @@ export default {
   .wrapper
     width 100vw
     max-width: 100%
+
+  .taskbar-link
+    &:hover
+      cursor pointer
 </style>
 
 // <style lang="stylus" scoped>
