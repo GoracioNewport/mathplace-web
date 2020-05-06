@@ -10,7 +10,10 @@
             :is-full-page='false')
     section(v-if="!this.isLoading")
       .container
-        p.title_topic Популярные
+        <div>
+          p.title_topic Популярные
+          p.all_topic См.Все
+        </div>
         .topic-list
           .topic-item-wrapper(
             v-for = "topic in getTopics",
@@ -26,7 +29,7 @@
         p.title_topic ОГЭ 2020
         .topic-list
           .topic-item-wrapper(
-            v-for = "topic in getTopicsAlgebra"
+            v-for = "topic in getTopics"
             v-if='topic.id<16',
             :key = "topic.id"
           )
@@ -166,5 +169,13 @@ export default {
     display grid
     grid-template-columns repeat(auto-fit, minmax(320px, 1fr))
     margin-top 0px
+
+  .all_topic
+    width 100%
+    color: #763DCA
+    text-align right
+    font-family: 'Roboto', sans-serif
+    font-size: 40px
+    font-weight: bold
 
 </style>

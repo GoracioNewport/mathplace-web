@@ -19,9 +19,9 @@
                   //-   :to = " `${link.url}`"
                   //- ) {{ link.src }}
     .name  Задача 1
-      img(class="star1", src='@/assets/images/star.png', alt='Звезда', height="30", width="30")
-      img(class="star2", src='@/assets/images/star.png', alt='Звезда', height="30", width="30")
-      img(class="star3", src='@/assets/images/star.png', alt='Звезда', height="30", width="30")
+      img(class="star" src='@/assets/images/star.png', alt='Звезда')
+      img(class="star" src='@/assets/images/star.png', alt='Звезда')
+      img(class="star" src='@/assets/images/star.png', alt='Звезда')
     .condition
       p В случайном эксперименте бросают две игральные кости. Найдите вероятность того, что сумма выпавших очков равна 10 Результат округлите до сотых.
       p С точностью 2 знака после запятой
@@ -34,7 +34,7 @@
         img(src='@/assets/images/comment_1.png', alt='Комментарии')
       a.but(href="#taskexp")
         img(src='@/assets/images/like_none.png', alt='Лайк', @click='chg(this.id)')
-      input.sub(type='submit', value="Отправить")
+      input.sub(type='button', value="Отправить")
     #zatemnenie
       #okno
         .solve
@@ -72,41 +72,58 @@ export default {
   #img_navbar
     height 30px
     width 30px
+  .star
+    height 40px
+    max-height 100px
+    width auto
 
   .name
     background #763DCA
     text-align left
     color #ffffff
     padding 10px
+    font-family: 'Roboto', sans-serif
+    font-size: 30px
+    font-weight: bold
     box-shadow 0 0 10px rgba(0,0,0,0.5)
     border-radius 10px 10px 0 0
     margin-top 50px
-    margin-left 30%
-    margin-right 30%
+    margin-left 23%
+    margin-right 23%
   img
     orientation right
     float right
     margin-right 5px
   .condition
+    min-height 350px
     background #ffffff
     color #000000
+    color:#525252
+    font-family: 'Roboto', sans-serif
+    font-size: 20px
+    font-weight: 450
     border-radius 0 0 10px 10px
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     padding 10px
-    margin-left 30%
-    margin-right 30%
+    margin-left 23%
+    margin-right 23%
   .answ
     margin-top 20px
-    margin-left 30%
-    margin-right 30%
+    margin-left 23%
+    margin-right 23%
   .enter
-    margin-left 30%
-    margin-right 30%
+    margin-left 23%
+    margin-right 23%
     display inline-block
   .sub
     background-color #763DCA
     color #ffffff
     padding 11px
+
+    // color:#525252
+    font-family: 'Roboto', sans-serif
+    font-size: 25px
+    font-weight: bold
     box-shadow 0 0 10px rgba(0,0,0,0.5)
     border-radius 10px
     outline none
@@ -125,7 +142,10 @@ export default {
   .ans
     background-color #ffffff
     border-radius 10px
-    color #655cb5
+    color:#525252
+    font-family: 'Roboto', sans-serif
+    font-size: 25px
+    font-weight: bold
     box-shadow 0 0 10px rgba(0,0,0,0.5)
     padding 11px
     outline none
