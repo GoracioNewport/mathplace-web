@@ -1,6 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
-import User from './user'
+// import User from './user'
 
 export default {
   actions: {
@@ -18,31 +18,31 @@ export default {
             var right = 0
             var all = 1
             let theme = doc.id
-            var docRef = db.collection('account').doc(User.state.user.id)
-            docRef.get().then(function (doc2) {
-              // var topic = doc2.data()[theme]
-              // if (topic != null) {
-              //   console.log(String(theme) + ' ' + doc2.data()[theme].toString())
-              //   for (let i = 0; i < topic.length; i++) {
-              //     console.log('Start')
-              //     if (topic[i] === 2) {
-              //       right++
-              //     }
-              //     all++
-              //   }
-              // }
-              // var arrayTopic = new Array()
-              // var arrayTopic = Array(mapTopic[doc.data().theme])
-              // arrayTopic.push(topics)
-              // mapTopic[doc.data().theme] = arrayTopic
-              // console.log(mapTopic)
-              topics.push({
-                'id': innderId++,
-                'title': theme,
-                'completed': (right * 100) / all,
-                'theme': doc.data().theme
-              })
+            // var docRef = db.collection('account').doc(User.state.user.id)
+            // docRef.get().then(function (doc2) {
+            // var topic = doc2.data()[theme]
+            // if (topic != null) {
+            //   console.log(String(theme) + ' ' + doc2.data()[theme].toString())
+            //   for (let i = 0; i < topic.length; i++) {
+            //     console.log('Start')
+            //     if (topic[i] === 2) {
+            //       right++
+            //     }
+            //     all++
+            //   }
+            // }
+            // var arrayTopic = new Array()
+            // var arrayTopic = Array(mapTopic[doc.data().theme])
+            // arrayTopic.push(topics)
+            // mapTopic[doc.data().theme] = arrayTopic
+            // console.log(mapTopic)
+            topics.push({
+              'id': innderId++,
+              'title': theme,
+              'completed': (right * 100) / all,
+              'theme': doc.data().theme
             })
+            // })
           })
         })
         .catch((err) => {
