@@ -17,7 +17,7 @@
         .topic-list
           .topic-item-wrapper(
             v-for = "topic in getTopics",
-            v-if='topic.id<16',
+            v-if='topic.id<169',
             :key = "topic.id"
           )
             Topic(

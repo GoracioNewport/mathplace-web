@@ -22,6 +22,7 @@ export default {
             let comma = '\\'.concat('n')
             var splittedText = subTask[0].split(comma)
             var formattedText = []
+            splittedText[splittedText.length - 1] += ' '
 
             for (let j = 0; j < splittedText.length; j++) {
               let partition = []
@@ -47,6 +48,8 @@ export default {
               })
               formattedText = formattedText.concat(partition)
             }
+
+            console.log(i, formattedText)
 
             var task = {
               id: i,
