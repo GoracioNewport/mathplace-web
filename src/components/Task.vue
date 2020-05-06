@@ -32,7 +32,14 @@
         .text-part(
           v-for = "part in this.taskList[this.activeTask].text"
         )
-          span {{ part }}
+          span(
+            v-if = 'part.type == "text"'
+          ) {{ part.content }}
+
+          img.condition-image(
+            v-else-if = 'part.type == "img"'
+            :src = 'part.content'
+          )
       .answ
         input(size="40", placeholder="Введите ответ" class="ans")
       .enter
@@ -63,7 +70,6 @@ export default {
   async mounted () {
     await this.fetchTasks()
     this.taskList = this.$store.getters.getTasks
-    console.log(this.taskList)
   },
   data () {
     return {
@@ -83,6 +89,11 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .condition-image
+    display block
+    float none
+    margin-left auto
+    margin-right auto
   .star
     height 40px
     max-height 100px
@@ -249,160 +260,3 @@ export default {
     &:hover
       cursor pointer
 </style>
-
-// <style lang="stylus" scoped>
-//   #img_navbar
-//     height 50px
-//     width 50px
-//   .star
-//     height 40px
-//     max-height 100px
-//     width auto
-
-//   .name
-//     background #763DCA
-//     text-align left
-//     color #ffffff
-//     padding 10px
-//     font-family: 'Roboto', sans-serif
-//     font-size: 30px
-//     font-weight: bold
-//     box-shadow 0 0 10px rgba(0,0,0,0.5)
-//     border-radius 10px 10px 0 0
-//     margin-top 50px
-//     margin-left 23%
-//     margin-right 23%
-//   img
-//     orientation right
-//     float right
-//     margin-right 5px
-//   .condition
-//     min-height 350px
-//     background #ffffff
-//     color #000000
-//     color:#525252
-//     font-family: 'Roboto', sans-serif
-//     font-size: 20px
-//     font-weight: 450
-//     border-radius 0 0 10px 10px
-//     box-shadow 0 0 5px rgba(0,0,0,0.5)
-//     padding 10px
-//     margin-left 23%
-//     margin-right 23%
-//   .answ
-//     margin-top 20px
-//     margin-left 23%
-//     margin-right 23%
-//   .enter
-//     margin-left 23%
-//     margin-right 23%
-//     display inline-block
-//   .sub
-//     background-color #763DCA
-//     color #ffffff
-//     padding 11px
-
-//     // color:#525252
-//     font-family: 'Roboto', sans-serif
-//     font-size: 25px
-//     font-weight: bold
-//     box-shadow 0 0 10px rgba(0,0,0,0.5)
-//     border-radius 10px
-//     outline none
-//     border none
-//     &:hover
-//         background #5E2DA6
-//     max-width 80%
-//     min-width 80%
-//     width 80%
-//     float right
-//   .but
-//     max-width 5%
-//     min-width 5%
-//     width 5%
-//     float left
-//   .ans
-//     background-color #ffffff
-//     border-radius 10px
-//     color:#525252
-//     font-family: 'Roboto', sans-serif
-//     font-size: 25px
-//     font-weight: bold
-//     box-shadow 0 0 10px rgba(0,0,0,0.5)
-//     padding 11px
-//     outline none
-//     border none
-//     max-width 100%
-//     min-width 100%
-//     width 100%
-//   #zatemnenie
-//     background rgba(102, 102, 102, 0.5)
-//     width 100%
-//     height 100%
-//     position absolute
-//     top 0
-//     left 0
-//     display none
-//     &:target
-//         display block
-
-//   #okno
-//     box-shadow 0 0 10px rgba(0,0,0,0.5)
-//     width 60%
-//     height 80%
-//     text-align center
-//     padding 15px
-//     border-radius 10px
-//     color #000000
-//     position absolute
-//     top 0
-//     right 0
-//     bottom 0
-//     left 0
-//     margin auto
-//     background #ffffff
-
-//   .solve
-//     height 100%
-//   .consolve
-//     box-shadow 0 0 10px rgba(0,0,0,0.5)
-//     height 38%
-//     border-radius 10px
-//   .solsolve
-//     box-shadow 0 0 10px rgba(0,0,0,0.5)
-//     height 40%
-//     margin-top 2%
-//     border-radius 10px
-
-//   .anssolve
-//     box-shadow 0 0 10px rgba(0,0,0,0.5)
-//     height 17%
-//     margin-top 2%
-//     border-radius 10px
-
-//   .close
-//     display inline-block
-//     box-shadow 0 0 10px rgba(0,0,0,0.5)
-//     border-radius 7px
-//     color #ffffff
-//     padding 0 12px
-//     orientation bottom
-//     margin-top 5%
-//     text-decoration none
-//     background #763DCA
-//     font-size 14pt
-//     cursor pointer
-//     &:hover
-//         background #5E2DA6
-//   .navbar
-//     background-color #763DCA
-//     width 100%
-//     orientation top
-//     margin-top -1px
-//     align-items center
-//     diaply flex
-
-//   .wrapper
-//     width 100vw
-//     max-width: 100%
-// </style>

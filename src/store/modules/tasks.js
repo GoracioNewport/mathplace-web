@@ -21,11 +21,37 @@ export default {
             if (taskKind === 'task') taskCount++
             let comma = '\\'.concat('n')
             var splittedText = subTask[0].split(comma)
+            var formattedText = []
+
+            for (let j = 0; j < splittedText.length; j++) {
+              let partition = []
+              let pointer = 0
+              let inImg = false
+              for (let k = 0; k < splittedText[j].length; k++) {
+                if ((splittedText[j].slice(k, k + 5) === '[http' && !inImg) || (splittedText[j][k - 1] === ']' && inImg)) {
+                  let type = ''
+                  inImg ? type = 'img' : type = 'text'
+                  let partedText = splittedText[j].slice(pointer, k)
+                  if (inImg) partedText = partedText.slice(1, partedText.length - 1)
+                  partition.push({
+                    type: type,
+                    content: partedText
+                  })
+                  pointer = k
+                  inImg = !inImg
+                }
+              }
+              partition.push({
+                type: 'text',
+                content: splittedText[j].slice(pointer, splittedText[j].length)
+              })
+              formattedText = formattedText.concat(partition)
+            }
 
             var task = {
               id: i,
               taskId: taskCount,
-              text: splittedText,
+              text: formattedText,
               type: taskKind,
               answer: subTask[1],
               difficulty: subTask[2],
