@@ -46,7 +46,8 @@
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "topic in getTopics.get('школа')"
+                v-for = "(topic, index) in getTopics.get('школа')"
+                v-if='index>=4',
                 :key = "topic.id"
               )
                 Topic(
@@ -76,7 +77,8 @@
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "topic in getTopics.get('геометрия')"
+                v-for = "(topic, index) in getTopics.get('геометрия')"
+                v-if='index>=4',
                 :key = "topic.id"
               )
                 Topic(
@@ -106,7 +108,8 @@
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "topic in getTopics.get('геометрия')"
+                v-for = "(topic, index) in getTopics.get('геометрия')"
+                v-if='index>=4',
                 :key = "topic.id"
               )
                 Topic(
@@ -136,7 +139,8 @@
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "topic in getTopics.get('алгебра')"
+                v-for = "(topic, index) in getTopics.get('алгебра')"
+                v-if='index>=4',
                 :key = "topic.id"
               )
                 Topic(
@@ -167,6 +171,7 @@
             .topic-list
               .topic-item-wrapper(
                 v-for = "(topic, index) in getTopics.get('комбинаторика')"
+                v-if='index>=4',
                 :key = "topic.id"
               )
                 Topic(
@@ -196,7 +201,8 @@
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "topic in getTopics.get('логика')"
+                v-for = "(topic, index) in getTopics.get('логика')"
+                v-if='index>=4',
                 :key = "topic.id"
               )
                 Topic(
@@ -226,7 +232,8 @@
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "topic in getTopics.get('графы')"
+                v-for = "(topic, index) in getTopics.get('графы')"
+                v-if='index>=4',
                 :key = "topic.id"
               )
                 Topic(
