@@ -51,8 +51,16 @@
             v-else-if = 'part.type == "img"'
             :src = 'part.content'
           )
-      .answ
-        input(size="40", placeholder="Введите ответ" class="ans")
+      .answ(
+        v-if='this.taskList[this.activeTask].type == "task"'
+      )
+        input.submit-field(
+          size = "40",
+          placeholder = "Введите ответ",
+          class = "ans",
+          v-model = 'answer',
+          :disabled = 'correct'
+          v-bind:class = "{ 'answerCorrect' : correct, 'answerWrong' : wrong }")
       .enter
         a.but(href="#zatemnenie")
           img(src='@/assets/images/lock.png', alt='Решения',id="lock")
@@ -60,7 +68,12 @@
           img(src='@/assets/images/comment_1.png', alt='Комментарии')
         .but
           img(src='@/assets/images/like_none.png', alt='Лайк')
-        input.sub(type='submit', value="Отправить")
+        input.sub.submit-button(
+          type = 'submit',
+          value = 'Отправить',
+          :disabled = 'correct',
+          v-if = 'this.taskList[this.activeTask].type == "task"',
+          @click = 'sendAnswer')
       #zatemnenie
         #okno
           .solve
@@ -95,7 +108,11 @@ export default {
       taskImage,
       activeTask: 0,
       taskList: [],
-      isLoading: true
+      isLoading: true,
+      answer: '',
+      status: 'Idle',
+      wrong: false,
+      correct: false
     }
   },
   methods: {
@@ -103,6 +120,19 @@ export default {
     changeActiveTask (i, thisTask) {
       this.activeTask = i
       thisTask.activeTask = i
+    },
+    sendAnswer () {
+      if (this.answer === this.taskList[this.activeTask].answer) {
+        this.status = 'Correct'
+        this.correct = true
+        this.wrong = false
+      } else {
+        this.status = 'Wrong'
+        this.wrong = true
+        this.correct = false
+      }
+
+      console.log(this.status, this.answer, this.taskList[this.activeTask].answer)
     }
   },
   computed: {
@@ -116,6 +146,13 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .answerCorrect
+    background-color rgba(0, 255, 0, .4)
+  .answerWrong
+    background-color rgba(255, 0, 0, .4)
+  .submit-button
+    &:hover
+      cursor pointer
   .thisButton
     height 42px
     width 42px
@@ -211,8 +248,8 @@ export default {
     min-width 5%
     width 5%
     float left
+    margin auto
   .ans
-    background-color #ffffff
     border-radius 10px
     color:#525252
     font-family: 'Roboto', sans-serif

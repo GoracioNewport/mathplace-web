@@ -11,9 +11,6 @@ import Registration from '@/components/Auth/Registration'
 import Login from '@/components/Auth/Login'
 import Logout from '@/components/Auth/Logout'
 
-import firebase from 'firebase/app'
-import 'firebase/firestore'
-
 Vue.use(Router)
 Vue.use(VueFirestore)
 Vue.use(Uimini)
@@ -34,7 +31,10 @@ export default new Router({
     {
       path: '/task',
       name: 'task',
-      component: Task
+      component: Task,
+      beforeEnter (to, from, next) {
+        Store.getters.checkUser ? next() : next('/login')
+      }
     },
     {
       path: '/login',
@@ -46,15 +46,9 @@ export default new Router({
       name: 'logout',
       component: Logout,
       beforeEnter (to, from, next) {
-        firebase.auth().signOut().then(function () {
-          console.log('Logged out succesfuly')
-          Store.state.user.user = null
-          next('/login')
-        }).catch(function (error) {
-          console.log('Logout error: ', error)
-          Store.state.user.user = null
-          next('/login')
-        })
+        Store.dispatch('logoutUser')
+        window.localStorage.clear()
+        next('/login')
       }
     },
     {

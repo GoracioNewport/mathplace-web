@@ -134,17 +134,14 @@ export default {
       mapTopic.set('логика', komba)
       mapTopic.set('графы', komba)
       mapTopic.set('идеи', komba)
-      console.log(mapTopic)
       ctx.commit('updateTopics', mapTopic)
       ctx.commit('updateTopicsLoaded', true)
     }
   },
   mutations: {
     updateTopics (state, map) {
-      console.log(map)
       // state.topics = topics
       state.mapTopic = map
-      console.log(state.mapTopic)
     },
     updateTopicsLoaded (state, isLoaded) {
       state.topicsLoaded = isLoaded

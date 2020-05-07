@@ -7,6 +7,7 @@ export default {
       ctx.commit('updateTasksLoadingStatus', true)
       const db = firebase.firestore()
       var tasksDb = db.collection('task2').doc(this.getters.getCurrentTopic)
+      var userData = db.collection('account').doc(this.getters.getUser.id)
       var itemCount = 0
       var taskCount = 0
       var tasksList = []
@@ -49,6 +50,15 @@ export default {
               formattedText = formattedText.concat(partition)
             }
 
+            let userTopicDetails = []
+
+            userData.get()
+              .then(usr => {
+                userTopicDetails = usr.data()[this.getters.getCurrentTopic]
+              })
+
+            console.log(userTopicDetails)
+
             var task = {
               id: i,
               taskId: taskCount,
@@ -56,7 +66,8 @@ export default {
               type: taskKind,
               answer: subTask[1],
               difficulty: subTask[2],
-              solution: subTask[3]
+              solution: subTask[3],
+              tries: userTopicDetails
             }
             tasksList.push(task)
           }
