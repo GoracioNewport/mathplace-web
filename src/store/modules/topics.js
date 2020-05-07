@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+// import { sort } from 'semver'
 // import User from './user'
 
 export default {
@@ -27,6 +28,7 @@ export default {
           snapshot.forEach((doc) => {
             var right = 0
             var all = 1
+            var like = doc.data().like
             // console.log(doc.id)
             let title = doc.id
             // var topic = doc2.data()[title]
@@ -101,13 +103,18 @@ export default {
               'id': innderId++,
               'title': title,
               'completed': (right * 100) / all,
-              'theme': theme
+              'theme': theme,
+              'like': like
             })
           })
         })
         .catch((err) => {
           console.log('Error getting documents', err)
         })
+      topics.sort(function (a, b) {
+        return b.like - a.like
+      })
+      mapTopic.set('популярные', topics)
       mapTopic.set('школа', school)
       mapTopic.set('огэ', OGE)
       mapTopic.set('геометрия', geometry)

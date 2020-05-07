@@ -2,13 +2,12 @@
 <div class='content-wrapper'>
     <a href="#MenuBlock"> <div id="BackToMenuButton"> </div> </a>
     <div id="Main">
-        <div id="design3" class="gradient"></div>
         <div id="leftMain">
 
             <div id="leftText">
                 <p class="textMargin" style="color:#000000; letter-spacing: 3px; font-family: 'Roboto', sans-serif; font-size: 20px; font-weight: bold;">приложение</p>
                 <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 62px; font-weight: bold;">MathPlace</p>
-                <h3 class="textMargin" style="width:30%; color:#919191; font-family: 'Roboto', sans-serif; margin-top: 15px; font-size: 22px;">место, где вы можете с легкостью поднять свой уровень в математике</h3>
+                <h3 class="textMargin" style="width:378px; color:#919191; font-family: 'Roboto', sans-serif; margin-top: 15px; font-size: 22px;">место, где вы можете с легкостью поднять свой уровень в математике</h3>
                 <div id="DownloadButton" class="gradient2">
                     <a href="#Download">
                         <div id="DownloadButtonText">
@@ -21,104 +20,38 @@
                 <img id="imgMain" src="./images/woman_arm2.jpg" alt="Второй текст"/>
             </div>
         </div>
+        <div id="designBottom1" class="gradient"></div>
     </div>
     <div id="MenuBlock" class="gradient">
         <h1 id="TextBlock">MathPlace охватывает</h1>
-            <div id="AlgebraMenu">
+            <div class="MenuBlockTopic">
                 <img class="MenuButton" src="./images/algebra.png"/>
                 <p class="TextMenu">Алгебра</p>
             </div>
-            <div id="GeometryMenu">
+            <div class="MenuBlockTopic">
                 <img class="MenuButton" src="./images/geometry.png"/>
                 <p class="TextMenu">Геометрия</p>
             </div>
-            <div id="KombaMenu">
+            <div class="MenuBlockTopic">
                 <img class="MenuButton" src="./images/komba.png"/>
                 <p class="TextMenu">Комба</p>
             </div>
-            <div id="OGEMenu">
+            <div class="MenuBlockTopic">
                 <img class="MenuButton" src="./images/examination.png"/>
                 <p class="TextMenu">ОГЭ2020</p>
             </div>
-            <div id="LogikaMenu">
+            <div class="MenuBlockTopic">
                 <img class="MenuButton" src="./images/logic.png"/>
                 <p class="TextMenu">Логика</p>
             </div>
-            <div id="SchoolMenu">
+            <div class="MenuBlockTopic">
                 <img class="MenuButton" src="./images/school.png" />
                 <p class="TextMenu">Школа</p>
             </div>
-            <div id="OlympMenu">
+            <div class="MenuBlockTopic">
                 <img class="MenuButton" src="./images/brain.png" />
                 <p class="TextMenu">Олимпиады</p>
             </div>
-    </div>
-    <div id="Feature">
-        <div id="design5" class="gradient"></div>
-        <div id="design6" class="gradient"></div>
-        <p style="height: 100%; width: 40%; text-align: center; margin-left: 30%; margin-right: 30%; margin-top: 15%; color:#525252; font-weight:400; font-family: 'Roboto', sans-serif; font-size: 25pt;"><strong>MathPlace</strong> это приложение, где вы можете изучать математику, не убирая телефон из рук. Удобное и бесплатное. Благодаря понятной теории и интересным задачам для усвоения каждой теории, приложение подходит для тех кто хочет повысить свой скилл. Даже самые продвинутые найдут задачи себе по вкусу. <strong>Просто и Легко</strong></p>
-    </div>
-    <div id="Topics" class="gradient">
-        <div id="design4" class="gradient"></div>
-        <div id="design7" class="gradient"></div>
-        <div id="FirstTopic" class="Topics">
-            <img class="ImageBox" src="./images/first_block.png"/>
-            <h1 class="TitleBox">Интересные задачи</h1>
-            <p class="TextBox">Более 500 задач и 50 уроков, а также несколько вариантов ОГЭ</p>
-        </div>
-        <div id="SecondTopic" class="Topics">
-            <img class="ImageBox" src="./images/second_block.png"/>
-            <h1 class="TitleBox">Достижения</h1>
-            <p class="TextBox">Вы можете выполнять достижения и соревноваться с друзьями</p>
-        </div>
-        <div id="ThirdTopic" class="Topics">
-            <img class="ImageBox" src="./images/third_block.png"/>
-            <h1 class="TitleBox">Простота</h1>
-            <p class="TextBox">Для вашего удобства темы структурированы по классам, разделам и темам. Вы обязательно найдете то что вам нужно</p>
-        </div>
-    </div>
-    <div id="Task">
-        <div id="design4" class="gradient"></div>
-        <div id="design3" class="gradient"></div>
-        <a href="#Task-Text">
-            <div id="TaskText">
-                <p id="TextTask2">В три коробки поровну разложили 90 чашек. В результате в каждой коробке оказалось 30 чашек. Записать выражение, которое описывает, что 90 чашек разложено в 3 коробки. Далее выполнить действие в этом выражении.</p>
-            </div>
-        </a>
-        <a href="#Task-Button">
-            <div id="TaskButton" v-on:click="sendAnswer()" class="gradient">
-                <div id="TaskButtonText">
-                </div>
-            </div>
-        </a>
-        <input type="text" id="TaskIn">
-    </div>
-    <div id="TaskResultSucsessful"> </div>
-    <div id="TaskResultnotSucsessful"> </div>
-    <div id="Download" class="gradient">
-        <div id="GooglePlayBox">
-            <a class="abutton" href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace&hl=ru"> <div id="GooglePlay_DownloadButton"> </div> </a>
-        </div>
-        <!-- <div id="AppStoreBox">
-            <a class="abutton" href="www.helllab.ru"> <div id="AppStore_DownloadButton"> </div> </a>
-        </div> -->
-        <div id="DownloadAPKBox">
-            <a class="abutton" href="/"> <div id="DownloadAPK_DownloadButton"> </div></a>
-        </div>
-    </div>
-    <div id="AboutDevelopers">
-        <div id="design3" class="gradient"></div>
-        <div id="design6" class="gradient"></div>
-        <img id="finishImg" src="./images/two_phone.png" />
-        <div id="finishText">
-            <h1 style="height: 10%; width: 40%; color:#763DCA; font-weight:700; font-family: 'Roboto', sans-serif; font-size: 25pt;">Начинай</h1>
-            <p style="height: 10%; width: 60%; margin-top: 15px; color:#919191; font-weight:500; font-family: 'Roboto', sans-serif; font-size: 17pt;">Не бойтесь начать уже сегодня. В приложение есть теория и задачи для всех от начинающих до профи.</p>
-        </div>
-    </div>
-    <div id="AboutUs" class="gradient">
-        <div id="headerAboutUs"></div>
-        <a href="vk.com"> <div id="vkontakte"></div> </a>
-        <a href="telegam.com"> <div id="telegram"></div> </a>
     </div>
 </div>
 
@@ -137,6 +70,10 @@
 
 <style lang="stylus" scoped>
 
+.MenuBlockTopic
+    display inline-block
+    width 14%
+
 #BackToMenuButton
     z-index 10
     position fixed
@@ -150,6 +87,8 @@
     background-size 100%
 
 #Main
+    position absolute
+    float left
     height 100%
     width 100%
     background-color #ffffff
@@ -159,7 +98,7 @@
 
 #leftMain
     position absolute
-    height 100%
+    height 90%
     width 80%
     left 20%
     top 10%
@@ -178,13 +117,17 @@
     left 40%
     top 00%
     z-index 10
+    @media screen and (max-width: 1000px) {
+        display none
+    }
 
 #DownloadButton
-    position absolute
-    left 0%
-    top 25%
-    height 5%
-    width 17%
+    // position absolute
+    // left 0%
+    // top 25%
+    margin 10px
+    height 50px
+    width 200px
     border-radius 50px 50px
     box-shadow rgba(145, 145, 145, 1) 5px 5px
 
@@ -193,18 +136,17 @@
     width 100%
     text-align center
     color:#FFFFFF
+    font-size 2em
     font-family: 'Roboto', sans-serif
-    font-size: 200%
     font-weight: bold
     // background-image url(images/Download.png)
     // background-repeat no-repeat
     // background-size 100%
 
 #MenuBlock
-    position absolute
+    float left
     height 40%
     width 100%
-    top 100%
 
 #TextBlock
     width 100%
@@ -297,26 +239,6 @@
     width 100%
     top 230%
 
-.ImageBox
-    position absolute
-    width 60%
-    height 30%
-    margin-left 20%
-    margin-top 10%
-
-.TitleBox
-    position absolute
-    width 90%
-    height 40%
-    color #763DCA
-    font-family 'Roboto', sans-serif
-    font-size 25pt
-    font-weight bold
-    text-align center
-    margin-top 66%
-    margin-left 5%
-    margin-right 5%
-
 #TextTask2
     position absolute
     width 70%
@@ -329,17 +251,43 @@
     text-align center
     font-size 25px
 
+.ImageBox
+    width 100px
+    height 200px
+    margin-left 10%
+    display block
+    margin 10% auto
+
+.TitleBox
+    position relative
+    width 100%
+    height auto
+    text-align center
+    margin-top 10%
+    color #763DCA
+    font-family 'Roboto', sans-serif
+    font-size 25pt
+    font-weight bold
 .TextBox
-    position absolute
-    width 90%
-    height 40%
+    position relative
+    width 100%
+    height auto
+    text-align center
+    margin-top 10%
     color #525252
     font-family 'Roboto', sans-serif
     font-size 20pt
-    text-align center
-    margin-top 82%
-    margin-left 5%
-    margin-right 5%
+.TopicBox
+    position relative
+    min-height 80%
+    overflow hidden
+    display inline-block
+    width 25%
+    margin 20px
+    height auto
+    border-radius 10px
+    background-color #ffffff
+    box-shadow rgba(145, 145, 145, 1) 10px 10px
 
 #FirstTopic
     z-index 2
@@ -371,40 +319,6 @@
     background-color #ffffff
     border-radius 10px
     box-shadow rgba(145, 145, 145, 1) 10px 10px
-
-#FourthTopic
-    position absolute
-    left 100%
-    top 10%
-    width 20%
-    height 60%
-    background-color #ffffff
-    border-radius 10px
-    box-shadow rgba(0, 0, 0, 0.8) 10px 10px
-
-#NextTopics
-    z-index 9
-    position absolute
-    top 25%
-    left 96%
-    height 35%
-    width 4%
-    border-bottom-left-radius 100%
-    border-top-left-radius 100%
-    background-image url(images/Button_right.png)
-    background-size 100%
-
-#PreviousTopics
-    z-index 9
-    position absolute
-    top 40%
-    left 0%
-    height 35%
-    width 4%
-    border-bottom-right-radius 100%
-    border-top-right-radius 100%
-    background-image url(images/Button_left.png)
-    background-size 100%
 
 #Task
     position absolute
@@ -654,11 +568,11 @@ body
     background-color #ffffff
     border-radius 50%
 
-#design3
-    position absolute
-    top 90%
+#designBottom1
+    position relative
     width 100%
     height 10%
+    top 90%
     border-top-right-radius 100%
     border-top-left-radius 90%
 
@@ -671,13 +585,13 @@ body
 
 #design5
     position absolute
-    top 90%
+    // top 90%
     width 100%
     height 10%
     border-top-left-radius 100%
 
 #design6
-    position absolute
+    // position absolute
     width 100%
     height 10%
     border-bottom-left-radius 100%
@@ -685,7 +599,7 @@ body
 
 #design7
     position absolute
-    top 90%
+    // top 90%
     width 100%
     height 10%
     border-top-left-radius 100%

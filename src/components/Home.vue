@@ -29,6 +29,37 @@
           input(id='pesontedan-one',type='checkbox', name='pesontedans')
           label(for='pesontedan-one')
             a.title_topic2(name='school')
+              strong Популярные
+            //- p(:name='gggg').title_topic {{ array[0] }}
+          .topic-list
+            .topic-item-wrapper(
+              v-for = "(topic, index) in getTopics.get('популярные')",
+              v-if='index<4',
+              :key = "topic.id"
+            )
+              Topic(
+                v-bind:id='topic.id',
+                v-bind:title='topic.title'
+                v-bind:percentage='topic.completed'
+                v-bind:theme='topic.theme'
+              )
+          .pesontedan-content
+            .topic-list
+              .topic-item-wrapper(
+                v-for = "(topic, index) in getTopics.get('популярные')"
+                v-if='index>=4',
+                :key = "topic.id"
+              )
+                Topic(
+                  v-bind:id='topic.id',
+                  v-bind:title='topic.title'
+                  v-bind:percentage='topic.completed'
+                  v-bind:theme='topic.theme'
+                )
+        .pesontedan
+          input(id='pesontedan-two',type='checkbox', name='pesontedans')
+          label(for='pesontedan-two')
+            a.title_topic2(name='school')
               strong Школа
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
@@ -57,8 +88,8 @@
                   v-bind:theme='topic.theme'
                 )
         .pesontedan
-          input(id='pesontedan-two',type='checkbox', name='pesontedans')
-          label(for='pesontedan-two')
+          input(id='pesontedan-three',type='checkbox', name='pesontedans')
+          label(for='pesontedan-three')
             a.title_topic2(name='examination')
               strong ОГЭ 2020
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -77,7 +108,7 @@
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "(topic, index) in getTopics.get('геометрия')"
+                v-for = "(topic, index) in getTopics.get('огэ')"
                 v-if='index>=4',
                 :key = "topic.id"
               )
@@ -88,8 +119,8 @@
                   v-bind:theme='topic.theme'
                 )
         .pesontedan
-          input(id='pesontedan-three',type='checkbox', name='pesontedans')
-          label(for='pesontedan-three')
+          input(id='pesontedan-four',type='checkbox', name='pesontedans')
+          label(for='pesontedan-four')
             a.title_topic2(name='geometry')
               strong Геометрия
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -119,8 +150,8 @@
                   v-bind:theme='topic.theme'
                 )
         .pesontedan
-          input(id='pesontedan-four',type='checkbox', name='pesontedans')
-          label(for='pesontedan-four')
+          input(id='pesontedan-five',type='checkbox', name='pesontedans')
+          label(for='pesontedan-five')
             a.title_topic2(name='algebra')
               strong Алгебра
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -150,8 +181,8 @@
                   v-bind:theme='topic.theme'
                 )
         .pesontedan
-          input(id='pesontedan-five',type='checkbox', name='pesontedans')
-          label(for='pesontedan-five')
+          input(id='pesontedan-six',type='checkbox', name='pesontedans')
+          label(for='pesontedan-six')
             a.title_topic2(name='komba')
               strong Комбинаторика
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -181,8 +212,8 @@
                   v-bind:theme='topic.theme'
                 )
         .pesontedan
-          input(id='pesontedan-six',type='checkbox', name='pesontedans')
-          label(for='pesontedan-six')
+          input(id='pesontedan-seven',type='checkbox', name='pesontedans')
+          label(for='pesontedan-seven')
             a.title_topic2(name='logic')
               strong Логика
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -212,8 +243,8 @@
                   v-bind:theme='topic.theme'
                 )
         .pesontedan
-          input(id='pesontedan-seven',type='checkbox', name='pesontedans')
-          label(for='pesontedan-seven')
+          input(id='pesontedan-eight',type='checkbox', name='pesontedans')
+          label(for='pesontedan-eight')
             a.title_topic2(name='graph')
               strong Графы
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -295,6 +326,7 @@ export default {
 
   .title_topic2
     color: #000000
+    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-size: 50px
     font-weight: 100
 
