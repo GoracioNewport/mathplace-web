@@ -49,8 +49,6 @@ export default {
               formattedText = formattedText.concat(partition)
             }
 
-            console.log(i, formattedText)
-
             var task = {
               id: i,
               taskId: taskCount,
