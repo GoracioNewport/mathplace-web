@@ -1,30 +1,33 @@
 <template lang="pug">
   .content-wrapper
-    .taskbar
-        .container
-          .taskbar-content
-            .taskbar-list__wrapper
-              .taskbar-list
-                .taskbar-item(
-                  v-for = "task in this.taskList"
-                  @click = 'changeActiveTask(task.id, task)'
-                  :key = "task.id"
-                )
-                  .taskbar-link
+    .taskbar(v-if="!isLoading")
+      .container
+        .taskbar-content
+          .taskbar-list__wrapper
+            .taskbar-list
+              .taskbar-item(
+                v-if = "taskList.length"
+                v-for = "task in this.taskList"
+                @click = 'changeActiveTask(task.id, task)'
+                :key = "task.id"
+              )
+                .taskbar-link
 
-                    img.img_taskbar(
-                      v-if = 'task.type == "task"'
-                      :class='{ thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask}'
-                      :src = 'taskImage')
-                    img.img_taskbar(
-                      v-if = "task.type == 'theory'"
-                      :class='{ thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
-                      :src = "theoryImage")
-    .content
-      .loading-indicator
+                  img.img_taskbar(
+                    v-if = 'task.type == "task"'
+                    :class='{ thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask}'
+                    :src = 'taskImage')
+                  img.img_taskbar(
+                    v-if = "task.type == 'theory'"
+                    :class='{ thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
+                    :src = "theoryImage")
+
+    .loading-indicator
         loading(
-          :active.sync="this.isLoading",
-          :is-full-page='true')
+          :active.sync = "this.isLoading",
+          :is-full-page = 'true',
+          color = '#763dca')
+    .content(v-if="!isLoading")
       .name
         span(
           v-if = 'this.taskList[this.activeTask].type == "task"'
@@ -59,8 +62,7 @@
           placeholder = "Введите ответ",
           class = "ans",
           v-model = 'answer',
-          :disabled = 'correct'
-          v-bind:class = "{ 'answerCorrect' : correct, 'answerWrong' : wrong }")
+          v-bind:class = "{ 'answerCorrect' : status == 'Correct', 'answerWrong' : status == 'Wrong' }")
       .enter
         a.but(href="#zatemnenie")
           img(src='@/assets/images/lock.png', alt='Решения',id="lock")
@@ -71,7 +73,7 @@
         input.sub.submit-button(
           type = 'submit',
           value = 'Отправить',
-          :disabled = 'correct',
+          :disabled = 'status == "Correct"',
           v-if = 'this.taskList[this.activeTask].type == "task"',
           @click = 'sendAnswer')
       #zatemnenie
@@ -107,32 +109,35 @@ export default {
       theoryImage,
       taskImage,
       activeTask: 0,
-      taskList: [],
+      taskList: [{
+        id: 0,
+        taskId: 0,
+        text: '',
+        type: 'text',
+        answer: 0,
+        difficulty: 0,
+        solution: 0,
+        tries: 1
+      }],
       isLoading: true,
       answer: '',
-      status: 'Idle',
-      wrong: false,
-      correct: false
+      status: 'Idle'
     }
   },
   methods: {
     ...mapActions(['fetchTasks']),
     changeActiveTask (i, thisTask) {
+      this.answer = ''
+      this.status = 'Idle'
       this.activeTask = i
       thisTask.activeTask = i
     },
     sendAnswer () {
       if (this.answer === this.taskList[this.activeTask].answer) {
         this.status = 'Correct'
-        this.correct = true
-        this.wrong = false
       } else {
         this.status = 'Wrong'
-        this.wrong = true
-        this.correct = false
       }
-
-      console.log(this.status, this.answer, this.taskList[this.activeTask].answer)
     }
   },
   computed: {

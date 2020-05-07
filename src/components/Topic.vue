@@ -97,7 +97,7 @@ export default {
     padding 7%
 
   .topic-item
-    box-shadow 0 0 10px
+    box-shadow 5px 5px 5px #aaaaaa
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-size 1.2em
     color #FFFFFF
@@ -134,5 +134,4 @@ export default {
     float right
     margin-bottom 70px
     margin-right 20px
-
 </style>
