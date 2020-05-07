@@ -76,13 +76,13 @@ export default {
                   answer: subTask[1],
                   difficulty: subTask[2],
                   solution: subTask[3],
-                  tries: userTopicDetails
+                  tries: userTopicDetails[i]
                 }
                 tasksList.push(task)
               }
             })
         })
-
+      console.log(tasksList)
       ctx.commit('updateTasks', tasksList)
     },
     changeCurrentTopic (ctx, topic) {

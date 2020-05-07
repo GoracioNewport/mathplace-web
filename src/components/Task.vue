@@ -61,8 +61,9 @@
           size = "40",
           placeholder = "Введите ответ",
           class = "ans",
+          v-bind:disabled = "this.taskList[this.activeTask].tries === 2",
           v-model = 'answer',
-          v-bind:class = "{ 'answerCorrect' : status == 'Correct', 'answerWrong' : status == 'Wrong' }")
+          v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2, 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
       .enter
         a.but(href="#zatemnenie")
           img(src='@/assets/images/lock.png', alt='Решения',id="lock")
@@ -73,7 +74,6 @@
         input.sub.submit-button(
           type = 'submit',
           value = 'Отправить',
-          :disabled = 'status == "Correct"',
           v-if = 'this.taskList[this.activeTask].type == "task"',
           @click = 'sendAnswer')
       #zatemnenie
@@ -94,6 +94,9 @@ import theoryImage from '@/assets/images/theory.png'
 import taskImage from '@/assets/images/question.png'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions } from 'vuex'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+
 export default {
   components: {
     Loading
@@ -127,17 +130,28 @@ export default {
   methods: {
     ...mapActions(['fetchTasks']),
     changeActiveTask (i, thisTask) {
-      this.answer = ''
       this.status = 'Idle'
       this.activeTask = i
       thisTask.activeTask = i
+      this.taskList[this.activeTask].tries === 2 ? this.answer = this.taskList[this.activeTask].answer : this.answer = ''
     },
     sendAnswer () {
+      let verdict = 1
       if (this.answer === this.taskList[this.activeTask].answer) {
         this.status = 'Correct'
+        verdict = 2
       } else {
         this.status = 'Wrong'
+        verdict = 0
       }
+      const db = firebase.firestore()
+      let newStatus = []
+      for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
+      newStatus[this.activeTask] = verdict
+      db.collection('account').doc(this.$store.getters.getUser.id).update({
+        [this.$store.getters.getCurrentTopic]: newStatus
+      })
+      this.taskList[this.activeTask].tries = verdict
     }
   },
   computed: {
