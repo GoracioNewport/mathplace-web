@@ -6,8 +6,9 @@
           strong Темы
         .loading-indicator
           loading(
-            :active.sync="this.isLoading",
-            :is-full-page='false')
+            :active.sync = "this.isLoading",
+            :is-full-page = 'false',
+            color = "#763dca")
     section(v-if="!this.isLoading")
       .sidebar
         a(href='#school')
@@ -325,6 +326,7 @@ export default {
     text-align center
 
   .title_topic2
+    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     color: #000000
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-size: 50px
@@ -334,7 +336,8 @@ export default {
     display grid
     grid-template-columns repeat(auto-fit, minmax(320px, 1fr))
     margin-top 0px
-    margin-left 30px
+    margin-left 2%
+    margin-right 2%
   .ui-card
     border-width 1px
     background-color #763DCA
@@ -371,13 +374,20 @@ export default {
     padding: 1px 16px;
     height: 1000px;
   }
-  .pesontedan {
-    position: relative;
-    margin-bottom: 1px;
-    width: 100%;
-    color: #000;
-    overflow: hidden;
-  }
+  .pesontedan
+    position relative
+    margin-bottom 5%
+    width 100%
+    color #000
+    overflow hidden
+    border solid
+    border-radius 30px
+    border-color #999999
+    border-width 2px
+    box-shadow 5px 5px 5px #cccccc
+    @media screen and (max-width: 700px)
+      border none
+      box-shadow none
 
   .pesontedan input {
     position: absolute;

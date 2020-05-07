@@ -21,7 +21,6 @@ new Vue({
   store,
   components: { App, Topic },
   template: '<App/>',
-  // eslint-disable-next-line
   created () {
     var firebaseConfig = {
       apiKey: 'AIzaSyAwxefCuoxvrMYCWbgQcJVUgTvL6CPEErA',
