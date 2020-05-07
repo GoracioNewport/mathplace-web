@@ -28,7 +28,7 @@
         .pesontedan
           input(id='pesontedan-one',type='checkbox', name='pesontedans')
           label(for='pesontedan-one')
-            a(name='school')
+            a.title_topic2(name='school')
               strong Школа
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
@@ -59,7 +59,7 @@
         .pesontedan
           input(id='pesontedan-two',type='checkbox', name='pesontedans')
           label(for='pesontedan-two')
-            a(name='examination')
+            a.title_topic2(name='examination')
               strong ОГЭ 2020
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
@@ -90,7 +90,7 @@
         .pesontedan
           input(id='pesontedan-three',type='checkbox', name='pesontedans')
           label(for='pesontedan-three')
-            a(name='geometry')
+            a.title_topic2(name='geometry')
               strong Геометрия
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
@@ -121,7 +121,7 @@
         .pesontedan
           input(id='pesontedan-four',type='checkbox', name='pesontedans')
           label(for='pesontedan-four')
-            a(name='algebra')
+            a.title_topic2(name='algebra')
               strong Алгебра
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
@@ -152,7 +152,7 @@
         .pesontedan
           input(id='pesontedan-five',type='checkbox', name='pesontedans')
           label(for='pesontedan-five')
-            a(name='komba')
+            a.title_topic2(name='komba')
               strong Комбинаторика
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
@@ -183,7 +183,7 @@
         .pesontedan
           input(id='pesontedan-six',type='checkbox', name='pesontedans')
           label(for='pesontedan-six')
-            a(name='logic')
+            a.title_topic2(name='logic')
               strong Логика
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
@@ -214,7 +214,7 @@
         .pesontedan
           input(id='pesontedan-seven',type='checkbox', name='pesontedans')
           label(for='pesontedan-seven')
-            a(name='graph')
+            a.title_topic2(name='graph')
               strong Графы
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
@@ -293,14 +293,10 @@ export default {
     padding-top 4%
     text-align center
 
-  .title_topic
-    display grid
-    color: #000
-    font-family: 'Roboto', sans-serif
-    font-size: 62px
-    margin-left 25px
-    margin-bottom 1%
-    font-weight: bold
+  .title_topic2
+    color: #000000
+    font-size: 50px
+    font-weight: 100
 
   .topic-list
     display grid
