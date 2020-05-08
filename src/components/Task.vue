@@ -15,11 +15,11 @@
 
                   img.img_taskbar(
                     v-if = 'task.type == "task"'
-                    :class='{ thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask}'
+                    :class = '{ solvedTask : task.tries === 2, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask }'
                     :src = 'taskImage')
                   img.img_taskbar(
                     v-if = "task.type == 'theory'"
-                    :class='{ thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
+                    :class = '{ solvedTask : task.tries === 2, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
                     :src = "theoryImage")
 
     .loading-indicator
@@ -130,28 +130,32 @@ export default {
   methods: {
     ...mapActions(['fetchTasks']),
     changeActiveTask (i, thisTask) {
+      if (this.taskList[this.activeTask].type === 'theory') this.sendAnswer()
       this.status = 'Idle'
       this.activeTask = i
       thisTask.activeTask = i
       this.taskList[this.activeTask].tries === 2 ? this.answer = this.taskList[this.activeTask].answer : this.answer = ''
     },
     sendAnswer () {
-      let verdict = 1
-      if (this.answer === this.taskList[this.activeTask].answer) {
-        this.status = 'Correct'
-        verdict = 2
-      } else {
-        this.status = 'Wrong'
-        verdict = 0
+      if (!this.$store.getters.checkUser) this.$router.push('/login')
+      else {
+        let verdict = 1
+        if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
+          this.status = 'Correct'
+          verdict = 2
+        } else {
+          this.status = 'Wrong'
+          verdict = 0
+        }
+        const db = firebase.firestore()
+        let newStatus = []
+        for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
+        newStatus[this.activeTask] = verdict
+        db.collection('account').doc(this.$store.getters.getUser.id).update({
+          [this.$store.getters.getCurrentTopic]: newStatus
+        })
+        this.taskList[this.activeTask].tries = verdict
       }
-      const db = firebase.firestore()
-      let newStatus = []
-      for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
-      newStatus[this.activeTask] = verdict
-      db.collection('account').doc(this.$store.getters.getUser.id).update({
-        [this.$store.getters.getCurrentTopic]: newStatus
-      })
-      this.taskList[this.activeTask].tries = verdict
     }
   },
   computed: {
@@ -165,6 +169,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .solvedTask
+    background rgba(0, 255, 0, .5) !important
+  .failedTask
+    background rgba(255, 0, 0, .5) !important
   .answerCorrect
     background-color rgba(0, 255, 0, .4)
   .answerWrong
