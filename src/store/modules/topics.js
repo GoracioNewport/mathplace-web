@@ -116,6 +116,21 @@ export default {
       mapTopic.set('идеи', komba)
       ctx.commit('updateTopics', mapTopic)
       ctx.commit('updateTopicsLoaded', true)
+    },
+    like (ctx, liked) {
+      console.log('Like function initiated')
+      let n = 0
+      if (liked) n = 1
+      else n = -1
+      let likes = this.getters.getTopicLikes
+      console.log(likes)
+      ctx.commit('updateTopicDetailsDB', ['like', likes + n])
+    },
+    async fetchLikes (ctx) {
+      const db = firebase.firestore()
+      db.collection('task2').doc(this.getters.getCurrentTopic).get().then(doc => {
+        ctx.commit('updateLikes', doc.data().like)
+      })
     }
   },
   mutations: {
@@ -125,12 +140,20 @@ export default {
     },
     updateTopicsLoaded (state, isLoaded) {
       state.topicsLoaded = isLoaded
+    },
+    updateTopicDetailsDB (state, [key, value]) {
+      const db = firebase.firestore()
+      this.commit('updateLikes', value)
+      db.collection('task2').doc(this.getters.getCurrentTopic).update({ [key]: value })
+    },
+    updateLikes (state, payload) {
+      state.likes = payload
     }
   },
   state: {
     topicsLoaded: false,
-    // topics: [],
-    mapTopic: new Map()
+    mapTopic: new Map(),
+    likes: 0
   },
   getters: {
     getTopics (state) {
@@ -138,6 +161,9 @@ export default {
     },
     isTopicsLoaded (state) {
       return state.topicsLoaded
+    },
+    getTopicLikes (state) {
+      return state.likes
     }
   }
 }

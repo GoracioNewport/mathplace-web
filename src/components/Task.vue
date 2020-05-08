@@ -70,7 +70,7 @@
         .but
           img(src='@/assets/images/comment_1.png', alt='Комментарии')
         .but
-          img(src='@/assets/images/like_none.png', alt='Лайк')
+          img(src='@/assets/images/like_none.png', alt='Лайк' @click = 'likeButton')
         input.sub.submit-button(
           type = 'submit',
           value = 'Отправить',
@@ -102,6 +102,7 @@ export default {
   async mounted () {
     this.updateUser(['lastTheme', this.getCurrentTopic])
     this.isLoading = true
+    await this.fetchLikes()
     await this.fetchTasks()
     this.taskList = this.$store.getters.getTasks
     this.isLoading = false
@@ -127,9 +128,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchTasks', 'updateUser']),
+    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes']),
     changeActiveTask (i, thisTask) {
-      if (this.getUser.like.find(t => t === this.getCurrentTopic)) console.log('Liked topic')
       if (this.taskList[this.activeTask].type === 'theory' && this.taskList[this.activeTask].tries !== 2) this.sendAnswer()
       this.status = 'Idle'
       this.activeTask = i
@@ -160,11 +160,21 @@ export default {
       }
     },
     likeButton () {
-      // if (getUser.like.find(getCurrentTopic))
+      let liked = this.getUser.like
+      if (this.getUser.like.find(t => t === this.getCurrentTopic)) {
+        console.log('ok')
+        liked.splice(liked.indexOf(this.getCurrentTopic), 1)
+        this.like(true)
+      } else {
+        console.log('not ok')
+        liked.push(this.getCurrentTopic)
+        this.like(false)
+      }
+      this.updateUser(['like', liked])
     }
   },
   computed: {
-    ...mapGetters(['getCurrentTopic', 'getUser']),
+    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes']),
     getDifficulty () {
       var dif = this.taskList[this.activeTask].difficulty
       if (dif !== 'null') return parseInt(dif, 10)
