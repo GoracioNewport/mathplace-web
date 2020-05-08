@@ -6,8 +6,6 @@ export default {
   actions: {
     async fetchTopics (ctx) {
       ctx.commit('updateTopicsLoaded', false)
-
-      // console.log(User.state.user.id)
       var topics = []
       var algebra = []
       var geometry = []
@@ -116,7 +114,6 @@ export default {
       mapTopic.set('логика', logika)
       mapTopic.set('графы', graf)
       mapTopic.set('идеи', komba)
-      console.log(mapTopic)
       ctx.commit('updateTopics', mapTopic)
       ctx.commit('updateTopicsLoaded', true)
     }

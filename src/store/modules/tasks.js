@@ -20,12 +20,10 @@ export default {
               userTopicDetails = usr.data()[this.getters.getCurrentTopic]
               itemCount = doc.data().items
               if (userTopicDetails === undefined) {
-                console.log('Creating new topic...')
                 let blankArray = []
                 for (let i = 0; i < itemCount; i++) blankArray.push(1)
                 let topicStatus = this.getters.getCurrentTopic
                 let solveStatus = this.getters.getCurrentTopic + 'Solution'
-                console.log(topicStatus, solveStatus)
                 db.collection('account').doc(this.getters.getUser.id).update({
                   [topicStatus]: blankArray,
                   [solveStatus]: blankArray
@@ -82,7 +80,6 @@ export default {
               }
             })
         })
-      console.log(tasksList)
       ctx.commit('updateTasks', tasksList)
     },
     changeCurrentTopic (ctx, topic) {

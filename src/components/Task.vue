@@ -93,15 +93,15 @@ import Loading from 'vue-loading-overlay'
 import theoryImage from '@/assets/images/theory.png'
 import taskImage from '@/assets/images/question.png'
 import 'vue-loading-overlay/dist/vue-loading.css'
-import { mapActions } from 'vuex'
-import firebase from 'firebase/app'
-import 'firebase/firestore'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
     Loading
   },
   async mounted () {
+    console.log(this.getCurrentTopic)
+    this.updateUser(['lastTheme', this.getCurrentTopic])
     this.isLoading = true
     await this.fetchTasks()
     this.taskList = this.$store.getters.getTasks
@@ -128,7 +128,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchTasks']),
+    ...mapActions(['fetchTasks', 'updateUser']),
     changeActiveTask (i, thisTask) {
       if (this.taskList[this.activeTask].type === 'theory' && this.taskList[this.activeTask].tries !== 2) this.sendAnswer()
       this.status = 'Idle'
@@ -137,29 +137,31 @@ export default {
       this.taskList[this.activeTask].tries === 2 ? this.answer = this.taskList[this.activeTask].answer : this.answer = ''
     },
     sendAnswer () {
-      console.log(this.$store.getters.getUser.id)
       if (this.$store.getters.getUser === null) this.$router.push('/login')
       else {
         let verdict = 1
         if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
-          this.status = 'Correct'
+          if (this.taskList[this.activeTask].type !== 'theory') {
+            this.updateUser(['money', this.getUser.money + 3])
+            this.updateUser(['right', this.getUser.right + 1])
+          } this.status = 'Correct'
           verdict = 2
         } else {
           this.status = 'Wrong'
           verdict = 0
         }
-        const db = firebase.firestore()
+
+        if (this.taskList[this.activeTask].type !== 'theory') this.updateUser(['submit', this.getUser.submit + 1])
         let newStatus = []
         for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
         newStatus[this.activeTask] = verdict
-        db.collection('account').doc(this.$store.getters.getUser.id).update({
-          [this.$store.getters.getCurrentTopic]: newStatus
-        })
+        this.updateUser([this.getCurrentTopic, newStatus])
         this.taskList[this.activeTask].tries = verdict
       }
     }
   },
   computed: {
+    ...mapGetters(['getCurrentTopic', 'getUser']),
     getDifficulty () {
       var dif = this.taskList[this.activeTask].difficulty
       if (dif !== 'null') return parseInt(dif, 10)
