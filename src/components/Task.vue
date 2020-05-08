@@ -27,7 +27,7 @@
           :active.sync = "this.isLoading",
           :is-full-page = 'true',
           color = '#763dca')
-    .content(v-if="!isLoading")
+    .content(v-if="taskList.length > 1")
       .name
         span(
           v-if = 'this.taskList[this.activeTask].type == "task"'
@@ -100,7 +100,6 @@ export default {
     Loading
   },
   async mounted () {
-    console.log(this.getCurrentTopic)
     this.updateUser(['lastTheme', this.getCurrentTopic])
     this.isLoading = true
     await this.fetchTasks()
@@ -116,7 +115,7 @@ export default {
         id: 0,
         taskId: 0,
         text: '',
-        type: 'text',
+        type: 'task',
         answer: 0,
         difficulty: 0,
         solution: 0,
@@ -130,6 +129,7 @@ export default {
   methods: {
     ...mapActions(['fetchTasks', 'updateUser']),
     changeActiveTask (i, thisTask) {
+      if (this.getUser.like.find(t => t === this.getCurrentTopic)) console.log('Liked topic')
       if (this.taskList[this.activeTask].type === 'theory' && this.taskList[this.activeTask].tries !== 2) this.sendAnswer()
       this.status = 'Idle'
       this.activeTask = i
@@ -158,6 +158,9 @@ export default {
         this.updateUser([this.getCurrentTopic, newStatus])
         this.taskList[this.activeTask].tries = verdict
       }
+    },
+    likeButton () {
+      // if (getUser.like.find(getCurrentTopic))
     }
   },
   computed: {

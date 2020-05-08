@@ -13,7 +13,6 @@ export default {
       console.log('User state changed\n', payload)
     },
     updateUser (state, [key, value]) {
-      console.log(key, value)
       state.user[key] = value
     }
   },
@@ -65,7 +64,6 @@ export default {
     updateUser ({commit}, [key, value]) {
       const db = firebase.firestore()
       console.log('User update!\n', key, value)
-      console.log(this.getters.getUser)
       commit('updateUser', [key, value])
       db.collection('account').doc(this.getters.getUser.id).update({ [key]: value })
     }
