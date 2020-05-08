@@ -11,24 +11,31 @@
             color = "#763dca")
     section(v-if="!this.isLoading")
       .sidebar
-        a(href='#school')
+        <a href="#school" v-smooth-scroll>
           img(src="@/components/images/school1.png", width= "50px", height = "50px")
-        a(href='#examination')
+        </a>
+        <a href="#examination" v-smooth-scroll>
           img(src="@/components/images/examination1.png", width= "50px", height = "50px")
-        a(href='#geometry')
+        </a>
+        <a href="#geometry" v-smooth-scroll>
           img(src="@/components/images/geometry1.png", width= "50px", height = "50px")
-        a(href='#algebra')
+        </a>
+        <a href="#algebra" v-smooth-scroll>
           img(src="@/components/images/algebra1.png", width= "50px", height = "50px")
-        a(href='#komba')
+        </a>
+        <a href="#komba" v-smooth-scroll>
           img(src="@/components/images/komba1.png", width= "50px", height = "50px")
-        a(href='#logic')
+        </a>
+        <a href="#logic" v-smooth-scroll>
           img(src="@/components/images/logic1.png", width= "50px", height = "50px")
-        a(href='#graph')
+        </a>
+        <a href="#graph" v-smooth-scroll>
           img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
+        </a>
       .container
         .pesontedan
           input(id='pesontedan-one',type='checkbox', name='pesontedans')
-          label(for='pesontedan-one')
+          label#school(for='pesontedan-one')
             a.title_topic2(name='school')
               strong Школа
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -59,7 +66,7 @@
                 )
         .pesontedan
           input(id='pesontedan-two',type='checkbox', name='pesontedans')
-          label(for='pesontedan-two')
+          label#examination(for='pesontedan-two')
             a.title_topic2(name='examination')
               strong ОГЭ 2020
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -90,7 +97,7 @@
                 )
         .pesontedan
           input(id='pesontedan-three',type='checkbox', name='pesontedans')
-          label(for='pesontedan-three')
+          label#geometry(for='pesontedan-three')
             a.title_topic2(name='geometry')
               strong Геометрия
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -121,7 +128,7 @@
                 )
         .pesontedan
           input(id='pesontedan-four',type='checkbox', name='pesontedans')
-          label(for='pesontedan-four')
+          label#algebra(for='pesontedan-four')
             a.title_topic2(name='algebra')
               strong Алгебра
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -152,7 +159,7 @@
                 )
         .pesontedan
           input(id='pesontedan-five',type='checkbox', name='pesontedans')
-          label(for='pesontedan-five')
+          label#komba(for='pesontedan-five')
             a.title_topic2(name='komba')
               strong Комбинаторика
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -183,7 +190,7 @@
                 )
         .pesontedan
           input(id='pesontedan-six',type='checkbox', name='pesontedans')
-          label(for='pesontedan-six')
+          label#logic(for='pesontedan-six')
             a.title_topic2(name='logic')
               strong Логика
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -214,7 +221,7 @@
                 )
         .pesontedan
           input(id='pesontedan-seven',type='checkbox', name='pesontedans')
-          label(for='pesontedan-seven')
+          label#graph(for='pesontedan-seven')
             a.title_topic2(name='graph')
               strong Графы
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -243,6 +250,7 @@
                   v-bind:percentage='topic.completed'
                   v-bind:theme='topic.theme'
                 )
+          <div id="div-id"></div>
 </template>
 
 <script>

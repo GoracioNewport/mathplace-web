@@ -54,7 +54,7 @@ export default {
       return state.user
     },
     checkUser (state) {
-      return state.user !== null
+      return state.user.id !== null
     }
   }
 }

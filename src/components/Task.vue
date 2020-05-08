@@ -130,14 +130,15 @@ export default {
   methods: {
     ...mapActions(['fetchTasks']),
     changeActiveTask (i, thisTask) {
-      if (this.taskList[this.activeTask].type === 'theory') this.sendAnswer()
+      if (this.taskList[this.activeTask].type === 'theory' && this.taskList[this.activeTask].tries !== 2) this.sendAnswer()
       this.status = 'Idle'
       this.activeTask = i
       thisTask.activeTask = i
       this.taskList[this.activeTask].tries === 2 ? this.answer = this.taskList[this.activeTask].answer : this.answer = ''
     },
     sendAnswer () {
-      if (!this.$store.getters.checkUser) this.$router.push('/login')
+      console.log(this.$store.getters.getUser.id)
+      if (this.$store.getters.getUser === null) this.$router.push('/login')
       else {
         let verdict = 1
         if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
