@@ -4,9 +4,8 @@
       .navbar.navbar--fixed
         .container
           .navbar-content
-            router-link.header-logo(
-              to = "/"
-            ) <strong class="mathplace-logo">MathPlace</strong>
+            .header-logo
+              <strong class="mathplace-logo">MathPlace</strong>
             .button-burger(
               @click = "menuShow = !menuShow"
               :class="{ active: menuShow}"
