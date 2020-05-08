@@ -35,6 +35,9 @@
       a
         .topic-item-solve(@click="openTopic()")
           .button.button--round.button-success Решать
+      .LikeBox
+        img#LikeImg(src="./images/like.png")
+        a#LikeText  {{like}}
 
 </template>
 
@@ -61,6 +64,10 @@ export default {
     theme: {
       default: '',
       type: String
+    },
+    like: {
+      default: '',
+      type: String
     }
   },
   methods: {
@@ -79,6 +86,36 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
+  .button
+    font-family: 'Roboto', sans-serif
+    font-size 0.9em
+    font-weight 400
+
+  .LikeBox
+    position relative
+    // height auto
+    // width auto
+    // display flex
+    float left
+    margin-top 3px
+    margin-bottom 0px
+    margin-left 20px
+
+  #LikeImg
+    height 25px
+    width 25px
+    vertical-align middle
+  #LikeText
+    position relative
+    margin-left 4px
+    font-size 0.95em
+    color #ffffff
+    font-weight 600
+    text-align center
+    letter-spacing -0.7px
+    vertical-align middle
+    font-family: 'Roboto', sans-serif
 
   .content-wrapper
     max-height 400px
@@ -112,6 +149,9 @@ export default {
   .topic-item-title
     display flex
     color #ffffff
+    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-size 1.05em
+    font-weight 600
 
   .topic-item-theme
     float right
@@ -132,6 +172,6 @@ export default {
   .topic-item-solve
     display flex
     float right
-    margin-bottom 70px
+    margin-bottom 0px
     margin-right 20px
 </style>

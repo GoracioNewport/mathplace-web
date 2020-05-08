@@ -8,7 +8,7 @@ export default {
     async fetchTopics (ctx) {
       ctx.commit('updateTopicsLoaded', false)
 
-      // console.log(User.state.user.id)
+      console.log(this.getters.getUser.id)
       var topics = []
       var algebra = []
       var geometry = []
@@ -23,93 +23,103 @@ export default {
       const db = firebase.firestore()
       // var docRef = db.collection('account').doc('FGffHhxvVUfa79meSj7bHMYviRs2')
       // docRef.get().then(function (doc2) {
-      await db.collection('task2').get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            var right = 0
-            var all = 1
-            var like = doc.data().like
-            // console.log(doc.id)
-            let title = doc.id
-            // var topic = doc2.data()[title]
-            var theme = doc.data().theme
-            // if (topic != null) {
-            //   for (let i = 0; i < topic.length; i++) {
-            //     console.log('Start')
-            //     if (topic[i] === 2) {
-            //       right++
-            //     }
-            //     all++
-            //   }
-            // }
-            if (theme === 'алгебра') {
-              algebra.push({
-                'id': innderId++,
-                'title': title,
-                'completed': (right * 100) / all,
-                'theme': theme
+      var userData = db.collection('account').doc(this.getters.getUser.id)
+      await userData.get()
+        .then(usr => {
+          db.collection('task2').get()
+            .then((snapshot) => {
+              snapshot.forEach((doc) => {
+                var right = 0
+                var all = 1
+                var like = doc.data().like
+                // console.log(doc.id)
+                let title = doc.id
+                var topic = usr.data()[title]
+                // console.log(topic)
+                var theme = doc.data().theme
+                if (topic != null) {
+                  for (let i = 0; i < topic.length; i++) {
+                    console.log('Start')
+                    if (topic[i] === 2) {
+                      right++
+                    }
+                    all++
+                  }
+                }
+                if (theme === 'алгебра') {
+                  algebra.push({
+                    'id': innderId++,
+                    'title': title,
+                    'completed': (right * 100) / all,
+                    'theme': theme,
+                    'like': like
+                  })
+                } else if (theme === 'геометрия') {
+                  geometry.push({
+                    'id': innderId++,
+                    'title': title,
+                    'completed': (right * 100) / all,
+                    'theme': theme,
+                    'like': like
+                  })
+                } else if (theme === 'школа') {
+                  school.push({
+                    'id': innderId++,
+                    'title': title,
+                    'completed': (right * 100) / all,
+                    'theme': theme,
+                    'like': like
+                  })
+                } else if (theme === 'огэ') {
+                  OGE.push({
+                    'id': innderId++,
+                    'title': title,
+                    'completed': (right * 100) / all,
+                    'theme': theme,
+                    'like': like
+                  })
+                } else if (theme === 'комбинаторика') {
+                  komba.push({
+                    'id': innderId++,
+                    'title': title,
+                    'completed': (right * 100) / all,
+                    'theme': theme,
+                    'like': like
+                  })
+                } else if (theme === 'логика') {
+                  logika.push({
+                    'id': innderId++,
+                    'title': title,
+                    'completed': (right * 100) / all,
+                    'theme': theme,
+                    'like': like
+                  })
+                } else if (theme === 'графы') {
+                  graf.push({
+                    'id': innderId++,
+                    'title': title,
+                    'completed': (right * 100) / all,
+                    'theme': theme,
+                    'like': like
+                  })
+                } else if (theme === 'идеи') {
+                  idea.push({
+                    'id': innderId++,
+                    'title': title,
+                    'completed': (right * 100) / all,
+                    'theme': theme,
+                    'like': like
+                  })
+                }
+                topics.push({
+                  'id': innderId++,
+                  'title': title,
+                  'completed': (right * 100) / all,
+                  'theme': theme,
+                  'like': like
+                })
               })
-            } else if (theme === 'геометрия') {
-              geometry.push({
-                'id': innderId++,
-                'title': title,
-                'completed': (right * 100) / all,
-                'theme': theme
-              })
-            } else if (theme === 'школа') {
-              school.push({
-                'id': innderId++,
-                'title': title,
-                'completed': (right * 100) / all,
-                'theme': theme
-              })
-            } else if (theme === 'огэ') {
-              OGE.push({
-                'id': innderId++,
-                'title': title,
-                'completed': (right * 100) / all,
-                'theme': theme
-              })
-            } else if (theme === 'комбинаторика') {
-              komba.push({
-                'id': innderId++,
-                'title': title,
-                'completed': (right * 100) / all,
-                'theme': theme
-              })
-            } else if (theme === 'логика') {
-              logika.push({
-                'id': innderId++,
-                'title': title,
-                'completed': (right * 100) / all,
-                'theme': theme
-              })
-            } else if (theme === 'графы') {
-              graf.push({
-                'id': innderId++,
-                'title': title,
-                'completed': (right * 100) / all,
-                'theme': theme
-              })
-            } else if (theme === 'идеи') {
-              idea.push({
-                'id': innderId++,
-                'title': title,
-                'completed': (right * 100) / all,
-                'theme': theme
-              })
-            }
-            topics.push({
-              'id': innderId++,
-              'title': title,
-              'completed': (right * 100) / all,
-              'theme': theme,
-              'like': like
             })
-          })
-        })
-        .catch((err) => {
-          console.log('Error getting documents', err)
         })
       topics.sort(function (a, b) {
         return b.like - a.like
@@ -123,7 +133,11 @@ export default {
       mapTopic.set('логика', logika)
       mapTopic.set('графы', graf)
       mapTopic.set('идеи', komba)
-      console.log(mapTopic)
+      // })
+      // .catch((err) => {
+      //   console.log('Error getting documents', err)
+      // })
+      // console.log(mapTopic)
       ctx.commit('updateTopics', mapTopic)
       ctx.commit('updateTopicsLoaded', true)
     }

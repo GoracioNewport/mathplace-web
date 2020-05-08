@@ -2,6 +2,7 @@
   .content-wrapper
     .taskbar(v-if="!isLoading")
       .container
+        //- img(src=)
         .taskbar-content
           .taskbar-list__wrapper
             .taskbar-list

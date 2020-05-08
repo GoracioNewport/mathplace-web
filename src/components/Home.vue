@@ -34,7 +34,7 @@
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
-              v-for = "(topic, index) in getTopics.get('популярные')",
+              v-for = "(topic, index) in this.arrayPopular",
               v-if='index<4',
               :key = "topic.id"
             )
@@ -43,6 +43,7 @@
                 v-bind:title='topic.title'
                 v-bind:percentage='topic.completed'
                 v-bind:theme='topic.theme'
+                v-bind:like='topic.like'
               )
           .pesontedan-content
             .topic-list
@@ -56,16 +57,16 @@
                   v-bind:title='topic.title'
                   v-bind:percentage='topic.completed'
                   v-bind:theme='topic.theme'
+                  v-bind:like='topic.like'
                 )
         .pesontedan
           input(id='pesontedan-two',type='checkbox', name='pesontedans')
           label(for='pesontedan-two')
             a.title_topic2(name='school')
               strong Школа
-            //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
-              v-for = "(topic, index) in getTopics.get('школа')",
+              v-for = "(topic, index) in this.arraySchool",
               v-if='index<4',
               :key = "topic.id"
             )
@@ -74,11 +75,12 @@
                 v-bind:title='topic.title'
                 v-bind:percentage='topic.completed'
                 v-bind:theme='topic.theme'
+                v-bind:like='topic.like'
               )
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "(topic, index) in getTopics.get('школа')"
+                v-for = "(topic, index) in this.arraySchool"
                 v-if='index>=4',
                 :key = "topic.id"
               )
@@ -87,6 +89,7 @@
                   v-bind:title='topic.title'
                   v-bind:percentage='topic.completed'
                   v-bind:theme='topic.theme'
+                  v-bind:like='topic.like'
                 )
         .pesontedan
           input(id='pesontedan-three',type='checkbox', name='pesontedans')
@@ -96,7 +99,7 @@
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
-              v-for = "(topic, index) in getTopics.get('огэ')",
+              v-for = "(topic, index) in this.arrayOGE",
               v-if='index<4',
               :key = "topic.id"
             )
@@ -109,7 +112,7 @@
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "(topic, index) in getTopics.get('огэ')"
+                v-for = "(topic, index) in this.arrayOGE"
                 v-if='index>=4',
                 :key = "topic.id"
               )
@@ -127,7 +130,7 @@
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
-              v-for = "(topic, index) in getTopics.get('геометрия')",
+              v-for = "(topic, index) in this.arrayGeometry",
               v-if='index<4',
               :key = "topic.id"
             )
@@ -140,7 +143,7 @@
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "(topic, index) in getTopics.get('геометрия')"
+                v-for = "(topic, index) in this.arrayGeometry"
                 v-if='index>=4',
                 :key = "topic.id"
               )
@@ -158,7 +161,7 @@
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
-              v-for = "(topic, index) in getTopics.get('алгебра')",
+              v-for = "(topic, index) in this.arrayAlgebra",
               v-if='index<4',
               :key = "topic.id"
             )
@@ -171,7 +174,7 @@
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "(topic, index) in getTopics.get('алгебра')"
+                v-for = "(topic, index) in this.arrayAlgebra"
                 v-if='index>=4',
                 :key = "topic.id"
               )
@@ -180,6 +183,7 @@
                   v-bind:title='topic.title'
                   v-bind:percentage='topic.completed'
                   v-bind:theme='topic.theme'
+                  v-bind:like='topic.like'
                 )
         .pesontedan
           input(id='pesontedan-six',type='checkbox', name='pesontedans')
@@ -189,7 +193,7 @@
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
-              v-for = "(topic, index) in getTopics.get('комбинаторика')",
+              v-for = "(topic, index) in this.arrayKomba",
               v-if='index<4',
               :key = "topic.id"
             )
@@ -198,11 +202,12 @@
                 v-bind:title='topic.title'
                 v-bind:percentage='topic.completed'
                 v-bind:theme='topic.theme'
+                v-bind:like='topic.like'
               )
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "(topic, index) in getTopics.get('комбинаторика')"
+                v-for = "(topic, index) in this.arrayKomba"
                 v-if='index>=4',
                 :key = "topic.id"
               )
@@ -211,6 +216,7 @@
                   v-bind:title='topic.title'
                   v-bind:percentage='topic.completed'
                   v-bind:theme='topic.theme'
+                  v-bind:like='topic.like'
                 )
         .pesontedan
           input(id='pesontedan-seven',type='checkbox', name='pesontedans')
@@ -220,7 +226,7 @@
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
-              v-for = "(topic, index) in getTopics.get('логика')",
+              v-for = "(topic, index) in this.arrayLogika",
               v-if='index<4',
               :key = "topic.id"
             )
@@ -229,11 +235,12 @@
                 v-bind:title='topic.title'
                 v-bind:percentage='topic.completed'
                 v-bind:theme='topic.theme'
+                v-bind:like='topic.like'
               )
           .pesontedan-content
             .topic-list
               .topic-item-wrapper(
-                v-for = "(topic, index) in getTopics.get('логика')"
+                v-for = "(topic, index) in this.arrayLogika"
                 v-if='index>=4',
                 :key = "topic.id"
               )
@@ -242,6 +249,7 @@
                   v-bind:title='topic.title'
                   v-bind:percentage='topic.completed'
                   v-bind:theme='topic.theme'
+                  v-bind:like='topic.like'
                 )
         .pesontedan
           input(id='pesontedan-eight',type='checkbox', name='pesontedans')
@@ -251,7 +259,7 @@
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
-              v-for = "(topic, index) in getTopics.get('графы')",
+              v-for = "(topic, index) in this.arrayGraf",
               v-if='index<4',
               :key = "topic.id"
             )
@@ -260,6 +268,7 @@
                 v-bind:title='topic.title'
                 v-bind:percentage='topic.completed'
                 v-bind:theme='topic.theme'
+                v-bind:like='topic.like'
               )
           .pesontedan-content
             .topic-list
@@ -273,6 +282,7 @@
                   v-bind:title='topic.title'
                   v-bind:percentage='topic.completed'
                   v-bind:theme='topic.theme'
+                  v-bind:like='topic.like'
                 )
 </template>
 
@@ -289,6 +299,14 @@ export default {
   },
   data () {
     return {
+      arrayPopular: [],
+      arraySchool: [],
+      arrayOGE: [],
+      arrayGeometry: [],
+      arrayAlgebra: [],
+      arrayKomba: [],
+      arrayLogika: [],
+      arrayGraf: [],
       isLoading: true
     }
   },
@@ -296,6 +314,15 @@ export default {
   async mounted () {
     await this.fetchTopics()
     this.isLoading = false
+    this.arrayPopular = this.$store.getters.getTopics.get('популярные')
+    this.arraySchool = this.$store.getters.getTopics.get('школа')
+    this.arrayOGE = this.$store.getters.getTopics.get('огэ')
+    this.arrayGeometry = this.$store.getters.getTopics.get('геометрия')
+    this.arrayAlgebra = this.$store.getters.getTopics.get('алгебра')
+    this.arrayKomba = this.$store.getters.getTopics.get('комбинаторика')
+    this.arrayLogika = this.$store.getters.getTopics.get('логика')
+    this.arrayGraf = this.$store.getters.getTopics.get('графы')
+    // await console.log(this.testTask)
   },
   methods: mapActions(['fetchTopics'])
 }
@@ -384,7 +411,7 @@ export default {
     border-radius 30px
     border-color #999999
     border-width 2px
-    box-shadow 5px 5px 5px #cccccc
+    box-shadow 0 0 15px #cccccc
     @media screen and (max-width: 700px)
       border none
       box-shadow none
