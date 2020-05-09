@@ -197,11 +197,9 @@ export default {
     likeButton () {
       let liked = this.getUser.like
       if (this.getUser.like.find(t => t === this.getCurrentTopic)) {
-        console.log('ok')
         liked.splice(liked.indexOf(this.getCurrentTopic), 1)
         this.like(false)
       } else {
-        console.log('not ok')
         liked.push(this.getCurrentTopic)
         this.like(true)
       }

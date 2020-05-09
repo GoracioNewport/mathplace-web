@@ -7,8 +7,6 @@ export default {
   actions: {
     async fetchTopics (ctx) {
       ctx.commit('updateTopicsLoaded', false)
-
-      console.log(this.getters.getUser.id)
       var topics = []
       var algebra = []
       var geometry = []
@@ -32,14 +30,11 @@ export default {
                 var right = 0
                 var all = doc.data().cnt_task
                 var like = doc.data().like
-                // console.log(doc.id)
                 let title = doc.id
                 var topic = usr.data()[title]
-                // console.log(topic)
                 var theme = doc.data().theme
                 if (topic != null) {
                   for (let i = 0; i < topic.length; i++) {
-                    console.log('Start')
                     if (topic[i] === 2) {
                       right++
                     }
@@ -133,21 +128,14 @@ export default {
       mapTopic.set('логика', logika)
       mapTopic.set('графы', graf)
       mapTopic.set('идеи', komba)
-      // })
-      // .catch((err) => {
-      //   console.log('Error getting documents', err)
-      // })
-      // console.log(mapTopic)
       ctx.commit('updateTopics', mapTopic)
       ctx.commit('updateTopicsLoaded', true)
     },
     like (ctx, liked) {
-      console.log('Like function initiated')
       let n = 0
       if (liked) n = 1
       else n = -1
       let likes = this.getters.getTopicLikes
-      console.log(likes)
       ctx.commit('updateTopicDetailsDB', ['like', likes + n])
     },
     async fetchLikes (ctx) {

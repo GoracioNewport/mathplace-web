@@ -336,7 +336,6 @@ export default {
     this.arrayKomba = this.$store.getters.getTopics.get('комбинаторика')
     this.arrayLogika = this.$store.getters.getTopics.get('логика')
     this.arrayGraf = this.$store.getters.getTopics.get('графы')
-    // await console.log(this.testTask)
   },
   methods: mapActions(['fetchTopics'])
 }

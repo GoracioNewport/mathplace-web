@@ -10,7 +10,6 @@ export default {
   mutations: {
     setUser (state, payload) {
       state.user = payload
-      console.log('User state changed\n', payload)
     },
     updateUser (state, [key, value]) {
       state.user[key] = value
@@ -57,13 +56,11 @@ export default {
       commit('setUser', new User(payload.uid))
     },
     logoutUser ({commit}) {
-      console.log('Log out initiated')
       firebase.auth().signOut()
       commit('setUser', null)
     },
     updateUser ({commit}, [key, value]) {
       const db = firebase.firestore()
-      console.log('User update!\n', key, value)
       commit('updateUser', [key, value])
       db.collection('account').doc(this.getters.getUser.id).update({ [key]: value })
     }
