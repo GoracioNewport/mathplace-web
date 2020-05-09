@@ -66,8 +66,8 @@ export default {
       type: String
     },
     like: {
-      default: '',
-      type: String
+      default: 0,
+      type: Number
     }
   },
   methods: {

@@ -21,7 +21,7 @@
                     :src = 'taskImage')
                   img.img_taskbar(
                     v-if = "task.type == 'theory'"
-                    :class = '{ solvedTask : task.tries === 2, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
+                    :class = '{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
                     :src = "theoryImage")
 
     .loading-indicator
@@ -63,9 +63,9 @@
           size = "40",
           placeholder = "Введите ответ",
           class = "ans",
-          v-bind:disabled = "this.taskList[this.activeTask].tries === 2",
+          v-bind:disabled = "this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3",
           v-model = 'answer',
-          v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2, 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
+          v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
       .enter
         a.but(href="#zatemnenie")
           img(src='@/assets/images/lock.png',
@@ -162,23 +162,26 @@ export default {
   methods: {
     ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo']),
     changeActiveTask (i, thisTask) {
-      if (this.taskList[this.activeTask].type === 'theory' && this.taskList[this.activeTask].tries !== 2) this.sendAnswer()
+      console.log('Change Active Task')
+      if (this.taskList[this.activeTask].type === 'theory' && this.taskList[this.activeTask].tries !== 3) this.sendAnswer()
       this.status = 'Idle'
       this.activeTask = i
       thisTask.activeTask = i
       this.taskList[this.activeTask].tries === 2 ? this.answer = this.taskList[this.activeTask].answer : this.answer = ''
     },
     sendAnswer () {
+      console.log('Send Answer', this.taskList)
       if (this.$store.getters.getUser === null) this.$router.push('/login')
       else if (this.activeTask === (this.taskList.length - 1) && this.taskList[this.activeTask].tries === 2) this.$router.push('/')
-      else if (this.taskList[this.activeTask].tries !== 2) {
+      else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) {
         let verdict = 1
         if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
           if (this.taskList[this.activeTask].type !== 'theory') {
             this.updateUser(['money', this.getUser.money + 3])
             this.updateUser(['right', this.getUser.right + 1])
           } this.status = 'Correct'
-          verdict = 2
+          if (this.taskList[this.activeTask].type === 'theory') verdict = 3
+          else verdict = 2
         } else {
           this.status = 'Wrong'
           verdict = 0
