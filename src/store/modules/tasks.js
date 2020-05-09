@@ -84,6 +84,9 @@ export default {
     },
     changeCurrentTopic (ctx, topic) {
       ctx.commit('updateCurrentTopic', topic)
+    },
+    changeCurrentLogo (ctx, logo) {
+      ctx.commit('updateCurrentLogo', logo)
     }
   },
   mutations: {
@@ -95,12 +98,16 @@ export default {
     },
     updateTasks (state, payload) {
       state.tasks = payload
+    },
+    updateCurrentLogo (state, payload) {
+      state.logo = payload
     }
   },
   state: {
     currentTopic: 'ОГЭ Вариант 1',
     tasks: [],
-    tasksLoading: false
+    tasksLoading: false,
+    logo: 'MathPlace'
   },
   getters: {
     getCurrentTopic (state) {
@@ -108,6 +115,9 @@ export default {
     },
     getTasks (state) {
       return state.tasks
+    },
+    getCurrentLogo (state) {
+      return state.logo
     }
   }
 }
