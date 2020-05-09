@@ -166,7 +166,7 @@ export default {
     },
     sendAnswer () {
       if (this.$store.getters.getUser === null) this.$router.push('/login')
-      else {
+      else if (this.taskList[this.activeTask].tries !== 2) {
         let verdict = 1
         if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
           if (this.taskList[this.activeTask].type !== 'theory') {
