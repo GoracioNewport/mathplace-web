@@ -86,4 +86,6 @@ export default {
   .router-link-title
     font-size 1.3em
     color #ffffff
+    @media screen and (max-width: 480px)
+      color #000000
 </style>
