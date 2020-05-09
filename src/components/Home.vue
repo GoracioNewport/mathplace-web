@@ -68,7 +68,7 @@
                 )
         .pesontedan
           input(id='pesontedan-two',type='checkbox', name='pesontedans')
-          label(for='pesontedan-two')
+          label#school(for='pesontedan-two')
             a.title_topic2(name='school')
               strong Школа
           .topic-list
@@ -100,7 +100,7 @@
                 )
         .pesontedan
           input(id='pesontedan-three',type='checkbox', name='pesontedans')
-          label(for='pesontedan-three')
+          label#examination(for='pesontedan-three')
             a.title_topic2(name='examination')
               strong ОГЭ 2020
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -133,7 +133,7 @@
                 )
         .pesontedan
           input(id='pesontedan-four',type='checkbox', name='pesontedans')
-          label(for='pesontedan-four')
+          label#geometry(for='pesontedan-four')
             a.title_topic2(name='geometry')
               strong Геометрия
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -166,7 +166,7 @@
                 )
         .pesontedan
           input(id='pesontedan-five',type='checkbox', name='pesontedans')
-          label(for='pesontedan-five')
+          label#algebra(for='pesontedan-five')
             a.title_topic2(name='algebra')
               strong Алгебра
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -199,7 +199,7 @@
                 )
         .pesontedan
           input(id='pesontedan-six',type='checkbox', name='pesontedans')
-          label(for='pesontedan-six')
+          label#komba(for='pesontedan-six')
             a.title_topic2(name='komba')
               strong Комбинаторика
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -232,7 +232,7 @@
                 )
         .pesontedan
           input(id='pesontedan-seven',type='checkbox', name='pesontedans')
-          label(for='pesontedan-seven')
+          label#logic(for='pesontedan-seven')
             a.title_topic2(name='logic')
               strong Логика
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -265,7 +265,7 @@
                 )
         .pesontedan
           input(id='pesontedan-eight',type='checkbox', name='pesontedans')
-          label(for='pesontedan-eight')
+          label#graph(for='pesontedan-eight')
             a.title_topic2(name='graph')
               strong Графы
             //- p(:name='gggg').title_topic {{ array[0] }}

@@ -5,7 +5,7 @@
         .container
           .navbar-content
             .header-logo
-              <strong class="mathplace-logo"> {{ getCurrentLogo }} </strong>
+              <strong class="mathplace-logo"> MathPlace </strong>
             .button-burger(
               @click = "menuShow = !menuShow"
               :class="{ active: menuShow}"
@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
@@ -38,7 +37,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getCurrentLogo']),
     linkMenu () {
       if (this.$store.getters.checkUser) {
         return [
