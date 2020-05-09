@@ -30,7 +30,7 @@ export default {
             .then((snapshot) => {
               snapshot.forEach((doc) => {
                 var right = 0
-                var all = 1
+                var all = doc.data().cnt_task
                 var like = doc.data().like
                 // console.log(doc.id)
                 let title = doc.id
@@ -43,7 +43,7 @@ export default {
                     if (topic[i] === 2) {
                       right++
                     }
-                    all++
+                    // all++
                   }
                 }
                 if (theme === 'алгебра') {

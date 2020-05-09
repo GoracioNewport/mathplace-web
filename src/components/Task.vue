@@ -344,7 +344,7 @@ export default {
     }
   .sub
     position relative
-    width 80%
+    width 70%
     height 90%
     margin-top 5%
     margin-bottom 5%
