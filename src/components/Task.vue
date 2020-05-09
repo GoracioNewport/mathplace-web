@@ -36,7 +36,7 @@
         ) Задача {{ this.taskList[this.activeTask].taskId }}
         span(
           v-if = 'this.taskList[this.activeTask].type == "theory"'
-        ) Теория
+        ) {{ getCurrentTopic }}
 
         img.star(
           class = "star1",
