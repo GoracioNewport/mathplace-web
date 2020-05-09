@@ -38,7 +38,6 @@ export default {
                     if (topic[i] === 2) {
                       right++
                     }
-                    // all++
                   }
                 }
                 if (theme === 'алгебра') {

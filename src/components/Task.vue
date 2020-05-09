@@ -67,45 +67,46 @@
           v-model = 'answer',
           v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2, 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
       .enter
-        a.but(href="#zatemnenie")
-          img(src='@/assets/images/lock.png',
-          v-if = 'this.taskList[this.activeTask].type == "task"', alt='Решения',id="lock")
-        .but
-          img(src='@/assets/images/comment_1.png', alt='Комментарии')
-        .but
-          input#checkbox.checkbox(type='checkbox')
-          label(for='checkbox' @click = 'likeButton')
-            svg#heart-svg(viewBox='467 392 58 57', xmlns='http://www.w3.org/2000/svg')
-              g#Group(fill='none', fill-rule='evenodd', transform='translate(467 392)')
-                path#heart(d='M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z', fill='#AAB8C2')
-                circle#main-circ(fill='#763DCA', opacity='0', cx='29.5', cy='29.5', r='1.5')
-                g#grp7(opacity='0', transform='translate(7 6)')
-                  circle#oval1(fill='#9CD8C3', cx='2', cy='6', r='2')
-                  circle#oval2(fill='#8CE8C3', cx='5', cy='2', r='2')
-                g#grp6(opacity='0', transform='translate(0 28)')
-                  circle#oval1(fill='#CC8EF5', cx='2', cy='7', r='2')
-                  circle#oval2(fill='#91D2FA', cx='3', cy='2', r='2')
-                g#grp3(opacity='0', transform='translate(52 28)')
-                  circle#oval2(fill='#9CD8C3', cx='2', cy='7', r='2')
-                  circle#oval1(fill='#8CE8C3', cx='4', cy='2', r='2')
-                g#grp2(opacity='0', transform='translate(44 6)')
-                  circle#oval2(fill='#CC8EF5', cx='5', cy='6', r='2')
-                  circle#oval1(fill='#CC8EF5', cx='2', cy='2', r='2')
-                g#grp5(opacity='0', transform='translate(14 50)')
-                  circle#oval1(fill='#91D2FA', cx='6', cy='5', r='2')
-                  circle#oval2(fill='#91D2FA', cx='2', cy='2', r='2')
-                g#grp4(opacity='0', transform='translate(35 50)')
-                  circle#oval1(fill='#F48EA7', cx='6', cy='5', r='2')
-                  circle#oval2(fill='#F48EA7', cx='2', cy='2', r='2')
-                g#grp1(opacity='0', transform='translate(24)')
-                  circle#oval1(fill='#9FC7FA', cx='2.5', cy='3', r='2')
-                  circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
-        .sub.submit-button(
-          type = 'submit',
-          @click = 'sendAnswer')
-            span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory"') Отправить
-            span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
-            span(v-else) Завершить
+        .send
+          //- a.but(href="#zatemnenie")
+          //-   img(src='@/assets/images/lock.png',
+          //-   v-if = 'this.taskList[this.activeTask].type == "task"', alt='Решения',id="lock")
+          //- .but
+          //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
+          .but
+            input#checkbox.checkbox(type='checkbox')
+            label(for='checkbox' @click = 'likeButton')
+              svg#heart-svg(viewBox='467 392 58 57', xmlns='http://www.w3.org/2000/svg')
+                g#Group(fill='none', fill-rule='evenodd', transform='translate(467 392)')
+                  path#heart(d='M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z', fill='#AAB8C2')
+                  circle#main-circ(fill='#763DCA', opacity='0', cx='29.5', cy='29.5', r='1.5')
+                  g#grp7(opacity='0', transform='translate(7 6)')
+                    circle#oval1(fill='#9CD8C3', cx='2', cy='6', r='2')
+                    circle#oval2(fill='#8CE8C3', cx='5', cy='2', r='2')
+                  g#grp6(opacity='0', transform='translate(0 28)')
+                    circle#oval1(fill='#CC8EF5', cx='2', cy='7', r='2')
+                    circle#oval2(fill='#91D2FA', cx='3', cy='2', r='2')
+                  g#grp3(opacity='0', transform='translate(52 28)')
+                    circle#oval2(fill='#9CD8C3', cx='2', cy='7', r='2')
+                    circle#oval1(fill='#8CE8C3', cx='4', cy='2', r='2')
+                  g#grp2(opacity='0', transform='translate(44 6)')
+                    circle#oval2(fill='#CC8EF5', cx='5', cy='6', r='2')
+                    circle#oval1(fill='#CC8EF5', cx='2', cy='2', r='2')
+                  g#grp5(opacity='0', transform='translate(14 50)')
+                    circle#oval1(fill='#91D2FA', cx='6', cy='5', r='2')
+                    circle#oval2(fill='#91D2FA', cx='2', cy='2', r='2')
+                  g#grp4(opacity='0', transform='translate(35 50)')
+                    circle#oval1(fill='#F48EA7', cx='6', cy='5', r='2')
+                    circle#oval2(fill='#F48EA7', cx='2', cy='2', r='2')
+                  g#grp1(opacity='0', transform='translate(24)')
+                    circle#oval1(fill='#9FC7FA', cx='2.5', cy='3', r='2')
+                    circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
+          .sub.submit-button(
+            type = 'submit',
+            @click = 'sendAnswer')
+              span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory"') Отправить
+              span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
+              span(v-else) Завершить
       #zatemnenie
         #okno
           .solve
@@ -197,9 +198,11 @@ export default {
     likeButton () {
       let liked = this.getUser.like
       if (this.getUser.like.find(t => t === this.getCurrentTopic)) {
+        console.log('ok')
         liked.splice(liked.indexOf(this.getCurrentTopic), 1)
         this.like(false)
       } else {
+        console.log('not ok')
         liked.push(this.getCurrentTopic)
         this.like(true)
       }
@@ -323,6 +326,7 @@ export default {
         margin-left 6%
     }
   .answ
+    heigth auto
     margin-top 20px
     margin-left 23%
     margin-right 23%
@@ -331,6 +335,10 @@ export default {
         margin-right 6%
         margin-left 6%
     }
+  .submit-field
+    position relative
+    height 10px
+    // margin-bottom 0px
   .enter
     margin-left 23%
     margin-right 23%
@@ -340,15 +348,17 @@ export default {
         margin-right 6%
         margin-left 6%
     }
+  .send
+    positine relative
+    margin-top 15px
   .sub
     position relative
-    width 70%
-    height 90%
-    margin-top 5%
-    margin-bottom 5%
+    width 80%
+    height auto
+    // margin-top 6%
     display inline-block
     color #ffffff
-    padding 11px
+    padding 9px
     font-family: 'Roboto', sans-serif
     font-size: 25px
     font-weight: bold
@@ -362,14 +372,16 @@ export default {
         background #5E2DA6
   .but
     position relative
-    width 10%
+    width 20%
     height 100%
     display inline-block
     vertical-align middle
     text-align center
-    margin auto
+    // margin auto
   .ans
+    height 50px
     border-radius 10px
+    margin-bottom 0px
     color:#525252
     font-family: 'Roboto', sans-serif
     font-size: 25px
