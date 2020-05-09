@@ -84,7 +84,7 @@
 
               .buttons-list-reference
                 span Уже есть аккаунт?
-                  router-link(to='/login')  Войдите
+                  router-link(style="color: #763DCA" to='/login')  Войдите
 </template>
 
 <script>
@@ -224,6 +224,7 @@ export default {
 
   .buttons-list
     text-align right
+    width auto
     margin 3%
     margin-right 0
     margin-bottom 5%
@@ -237,19 +238,28 @@ export default {
     &.error
       border-color #fc5c65
 
-  .buttons-list-reference
-    text-align center
-    color #763DCA
-  button
+.buttons-list-reference
+  text-decoration none
+  color #525252
+  text-align center
+
+button
     border-radius 10px
     background-color #763DCA
-    width 40%
+    width auto
+    font-family 'Roboto', sans-serif
+    font-size 1.1em
+    padding 11px
+    font-weight 500
 
   .error
     color #fc5c65
 
   .ui-title-2
     color #763DCA
+    font-family 'Roboto', sans-serif
+    font-size 2.4em
+    font-weight bold
 
   @media screen and (max-width:500px)
     .auth-title

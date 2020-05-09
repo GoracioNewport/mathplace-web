@@ -369,7 +369,7 @@ export default {
     position relative
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     color: #000000
-    font-size: 50px
+    font-size: 1em
     margin-top 500px
     font-weight: 100
 
@@ -499,11 +499,11 @@ export default {
   /* На экранах шириной менее 700 пикселей превратить боковую панель в верхнюю панель */
   @media screen and (max-width: 700px) {
     .sidebar {
-      width 100%
-      height auto
       position relative
-      left 20%
-      right 20%
+      width 80%
+      height auto
+      margin-left 10%
+      margin-right 10%
       top 0
       margin auto
       float top
@@ -542,8 +542,11 @@ export default {
       max-width: 35px
       min-width: 35px
     .sidebar
-      left 18%
-      right 18%
+      width 90%
+      left 10%
+      right 10%
+      // left 18%
+      // right 18%
 
     .pesontedan label
       margin-left 30px
@@ -564,8 +567,11 @@ export default {
       min-width: 30px
     }
     .sidebar {
-      left 16%
-      right 16%
+      width 80%
+      left 10%
+      rigth 10%
+      // left 16%
+      // right 16%
     }
     .pesontedan label {
       margin-left 30px

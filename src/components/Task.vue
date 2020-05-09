@@ -68,11 +68,11 @@
           v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2, 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
       .enter
         a.but(href="#zatemnenie")
-          img(src='@/assets/images/lock.png', alt='Решения',id="lock")
+          img(src='@/assets/images/lock.png',
+          v-if = 'this.taskList[this.activeTask].type == "task"', alt='Решения',id="lock")
         .but
-          img(src='@/assets/images/comment_1.png', alt='Комментарии')
-        .but
-          img(src='@/assets/images/like_none.png', alt='Лайк' @click = 'likeButton')
+          img(src='@/assets/images/like_none.png',
+          v-if = 'this.taskList[this.activeTask].type == "task"', alt='Лайк' @click = 'likeButton')
         input.sub.submit-button(
           type = 'submit',
           value = 'Отправить',
@@ -242,7 +242,7 @@ export default {
     margin 0 auto
     display table
   .taskbar-item
-    padding 13px 10px 10px 20px
+    padding 13px 9px 9px 20px
     float left
   .content
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
@@ -259,6 +259,11 @@ export default {
     margin-top 50px
     margin-left 23%
     margin-right 23%
+    @media screen and (max-width: 500px) {
+        width 88%
+        margin-right 6%
+        margin-left 6%
+    }
   img
     orientation right
     float right
@@ -276,38 +281,56 @@ export default {
     padding 10px
     margin-left 23%
     margin-right 23%
+    @media screen and (max-width: 500px) {
+        width 88%
+        margin-right 6%
+        margin-left 6%
+    }
   .answ
     margin-top 20px
     margin-left 23%
     margin-right 23%
+    @media screen and (max-width: 500px) {
+        width 88%
+        margin-right 6%
+        margin-left 6%
+    }
   .enter
     margin-left 23%
     margin-right 23%
     display inline-block
+    @media screen and (max-width: 500px) {
+        width 88%
+        margin-right 6%
+        margin-left 6%
+    }
   .sub
-    background-color #763DCA
+    position relative
+    width 80%
+    height 90%
+    margin-top 5%
+    margin-bottom 5%
+    display inline-block
     color #ffffff
     padding 11px
-
-    // color:#525252
     font-family: 'Roboto', sans-serif
     font-size: 25px
     font-weight: bold
+    background-color #763DCA
     box-shadow 0 0 10px rgba(0,0,0,0.5)
     border-radius 10px
     outline none
     border none
+    vertical-align middle
     &:hover
         background #5E2DA6
-    max-width 80%
-    min-width 80%
-    width 80%
-    float right
   .but
-    max-width 5%
-    min-width 5%
-    width 5%
-    float left
+    position relative
+    width 10%
+    height 100%
+    display inline-block
+    vertical-align middle
+    text-align center
     margin auto
   .ans
     border-radius 10px
@@ -380,7 +403,7 @@ export default {
   .taskbar
     background-color #763DCA
     width 100%
-    height 68px
+    height auto
     orientation top
     align-items center
     diaply flex

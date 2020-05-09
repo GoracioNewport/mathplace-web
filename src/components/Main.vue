@@ -7,9 +7,9 @@
             <div id="leftMain">
 
                 <div id="leftText">
-                    <p class="textMargin" style="color:#000000; letter-spacing: 3px; font-family: 'Roboto', sans-serif; font-size: 20px; font-weight: bold;">приложение</p>
-                    <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 62px; font-weight: bold;">MathPlace</p>
-                    <h3 class="textMargin" style="width:378px; color:#919191; font-family: 'Roboto', sans-serif; margin-top: 15px; font-size: 22px;">место, где вы можете с легкостью поднять свой уровень в математике</h3>
+                    <p class="textMargin" style="color:#000000; letter-spacing: 3px; font-family: 'Roboto', sans-serif; font-size: 1.1em; font-weight: bold;">приложение</p>
+                    <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 3.8em; font-weight: bold;">MathPlace</p>
+                    <h3 class="textMargin" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень в математике</h3>
                     <div id="DownloadButton" class="gradient2">
                         <a href="#Download">
                             <div id="DownloadButtonText">
@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div>
-                    <img id="imgMain" src="./images/woman_arm2.jpg" alt="Второй текст"/>
+                    <img id="imgMain" src="./images/woman_arm2.png" alt="Второй текст"/>
                 </div>
             </div>
         </div>
@@ -108,9 +108,9 @@
         <div id="AboutDevelopers">
             <div id="design6" class="gradient"></div>
             <img id="finishImg" src="./images/two_phone.png" />
-            <div id="finishText">
-                <h1 style="height: auto; width: 40%; color:#763DCA; font-weight:700; font-family: 'Roboto', sans-serif; font-size: 25pt;">Начинай</h1>
-                <p style="height: auto; width: 60%; margin-top: 15px; color:#919191; font-weight:500; font-family: 'Roboto', sans-serif; font-size: 17pt;">Не бойтесь начать уже сегодня. В приложение есть теория и задачи для всех от начинающих до профи.</p>
+            <div id="finish">
+                <h1 id="finishTitle">Начинай</h1>
+                <p id="finishText">Не бойтесь начать уже сегодня. В приложение есть теория и задачи для всех от начинающих до профи.</p>
             </div>
             <div id="design8" class="gradient"></div>
         </div>
@@ -145,6 +145,8 @@
 
 <style lang="stylus" scoped>
 
+<style lang="stylus" scoped>
+
 #Content
     position absolute
     width 100%
@@ -163,6 +165,12 @@
     width 16%
     min-width 250px
     height 100%
+    @media screen and (max-width: 450px) {
+        display inline-block
+        width 49.3%
+        min-width 100px
+        // margin 0 auto
+    }
 
 #Main
     // position absolute
@@ -170,6 +178,12 @@
     height 90vh
     width 100%
     background-color #ffffff
+    @media screen and (max-width: 450px) {
+        height 500px
+    }
+    @media screen and (max-width: 800px) {
+        height 500px
+    }
 
 .Main2
     // position absolute
@@ -208,6 +222,16 @@
     width 80%
     left 20%
     top 10%
+    @media screen and (max-width: 450px) {
+        // display inline-block
+        height 100%
+        top 10px
+        // margin 0 auto
+    }
+    @media screen and (max-width: 800px) {
+        height 100%
+        top 15px
+    }
 
 #leftText
     position absolute
@@ -215,6 +239,18 @@
     width 100%
     left 0%
     top 10%
+
+#leftTextDiscrib
+    width 28%
+    min-width 300px
+    color #919191
+    font-family 'Roboto', sans-serif
+    margin-top 15px
+    font-size 1.22em
+    @media screen and (max-width: 480px) {
+        width 80%
+        min-width 100px
+    }
 
 #imgMain
     position absolute
@@ -300,6 +336,12 @@
     font-weight 400
     font-family  'Roboto', sans-serif
     font-size  2em
+    @media screen and (max-width: 450px) {
+        // display inline-block
+        width 80%
+        min-width 100px
+        // margin 0 auto
+    }
 
 #Topics
     z-index 3
@@ -351,7 +393,7 @@
 .TopicBox
     position relative
     width 27%
-    min-width 470px
+    min-width 420px
     height 740px
     min-height 70%
     overflow hidden
@@ -361,6 +403,24 @@
     border-radius 10px
     background-color #ffffff
     box-shadow rgba(145, 145, 145, 1) 10px 10px
+    @media screen and (max-width: 800px) {
+        width 68%
+        min-width 400px
+        margin-right 16%
+        margin-left 16%
+        height 700px
+        text-align center
+        vertical-align middle
+        min-width 100px
+    }
+    @media screen and (max-width: 450px) {
+        width 88%
+        height 650px
+        min-width 100px
+        margin-right 6%
+        margin-left 6%
+        min-width 100px
+    }
 
 #Task
     position relative
@@ -398,6 +458,12 @@
     border-radius 50px
     font-size 30pt
     text-align center
+    @media screen and (max-width: 1000px) {
+        width 90%
+        margin-left 10%
+        margin-right 10%
+        // display block
+    }
 
 #TaskText
     position relative
@@ -411,11 +477,26 @@
     border-radius 50px
     background-color #ffffff
     box-shadow rgba(0, 0, 0, 0.5) 0px 0px 15px
+    @media screen and (max-width: 1100px) {
+        width 90%
+        left 5%
+        // margin-left 10%
+        // margin-right 10%
+        display block
+    }
 
 #rightTask
     position relative
     display inline-block
     width 40%
+    // margin-top 800px
+    @media screen and (max-width: 1100px) {
+        width 90%
+        margin-top 0%
+        // margin-left 10%
+        margin-right 10%
+        display block
+    }
 
 #TextTask2
     position relative
@@ -429,6 +510,16 @@
     font-family 'Roboto', sans-serif
     text-align center
     font-size 25px
+    @media screen and (max-width: 1100px) {
+        width 90%
+        padding-top 20px
+        margin-top 15px
+        margin-left 15px
+        margin-right 15px
+        // margin-left 10%
+        // margin-right 10%
+        display block
+    }
 
 #TaskResultSucsessful
     z-index 6
@@ -486,6 +577,25 @@
     background-image url("images/GooglePlay.jpg")
     border-radius 10px
     box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+    @media screen and (max-width: 800px) {
+        width 60%
+        margin-right 20%
+        margin-left 20%
+        height 700px
+        text-align center
+        vertical-align middle
+        min-width 100px
+    }
+    @media screen and (max-width: 450px) {
+        // display block
+        width 80%
+        height 540px
+        min-width 100px
+        margin-left 10%
+        min-width 280px
+        margin-right 10%
+        // margin 0 auto
+    }
 
 #GooglePlay_DownloadButton
     position absolute
@@ -515,6 +625,26 @@
     background-color #ffffff
     border-radius 10px
     box-shadow rgba(0, 0, 0, 0.50) 10px 10px
+    @media screen and (max-width: 450px) {
+        display none
+        // height 640px
+        // width 80%
+        // margin-left 10%
+        // margin-right 10%
+        // min-width 100px
+        // margin 0 auto
+    }
+    @media screen and (max-width: 800px) {
+        display none
+        // width 68%
+        // min-width 400px
+        // margin-right 16%
+        // margin-left 16%
+        // height 700px
+        // text-align center
+        // vertical-align middle
+        // min-width 100px
+    }
 
 #DownloadAPK_DownloadButton
     position absolute
@@ -535,26 +665,61 @@
 #finishImg
     position relative
     width 35%
-    min-width 430px
+    min-width 400px
     height 700px
-    margin-left 10%
+    margin-left 9%
     margin-top 120px
     display inline-block
-    @media screen and (max-width: 1000px) {
+    @media screen and (max-width: 1010px) {
         display none
     }
 
-#finishText
+#finish
     position relative
     width 30%
+    min-width 380px
     height auto
     display inline-block
     margin-top 100px
     margin-left 20%
-    @media screen and (max-width: 1000px) {
+    @media screen and (max-width: 1010px) {
         width 80%
-        margin-left 20%
+        text-align center
+        min-width 0px
+        margin-left 10%
+        margin-right 10%
         margin-bottom 100px
+    }
+
+#finishTitle
+    height auto
+    width 40%
+    color #763DCA
+    font-weight 700
+    font-family 'Roboto', sans-serif
+    font-size 25pt
+    @media screen and (max-width: 1010px) {
+        width 100%
+        text-align center
+    }
+
+#finishText
+    height auto
+    width 60%
+    margin-top 15px
+    color #919191
+    font-weight:500
+    font-family 'Roboto', sans-serif
+    font-size 17pt
+    @media screen and (max-width: 480px) {
+        width 100%
+        text-align center
+    }
+    @media screen and (max-width: 480px) {
+        width 70%
+        margin-left 15%
+        margin-right 15%
+        text-align center
     }
 
 #AboutUs
@@ -593,6 +758,10 @@
     background-size 100% 100%
     background-color #ffffff
     box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+    @media screen and (max-width: 450px) {
+        height 100px
+        width 100px
+    }
 
 #telegram
     position relative
@@ -607,6 +776,10 @@
     background-size 100% 100%
     background-color #ffffff
     box-shadow rgba(0, 0, 0, 0.5) 10px 10px
+    @media screen and (max-width: 450px) {
+        height 100px
+        width 100px
+    }
 
 .gradient
     z-index 100
@@ -642,6 +815,9 @@ body
     height 100px
     border-top-right-radius 100%
     border-top-left-radius 90%
+    @media screen and (max-width: 1100px) {
+        margin-top 100px
+    }
 
 #designBottom1
     position relative

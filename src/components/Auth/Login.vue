@@ -4,7 +4,15 @@
       .container
         .auth
           .auth-title
-            h1.ui-title-2 Пикча
+            span.ui-title-2
+              strong Наше приложение
+            //img(class="picture", src='@/assets/saluting.png', alt='Пикча')
+            //img(class="picture", src='@/assets/gestures.png', alt='Пикча')
+            //img(class="picture", src='@/assets/birthday-and-party.png', alt='Пикча')
+            //img(class="picture", src='@/assets/miscellaneous.png', alt='Пикча')
+            a(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+              //img(class="picture", src='@/assets/google_play.svg', alt='Пикча')
+              img(class="picture", src='@/assets/googleplay.png', alt='Пикча')
           .auth-form
             span.ui-title-2 Вход
             form(@submit.prevent="onSubmit")
@@ -45,7 +53,7 @@
                 p.errorMsg.error(v-else) {{submitStatus}}
               .buttons-list-reference
                 span Нет аккаунта?
-                  router-link(to='/registration')  Создайте его!
+                  router-link(style="color: #763DCA" to='/registration')  Создайте его!
 </template>
 
 <script>
@@ -99,43 +107,84 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .auth
-    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-    display flex
+.auth
+  font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+  display flex
 
-  .auth-title,
-  .auth-form
-    width 50%
+.auth-form
+  width 56%
+  box-shadow 0 0 10px rgba(0,0,0,0.5)
+  border-radius 10px
+  padding 10px
+  margin-left 50px
 
-  .form-item
-    .error
-      display none
-      margin-bottom 2%
-      font-size 1em
-      color #fc5c65
-    &.errorInput
-      .error
-        display block
+.auth-title
+  width 40%
+  box-shadow 0 0 10px rgba(0,0,0,0.5)
+  border-radius 10px
+  padding 10px
+  text-align center
 
-  .buttons-list
-    text-align right
-    margin 3%
-    margin-right 0
-    margin-bottom 5%
-    &:last-child
-      margin-bottom 0
+.picture
+  width 80%
 
-  input
-    border-radius 5px
-    border-width 1px
-    border-color #000
-    &.error
-      border-color #fc5c65
+.auth-space
+  width 4%
 
-  .buttons-list-reference
-    text-align center
-
+.form-item
   .error
+    display none
+    margin-bottom 2%
+    font-size 1em
     color #fc5c65
+  &.errorInput
+    .error
+      display block
+
+.buttons-list
+  text-align right
+  margin 3%
+  margin-right 0
+  margin-bottom 5%
+  margin-left 5%
+  &:last-child
+    margin-bottom 0
+
+input
+  border-radius 5px
+  border-width 1px
+  border-color #763DCA
+  &.error
+    border-color #fc5c65
+
+button
+  border-radius 10px
+  background-color #763DCA
+  width auto
+  font-family 'Roboto', sans-serif
+  font-size 1.1em
+  padding 11px
+  font-weight 500
+
+.ui-title-2
+  color #763DCA
+  font-family 'Roboto', sans-serif
+  font-size 2.4em
+  font-weight bold
+
+.buttons-list-reference
+  text-decoration none
+  color #525252
+  text-align center
+
+@media screen and (max-width:500px)
+  .auth-title
+      display none
+  .auth-form
+    width 100%
+  .auth-space
+    width 0%
+.error
+  color #fc5c65
 
 </style>
