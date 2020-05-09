@@ -67,7 +67,7 @@
                   type="submit"
                 )
                   span(v-if="loading") Загрузка...
-                  span(v-else) Зарегистрироватся
+                  span(v-else) Зарегистрироваться
 
               //- .buttons-list.buttons-list-agreement
                 //- p

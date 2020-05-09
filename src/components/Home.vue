@@ -323,8 +323,9 @@ export default {
       isLoading: true
     }
   },
-  computed: mapGetters(['getTopics', 'isTopicsLoaded']),
+  computed: mapGetters(['getTopics', 'isTopicsLoaded', 'getUser']),
   async mounted () {
+    if (this.getUser === null) this.$router.push('/login')
     await this.fetchTopics()
     this.isLoading = false
     this.arrayPopular = this.$store.getters.getTopics.get('популярные')
