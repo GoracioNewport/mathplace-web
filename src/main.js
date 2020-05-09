@@ -9,9 +9,11 @@ import store from './store'
 import firebase from 'firebase/app'
 
 import Topic from './components/Topic'
+import vueSmoothScroll from 'vue2-smooth-scroll'
 
 Vue.use(Topic)
 Vue.use(Vuelidate)
+Vue.use(vueSmoothScroll)
 
 Vue.config.productionTip = false
 /* eslint-disable no-new */
@@ -35,10 +37,10 @@ new Vue({
 
     firebase.initializeApp(firebaseConfig)
 
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.$store.dispatch('loggedUser', user)
-      }
-    })
+    // firebase.auth().onAuthStateChanged(user => {
+    //   if (user) {
+    //     this.$store.dispatch('loggedUser', user)
+    //   }
+    // })
   }
 })

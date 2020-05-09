@@ -29,7 +29,7 @@
           :active.sync = "this.isLoading",
           :is-full-page = 'true',
           color = '#763dca')
-    .content(v-if="!isLoading")
+    .content(v-if="taskList.length > 1")
       .name
         span(
           v-if = 'this.taskList[this.activeTask].type == "task"'
@@ -72,7 +72,7 @@
         .but
           img(src='@/assets/images/comment_1.png', alt='Комментарии')
         .but
-          img(src='@/assets/images/like_none.png', alt='Лайк')
+          img(src='@/assets/images/like_none.png', alt='Лайк' @click = 'likeButton')
         input.sub.submit-button(
           type = 'submit',
           value = 'Отправить',
@@ -95,16 +95,16 @@ import Loading from 'vue-loading-overlay'
 import theoryImage from '@/assets/images/theory.png'
 import taskImage from '@/assets/images/question.png'
 import 'vue-loading-overlay/dist/vue-loading.css'
-import { mapActions } from 'vuex'
-import firebase from 'firebase/app'
-import 'firebase/firestore'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
     Loading
   },
   async mounted () {
+    this.updateUser(['lastTheme', this.getCurrentTopic])
     this.isLoading = true
+    await this.fetchLikes()
     await this.fetchTasks()
     this.taskList = this.$store.getters.getTasks
     this.isLoading = false
@@ -118,7 +118,7 @@ export default {
         id: 0,
         taskId: 0,
         text: '',
-        type: 'text',
+        type: 'task',
         answer: 0,
         difficulty: 0,
         solution: 0,
@@ -130,37 +130,53 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchTasks']),
+    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes']),
     changeActiveTask (i, thisTask) {
-      if (this.taskList[this.activeTask].type === 'theory') this.sendAnswer()
+      if (this.taskList[this.activeTask].type === 'theory' && this.taskList[this.activeTask].tries !== 2) this.sendAnswer()
       this.status = 'Idle'
       this.activeTask = i
       thisTask.activeTask = i
       this.taskList[this.activeTask].tries === 2 ? this.answer = this.taskList[this.activeTask].answer : this.answer = ''
     },
     sendAnswer () {
-      if (!this.$store.getters.checkUser) this.$router.push('/login')
+      if (this.$store.getters.getUser === null) this.$router.push('/login')
       else {
         let verdict = 1
         if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
-          this.status = 'Correct'
+          if (this.taskList[this.activeTask].type !== 'theory') {
+            this.updateUser(['money', this.getUser.money + 3])
+            this.updateUser(['right', this.getUser.right + 1])
+          } this.status = 'Correct'
           verdict = 2
         } else {
           this.status = 'Wrong'
           verdict = 0
         }
-        const db = firebase.firestore()
+
+        if (this.taskList[this.activeTask].type !== 'theory') this.updateUser(['submit', this.getUser.submit + 1])
         let newStatus = []
         for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
         newStatus[this.activeTask] = verdict
-        db.collection('account').doc(this.$store.getters.getUser.id).update({
-          [this.$store.getters.getCurrentTopic]: newStatus
-        })
+        this.updateUser([this.getCurrentTopic, newStatus])
         this.taskList[this.activeTask].tries = verdict
       }
+    },
+    likeButton () {
+      let liked = this.getUser.like
+      if (this.getUser.like.find(t => t === this.getCurrentTopic)) {
+        console.log('ok')
+        liked.splice(liked.indexOf(this.getCurrentTopic), 1)
+        this.like(true)
+      } else {
+        console.log('not ok')
+        liked.push(this.getCurrentTopic)
+        this.like(false)
+      }
+      this.updateUser(['like', liked])
     }
   },
   computed: {
+    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes']),
     getDifficulty () {
       var dif = this.taskList[this.activeTask].difficulty
       if (dif !== 'null') return parseInt(dif, 10)

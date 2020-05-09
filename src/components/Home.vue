@@ -11,20 +11,27 @@
             color = "#763dca")
     section(v-if="!this.isLoading")
       .sidebar
-        a(href='#school')
+        <a href="#school" v-smooth-scroll>
           img(src="@/components/images/school1.png", width= "50px", height = "50px")
-        a(href='#examination')
+        </a>
+        <a href="#examination" v-smooth-scroll>
           img(src="@/components/images/examination1.png", width= "50px", height = "50px")
-        a(href='#geometry')
+        </a>
+        <a href="#geometry" v-smooth-scroll>
           img(src="@/components/images/geometry1.png", width= "50px", height = "50px")
-        a(href='#algebra')
+        </a>
+        <a href="#algebra" v-smooth-scroll>
           img(src="@/components/images/algebra1.png", width= "50px", height = "50px")
-        a(href='#komba')
+        </a>
+        <a href="#komba" v-smooth-scroll>
           img(src="@/components/images/komba1.png", width= "50px", height = "50px")
-        a(href='#logic')
+        </a>
+        <a href="#logic" v-smooth-scroll>
           img(src="@/components/images/logic1.png", width= "50px", height = "50px")
-        a(href='#graph')
+        </a>
+        <a href="#graph" v-smooth-scroll>
           img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
+        </a>
       .container
         .pesontedan
           input(id='pesontedan-two',type='checkbox', name='pesontedans')
@@ -289,6 +296,7 @@
                   v-bind:theme='topic.theme'
                   v-bind:like='topic.like'
                 )
+          <div id="div-id"></div>
 </template>
 
 <script>
