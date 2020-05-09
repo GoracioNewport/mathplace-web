@@ -11,7 +11,7 @@
                     <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 3.8em; font-weight: bold;">MathPlace</p>
                     <h3 class="textMargin" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень в математике</h3>
                     <div id="DownloadButton" class="gradient2">
-                        <a href="#Download">
+                        <a href="#Download" v-smooth-scroll>
                             <div id="DownloadButtonText">
                                 <p>Скачать</p>
                             </div>
@@ -80,9 +80,9 @@
                 <p id="TextTask2">В три коробки поровну разложили 90 чашек. В результате в каждой коробке оказалось 30 чашек. Записать выражение, которое описывает, что 90 чашек разложено в 3 коробки. Далее выполнить действие в этом выражении.</p>
             </div>
             <div id="rightTask">
-                <input type="text" id="TaskIn">
+                <input type="text" id="TaskIn" v-model="answer" :class = "{ answerCorrect : this.state === 1, answerWrong : this.state === 2 }">
                 <a href="#Task-Button">
-                    <div id="TaskButton" v-on:click="sendAnswer()" class="gradient">
+                    <div id="TaskButton" @click="sendAnswer" class="gradient">
                         <p id="TaskButtonText">Отправить</p>
                     </div>
                 </a>
@@ -133,19 +133,30 @@
 </template>
 
 <script>
-// import Vue from 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js'
-// import Test from '@/components/test.js'
-// export default {
-//   components: {
-//     Test
-//   }
-// }
+
+export default {
+  data () {
+    return {
+      state: 0,
+      answer: ''
+    }
+  },
+  methods: {
+    sendAnswer () {
+      if (this.answer === '10') this.state = 1
+      else this.state = 2
+    }
+  }
+}
 
 </script>
 
 <style lang="stylus" scoped>
 
-<style lang="stylus" scoped>
+.answerCorrect
+  background rgba(0, 255, 0, .5)
+.answerWrong
+  background rgba(255, 0, 0, .5)
 
 #Content
     position absolute
