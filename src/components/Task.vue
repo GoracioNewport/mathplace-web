@@ -97,11 +97,12 @@
                 g#grp1(opacity='0', transform='translate(24)')
                   circle#oval1(fill='#9FC7FA', cx='2.5', cy='3', r='2')
                   circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
-        input.sub.submit-button(
+        .sub.submit-button(
           type = 'submit',
-          value = 'Отправить',
-          v-if = 'this.taskList[this.activeTask].type == "task"',
           @click = 'sendAnswer')
+            span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory"') Отправить
+            span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
+            span(v-else) Завершить
       #zatemnenie
         #okno
           .solve
@@ -166,6 +167,7 @@ export default {
     },
     sendAnswer () {
       if (this.$store.getters.getUser === null) this.$router.push('/login')
+      else if (this.activeTask === (this.taskList.length - 1) && this.taskList[this.activeTask].tries === 2) this.$router.push('/')
       else if (this.taskList[this.activeTask].tries !== 2) {
         let verdict = 1
         if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
@@ -185,6 +187,8 @@ export default {
         newStatus[this.activeTask] = verdict
         this.updateUser([this.getCurrentTopic, newStatus])
         this.taskList[this.activeTask].tries = verdict
+      } else {
+        this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
       }
     },
     likeButton () {
@@ -226,6 +230,7 @@ export default {
   .answerWrong
     background-color rgba(255, 0, 0, .4)
   .submit-button
+    text-align center
     &:hover
       cursor pointer
   .thisButton
