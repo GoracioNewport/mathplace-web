@@ -1,29 +1,30 @@
 <template lang="html">
 <div class='content-wrapper'>
-    <a href="#MenuBlock"> <div id="BackToMenuButton"> </div> </a>
-    <div id="Main">
-        <div id="leftMain">
+    <div id="Contest">
+        <a href="#MenuBlock"> <div id="BackToMenuButton"> </div> </a>
+        <div id="Main">
+            <div id="designBottom1" class="gradient"></div>
+            <div id="leftMain">
 
-            <div id="leftText">
-                <p class="textMargin" style="color:#000000; letter-spacing: 3px; font-family: 'Roboto', sans-serif; font-size: 20px; font-weight: bold;">приложение</p>
-                <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 62px; font-weight: bold;">MathPlace</p>
-                <h3 class="textMargin" style="width:378px; color:#919191; font-family: 'Roboto', sans-serif; margin-top: 15px; font-size: 22px;">место, где вы можете с легкостью поднять свой уровень в математике</h3>
-                <div id="DownloadButton" class="gradient2">
-                    <a href="#Download">
-                        <div id="DownloadButtonText">
-                            <p>Скачать</p>
-                        </div>
-                    </a>
+                <div id="leftText">
+                    <p class="textMargin" style="color:#000000; letter-spacing: 3px; font-family: 'Roboto', sans-serif; font-size: 20px; font-weight: bold;">приложение</p>
+                    <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 62px; font-weight: bold;">MathPlace</p>
+                    <h3 class="textMargin" style="width:378px; color:#919191; font-family: 'Roboto', sans-serif; margin-top: 15px; font-size: 22px;">место, где вы можете с легкостью поднять свой уровень в математике</h3>
+                    <div id="DownloadButton" class="gradient2">
+                        <a href="#Download">
+                            <div id="DownloadButtonText">
+                                <p>Скачать</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <img id="imgMain" src="./images/woman_arm2.jpg" alt="Второй текст"/>
                 </div>
             </div>
-            <div>
-                <img id="imgMain" src="./images/woman_arm2.jpg" alt="Второй текст"/>
-            </div>
         </div>
-        <div id="designBottom1" class="gradient"></div>
-    </div>
-    <div id="MenuBlock" class="gradient">
-        <h1 id="TextBlock">MathPlace охватывает</h1>
+        <div id="MenuBlock" class="gradient">
+            <h1 id="TextBlock">MathPlace охватывает</h1>
             <div class="MenuBlockTopic">
                 <img class="MenuButton" src="./images/algebra.png"/>
                 <p class="TextMenu">Алгебра</p>
@@ -31,10 +32,6 @@
             <div class="MenuBlockTopic">
                 <img class="MenuButton" src="./images/geometry.png"/>
                 <p class="TextMenu">Геометрия</p>
-            </div>
-            <div class="MenuBlockTopic">
-                <img class="MenuButton" src="./images/komba.png"/>
-                <p class="TextMenu">Комба</p>
             </div>
             <div class="MenuBlockTopic">
                 <img class="MenuButton" src="./images/examination.png"/>
@@ -52,6 +49,84 @@
                 <img class="MenuButton" src="./images/brain.png" />
                 <p class="TextMenu">Олимпиады</p>
             </div>
+        </div>
+        <div id="Feature">
+            <div class="Main2">
+                <div id="design6" class="gradient"></div>
+                <p id="FeatureText"><strong>MathPlace</strong> это приложение, где вы можете изучать математику, не убирая телефон из рук. Удобное и бесплатное. Благодаря понятной теории и интересным задачам для усвоения каждой теории, приложение подходит для тех кто хочет повысить свой скилл. Даже самые продвинутые найдут задачи себе по вкусу. <strong>Просто и Легко</strong></p>
+                <div id="design5" class="gradient"></div>
+            </div>
+        </div>
+        <div id="Topics" class="gradient">
+            <div class="TopicBox">
+                <img class="ImageBox" src="./images/first_block.png"/>
+                <h1 class="TitleBox">Интересные задачи</h1>
+                <p class="TextBox">Более 500 задач и 50 уроков, а также несколько вариантов ОГЭ</p>
+            </div>
+            <div class="TopicBox">
+                <img class="ImageBox" src="./images/second_block.png"/>
+                <h1 class="TitleBox">Достижения</h1>
+                <p class="TextBox">Вы можете выполнять достижения и соревноваться с друзьями</p>
+            </div>
+            <div class="TopicBox">
+                <img class="ImageBox" src="./images/third_block.png"/>
+                <h1 class="TitleBox">Простота</h1>
+                <p class="TextBox">Для вашего удобства темы структурированы по классам, разделам и темам. Вы обязательно найдете то что вам нужно</p>
+            </div>
+        </div>
+        <div id="Task">
+            <div id="design4" class="gradient"></div>
+            <div id="TaskText">
+                <p id="TextTask2">В три коробки поровну разложили 90 чашек. В результате в каждой коробке оказалось 30 чашек. Записать выражение, которое описывает, что 90 чашек разложено в 3 коробки. Далее выполнить действие в этом выражении.</p>
+            </div>
+            <div id="rightTask">
+                <input type="text" id="TaskIn">
+                <a href="#Task-Button">
+                    <div id="TaskButton" v-on:click="sendAnswer()" class="gradient">
+                        <p id="TaskButtonText">Отправить</p>
+                    </div>
+                </a>
+            </div>
+            <div id="design3" class="gradient"></div>
+        </div>
+        <div id="Download" class="gradient">
+            <div id="GooglePlayBox">
+                <a class="abutton" href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace&hl=ru">
+                    <div id="GooglePlay_DownloadButton">
+                        <p class="DownloadText">Скачать</p>
+                    </div>
+                </a>
+            </div>
+            <div id="DownloadAPKBox">
+                <a class="abutton" href="/">
+                    <div id="DownloadAPK_DownloadButton">
+                        <p style="color: #ffffff" class="DownloadText">Начать</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div id="AboutDevelopers">
+            <div id="design6" class="gradient"></div>
+            <img id="finishImg" src="./images/two_phone.png" />
+            <div id="finishText">
+                <h1 style="height: auto; width: 40%; color:#763DCA; font-weight:700; font-family: 'Roboto', sans-serif; font-size: 25pt;">Начинай</h1>
+                <p style="height: auto; width: 60%; margin-top: 15px; color:#919191; font-weight:500; font-family: 'Roboto', sans-serif; font-size: 17pt;">Не бойтесь начать уже сегодня. В приложение есть теория и задачи для всех от начинающих до профи.</p>
+            </div>
+            <div id="design8" class="gradient"></div>
+        </div>
+        <div id="AboutUs" class="gradient">
+            <p id="headerAboutUs">Наши соцсети</p>
+            <div id="Media">
+                <a href="vk.com">
+                    <div id="vkontakte">
+                    </div>
+                </a>
+                <a href="telegam.com">
+                    <div id="telegram">
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -70,9 +145,47 @@
 
 <style lang="stylus" scoped>
 
+#Content
+    position absolute
+    width 100%
+    height auto
+
+.content-wrapper
+    // clear both
+    position relative
+    display block
+    width 100%
+    height 300px
+
 .MenuBlockTopic
+    position relative
     display inline-block
-    width 14%
+    width 16%
+    min-width 250px
+    height 100%
+
+#Main
+    // position absolute
+    // float left
+    height 90vh
+    width 100%
+    background-color #ffffff
+
+.Main2
+    // position absolute
+    // float left
+    height auto
+    width 100%
+    background-color #ffffff
+
+#MenuBlock
+    position relative
+    // overflow hidden
+    width 100%
+    // float left
+    // margin-top 0%
+    height auto
+    z-index 50
 
 #BackToMenuButton
     z-index 10
@@ -85,13 +198,6 @@
     box-shadow rgba(0, 0, 0, 0.5) 5px 5px
     background-image url(images/Down.png)
     background-size 100%
-
-#Main
-    position absolute
-    float left
-    height 100%
-    width 100%
-    background-color #ffffff
 
 .textMargin
     margin 10px
@@ -112,21 +218,43 @@
 
 #imgMain
     position absolute
-    height 100%
+    height 98%
     width 50%
     left 40%
     top 00%
-    z-index 10
     @media screen and (max-width: 1000px) {
         display none
     }
+
+.TextMenu
+    position relative
+    width 100%
+    height auto
+    margin-top 20px
+    color #ffffff
+    font-family Verdana, Geneva, sans-serif
+    font-size 2em
+    text-align center
+    font-weight bold
+
+.MenuButton
+    position relative
+    height auto
+    width 60%
+    margin-left 20%
+    margin-right 20%
+    margin-top 20%
+    background-repeat no-repeat
+    background-size 60%
+    border-radius 100%
+    box-shadow rgba(0, 0, 0, 0.5) 7px 7px
 
 #DownloadButton
     // position absolute
     // left 0%
     // top 25%
     margin 10px
-    height 50px
+    height auto
     width 200px
     border-radius 50px 50px
     box-shadow rgba(145, 145, 145, 1) 5px 5px
@@ -135,6 +263,7 @@
     height 100%
     width 100%
     text-align center
+    vertical-align middle
     color:#FFFFFF
     font-size 2em
     font-family: 'Roboto', sans-serif
@@ -143,116 +272,55 @@
     // background-repeat no-repeat
     // background-size 100%
 
-#MenuBlock
-    float left
-    height 40%
-    width 100%
-
 #TextBlock
     width 100%
     margin-top 0%
     text-align center
     color #ffffff
     font-family 'Roboto', sans-serif
-    font-size 62px
+    font-size 3.5em
     font-weight bold
-
-.TextMenu
-    position absolute
-    width 170px
-    height 40px
-    margin-top 20px
-    color #ffffff
-    font-family Verdana, Geneva, sans-serif
-    font-size 30pt
-    text-align center
-    font-weight bold
-
-.MenuButton
-    height 150px
-    width 150px
-    background-repeat no-repeat
-    background-size 100%
-    border-radius 100%
-    box-shadow rgba(0, 0, 0, 0.5) 7px 7px
-
-#AlgebraMenu
-    position absolute
-    left 3%
-    top 35%
-    height 500px
-    width 170px
-
-#GeometryMenu
-    position absolute
-    left 17%
-    top 35%
-    height 400px
-    width 170px
-
-#KombaMenu
-    position absolute
-    left 31%
-    top 35%
-    height 400px
-    width 170px
-
-#OGEMenu
-    position absolute
-    left 45%
-    top 35%
-    height 400px
-    width 170px
-
-#LogikaMenu
-    position absolute
-    left 59%
-    top 35%
-    height 400px
-    width 170px
-
-#SchoolMenu
-    position absolute
-    left 73%
-    top 35%
-    height 400px
-    width 170px
-
-#OlympMenu
-    position absolute
-    left 86%
-    top 35%
-    height 400px
-    width 170px
 
 @import url(http://fonts.googleapis.com/css?family=Roboto:700,400&subset=latin,cyrillic);
 #Feature
-    position absolute
-    height 90%
+    position relative
+    height auto
     width 100%
-    top 140%
+
+#FeatureText
+    position relative
+    height auto
+    width 50%
+    min-width 450px
+    margin-top 10%
+    margin-bottom 10%
+    text-align center
+    margin 10% auto
+    color #525252
+    font-weight 400
+    font-family  'Roboto', sans-serif
+    font-size  2em
 
 #Topics
     z-index 3
-    position absolute
-    height 100%
+    position relative
+    height auto
     width 100%
-    top 230%
 
-#TextTask2
-    position absolute
-    width 70%
-    margin-top 5%
-    margin-left 15%
-    margin-right 15%
-    height 50%
-    color #525252
-    font-family 'Roboto', sans-serif
-    text-align center
-    font-size 25px
+.TopicBox
+    position relative
+    min-height 80%
+    overflow hidden
+    display inline-block
+    width 25%
+    margin 20px
+    height auto
+    border-radius 10px
+    background-color #ffffff
+    box-shadow rgba(145, 145, 145, 1) 10px 10px
 
 .ImageBox
-    width 100px
+    width 200px
     height 200px
     margin-left 10%
     display block
@@ -270,84 +338,61 @@
     font-weight bold
 .TextBox
     position relative
-    width 100%
-    height auto
+    width 80%
     text-align center
+    height auto
     margin-top 10%
+    margin-left 10%
+    margin-right 10%
     color #525252
     font-family 'Roboto', sans-serif
     font-size 20pt
+    display inline-block
 .TopicBox
     position relative
-    min-height 80%
+    width 27%
+    min-width 470px
+    height 740px
+    min-height 70%
     overflow hidden
-    display inline-block
-    width 25%
-    margin 20px
-    height auto
+    margin-top 10%
+    margin-right 3%
+    margin-left 3%
     border-radius 10px
     background-color #ffffff
-    box-shadow rgba(145, 145, 145, 1) 10px 10px
-
-#FirstTopic
-    z-index 2
-    position absolute
-    left 10%
-    top 25%
-    width 20%
-    height 60%
-    border-radius 10px
-    background-color #ffffff
-    box-shadow rgba(145, 145, 145, 1) 10px 10px
-
-#SecondTopic
-    position absolute
-    left 40%
-    top 20%
-    width 20%
-    height 60%
-    border-radius 10px
-    background-color #ffffff
-    box-shadow rgba(145, 145, 145, 1) 10px 10px
-
-#ThirdTopic
-    position absolute
-    left 70%
-    top 15%
-    width 20%
-    height 60%
-    background-color #ffffff
-    border-radius 10px
     box-shadow rgba(145, 145, 145, 1) 10px 10px
 
 #Task
-    position absolute
-    height 100%
+    position relative
+    height auto
     width 100%
-    top 330%
 
 #TaskButton
-    position absolute
-    top 75%
-    left 75%
-    height 7%
-    width 15%
+    position relative
+    height auto
+    width 300px
+    float right
     border-radius 50px 50px
     box-shadow rgba(0, 0, 0, 0.75) 5px 5px
 
 #TaskButtonText
-    width 90%
-    height 90%
-    background-image url(images/input.png)
-    background-size 100%
-    margin 2.5% 5%
+    width auto
+    height auto
+    margin-left 20px
+    margin-right 20px
+    margin-top 10px
+    margin-bottom 10px
+    text-align center
+    color #ffffff
+    font-family 'Roboto', sans-serif
+    font-size 25pt
+    font-weight bold
 
 #TaskIn
-    position absolute
-    top 65%
-    left 70%
-    height 7%
-    width 20%
+    position relative
+    height 60px
+    width 50%
+    margin-left 50%
     padding 1%
     border-style groove
     border-radius 50px
@@ -355,14 +400,35 @@
     text-align center
 
 #TaskText
-    position absolute
-    top 15%
+    position relative
+    top 40px
+    display inline-block
     left 10%
     width 50%
-    height 70%
+    height auto
+    margin-bottom 100px
+    min-height 600px
     border-radius 50px
     background-color #ffffff
     box-shadow rgba(0, 0, 0, 0.5) 0px 0px 15px
+
+#rightTask
+    position relative
+    display inline-block
+    width 40%
+
+#TextTask2
+    position relative
+    width 70%
+    padding-top 5%
+    margin-top 15%
+    margin-left 15%
+    margin-right 15%
+    height auto
+    color #525252
+    font-family 'Roboto', sans-serif
+    text-align center
+    font-size 25px
 
 #TaskResultSucsessful
     z-index 6
@@ -387,68 +453,62 @@
     background-size 100%
 
 #Download
-    position absolute
-    top 430%
+    position relative
+    height auto
+    width 100%
+    // display table
+    // margin 10%
+
+.DownloadText
     height 100%
     width 100%
+    text-align center
+    vertical-align middle
+    color:#FFFFFF
+    margin-top 8px
+    margin-bottom 8px
+    font-size 2em
+    font-family: 'Roboto', sans-serif
+    font-weight: bold
 
 #GooglePlayBox
-    position absolute
-    left 20%
-    top 10%
-    bottom 10%
-    width 20%
-    height 80%
+    position relative
+    display inline-block
+    width 27%
+    min-width 400px
+    height 760px
+    margin-top 50px
+    margin-bottom 50px
+    margin-left 11%
+    margin-right 11%
     background-repeat no-repeat
     background-size 100%
-    // background-image url("images/GooglePlay.jpg")
+    background-image url("images/GooglePlay.jpg")
     border-radius 10px
     box-shadow rgba(0, 0, 0, 0.5) 10px 10px
 
 #GooglePlay_DownloadButton
     position absolute
     left 45%
-    top 85%
-    height 10%
+    top 86%
+    height auto
     width 50%
     border-radius 50px 50px
-    background-image url(images/downloadGooglePlay.png)
-    background-size 100%
-    box-shadow rgba(0, 0, 0, 0.5) 5px 5px
+    box-shadow rgba(0, 0, 0, 0.5) 0px 0px 15px
     color #64D597
 
-#AppStoreBox
-    position absolute
-    left 40%
-    top 10%
-    bottom 10%
-    width 20%
-    height 80%
-    background-repeat no-repeat
-    background-size 100%
-    background-image url(images/AppStore.jpg)
-    border-radius 10px
-    box-shadow rgba(0, 0, 0, 0.5) 10px 10px
-
-#AppStore_DownloadButton
-    position absolute
-    left 45%
-    top 85%
-    height 10%
-    width 50%
-    border-radius 50px 50px
-    background-image url(images/downloadAppStore.png)
-    background-size 100%
-    box-shadow rgba(0, 0, 0, 0.5) 5px 5px
-    color #00AAF0
-
 #DownloadAPKBox
-    position absolute
-    left 60%
-    top 10%
+    position relative
+    // top 10%
+    display inline-block
     bottom 10%
-    width 20%
-    height 80%
+    width 27%
+    margin-top 50px
+    margin-bottom 50px
+    min-width 400px
+    height 760px
+    margin-left 11%
+    margin-right 11%
     background-repeat no-repeat
     background-size 100%
     background-image url(images/Android.jpg)
@@ -459,84 +519,92 @@
 #DownloadAPK_DownloadButton
     position absolute
     left 45%
-    top 85%
-    height 10%
+    top 86%
+    height auto
     width 50%
+    background #763DCA
     border-radius 50px 50px
-    background-image url(images/downloadAPK.png)
-    background-size 100%
-    box-shadow rgba(0, 0, 0, 0.5) 5px 5px
-    color #00AAF0
+    box-shadow rgba(0, 0, 0, 0.5) 0px 0px 15px
+    color #763DCA
 
 #AboutDevelopers
-    position absolute
-    top 530%
-    height 100%
+    position relative
+    height auto
     width 100%
 
-#AboutDevelopersHeader
-    position absolute
-    top 14%
-    left 30%
-    width 45%
-    height 10%
-    background-image url(images/AboutDevelopersHeader.png)
-    background-size 100%
-    background-repeat no-repeat
-
 #finishImg
-    position absolute
-    width 36%
-    height 80%
-    margin-top 10%
+    position relative
+    width 35%
+    min-width 430px
+    height 700px
     margin-left 10%
-    margin-bottom 10%
+    margin-top 120px
+    display inline-block
+    @media screen and (max-width: 1000px) {
+        display none
+    }
 
 #finishText
-    position absolute
-    width 34%
-    height 40%
-    margin-top 20%
-    margin-left 66%
+    position relative
+    width 30%
+    height auto
+    display inline-block
+    margin-top 100px
+    margin-left 20%
+    @media screen and (max-width: 1000px) {
+        width 80%
+        margin-left 20%
+        margin-bottom 100px
+    }
 
 #AboutUs
-    position absolute
-    top 630%
-    height 40%
+    position relative
+    height auto
     width 100%
 
 #headerAboutUs
-    position absolute
-    left 30%
-    height 30%
-    width 45%
-    background-image url(images/AboutUs.png)
-    background-repeat no-repeat
-    background-size 100%
+    position relative
+    height 100%
+    width 100%
+    text-align center
+    vertical-align middle
+    color:#FFFFFF
+    font-size 3.6em
+    font-family: 'Roboto', sans-serif
+    font-weight: bold
+
+#Media
+    position relative
+    margin 0px 0px 0px 0px auto
+    text-align center
+    vertical-align middle
+    margin-top 40px
 
 #vkontakte
-    position absolute
-    top 40%
-    left 35%
+    position relative
     height 200px
     width 200px
+    // margin-left 20%
+    margin-bottom 50px
+    display inline-block
     background-repeat no-repeat
     border-radius 50%
     background-image url(images/vk.png)
-    background-size 100%
+    background-size 100% 100%
     background-color #ffffff
     box-shadow rgba(0, 0, 0, 0.5) 10px 10px
 
 #telegram
-    position absolute
-    top 40%
-    left 55%
+    position relative
     height 200px
     width 200px
+    margin-bottom 50px
+    margin-left 80px
+    display inline-block
     background-repeat no-repeat
     border-radius 50%
     background-image url(images/telegram.png)
-    background-size 100%
+    background-size 100% 100%
     background-color #ffffff
     box-shadow rgba(0, 0, 0, 0.5) 10px 10px
 
@@ -568,6 +636,13 @@ body
     background-color #ffffff
     border-radius 50%
 
+#design3
+    position relative
+    width 100%
+    height 100px
+    border-top-right-radius 100%
+    border-top-left-radius 90%
+
 #designBottom1
     position relative
     width 100%
@@ -577,23 +652,21 @@ body
     border-top-left-radius 90%
 
 #design4
-    z-index 3
-    position absolute
+    position relative
     width 100%
-    height 10%
+    height 100px
     border-bottom-right-radius 100%
 
 #design5
-    position absolute
-    // top 90%
+    position relative
     width 100%
-    height 10%
+    height 100px
     border-top-left-radius 100%
 
 #design6
-    // position absolute
+    position relative
     width 100%
-    height 10%
+    height 100px
     border-bottom-left-radius 100%
     border-bottom-right-radius 100%
 
@@ -603,4 +676,13 @@ body
     width 100%
     height 10%
     border-top-left-radius 100%
+
+#design8
+    position absolute
+    width 100%
+    height 10%
+    top 90%
+    border-top-right-radius 100%
+    border-top-left-radius 90%
+
 </style>

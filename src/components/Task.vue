@@ -1,8 +1,9 @@
 <template lang="pug">
   .content-wrapper
     .taskbar(v-if="!isLoading")
+      a(href="/")
+        img#imgBack(src="@/components/images/back.png")
       .container
-        //- img(src=)
         .taskbar-content
           .taskbar-list__wrapper
             .taskbar-list
@@ -170,6 +171,21 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .taskbar-content
+    position relative
+  #imgBack
+    position absolute
+    float left
+    padding 6px
+    height 36px
+    width 36px
+    margin-left 2%
+    margin-top 15px
+    // display block
+    // margin 0px auto
+    // text-align center
+    // margin-top 5%
+    // vertical-align middle
   .solvedTask
     background rgba(0, 255, 0, .5) !important
   .failedTask

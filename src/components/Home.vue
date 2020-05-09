@@ -27,9 +27,9 @@
           img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
       .container
         .pesontedan
-          input(id='pesontedan-one',type='checkbox', name='pesontedans')
-          label(for='pesontedan-one')
-            a.title_topic2(name='school')
+          input(id='pesontedan-two',type='checkbox', name='pesontedans')
+          label(for='pesontedan-two')
+            a.title_topic2
               strong Популярные
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
@@ -108,6 +108,7 @@
                 v-bind:title='topic.title'
                 v-bind:percentage='topic.completed'
                 v-bind:theme='topic.theme'
+                v-bind:like='topic.like'
               )
           .pesontedan-content
             .topic-list
@@ -121,6 +122,7 @@
                   v-bind:title='topic.title'
                   v-bind:percentage='topic.completed'
                   v-bind:theme='topic.theme'
+                  v-bind:like='topic.like'
                 )
         .pesontedan
           input(id='pesontedan-four',type='checkbox', name='pesontedans')
@@ -139,6 +141,7 @@
                 v-bind:title='topic.title'
                 v-bind:percentage='topic.completed'
                 v-bind:theme='topic.theme'
+                v-bind:like='topic.like'
               )
           .pesontedan-content
             .topic-list
@@ -152,6 +155,7 @@
                   v-bind:title='topic.title'
                   v-bind:percentage='topic.completed'
                   v-bind:theme='topic.theme'
+                  v-bind:like='topic.like'
                 )
         .pesontedan
           input(id='pesontedan-five',type='checkbox', name='pesontedans')
@@ -170,6 +174,7 @@
                 v-bind:title='topic.title'
                 v-bind:percentage='topic.completed'
                 v-bind:theme='topic.theme'
+                v-bind:like='topic.like'
               )
           .pesontedan-content
             .topic-list
@@ -353,10 +358,11 @@ export default {
     text-align center
 
   .title_topic2
+    position relative
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     color: #000000
-    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-size: 50px
+    margin-top 500px
     font-weight: 100
 
   .topic-list
