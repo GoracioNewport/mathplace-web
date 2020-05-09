@@ -11,7 +11,7 @@
                     <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 3.8em; font-weight: bold;">MathPlace</p>
                     <h3 class="textMargin" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень в математике</h3>
                     <div id="DownloadButton" class="gradient2">
-                        <a href="#Download">
+                        <a href="#Download" v-smooth-scroll>
                             <div id="DownloadButtonText">
                                 <p>Скачать</p>
                             </div>
