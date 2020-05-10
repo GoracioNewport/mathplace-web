@@ -21,7 +21,7 @@
                     :src = 'taskImage')
                   img.img_taskbar(
                     v-if = "task.type == 'theory'"
-                    :class = '{ solvedTask : task.tries === 2, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
+                    :class = '{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
                     :src = "theoryImage")
 
     .loading-indicator
@@ -36,7 +36,7 @@
         ) Задача {{ this.taskList[this.activeTask].taskId }}
         span(
           v-if = 'this.taskList[this.activeTask].type == "theory"'
-        ) Теория
+        ) {{ getCurrentTopic }}
 
         img.star(
           class = "star1",
@@ -65,7 +65,7 @@
           class = "ans",
           v-bind:disabled = "this.taskList[this.activeTask].tries === 2",
           v-model = 'answer',
-          v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2, 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
+          v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
       .enter
         .send
           //- a.but(href="#zatemnenie")
@@ -163,23 +163,25 @@ export default {
   methods: {
     ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo']),
     changeActiveTask (i, thisTask) {
-      if (this.taskList[this.activeTask].type === 'theory' && this.taskList[this.activeTask].tries !== 2) this.sendAnswer()
+      console.log('Change Active Task', i + 1)
       this.status = 'Idle'
       this.activeTask = i
       thisTask.activeTask = i
       this.taskList[this.activeTask].tries === 2 ? this.answer = this.taskList[this.activeTask].answer : this.answer = ''
     },
     sendAnswer () {
+      console.log('Send Answer', this.taskList)
       if (this.$store.getters.getUser === null) this.$router.push('/login')
       else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/')
       else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) {
         let verdict = 1
-        if (this.answer === this.taskList[this.activeTask].answer) {
+        if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
           if (this.taskList[this.activeTask].type !== 'theory') {
             this.updateUser(['money', this.getUser.money + 3])
             this.updateUser(['right', this.getUser.right + 1])
           } this.status = 'Correct'
-          verdict = 2
+          if (this.taskList[this.activeTask].type === 'theory') verdict = 3
+          else verdict = 2
         } else {
           this.status = 'Wrong'
           verdict = 0
@@ -327,10 +329,8 @@ export default {
         margin-left 6%
     }
   .answ
-    position relative
-    height 100%
-    margin-top 30px
-    margin-bottom -10px
+    heigth auto
+    margin-top 20px
     margin-left 23%
     margin-right 23%
     @media screen and (max-width: 500px) {
@@ -338,10 +338,11 @@ export default {
         margin-right 6%
         margin-left 6%
     }
-  .enter
+  .submit-field
     position relative
-    width 54%
-    margin-top 8px
+    height 10px
+    // margin-bottom 0px
+  .enter
     margin-left 23%
     margin-right 23%
     display inline-block
@@ -352,20 +353,15 @@ export default {
     }
   .send
     positine relative
-    height 60px
-    width 100%
-    margin-top 8px
-    // dispaly flex
-    float right
+    margin-top 15px
   .sub
     position relative
-    width 90%
-    height 100%
-    // flex 1
+    width 80%
+    height auto
+    // margin-top 6%
     display inline-block
     color #ffffff
     padding 9px
-    vertical-align middle
     font-family: 'Roboto', sans-serif
     font-size: 25px
     font-weight: bold
@@ -374,38 +370,21 @@ export default {
     border-radius 10px
     outline none
     border none
-    // float right
-    @media screen and (max-width: 400px) {
-      height 80%
-      padding 5px
-    }
+    vertical-align middle
     &:hover
         background #5E2DA6
   .but
     position relative
-    width 10%
-    // float left
-    // max-width 100px
-    // margin-left 1%
-    // margin-right 6%
-    // padding 3%
-    // height 100%
+    width 20%
+    height 100%
     display inline-block
     vertical-align middle
-    // text-align center
+    text-align center
     // margin auto
-    // @media screen and (max-width: 400px) {
-    //   position relative
-    //   width 55px
-    //   height 100%
-    // }
-  .submit-field
-    position relative
-    height 100%
   .ans
-    position relative
     height 50px
     border-radius 10px
+    margin-bottom 0px
     color:#525252
     font-family: 'Roboto', sans-serif
     font-size: 25px
