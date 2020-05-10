@@ -332,33 +332,43 @@ export default {
     }
   .answ
     heigth auto
+    // width 67.5%
     margin-top 20px
     margin-left 23%
     margin-right 23%
     @media screen and (max-width: 500px) {
         width 88%
-        margin-right 6%
-        margin-left 6%
+        margin-right 0%
+        margin-left 0%
     }
-  .submit-field
-    position relative
-    height 10px
-    // margin-bottom 0px
   .enter
+    position relative
+    width 54%
     margin-left 23%
     margin-right 23%
+  .submit-field
+    position relative
+    width 100%
+    margin-top 0px
+    margin-left 0%
+    margin-right 0%
     display inline-block
     @media screen and (max-width: 500px) {
         width 88%
         margin-right 6%
         margin-left 6%
     }
+
   .send
     positine relative
-    margin-top 15px
+    height auto
+    width 100%
+    margin-top 8px
+    // dispaly flex
+    float right
   .sub
     position relative
-    width 80%
+    width 90%
     height auto
     // margin-top 6%
     display inline-block
@@ -377,14 +387,16 @@ export default {
         background #5E2DA6
   .but
     position relative
-    width 20%
+    width 10%
     height 100%
     display inline-block
     vertical-align middle
     text-align center
     // margin auto
   .ans
+    postion relative
     height 50px
+    width 100%
     border-radius 10px
     margin-bottom 0px
     color:#525252
@@ -395,9 +407,6 @@ export default {
     padding 11px
     outline none
     border none
-    max-width 100%
-    min-width 100%
-    width 100%
   #zatemnenie
     background rgba(102, 102, 102, 0.5)
     width 100%
