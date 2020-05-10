@@ -173,7 +173,7 @@ export default {
       console.log('Send Answer', this.taskList)
       if (this.$store.getters.getUser === null) this.$router.push('/login')
       else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/')
-      else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) {
+      else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) { // Task complition
         let verdict = 1
         if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
           if (this.taskList[this.activeTask].type !== 'theory') {
@@ -193,8 +193,8 @@ export default {
         newStatus[this.activeTask] = verdict
         this.updateUser([this.getCurrentTopic, newStatus])
         this.taskList[this.activeTask].tries = verdict
+        if (this.taskList[this.activeTask].type === 'theory') this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
       } else {
-        if (this.taskList[this.activeTask].type === 'theory') this.taskList[this.activeTask].tries = 3
         this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
       }
     },
