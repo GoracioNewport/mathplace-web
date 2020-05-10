@@ -7,13 +7,13 @@
             <div id="leftMain">
 
                 <div id="leftText">
-                    <p class="textMargin" style="color:#000000; letter-spacing: 3px; font-family: 'Roboto', sans-serif; font-size: 1.1em; font-weight: bold;">приложение</p>
+                    <p class="textMargin" style="color:#000000; letter-spacing: 3px; font-family: 'Roboto', sans-serif; font-size: 1.1em; font-weight: bold;">платформа</p>
                     <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 3.8em; font-weight: bold;">MathPlace</p>
                     <h3 class="textMargin" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень в математике</h3>
                     <div id="DownloadButton" class="gradient2">
                         <a href="#Download" v-smooth-scroll>
                             <div id="DownloadButtonText">
-                                <p>Скачать</p>
+                                <p>Начать</p>
                             </div>
                         </a>
                     </div>
@@ -53,7 +53,7 @@
         <div id="Feature">
             <div class="Main2">
                 <div id="design6" class="gradient"></div>
-                <p id="FeatureText"><strong>MathPlace</strong> это приложение, где вы можете изучать математику, не убирая телефон из рук. Удобное и бесплатное. Благодаря понятной теории и интересным задачам для усвоения каждой теории, приложение подходит для тех кто хочет повысить свой скилл. Даже самые продвинутые найдут задачи себе по вкусу. <strong>Просто и Легко</strong></p>
+                <p id="FeatureText"><strong>MathPlace</strong> это платформа, где вы можете изучать математику, не убирая телефон из рук. Удобное и бесплатное. Благодаря понятной теории и интересным задачам для усвоения каждой теории, платформа подходит для тех кто хочет повысить свой скилл. Даже самые продвинутые найдут задачи себе по вкусу. <strong>Просто и Легко</strong></p>
                 <div id="design5" class="gradient"></div>
             </div>
         </div>
@@ -110,7 +110,7 @@
             <img id="finishImg" src="./images/two_phone.png" />
             <div id="finish">
                 <h1 id="finishTitle">Начинай</h1>
-                <p id="finishText">Не бойтесь начать уже сегодня. В приложение есть теория и задачи для всех от начинающих до профи.</p>
+                <p id="finishText">Не бойтесь начать уже сегодня. У нас есть теория и задачи для всех от начинающих до профи.</p>
             </div>
             <div id="design8" class="gradient"></div>
         </div>

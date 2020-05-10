@@ -340,7 +340,7 @@ export default {
   .enter
     position relative
     width 54%
-    margin-top 8px
+    margin-top 0px
     margin-left 23%
     margin-right 23%
     display inline-block
@@ -351,7 +351,7 @@ export default {
     }
   .send
     positine relative
-    height 60px
+    height auto
     width 100%
     margin-top 8px
     // dispaly flex
