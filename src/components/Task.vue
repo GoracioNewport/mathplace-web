@@ -74,7 +74,7 @@
           //- .but
           //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
           .but
-            input#checkbox.checkbox(type='checkbox')
+            input#checkbox.checkbox(type='checkbox' v-model = 'topicLiked')
             label(for='checkbox' @click = 'likeButton')
               svg#heart-svg(viewBox='467 392 58 57', xmlns='http://www.w3.org/2000/svg')
                 g#Group(fill='none', fill-rule='evenodd', transform='translate(467 392)')
@@ -139,6 +139,7 @@ export default {
     await this.fetchTasks()
     this.taskList = this.$store.getters.getTasks
     this.isLoading = false
+    if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
   },
   data () {
     return {
@@ -157,7 +158,8 @@ export default {
       }],
       isLoading: true,
       answer: '',
-      status: 'Idle'
+      status: 'Idle',
+      topicLiked: false
     }
   },
   methods: {
