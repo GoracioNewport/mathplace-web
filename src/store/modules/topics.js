@@ -30,11 +30,11 @@ export default {
               snapshot.forEach((doc) => {
                 var right = 0
                 var all = doc.data().cnt_task
-                var like = doc.data().like
+                var like = Number(doc.data().like)
                 let title = doc.id
-                console.log(title.toString())
+                // console.log(title.toString())
                 if (goodTheme.indexOf(title.toString()) === -1) {
-                  console.log('good')
+                  // console.log('good')
                   var topic = usr.data()[title]
                   var theme = doc.data().theme
                   if (topic != null) {
@@ -109,20 +109,46 @@ export default {
                       'like': like
                     })
                   }
-                  topics.push({
-                    'id': innderId++,
-                    'title': title,
-                    'completed': (right * 100) / all,
-                    'theme': theme,
-                    'like': like
-                  })
+                  var r = false
+                  var sss = topics.length
+                  console.log(doc.id.toString() + ' ' + String(sss))
+                  for (let i = 0; i < sss; i++) {
+                    if (like >= topics[i].like) {
+                      r = true
+                      topics.splice(i, 0, {
+                        'id': innderId++,
+                        'title': title,
+                        'completed': (right * 100) / all,
+                        'theme': theme,
+                        'like': like
+                      })
+                      break
+                    }
+                  }
+                  if (!r) {
+                    topics.push({
+                      'id': innderId++,
+                      'title': title,
+                      'completed': (right * 100) / all,
+                      'theme': theme,
+                      'like': like
+                    })
+                  }
+                  // topics.push({
+                  //   'like': like,
+                  //   'id': innderId++,
+                  //   'title': title,
+                  //   'completed': (right * 100) / all,
+                  //   'theme': theme
+                  // })
                 }
               })
             })
         })
-      topics.sort(function (a, b) {
-        return b.like - a.like
-      })
+      // await topics.sort(function (a, b) {
+      //   console.log(a.like, b.like)
+      //   return a.like - b.like
+      // })
       mapTopic.set('популярные', topics)
       mapTopic.set('школа', school)
       mapTopic.set('огэ', OGE)
