@@ -254,6 +254,10 @@ export default {
     await this.fetchTopics()
     this.isLoading = false
     this.arrayPopular = this.$store.getters.getTopics.get('популярные')
+    // await this.arrayPopular.sort(function (a, b) {
+    //   console.log(a.like, b.like)
+    //   return (a.like - b.like) > 0
+    // })
     this.arraySchool = this.$store.getters.getTopics.get('школа')
     this.arrayOGE = this.$store.getters.getTopics.get('огэ')
     this.arrayGeometry = this.$store.getters.getTopics.get('геометрия')
