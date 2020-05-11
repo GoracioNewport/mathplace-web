@@ -121,7 +121,7 @@ export default {
             })
         })
       topics.sort(function (a, b) {
-        return b.like - a.like
+        return b.like > a.like
       })
       mapTopic.set('популярные', topics)
       mapTopic.set('школа', school)
