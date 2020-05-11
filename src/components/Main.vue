@@ -38,10 +38,6 @@
                 <p class="TextMenu">ОГЭ2020</p>
             </div>
             <div class="MenuBlockTopic">
-                <img class="MenuButton" src="./images/logic.png"/>
-                <p class="TextMenu">Логика</p>
-            </div>
-            <div class="MenuBlockTopic">
                 <img class="MenuButton" src="./images/school.png" />
                 <p class="TextMenu">Школа</p>
             </div>
@@ -173,7 +169,7 @@ export default {
 .MenuBlockTopic
     position relative
     display inline-block
-    width 16%
+    width 19%
     min-width 250px
     height 100%
     @media screen and (max-width: 450px) {
@@ -404,7 +400,7 @@ export default {
 .TopicBox
     position relative
     width 27%
-    min-width 420px
+    min-width 410px
     height 740px
     min-height 70%
     overflow hidden

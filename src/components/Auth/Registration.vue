@@ -138,7 +138,6 @@ export default {
           .then(() => {
             this.submitStatus = 'OK'
             this.registerUserInDatabase(this.name, user)
-            this.$router.push('/')
           })
           .catch(err => {
             this.submitStatus = err.message
@@ -181,6 +180,7 @@ export default {
           }
 
           db.collection('account').doc(this.$store.state.user.user.id).set(data)
+          this.$router.push('/')
         })
     }
   }
