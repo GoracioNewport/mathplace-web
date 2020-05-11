@@ -65,7 +65,7 @@
           class = "ans",
           v-bind:disabled = "this.taskList[this.activeTask].tries === 2",
           v-model = 'answer',
-          v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
+          v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 || this.taskList[this.activeTask].tries == 3 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
       .enter
         .send
           //- a.but(href="#zatemnenie")
