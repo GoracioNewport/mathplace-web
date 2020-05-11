@@ -16,6 +16,7 @@ export default {
       var logika = []
       var graf = []
       var idea = []
+      var goodTheme = ['ОГЭ Вариант 8', 'Тестовая тема', 'Числосочетание', 'Свойства площади квадрата, прямоугольника, параллелограмма. ', 'Симметрия', 'Параллельность и сумма углов треугольников', 'Признаки равенства четырёхугольников', 'Олимпиада им.Эйлера 2018', 'Вероятность', 'Вероятность (Дополнительно)', 'Координатная плоскость', 'Параллельные прямые']
       var innderId = 0
       var mapTopic = new Map()
       const db = firebase.firestore()
@@ -31,87 +32,91 @@ export default {
                 var all = doc.data().cnt_task
                 var like = doc.data().like
                 let title = doc.id
-                var topic = usr.data()[title]
-                var theme = doc.data().theme
-                if (topic != null) {
-                  for (let i = 0; i < topic.length; i++) {
-                    if (topic[i] === 2) {
-                      right++
+                console.log(title.toString())
+                if (goodTheme.indexOf(title.toString()) === -1) {
+                  console.log('good')
+                  var topic = usr.data()[title]
+                  var theme = doc.data().theme
+                  if (topic != null) {
+                    for (let i = 0; i < topic.length; i++) {
+                      if (topic[i] === 2) {
+                        right++
+                      }
                     }
                   }
+                  if (theme === 'алгебра') {
+                    algebra.push({
+                      'id': innderId++,
+                      'title': title,
+                      'completed': (right * 100) / all,
+                      'theme': theme,
+                      'like': like
+                    })
+                  } else if (theme === 'геометрия') {
+                    geometry.push({
+                      'id': innderId++,
+                      'title': title,
+                      'completed': (right * 100) / all,
+                      'theme': theme,
+                      'like': like
+                    })
+                  } else if (theme === 'школа') {
+                    school.push({
+                      'id': innderId++,
+                      'title': title,
+                      'completed': (right * 100) / all,
+                      'theme': theme,
+                      'like': like
+                    })
+                  } else if (theme === 'огэ') {
+                    OGE.push({
+                      'id': innderId++,
+                      'title': title,
+                      'completed': (right * 100) / all,
+                      'theme': theme,
+                      'like': like
+                    })
+                  } else if (theme === 'комбинаторика' || theme === 'логика' || theme === 'графы') {
+                    komba.push({
+                      'id': innderId++,
+                      'title': title,
+                      'completed': (right * 100) / all,
+                      'theme': theme,
+                      'like': like
+                    })
+                  } else if (theme === 'логика') {
+                    logika.push({
+                      'id': innderId++,
+                      'title': title,
+                      'completed': (right * 100) / all,
+                      'theme': theme,
+                      'like': like
+                    })
+                  } else if (theme === 'графы') {
+                    graf.push({
+                      'id': innderId++,
+                      'title': title,
+                      'completed': (right * 100) / all,
+                      'theme': theme,
+                      'like': like
+                    })
+                  } else if (theme === 'идеи') {
+                    idea.push({
+                      'id': innderId++,
+                      'title': title,
+                      'completed': (right * 100) / all,
+                      'theme': theme,
+                      'like': like
+                    })
+                  }
+                  topics.push({
+                    'id': innderId++,
+                    'title': title,
+                    'completed': (right * 100) / all,
+                    'theme': theme,
+                    'like': like
+                  })
                 }
-                if (theme === 'алгебра') {
-                  algebra.push({
-                    'id': innderId++,
-                    'title': title,
-                    'completed': (right * 100) / all,
-                    'theme': theme,
-                    'like': like
-                  })
-                } else if (theme === 'геометрия') {
-                  geometry.push({
-                    'id': innderId++,
-                    'title': title,
-                    'completed': (right * 100) / all,
-                    'theme': theme,
-                    'like': like
-                  })
-                } else if (theme === 'школа') {
-                  school.push({
-                    'id': innderId++,
-                    'title': title,
-                    'completed': (right * 100) / all,
-                    'theme': theme,
-                    'like': like
-                  })
-                } else if (theme === 'огэ') {
-                  OGE.push({
-                    'id': innderId++,
-                    'title': title,
-                    'completed': (right * 100) / all,
-                    'theme': theme,
-                    'like': like
-                  })
-                } else if (theme === 'комбинаторика') {
-                  komba.push({
-                    'id': innderId++,
-                    'title': title,
-                    'completed': (right * 100) / all,
-                    'theme': theme,
-                    'like': like
-                  })
-                } else if (theme === 'логика') {
-                  logika.push({
-                    'id': innderId++,
-                    'title': title,
-                    'completed': (right * 100) / all,
-                    'theme': theme,
-                    'like': like
-                  })
-                } else if (theme === 'графы') {
-                  graf.push({
-                    'id': innderId++,
-                    'title': title,
-                    'completed': (right * 100) / all,
-                    'theme': theme,
-                    'like': like
-                  })
-                } else if (theme === 'идеи') {
-                  idea.push({
-                    'id': innderId++,
-                    'title': title,
-                    'completed': (right * 100) / all,
-                    'theme': theme,
-                    'like': like
-                  })
-                }
-                topics.push({
-                  'id': innderId++,
-                  'title': title,
-                  'completed': (right * 100) / all,
-                  'theme': theme,
-                  'like': like
-                })
               })
             })
         })
@@ -124,9 +129,9 @@ export default {
       mapTopic.set('геометрия', geometry)
       mapTopic.set('алгебра', algebra)
       mapTopic.set('комбинаторика', komba)
-      mapTopic.set('логика', logika)
-      mapTopic.set('графы', graf)
-      mapTopic.set('идеи', komba)
+      // mapTopic.set('логика', logika)
+      // mapTopic.set('графы', graf)
+      // mapTopic.set('идеи', komba)
       ctx.commit('updateTopics', mapTopic)
       ctx.commit('updateTopicsLoaded', true)
     },

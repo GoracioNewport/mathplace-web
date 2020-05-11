@@ -632,7 +632,7 @@ export default {
     margin-right 11%
     background-repeat no-repeat
     background-size 100%
-    background-image url(images/Android.jpg)
+    background-image url(images/GooglePlay.png)
     background-color #ffffff
     border-radius 10px
     box-shadow rgba(0, 0, 0, 0.50) 10px 10px

@@ -344,8 +344,14 @@ export default {
   .enter
     position relative
     width 54%
+    height 100%
     margin-left 23%
     margin-right 23%
+    @media screen and (max-width: 500px) {
+        width 88%
+        margin-right 6%
+        margin-left 6%
+    }
   .submit-field
     position relative
     width 100%
@@ -363,6 +369,8 @@ export default {
     positine relative
     height auto
     width 100%
+    margin-left 0%
+    margin-right 0%
     margin-top 8px
     // dispaly flex
     float right

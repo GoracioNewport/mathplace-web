@@ -24,18 +24,12 @@
           img(src="@/components/images/algebra1.png", width= "50px", height = "50px")
         </a>
         <a href="#komba" v-smooth-scroll>
-          img(src="@/components/images/komba1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#logic" v-smooth-scroll>
           img(src="@/components/images/logic1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#graph" v-smooth-scroll>
-          img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
         </a>
       .container
         .pesontedan
-          input(id='pesontedan-two',type='checkbox', name='pesontedans')
-          label(for='pesontedan-two')
+          input(id='pesontedan-eight',type='checkbox', name='pesontedans')
+          label(for='pesontedan-eight')
             a.title_topic2
               strong Популярные
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -201,7 +195,7 @@
           input(id='pesontedan-six',type='checkbox', name='pesontedans')
           label#komba(for='pesontedan-six')
             a.title_topic2(name='komba')
-              strong Комбинаторика
+              strong Другие
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
@@ -230,73 +224,6 @@
                   v-bind:theme='topic.theme'
                   v-bind:like='topic.like'
                 )
-        .pesontedan
-          input(id='pesontedan-seven',type='checkbox', name='pesontedans')
-          label#logic(for='pesontedan-seven')
-            a.title_topic2(name='logic')
-              strong Логика
-            //- p(:name='gggg').title_topic {{ array[0] }}
-          .topic-list
-            .topic-item-wrapper(
-              v-for = "(topic, index) in this.arrayLogika",
-              v-if='index<4',
-              :key = "topic.id"
-            )
-              Topic(
-                v-bind:id='topic.id',
-                v-bind:title='topic.title'
-                v-bind:percentage='topic.completed'
-                v-bind:theme='topic.theme'
-                v-bind:like='topic.like'
-              )
-          .pesontedan-content
-            .topic-list
-              .topic-item-wrapper(
-                v-for = "(topic, index) in this.arrayLogika"
-                v-if='index>=4',
-                :key = "topic.id"
-              )
-                Topic(
-                  v-bind:id='topic.id',
-                  v-bind:title='topic.title'
-                  v-bind:percentage='topic.completed'
-                  v-bind:theme='topic.theme'
-                  v-bind:like='topic.like'
-                )
-        .pesontedan
-          input(id='pesontedan-eight',type='checkbox', name='pesontedans')
-          label#graph(for='pesontedan-eight')
-            a.title_topic2(name='graph')
-              strong Графы
-            //- p(:name='gggg').title_topic {{ array[0] }}
-          .topic-list
-            .topic-item-wrapper(
-              v-for = "(topic, index) in this.arrayGraf",
-              v-if='index<4',
-              :key = "topic.id"
-            )
-              Topic(
-                v-bind:id='topic.id',
-                v-bind:title='topic.title'
-                v-bind:percentage='topic.completed'
-                v-bind:theme='topic.theme'
-                v-bind:like='topic.like'
-              )
-          .pesontedan-content
-            .topic-list
-              .topic-item-wrapper(
-                v-for = "(topic, index) in getTopics.get('графы')"
-                v-if='index>=4',
-                :key = "topic.id"
-              )
-                Topic(
-                  v-bind:id='topic.id',
-                  v-bind:title='topic.title'
-                  v-bind:percentage='topic.completed'
-                  v-bind:theme='topic.theme'
-                  v-bind:like='topic.like'
-                )
-          <div id="div-id"></div>
 </template>
 
 <script>
@@ -318,8 +245,6 @@ export default {
       arrayGeometry: [],
       arrayAlgebra: [],
       arrayKomba: [],
-      arrayLogika: [],
-      arrayGraf: [],
       isLoading: true
     }
   },
@@ -334,8 +259,6 @@ export default {
     this.arrayGeometry = this.$store.getters.getTopics.get('геометрия')
     this.arrayAlgebra = this.$store.getters.getTopics.get('алгебра')
     this.arrayKomba = this.$store.getters.getTopics.get('комбинаторика')
-    this.arrayLogika = this.$store.getters.getTopics.get('логика')
-    this.arrayGraf = this.$store.getters.getTopics.get('графы')
   },
   methods: mapActions(['fetchTopics'])
 }
