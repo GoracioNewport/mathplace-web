@@ -174,7 +174,7 @@ export default {
       this.taskList[this.activeTask].tries === 2 ? this.answer = this.taskList[this.activeTask].answer : this.answer = ''
     },
     sendAnswer () {
-      if (this.answer === '') alert('Поле для ввода пустое!')
+      if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory') alert('Поле для ввода пустое!')
       else {
         if (this.$store.getters.getUser === null) this.$router.push('/login')
         else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/')
