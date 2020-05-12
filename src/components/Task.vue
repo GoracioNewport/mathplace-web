@@ -66,6 +66,7 @@
           class = "ans",
           v-bind:disabled = "this.taskList[this.activeTask].tries === 2",
           v-model = 'answer',
+          @keyup.enter = 'sendAnswer',
           v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 || this.taskList[this.activeTask].tries == 3 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
       .enter
         .send
@@ -102,7 +103,7 @@
                   g#grp1(opacity='0', transform='translate(24)')
                     circle#oval1(fill='#9FC7FA', cx='2.5', cy='3', r='2')
                     circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
-          .sub.submit-button(
+          button.sub.submit-button(
             type = 'submit',
             @click = 'sendAnswer')
               span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory"') Отправить
@@ -173,33 +174,35 @@ export default {
       this.taskList[this.activeTask].tries === 2 ? this.answer = this.taskList[this.activeTask].answer : this.answer = ''
     },
     sendAnswer () {
-      console.log('Send Answer', this.taskList)
-      if (this.$store.getters.getUser === null) this.$router.push('/login')
-      else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/')
-      else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) { // Task complition
-        this.answer = this.answer.replace(',', '.')
-        let verdict = 1
-        if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
-          if (this.taskList[this.activeTask].type !== 'theory') {
-            this.updateUser(['money', this.getUser.money + 3])
-            this.updateUser(['right', this.getUser.right + 1])
-          } this.status = 'Correct'
-          if (this.taskList[this.activeTask].type === 'theory') verdict = 3
-          else verdict = 2
-        } else {
-          this.status = 'Wrong'
-          verdict = 0
-        }
+      if (this.answer === '') alert('Поле для ввода пустое!')
+      else {
+        if (this.$store.getters.getUser === null) this.$router.push('/login')
+        else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/')
+        else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) { // Task complition
+          this.answer = this.answer.replace(',', '.')
+          let verdict = 1
+          if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
+            if (this.taskList[this.activeTask].type !== 'theory') {
+              this.updateUser(['money', this.getUser.money + 3])
+              this.updateUser(['right', this.getUser.right + 1])
+            } this.status = 'Correct'
+            if (this.taskList[this.activeTask].type === 'theory') verdict = 3
+            else verdict = 2
+          } else {
+            this.status = 'Wrong'
+            verdict = 0
+          }
 
-        if (this.taskList[this.activeTask].type !== 'theory') this.updateUser(['submit', this.getUser.submit + 1])
-        let newStatus = []
-        for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
-        newStatus[this.activeTask] = verdict
-        this.updateUser([this.getCurrentTopic, newStatus])
-        this.taskList[this.activeTask].tries = verdict
-        if (this.taskList[this.activeTask].type === 'theory') this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
-      } else {
-        this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
+          if (this.taskList[this.activeTask].type !== 'theory') this.updateUser(['submit', this.getUser.submit + 1])
+          let newStatus = []
+          for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
+          newStatus[this.activeTask] = verdict
+          this.updateUser([this.getCurrentTopic, newStatus])
+          this.taskList[this.activeTask].tries = verdict
+          if (this.taskList[this.activeTask].type === 'theory') this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
+        } else {
+          this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
+        }
       }
     },
     likeButton () {
