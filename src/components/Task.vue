@@ -177,6 +177,7 @@ export default {
       if (this.$store.getters.getUser === null) this.$router.push('/login')
       else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/')
       else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) { // Task complition
+        this.answer = this.answer.replace(',', '.')
         let verdict = 1
         if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
           if (this.taskList[this.activeTask].type !== 'theory') {
@@ -279,6 +280,7 @@ export default {
     background-size 100%
     background rgba(102, 102, 102, 0.5)
   .condition-image
+    max-height 300px
     display block
     float none
     margin-left auto
