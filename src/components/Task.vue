@@ -18,7 +18,7 @@
 
                   img.img_taskbar(
                     v-if = 'task.type == "task"'
-                    :class = '{ solvedTask : task.tries === 2, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask }'
+                    :class = '{ solvedTask : task.tries === 2, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
                     :src = 'taskImage')
                   img.img_taskbar(
                     v-if = "task.type == 'theory'"
