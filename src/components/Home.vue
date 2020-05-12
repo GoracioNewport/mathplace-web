@@ -50,7 +50,7 @@
             .topic-list
               .topic-item-wrapper(
                 v-for = "(topic, index) in getTopics.get('популярные')"
-                v-if='index>=4',
+                v-if='index>=4 && index<12',
                 :key = "topic.id"
               )
                 Topic(

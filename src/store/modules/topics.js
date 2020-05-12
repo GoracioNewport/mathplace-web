@@ -22,6 +22,7 @@ export default {
       const db = firebase.firestore()
       // var docRef = db.collection('account').doc('FGffHhxvVUfa79meSj7bHMYviRs2')
       // docRef.get().then(function (doc2) {
+      console.log(this.getters.getUser.id)
       var userData = db.collection('account').doc(this.getters.getUser.id)
       await userData.get()
         .then(usr => {
@@ -32,9 +33,9 @@ export default {
                 var all = doc.data().cnt_task
                 var like = Number(doc.data().like)
                 let title = doc.id
-                // console.log(title.toString())
+                console.log(title.toString())
                 if (goodTheme.indexOf(title.toString()) === -1) {
-                  // console.log('good')
+                  console.log('good')
                   var topic = usr.data()[title]
                   var theme = doc.data().theme
                   if (topic != null) {

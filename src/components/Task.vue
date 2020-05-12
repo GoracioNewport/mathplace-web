@@ -1,5 +1,6 @@
 <template lang="pug">
   .content-wrapper
+    //- img#imgSmile(src="@/components/images/back.png")
     .taskbar(v-if="!isLoading")
       a(href="/")
         img#imgBack(src="@/components/images/back.png")
@@ -231,6 +232,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  #imgSmile
+    position relative
+    height 90%
+    width 90%
   .taskbar-content
     position relative
   #imgBack

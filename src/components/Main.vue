@@ -38,10 +38,6 @@
                 <p class="TextMenu">ОГЭ2020</p>
             </div>
             <div class="MenuBlockTopic">
-                <img class="MenuButton" src="./images/logic.png"/>
-                <p class="TextMenu">Логика</p>
-            </div>
-            <div class="MenuBlockTopic">
                 <img class="MenuButton" src="./images/school.png" />
                 <p class="TextMenu">Школа</p>
             </div>
@@ -61,7 +57,7 @@
             <div class="TopicBox">
                 <img class="ImageBox" src="./images/first_block.png"/>
                 <h1 class="TitleBox">Интересные задачи</h1>
-                <p class="TextBox">Более 500 задач и 50 уроков, а также несколько вариантов ОГЭ</p>
+                <p class="TextBox">Более 100 задач и 30 уроков, а также несколько вариантов ОГЭ</p>
             </div>
             <div class="TopicBox">
                 <img class="ImageBox" src="./images/second_block.png"/>
@@ -117,11 +113,11 @@
         <div id="AboutUs" class="gradient">
             <p id="headerAboutUs">Наши соцсети</p>
             <div id="Media">
-                <a href="vk.com">
+                <a href="https://vk.com/mathplace">
                     <div id="vkontakte">
                     </div>
                 </a>
-                <a href="telegam.com">
+                <a href="https://t.me/mathplacetg">
                     <div id="telegram">
                     </div>
                 </a>
@@ -173,7 +169,7 @@ export default {
 .MenuBlockTopic
     position relative
     display inline-block
-    width 16%
+    width 19%
     min-width 250px
     height 100%
     @media screen and (max-width: 450px) {
@@ -404,7 +400,7 @@ export default {
 .TopicBox
     position relative
     width 27%
-    min-width 420px
+    min-width 410px
     height 740px
     min-height 70%
     overflow hidden
