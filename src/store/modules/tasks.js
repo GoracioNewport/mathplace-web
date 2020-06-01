@@ -76,6 +76,7 @@ export default {
                   solution: subTask[3],
                   tries: userTopicDetails[i]
                 }
+                console.log(subTask)
                 tasksList.push(task)
               }
             })

@@ -70,9 +70,10 @@
           v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 || this.taskList[this.activeTask].tries == 3 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
       .enter
         .send
-          //- a.but(href="#zatemnenie")
-          //-   img(src='@/assets/images/lock.png',
-          //-   v-if = 'this.taskList[this.activeTask].type == "task"', alt='Решения',id="lock")
+          a.but(@click='solutionShown = true',
+                v-if = 'this.taskList[this.activeTask].type =="task" && this.taskList[this.activeTask].solution != "null"')
+            img(src='@/assets/images/lock.png'
+            alt='Решения',id="lock")
           //- .but
           //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
           .but
@@ -109,16 +110,13 @@
               span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory"') Отправить
               span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
               span(v-else) Завершить
-      #zatemnenie
-        #okno
-          .solve
-            .consolve
-              //- strong {{condition}}
-            .solsolve
-              p Решение
-            .anssolve
-              //- strong {{answer}}
-          a.close(href='#') Закрыть решение
+    .solution(v-if = 'this.solutionShown', @click='solutionShown = !solutionShown')
+      .solutionBox(@click='solutionShown = !solutionShown')
+        .solutionText
+          span {{ this.taskList[this.activeTask].solution }}
+        .solutionButtonClose
+          .button.button--round.button-success(
+            @click='solutionShown = false') ОК!
 </template>
 
 <script>
@@ -161,7 +159,8 @@ export default {
       isLoading: true,
       answer: '',
       status: 'Idle',
-      topicLiked: false
+      topicLiked: false,
+      solutionShown: false
     }
   },
   methods: {
@@ -235,6 +234,31 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .solution
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-size 2vw
+    background-color rgba(0, 0, 0, .5)
+    width 100%
+    height 100%
+    position fixed
+    top 0
+    left 0
+  .solutionBox
+    text-align center
+    background-color #FFFFFF
+    margin-top 10%
+    margin-left 20%
+    margin-right 20%
+    min-width 350px
+    border 2px #000000 solid
+    border-radius 10px
+  .solutionText
+    padding 5%
+    height 90%
+    overflow: auto;
+    max-height: 50vh;
+  .solutionButtonClose
+    margin 3%
   #imgSmile
     position relative
     height 90%
