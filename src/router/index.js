@@ -10,6 +10,7 @@ import Task from '@/components/Task'
 import Registration from '@/components/Auth/Registration'
 import Login from '@/components/Auth/Login'
 import Logout from '@/components/Auth/Logout'
+import Profile from '@/components/Profile/Profile'
 
 Vue.use(Router)
 Vue.use(VueFirestore)
@@ -55,6 +56,11 @@ export default new Router({
       path: '/registration',
       name: 'registration',
       component: Registration
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile
     }
   ]
 })

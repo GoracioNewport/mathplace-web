@@ -42,7 +42,7 @@ export default {
         return [
           {title: 'Главная', url: '/main'},
           {title: 'Темы', url: '/'},
-          {title: 'Выйти', url: '/logout'}
+          {title: 'Профиль', url: '/profile'}
         ]
       } else {
         return [
