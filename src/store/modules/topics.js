@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+
 // import { sort } from 'semver'
 // import User from './user'
 
@@ -16,7 +17,7 @@ export default {
       var logika = []
       var graf = []
       var idea = []
-      var goodTheme = ['ОГЭ Вариант 8', 'Тестовая тема', 'Числосочетание', 'Свойства площади квадрата, прямоугольника, параллелограмма. ', 'Симметрия', 'Параллельность и сумма углов треугольников', 'Признаки равенства четырёхугольников', 'Олимпиада им.Эйлера 2018', 'Вероятность', 'Вероятность (Дополнительно)', 'Координатная плоскость', 'Параллельные прямые']
+      var goodTheme = ['Тестовая тема']
       var innderId = 0
       var mapTopic = new Map()
       const db = firebase.firestore()
@@ -77,7 +78,7 @@ export default {
                       'theme': theme,
                       'like': like
                     })
-                  } else if (theme === 'комбинаторика' || theme === 'логика' || theme === 'графы') {
+                  } else if (theme === 'комбинаторика') {
                     komba.push({
                       'id': innderId++,
                       'title': title,
@@ -156,9 +157,9 @@ export default {
       mapTopic.set('геометрия', geometry)
       mapTopic.set('алгебра', algebra)
       mapTopic.set('комбинаторика', komba)
-      // mapTopic.set('логика', logika)
-      // mapTopic.set('графы', graf)
-      // mapTopic.set('идеи', komba)
+      mapTopic.set('логика', logika)
+      mapTopic.set('графы', graf)
+      mapTopic.set('идеи', komba)
       ctx.commit('updateTopics', mapTopic)
       ctx.commit('updateTopicsLoaded', true)
     },
