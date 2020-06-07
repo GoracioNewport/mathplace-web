@@ -16,12 +16,12 @@ export default {
     }
   },
   actions: {
-    async registerUser ({commit}, {email, password}) {
+    async registerUser ({commit}, {email, password, name}) {
       commit('clearErrors')
       commit('setLoading', true)
       try {
         const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
-        commit('setUser', new User(user.user.uid, 'ОГЭ Вариант 1', 100, 0, 0, []))
+        commit('setUser', new User(name, user.user.uid, 'ОГЭ Вариант 1', 100, 0, 0, []))
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)
@@ -35,16 +35,17 @@ export default {
       const db = firebase.firestore()
       try {
         const user = await firebase.auth().signInWithEmailAndPassword(email, password)
-        let lastTheme, money, submit, right, like
+        let lastTheme, money, submit, right, like, name
 
         await db.collection('account').doc(user.user.uid).get().then(doc => {
+          name = doc.data().name
           lastTheme = doc.data().lastTheme
           money = doc.data().money
           submit = doc.data().submit
           right = doc.data().right
           like = doc.data().like
         })
-        commit('setUser', new User(user.user.uid, lastTheme, money, right, submit, like))
+        commit('setUser', new User(name, user.user.uid, lastTheme, money, right, submit, like))
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)

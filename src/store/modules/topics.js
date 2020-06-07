@@ -175,6 +175,11 @@ export default {
       db.collection('task2').doc(this.getters.getCurrentTopic).get().then(doc => {
         ctx.commit('updateLikes', doc.data().like)
       })
+    },
+    async sendTopic (ctx, payload) {
+      // console.log(payload.token, payload.title)
+      const db = firebase.firestore()
+      db.collection('olympiad').doc(payload.token).set(payload.title)
     }
   },
   mutations: {
@@ -208,6 +213,16 @@ export default {
     },
     getTopicLikes (state) {
       return state.likes
+    },
+    isTokenValid (state) {
+      const db = firebase.firestore()
+      db.collection('olympiads').doc('token')
+        .get().then(
+          doc => {
+            if (doc.exists) {
+              return false
+            } else return true
+          })
     }
   }
 }

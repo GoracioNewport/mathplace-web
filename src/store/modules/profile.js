@@ -1,6 +1,8 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
+/* eslint-disable */
+
 export default {
     actions: {
         async fetchAchivements (ctx) {

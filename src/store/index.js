@@ -5,6 +5,7 @@ import topics from './modules/topics'
 import user from './modules/user'
 import common from './modules/common'
 import tasks from './modules/tasks'
+import profile from './modules/profile'
 
 import createPersistedState from 'vuex-persistedstate'
 
@@ -15,7 +16,8 @@ export default new Vuex.Store({
     common,
     topics,
     user,
-    tasks
+    tasks,
+    profile
   },
   plugins: [createPersistedState({
     storage: sessionStorage

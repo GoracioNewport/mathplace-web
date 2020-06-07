@@ -132,7 +132,8 @@ export default {
       } else {
         const user = {
           email: this.email,
-          password: this.password
+          password: this.password,
+          name: this.name
         }
         this.$store.dispatch('registerUser', user)
           .then(() => {

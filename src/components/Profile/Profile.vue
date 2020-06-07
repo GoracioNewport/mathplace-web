@@ -7,10 +7,8 @@
                     src = '@/assets/images/account_new.png',
                     alt = 'Аватар')
                 strong {{this.getUser.name}}
-                a(href='/logout')
-                  strong.logout Выйти
-                a(href='/profile/edit')
-                  strong.logout Редактировать
+                router-link.button.button-primary(to='/logout') Выйти
+                router-link.button.button-primary(to='/editProfile') Редактировать
 
             //- .name
             //-     strong {{this.getUser.name}}
@@ -18,6 +16,9 @@
                 strong Посылок: {{this.getUser.submit}}
                 strong Решено: {{this.getUser.right}}
                 strong Тугриков: {{this.getUser.money}}
+            .custom-task
+              .custom-task-button
+                router-link.button.button-primary(to='/customTitle') Создать свою тему
         .content-achieve
           .text-part(
           v-for = 'part in this.achivementsFull'
