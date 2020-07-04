@@ -6,7 +6,7 @@ export default {
     async fetchTasks (ctx) {
       ctx.commit('updateTasksLoadingStatus', true)
       const db = firebase.firestore()
-      var tasksDb = db.collection('task2').doc(this.getters.getCurrentTopic)
+      var tasksDb = db.collection(this.state.collection).doc(this.getters.getCurrentTopic)
       var userData = db.collection('account').doc(this.getters.getUser.id)
       var itemCount = 0
       var taskCount = 0
@@ -76,7 +76,6 @@ export default {
                   solution: subTask[3],
                   tries: userTopicDetails[i]
                 }
-                console.log(subTask)
                 tasksList.push(task)
               }
             })
@@ -88,6 +87,9 @@ export default {
     },
     changeCurrentLogo (ctx, logo) {
       ctx.commit('updateCurrentLogo', logo)
+    },
+    changeCollection (ctx, name) {
+      ctx.commit('updateCollection', name)
     }
   },
   mutations: {
@@ -102,13 +104,17 @@ export default {
     },
     updateCurrentLogo (state, payload) {
       state.logo = payload
+    },
+    updateCollection (state, payload) {
+      state.collection = payload
     }
   },
   state: {
     currentTopic: 'ОГЭ Вариант 1',
     tasks: [],
     tasksLoading: false,
-    logo: 'MathPlace'
+    logo: 'MathPlace',
+    collection: 'task2'
   },
   getters: {
     getCurrentTopic (state) {
@@ -119,6 +125,10 @@ export default {
     },
     getCurrentLogo (state) {
       return state.logo
+    },
+    getCollection (state) {
+      console.log('Response to getter: ', state.collection)
+      return state.collection
     }
   }
 }

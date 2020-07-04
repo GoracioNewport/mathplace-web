@@ -33,6 +33,8 @@
           img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
         </a>
       .container
+        .joinCustomTitle(@click="joinMenuShow = !joinMenuShow")
+          .button.button--round.button-success Присоединиться
         .pesontedan
           input(id='pesontedan-eight',type='checkbox', name='pesontedans')
           label(for='pesontedan-eight')
@@ -296,6 +298,18 @@
                   v-bind:theme='topic.theme'
                   v-bind:like='topic.like'
                 )
+    .joinMenu(v-if = 'this.joinMenuShow')
+      .joinMenuBox
+        .joinMenuField
+          label Введите идентификатор курса
+          input(
+                  type="text"
+                  placeholder="ID Курса"
+                  v-model="customTopicId"
+          )
+          .button.button--round.button-success(@click ='joinCourse(customTopicId)') Let's go!
+        .joinMenuCancel
+          .button.button--round.button-warning(@click ='joinMenuShow = false') Отмена
 </template>
 
 <script>
@@ -319,10 +333,12 @@ export default {
       arrayKomba: [],
       arrayLogics: [],
       arrayGraphs: [],
-      isLoading: true
+      isLoading: true,
+      joinMenuShow: false,
+      customTopicId: ''
     }
   },
-  computed: mapGetters(['getTopics', 'isTopicsLoaded', 'getUser']),
+  computed: mapGetters(['getTopics', 'isTopicsLoaded', 'getUser', 'courseExists', 'getCustomTopic']),
   async mounted () {
     if (this.getUser === null) this.$router.push('/login')
     await this.fetchTopics()
@@ -340,11 +356,44 @@ export default {
     this.arrayLogics = this.$store.getters.getTopics.get('логика')
     this.arrayGraphs = this.$store.getters.getTopics.get('графы')
   },
-  methods: mapActions(['fetchTopics'])
+  methods: {
+    ...mapActions(['fetchTopics', 'fetchCustomTopic']),
+    async joinCourse (id) {
+      await this.fetchCustomTopic(id)
+      var res = this.getCustomTopic
+      if (res !== null) {
+        this.$store.dispatch('changeCurrentTopic', res)
+        this.$router.push('/task')
+      }
+    },
+    openTopic () {
+      this.$store.dispatch('changeCurrentTopic', this.title)
+      this.$router.push('/task')
+    }
+  }
 }
 </script>
 
 <style lang="stylus" scoped>
+
+  .joinMenu
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-size 2vw
+    background-color rgba(0, 0, 0, .5)
+    width 100%
+    height 100%
+    position fixed
+    top 0
+    left 0
+  .joinMenuBox
+    text-align center
+    background-color #FFFFFF
+    margin-top 10%
+    margin-left 20%
+    margin-right 20%
+    min-width 350px
+    border 2px #000000 solid
+    border-radius 10px
 
   .ui-title-1
     font-size 4em

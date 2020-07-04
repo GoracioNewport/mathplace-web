@@ -3,6 +3,7 @@ import 'firebase/firestore'
 
 // import { sort } from 'semver'
 // import User from './user'
+import Tasks from './tasks'
 
 export default {
   actions: {
@@ -23,7 +24,6 @@ export default {
       const db = firebase.firestore()
       // var docRef = db.collection('account').doc('FGffHhxvVUfa79meSj7bHMYviRs2')
       // docRef.get().then(function (doc2) {
-      console.log(this.getters.getUser.id)
       var userData = db.collection('account').doc(this.getters.getUser.id)
       await userData.get()
         .then(usr => {
@@ -34,9 +34,7 @@ export default {
                 var all = doc.data().cnt_task
                 var like = Number(doc.data().like)
                 let title = doc.id
-                console.log(title.toString())
                 if (goodTheme.indexOf(title.toString()) === -1) {
-                  console.log('good')
                   var topic = usr.data()[title]
                   var theme = doc.data().theme
                   if (topic != null) {
@@ -113,7 +111,6 @@ export default {
                   }
                   var r = false
                   var sss = topics.length
-                  console.log(doc.id.toString() + ' ' + String(sss))
                   for (let i = 0; i < sss; i++) {
                     if (like >= topics[i].like) {
                       r = true
@@ -172,7 +169,8 @@ export default {
     },
     async fetchLikes (ctx) {
       const db = firebase.firestore()
-      db.collection('task2').doc(this.getters.getCurrentTopic).get().then(doc => {
+      var customTask = Tasks.state.collection
+      db.collection(customTask).doc(this.getters.getCurrentTopic).get().then(doc => {
         ctx.commit('updateLikes', doc.data().like)
       })
     },
@@ -180,6 +178,14 @@ export default {
       // console.log(payload.token, payload.title)
       const db = firebase.firestore()
       db.collection('olympiad').doc(payload.token).set(payload.title)
+    },
+    async fetchCustomTopic (ctx, payload) {
+      const db = firebase.firestore()
+      ctx.commit('updateCustomTopic', '')
+      await db.collection('olympiad').doc(payload).get().then(doc => {
+        if (doc.data() === undefined) ctx.commit('updateCustomTopic', null)
+        else ctx.commit('updateCustomTopic', doc.data().name)
+      })
     }
   },
   mutations: {
@@ -197,12 +203,18 @@ export default {
     },
     updateLikes (state, payload) {
       state.likes = payload
+    },
+    updateCustomTopic (state, payload) {
+      console.log('Update to ', payload)
+      if (payload !== undefined) state.customTopicTitle = payload
+      else state.customTopicTitle = null
     }
   },
   state: {
     topicsLoaded: false,
     mapTopic: new Map(),
-    likes: 0
+    likes: 0,
+    customTopicTitle: ''
   },
   getters: {
     getTopics (state) {
@@ -216,13 +228,16 @@ export default {
     },
     isTokenValid (state) {
       const db = firebase.firestore()
-      db.collection('olympiads').doc('token')
+      db.collection('olympiad').doc('token')
         .get().then(
           doc => {
             if (doc.exists) {
               return false
             } else return true
           })
+    },
+    getCustomTopic (state) {
+      return state.customTopicTitle
     }
   }
 }

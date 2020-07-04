@@ -133,7 +133,6 @@ export default {
   },
   async mounted () {
     this.updateUser(['lastTheme', this.getCurrentTopic])
-    this.changeCurrentLogo(this.getCurrentTopic)
     this.isLoading = true
     await this.fetchLikes()
     await this.fetchTasks()
