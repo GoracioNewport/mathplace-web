@@ -89,15 +89,20 @@ export default {
     },
     async sendTitle () {
       this.theme = this.theme.toLowerCase()
+      for (let i = 0; i < this.tasks.length; i++) {
+        if (this.tasks[i].type === 'task') this.cnt_task++
+      } this.items = this.tasks.length
       var data = {
         author: this.getUser.name,
         like: 0,
         name: this.name,
         public: !this.private,
-        theme: this.theme
+        theme: this.theme,
+        cnt_task: this.cnt_task,
+        items: this.items
       }
 
-      for (var i = 0; i < this.tasks.length; i++) {
+      for (let i = 0; i < this.tasks.length; i++) {
         var task = []
         task.push(this.tasks[i].text)
         this.tasks[i].type === 'theory' ? task.push('theory') : task.push(this.tasks[i].answer)

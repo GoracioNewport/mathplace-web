@@ -3,7 +3,6 @@ import 'firebase/firestore'
 
 // import { sort } from 'semver'
 // import User from './user'
-import Tasks from './tasks'
 
 export default {
   actions: {
@@ -133,21 +132,10 @@ export default {
                       'like': like
                     })
                   }
-                  // topics.push({
-                  //   'like': like,
-                  //   'id': innderId++,
-                  //   'title': title,
-                  //   'completed': (right * 100) / all,
-                  //   'theme': theme
-                  // })
                 }
               })
             })
         })
-      // await topics.sort(function (a, b) {
-      //   console.log(a.like, b.like)
-      //   return a.like - b.like
-      // })
       mapTopic.set('популярные', topics)
       mapTopic.set('школа', school)
       mapTopic.set('огэ', OGE)
@@ -167,10 +155,9 @@ export default {
       let likes = this.getters.getTopicLikes
       ctx.commit('updateTopicDetailsDB', ['like', likes + n])
     },
-    async fetchLikes (ctx) {
+    async fetchLikes (ctx, taskCollection) {
       const db = firebase.firestore()
-      var customTask = Tasks.state.collection
-      db.collection(customTask).doc(this.getters.getCurrentTopic).get().then(doc => {
+      db.collection(taskCollection).doc(this.getters.getCurrentTopic).get().then(doc => {
         ctx.commit('updateLikes', doc.data().like)
       })
     },

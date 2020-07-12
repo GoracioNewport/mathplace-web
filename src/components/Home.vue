@@ -338,16 +338,12 @@ export default {
       customTopicId: ''
     }
   },
-  computed: mapGetters(['getTopics', 'isTopicsLoaded', 'getUser', 'courseExists', 'getCustomTopic']),
+  computed: mapGetters(['getTopics', 'isTopicsLoaded', 'getUser', 'getCustomTopic']),
   async mounted () {
     if (this.getUser === null) this.$router.push('/login')
     await this.fetchTopics()
     this.isLoading = false
     this.arrayPopular = this.$store.getters.getTopics.get('популярные')
-    // await this.arrayPopular.sort(function (a, b) {
-    //   console.log(a.like, b.like)
-    //   return (a.like - b.like) > 0
-    // })
     this.arraySchool = this.$store.getters.getTopics.get('школа')
     this.arrayOGE = this.$store.getters.getTopics.get('огэ')
     this.arrayGeometry = this.$store.getters.getTopics.get('геометрия')
@@ -362,13 +358,10 @@ export default {
       await this.fetchCustomTopic(id)
       var res = this.getCustomTopic
       if (res !== null) {
-        this.$store.dispatch('changeCurrentTopic', res)
+        this.$store.dispatch('changeCurrentTopic', id)
+        this.$store.dispatch('changeCollection', 'olympiad')
         this.$router.push('/task')
       }
-    },
-    openTopic () {
-      this.$store.dispatch('changeCurrentTopic', this.title)
-      this.$router.push('/task')
     }
   }
 }

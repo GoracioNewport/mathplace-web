@@ -3,10 +3,11 @@ import 'firebase/firestore'
 
 export default {
   actions: {
-    async fetchTasks (ctx) {
+    async fetchTasks (ctx, taskCollection) {
+      console.log('Fetching tasks from collection', taskCollection, 'and task', this.getters.getCurrentTopic)
       ctx.commit('updateTasksLoadingStatus', true)
       const db = firebase.firestore()
-      var tasksDb = db.collection(this.state.collection).doc(this.getters.getCurrentTopic)
+      var tasksDb = db.collection(taskCollection).doc(this.getters.getCurrentTopic)
       var userData = db.collection('account').doc(this.getters.getUser.id)
       var itemCount = 0
       var taskCount = 0
@@ -127,7 +128,6 @@ export default {
       return state.logo
     },
     getCollection (state) {
-      console.log('Response to getter: ', state.collection)
       return state.collection
     }
   }

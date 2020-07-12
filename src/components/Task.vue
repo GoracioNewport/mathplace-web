@@ -134,8 +134,8 @@ export default {
   async mounted () {
     this.updateUser(['lastTheme', this.getCurrentTopic])
     this.isLoading = true
-    await this.fetchLikes()
-    await this.fetchTasks()
+    await this.fetchLikes(this.getCollection)
+    await this.fetchTasks(this.getCollection)
     this.taskList = this.$store.getters.getTasks
     this.isLoading = false
     if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
@@ -218,7 +218,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes']),
+    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection']),
     getDifficulty () {
       var dif = this.taskList[this.activeTask].difficulty
       if (dif !== 'null') return parseInt(dif, 10)
