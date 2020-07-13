@@ -32,9 +32,10 @@
         <a href="#graphs" v-smooth-scroll>
           img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
         </a>
+
+      .joinCustomTitle(@click="joinMenuShow = !joinMenuShow")
+        .button.button--round.button-success.right_button Присоединиться
       .container
-        .joinCustomTitle(@click="joinMenuShow = !joinMenuShow")
-          .button.button--round.button-success Присоединиться
         .pesontedan
           input(id='pesontedan-eight',type='checkbox', name='pesontedans')
           label(for='pesontedan-eight')
@@ -368,6 +369,23 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
+  .joinCustomTitle
+    z-index 10000
+    position fixed
+    bottom 100px
+    right 100px
+
+  .right_button
+    position fixed
+    bottom 20px
+    font-size 22px
+    background #763dca
+    font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    width auto
+    font-weight 500
+    height auto
+    right 20px
 
   .joinMenu
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
