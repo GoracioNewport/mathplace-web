@@ -1,7 +1,7 @@
 <template lang='pug'>
     .content-wrapper
       .test_button
-        router-link.button.bottom_button.button-primary(to='/customTitle') Создать свою тему
+        router-link.button--round.button.button-primary.bottom_button(to='/customTitle') Создать свою тему
 
       .content-block
 
@@ -13,15 +13,16 @@
                     alt = 'Аватар')
                 .userInf
                   p.userName {{this.getUser.name}}
+                  .info
+                    p.textInf Посылок {{this.getUser.submit}}
+                    p.textInf Решено {{this.getUser.right}}
+                    p.textInf Тугриков {{this.getUser.money}}
                   router-link.button--round.button.button-primary(to='/logout' style="margin-right: 10px") Выйти
                   router-link.button--round.button.button-primary(to='/editProfile') Редактировать
 
             //- .name
             //-     strong {{this.getUser.name}}
-            .info
-                strong Посылок: {{this.getUser.submit}}
-                strong Решено: {{this.getUser.right}}
-                strong Тугриков: {{this.getUser.money}}
+
         .content-achieve
           .text-part(
           v-for = 'part in this.achivementsFull'
@@ -151,19 +152,31 @@ export default {
     //   width 100%
 
     .test_button
-      position relative
+      position absolute
       height 100%
       width 100%
 
     .bottom_button
-      display flex
+      position fixed
+      bottom 20px
+      font-size 22px
+      background #763dca
+      font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+      width auto
+      font-weight 500
       height auto
-      float right
-      margin-bottom 10px
-      margin-right 20px
+      right 20px
 
     .userInf
+      width 40%
       display inline-block
+    .textInf
+      font-weight 600
+      margin-right 40px
+      margin-left 0px
+      align left
+      display inline-block
+
     .userName
       font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
       font-weight 700
@@ -197,7 +210,8 @@ export default {
 
     .text-part
       position relative
-      width 100%
+      display inline-block
+      width 50%
       height auto
 
     .content-achieve
@@ -208,14 +222,16 @@ export default {
       margin-bottom 5%
 
     .avatar
+      position relative
       margin-left 1%
       margin-right 1%
       margin-bottom 2%
       margin-top 2%
       width 100%
       img
-        width 15%
-        height 15%
+        vertical-align middle
+        width 12%
+        height 12%
 
     .achivText
       display inline-block
@@ -236,11 +252,9 @@ export default {
       font-size 1em
 
     .info
-        text-align center
-        margin-left 2%
         margin-right 2%
         margin-bottom 5%
-        margin-top 5%
+        margin-top 10px
         strong
           margin 9%
     .logout
@@ -253,11 +267,10 @@ export default {
     .icon
       position relative
       display inline-block
-      width 40%
       min-width 250px
       height 100%
       img
-        width 12%
+        width 19%
         margin-left 10%
         margin-bottom 3%
         margin-top 3%
