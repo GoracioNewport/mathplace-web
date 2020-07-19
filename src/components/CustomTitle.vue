@@ -16,10 +16,23 @@
               label(for='task') Задача
                 input#task(type = 'radio', value = 'task', v-model = "task.type")
 
-            .theoryEditBox(v-if ="task.type === 'theory'")
-              textarea.theoryText(placeholder = 'Введите текст теории здесь', v-model = "task.text")
+            .theoryEditBox
+              .theoryComponent(
+                v-for = 'component in task.text'
+              )
+                .theoryTextField(v-if ='component.type === "text"')
+                  textarea.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner")
+                .theoryText(v-if ='component.type === "img"')
+                  label(for='img') Select image:
+                  input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
+                .button.button-warning(@click='task.text.splice(task.text.indexOf(component), 1)') Удалить
+
+              .button.button-success(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
+
+              .button.button-success(
+                @click='addContent(tasks.indexOf(task), "img")'
+                ) Добавить картинку
             .taskEditBox(v-if ="task.type === 'task'")
-              textarea.taskText(placeholder = 'Введите текст задачи здесь', v-model = "task.text")
               input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
               br
               span Выберите сложность своей задачи:
@@ -39,6 +52,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import firebase from 'firebase/app'
+import 'firebase/storage'
 export default {
   data () {
     return {
@@ -58,20 +73,41 @@ export default {
         'Комбинаторика',
         'Логика',
         'Графы'
-      ]
+      ],
+      currTaskId: 0,
+      currComponentId: 0
     }
   },
   methods: {
     ...mapActions(['sendTopic']),
     addTask () {
       var task = {
-        text: '',
+        text: [],
         type: 'theory',
         answer: '',
         solution: '',
         difficulty: '1'
       }
       this.tasks.push(task)
+    },
+    addContent (id, type) {
+      console.log(this.tasks, id, type)
+      var data = {
+        type: type,
+        inner: ''
+      }
+      this.tasks[id].text.push(data)
+    },
+    nullifyContent (id) {
+      this.tasks[id].text = []
+    },
+    onFileButtonClicked (taskId, componentId) {
+      this.currTaskId = taskId
+      this.currComponentId = componentId
+    },
+    onFileSelected (event) {
+      this.tasks[this.currTaskId].text[this.currComponentId].inner = event.target.files[0]
+      console.log(event.target.files[0])
     },
     generateToken (length) {
       var a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('')
@@ -103,8 +139,27 @@ export default {
       }
 
       for (let i = 0; i < this.tasks.length; i++) {
-        var task = []
-        task.push(this.tasks[i].text)
+        var task = ['']
+        console.log(this.tasks)
+        for (let j = 0; j < this.tasks[i].text.length; j++) {
+          if (this.tasks[i].text[j].type === 'text') {
+            task[0] += this.tasks[i].text[j].inner.toString() + ' \n'
+          } else {
+            let file = this.tasks[i].text[j].inner
+            let fileName = file.name
+            const fileReader = new FileReader()
+            fileReader.readAsDataURL(file)
+            const ext = fileName.slice(fileName.lastIndexOf('.'))
+            let currentTime = new Date().getTime()
+            let imageUrl
+            let imageTimeName = 'uploads/' + currentTime + ext
+            await firebase.storage().ref(imageTimeName).put(file)
+            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) {
+              imageUrl = url
+            })
+            task[0] += '[' + imageUrl.toString() + '] \n'
+          }
+        }
         this.tasks[i].type === 'theory' ? task.push('theory') : task.push(this.tasks[i].answer)
         this.tasks[i].type === 'theory' ? task.push('null') : task.push(this.tasks[i].difficulty)
         this.tasks[i].type === 'theory' ? task.push('null') : task.push(this.tasks[i].solution)
@@ -115,6 +170,7 @@ export default {
         token: token,
         title: data
       }
+      console.log(sendInformation)
       this.sendTopic(sendInformation)
     }
   },
