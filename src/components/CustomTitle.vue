@@ -1,53 +1,55 @@
 <template lang="pug">
   .content-wrapper
     .editBox
-      .titleInfo
-        input(type = 'text', placeholder = 'Введите название вашей темы', v-model = "name")
-        label(for = 'isPrivate') Приватная тема
-          input#isPrivate(type = 'checkbox', v-model = "private")
-        select(v-model = "theme")
-          option(v-for = 'theme in themeList') {{ theme }}
-      .tasksInfo
-        .tasksContent
-          .task(v-for = 'task in tasks')
-            .taskType
-              label(for='theory') Теория
-                input#theory(type = 'radio', value = 'theory', v-model = "task.type")
-              label(for='task') Задача
-                input#task(type = 'radio', value = 'task', v-model = "task.type")
+      .marginBox
+        .titleInfo
+          p.olympTitle Создать урок
+          input.olympName(type = 'text', placeholder = 'Введите название вашей темы', v-model = "name")
+          label(for = 'isPrivate') Приватная тема
+            input#isPrivate(type = 'checkbox', v-model = "private")
+          select.olympTheme(v-model = "theme")
+            option(v-for = 'theme in themeList') {{ theme }}
+        .tasksInfo
+          .tasksContent
+            .task(v-for = 'task in tasks')
+              .taskType
+                label(for='theory') Теория
+                  input#theory(type = 'radio', value = 'theory', v-model = "task.type")
+                label(for='task') Задача
+                  input#task(type = 'radio', value = 'task', v-model = "task.type")
 
-            .theoryEditBox
-              .theoryComponent(
-                v-for = 'component in task.text'
-              )
-                .theoryTextField(v-if ='component.type === "text"')
-                  textarea.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner")
-                .theoryText(v-if ='component.type === "img"')
-                  label(for='img') Select image:
-                  input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
-                .button.button-warning(@click='task.text.splice(task.text.indexOf(component), 1)') Удалить
+              .button.img.delete_button(@click='tasks.splice(tasks.indexOf(task), 1)')
+              .theoryEditBox
+                .theoryComponent(
+                  v-for = 'component in task.text'
+                )
+                  .button.img.delete_button(@click='task.text.splice(task.text.indexOf(component), 1)')
+                  .theoryTextField(v-if ='component.type === "text"')
+                    textarea.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner")
+                  .theoryText(v-if ='component.type === "img"')
+                    label(for='img') Выберите картинку
+                    input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
 
-              .button.button-success(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
+                .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
 
-              .button.button-success(
-                @click='addContent(tasks.indexOf(task), "img")'
-                ) Добавить картинку
-            .taskEditBox(v-if ="task.type === 'task'")
-              input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
-              br
-              span Выберите сложность своей задачи:
+                .button.button--round.button-success(
+                  @click='addContent(tasks.indexOf(task), "img")'
+                  ) Добавить картинку
+              .taskEditBox(v-if ="task.type === 'task'")
+                input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
+                br
+                span Выберите сложность своей задачи:
 
-              label(for='difOne') Легкая
-                input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
-              label(for='difTwo') Средняя
-                input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
-              label(for='difThree') Трудная
-                input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
+                label(for='difOne') Легкая
+                  input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
+                label(for='difTwo') Средняя
+                  input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
+                label(for='difThree') Трудная
+                  input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
 
-              textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи', v-model = "task.solution")
-            .button.button-warning(@click='tasks.splice(tasks.indexOf(task), 1)') Удалить
-        .button.button-warning(@click='addTask()') Добавить теорию или задачу
-      .button.button-success(@click='sendTitle()') Опубликовать тему
+                textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи', v-model = "task.solution")
+          .button.button--round.button-success(@click='addTask()') Добавить теорию или задачу
+        .button.button--round.button-success.buttonPost(@click='sendTitle()') Опубликовать тему
 </template>
 
 <script>
@@ -181,10 +183,94 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .editBox
+    position relative
+    margin-top 50px
+    margin-left 25%
+    margin-right 25%
+    background-color #FCFCFF
+    box-shadow 0 0 5px rgba(0,0,0,0.5)
+    border-radius 20px 20px 20px 20px
+    // @media screen and (max-width: 2100px) {
+    //   margin-left 16%
+    //   margin-right 16%
+    // }
+
+  .theoryComponent
+    position relative
+    width 450px
+    margin-bottom 20px
+
+  .theoryTextField
+    position relative
+    height auto
+    width 90%
+    margin-bottom 0px
+    display inline-block
+    margin-top 0px
+
+
+  .marginBox
+    position relative
+    margin 20px
+
+  .olympName
+    width 300px
+    height auto
+    margin-top 20px
+    font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    font-size 0.8em
+
+  .olympTitle
+    position relative
+    width auto
+    font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    font-size 2em
+    font-weight 700
+
+  .buttonPost
+      position relative
+      font-size 19px
+      float right
+      background #763dca
+      font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+      width auto
+      font-weight 500
+      height auto
+      margin-right 0px
+      margin-bottom 20px
+
+  .olympTheme
+    width 300px
+    font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    font-size 1.1em
+    text-align center
+    vertical-align middle
+
+  .delete_button
+      position relative
+      display inline-block
+      width 32px
+      height 32px
+      float right
+      background-image url(images/clear.png)
+      background-size 100%
+
+  .taskSolution
+    position relative
+    width 600px
+
+  .buttonAdd
+    position relative
+    margin-right 20px
+  .taskType
+    position relative
+    display inline-block
+
   label
     justify-items left
   .task
-    border 1px solid #000000
+    border 1px solid #999
     border-radius 10px
     margin 1%
     padding 1%
