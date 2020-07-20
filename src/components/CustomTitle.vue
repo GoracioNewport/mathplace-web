@@ -231,7 +231,7 @@ export default {
       position relative
       font-size 19px
       float right
-      background #763dca
+      background #763dcb
       font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
       width auto
       font-weight 500
