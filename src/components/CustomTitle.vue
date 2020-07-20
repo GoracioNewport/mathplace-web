@@ -207,8 +207,7 @@ export default {
     width 90%
     margin-bottom 0px
     display inline-block
-    margin-top 0px
-
+    margin-top 0p
 
   .marginBox
     position relative
