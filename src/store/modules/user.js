@@ -49,6 +49,7 @@ export default {
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)
+        if (error.code === 'auth/network-request-failed') commit('setUser', new User('Offline User', 'null', 'ОГЭ Вариант 1', 100, 0, 0, []))
         commit('setErrors', error.message)
         throw error
       }

@@ -316,8 +316,8 @@
 <script>
 import Topic from './Topic.vue'
 import Loading from 'vue-loading-overlay'
-import { mapGetters, mapActions } from 'vuex'
 import 'vue-loading-overlay/dist/vue-loading.css'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {

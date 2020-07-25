@@ -12,6 +12,7 @@ import Login from '@/components/Auth/Login'
 import Logout from '@/components/Auth/Logout'
 import Profile from '@/components/Profile/Profile'
 import CustomTitle from '@/components/CustomTitle'
+import Statistics from '@/components/Profile/Statistics'
 
 Vue.use(Router)
 Vue.use(VueFirestore)
@@ -67,6 +68,11 @@ export default new Router({
       path: '/customTitle',
       name: 'customTitle',
       component: CustomTitle
+    },
+    {
+      path: '/statistics',
+      name: 'statistics',
+      component: Statistics
     }
   ]
 })

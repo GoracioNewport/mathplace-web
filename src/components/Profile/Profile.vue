@@ -17,7 +17,8 @@
                     p.textInf Посылок {{this.getUser.submit}}
                     p.textInf Решено {{this.getUser.right}}
                     p.textInf Тугриков {{this.getUser.money}}
-                  router-link.button--round.button.button-primary(to='/logout' style="margin-right: 10px") Выйти
+                  router-link.button--round.button.button-primary(to='/logout') Выйти
+                  router-link.button--round.button.button-primary(to='/statistics') Статистика
                   router-link.button--round.button.button-primary(to='/editProfile') Редактировать
 
             //- .name
@@ -150,6 +151,9 @@ export default {
     // .content-wrapper
     //   height 100%
     //   width 100%
+
+    .button-primary
+      margin-right 10px
 
     .test_button
       position absolute
