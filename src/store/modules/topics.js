@@ -173,11 +173,21 @@ export default {
         if (doc.data() === undefined) ctx.commit('updateCustomTopic', null)
         else ctx.commit('updateCustomTopic', doc.data().name)
       })
+    },
+    addUserToTopicList (ctx, payload) {
+      const db = firebase.firestore()
+      var users
+      db.collection('task2').doc(this.getters.getCurrentTopic).get().then(doc => {
+        users = doc.data().visited
+      })
+      if (users === undefined) users = []
+      users.push(this.getters.getUser.id)
+      db.collection('task2').doc(this.getters.getCurrentTopic).update({ 'visited': users })
     }
   },
   mutations: {
     updateTopics (state, map) {
-      // state.topics = topics
+      // state.topics = topicsg
       state.mapTopic = map
     },
     updateTopicsLoaded (state, isLoaded) {
