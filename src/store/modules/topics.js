@@ -161,10 +161,17 @@ export default {
         ctx.commit('updateLikes', doc.data().like)
       })
     },
-    async sendTopic (ctx, payload) {
+    sendTopic (ctx, payload) {
       // console.log(payload.token, payload.title)
       const db = firebase.firestore()
       db.collection('olympiad').doc(payload.token).set(payload.title)
+      var myTopics
+      db.collection('accounts').doc(this.getters.getUser.id).get().then(doc => {
+        myTopics = doc.data().myTopics
+      })
+      if (myTopics === undefined) myTopics = []
+      myTopics.push(payload.token)
+      db.collection('accounts').doc(this.getters.getUser.id).update({ 'myTopics': myTopics })
     },
     async fetchCustomTopic (ctx, payload) {
       const db = firebase.firestore()
