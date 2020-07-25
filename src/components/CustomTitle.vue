@@ -56,13 +56,16 @@
           strong.titleTokenText Пожалуйста, подождите
           br
           span Мы публикуем вашу тему. Это может занять некоторое время.
-          .loading-indicator
+          .vld-parent
             loading(
-              :active.sync = "this.loading",
-              :is-full-page = 'false',
-              color = "#763dca")
+              :active.sync = "this.loading"
+              :is-full-page = "this.falseVar"
+              color = "#763dca"
+              loader = 'dots'
+              opacity = 0
+              width = 150)
         .successText(v-else)
-          strong.titleTokenText  Готово!
+          strong.titleTokenText Готово!
           br
           span.titleTokenText Ключ темы:
           strong.titleTokenText  {{ this.token }}
@@ -108,7 +111,8 @@ export default {
       currComponentId: 0,
       success: false,
       token: 'null',
-      loading: false
+      loading: false,
+      falseVar: false
     }
   },
   methods: {
@@ -224,6 +228,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .vld-parent
+    position relavite
+    padding 5%
+    padding-top 10%
   .titleTokenText
     font-size 1.4em
   .successText
