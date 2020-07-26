@@ -6,9 +6,10 @@
           strong Темы
         .loading-indicator
           loading(
-            :active.sync = "this.isLoading",
-            :is-full-page = 'false',
-            color = "#763dca")
+            :active.sync = "this.isLoading"
+            :is-full-page = 'false'
+            color = "#763dca"
+            opacity = 0)
     section(v-if="!this.isLoading")
       .sidebar
         <a href="#school" v-smooth-scroll>
