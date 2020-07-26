@@ -149,19 +149,19 @@ export default {
       this.tasks[this.currTaskId].text[this.currComponentId].inner = event.target.files[0]
       console.log(event.target.files[0])
     },
-    generateToken (length) {
+    async generateToken (length) {
       var a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('')
       var b = []
-      for (var i = 0; i < length; i++) {
-        var j = (Math.random() * (a.length - 1)).toFixed(0)
-        b[i] = a[j]
-      }
 
-      // var succes = await this.isTokenValid
-      var succes = true
-      var returnTo = ''
-      succes ? returnTo = b.join('') : returnTo = this.generateToken(length)
-      return returnTo
+      var succes = false
+      while (!succes) {
+        for (var i = 0; i < length; i++) {
+          var j = (Math.random() * (a.length - 1)).toFixed(0)
+          b[i] = a[j]
+        }
+        succes = await this.isTokenValid(b.join(''))
+      }
+      return b.join('')
     },
     async sendTitle () {
       this.success = true
@@ -219,10 +219,20 @@ export default {
         console.log(error)
       }
       this.loading = false
+    },
+    isTokenValid (token) {
+      const db = firebase.firestore()
+      db.collection('olympiad').doc(token)
+        .get().then(
+          doc => {
+            if (doc.data() !== undefined) {
+              return false
+            } else return true
+          })
     }
   },
   computed: {
-    ...mapGetters(['getUser', 'isTokenValid'])
+    ...mapGetters(['getUser'])
   }
 }
 </script>
