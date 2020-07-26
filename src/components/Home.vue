@@ -1,6 +1,6 @@
 <template lang="pug">
   .content-wrapper
-    section.header-title(v-if="this.isLoading")
+    section.header-title(v-if="this.isLoading && !this.error")
       .container
         h1.ui-title-1
           strong Темы
@@ -10,7 +10,7 @@
             :is-full-page = 'false'
             color = "#763dca"
             opacity = 0)
-    section(v-if="!this.isLoading")
+    section(v-if = "!this.isLoading && !this.error")
       .sidebar
         <a href="#school" v-smooth-scroll>
           img(src="@/components/images/school1.png", width= "50px", height = "50px")
@@ -312,6 +312,12 @@
           .button.button--round.button-success(@click ='joinCourse(customTopicId)') Let's go!
         .joinMenuCancel
           .button.button--round.button-warning(@click ='joinMenuShow = false') Отмена
+    .errorBox(v-if = 'this.error')
+      strong Ой-ой... :(
+      br
+      span Похоже, что-то пошло не так.
+      br
+      span Пожалуйста, проверьте свое подключение к интернету.
 </template>
 
 <script>
@@ -337,21 +343,27 @@ export default {
       arrayGraphs: [],
       isLoading: true,
       joinMenuShow: false,
-      customTopicId: ''
+      customTopicId: '',
+      error: false
     }
   },
   computed: mapGetters(['getTopics', 'isTopicsLoaded', 'getUser', 'getCustomTopic']),
   async mounted () {
     if (this.getUser === null) this.$router.push('/login')
-    await this.fetchTopics()
-    this.arrayPopular = this.$store.getters.getTopics.get('популярные')
-    this.arraySchool = this.$store.getters.getTopics.get('школа')
-    this.arrayOGE = this.$store.getters.getTopics.get('огэ')
-    this.arrayGeometry = this.$store.getters.getTopics.get('геометрия')
-    this.arrayAlgebra = this.$store.getters.getTopics.get('алгебра')
-    this.arrayKomba = this.$store.getters.getTopics.get('комбинаторика')
-    this.arrayLogics = this.$store.getters.getTopics.get('логика')
-    this.arrayGraphs = this.$store.getters.getTopics.get('графы')
+    try {
+      await this.fetchTopics()
+      this.arrayPopular = this.$store.getters.getTopics.get('популярные')
+      this.arraySchool = this.$store.getters.getTopics.get('школа')
+      this.arrayOGE = this.$store.getters.getTopics.get('огэ')
+      this.arrayGeometry = this.$store.getters.getTopics.get('геометрия')
+      this.arrayAlgebra = this.$store.getters.getTopics.get('алгебра')
+      this.arrayKomba = this.$store.getters.getTopics.get('комбина{торика')
+      this.arrayLogics = this.$store.getters.getTopics.get('логика')
+      this.arrayGraphs = this.$store.getters.getTopics.get('графы')
+    } catch (error) {
+      this.error = true
+      throw error
+    }
     this.isLoading = false
   },
   methods: {
@@ -370,6 +382,13 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .errorBox
+    padding-top 10%
+    text-align center
+    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-size 3em
+    strong
+      font-size 2em
 
   .joinCustomTitle
     z-index 10000
