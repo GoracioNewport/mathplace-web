@@ -343,7 +343,6 @@ export default {
   async mounted () {
     if (this.getUser === null) this.$router.push('/login')
     await this.fetchTopics()
-    this.isLoading = false
     this.arrayPopular = this.$store.getters.getTopics.get('популярные')
     this.arraySchool = this.$store.getters.getTopics.get('школа')
     this.arrayOGE = this.$store.getters.getTopics.get('огэ')
@@ -352,6 +351,7 @@ export default {
     this.arrayKomba = this.$store.getters.getTopics.get('комбинаторика')
     this.arrayLogics = this.$store.getters.getTopics.get('логика')
     this.arrayGraphs = this.$store.getters.getTopics.get('графы')
+    this.isLoading = false
   },
   methods: {
     ...mapActions(['fetchTopics', 'fetchCustomTopic']),

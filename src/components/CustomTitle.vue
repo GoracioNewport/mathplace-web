@@ -147,7 +147,6 @@ export default {
     },
     onFileSelected (event) {
       this.tasks[this.currTaskId].text[this.currComponentId].inner = event.target.files[0]
-      console.log(event.target.files[0])
     },
     async generateToken (length) {
       var a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('')
@@ -207,7 +206,7 @@ export default {
         this.tasks[i].type === 'theory' ? task.push('null') : task.push(this.tasks[i].solution)
         data['task'.concat(i.toString())] = task
       }
-      var token = this.generateToken(5)
+      var token = await this.generateToken(5)
       var sendInformation = {
         token: token,
         title: data
