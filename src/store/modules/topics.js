@@ -23,8 +23,7 @@ export default {
       const db = firebase.firestore()
       // var docRef = db.collection('account').doc('FGffHhxvVUfa79meSj7bHMYviRs2')
       // docRef.get().then(function (doc2) {
-      var userData = db.collection('account').doc(this.getters.getUser.id)
-      await userData.get()
+      await db.collection('account').doc(this.getters.getUser.id).get()
         .then(usr => {
           db.collection('task2').get()
             .then((snapshot) => {
@@ -147,6 +146,7 @@ export default {
       mapTopic.set('идеи', komba)
       ctx.commit('updateTopics', mapTopic)
       ctx.commit('updateTopicsLoaded', true)
+      console.log('!!!')
     },
     like (ctx, liked) {
       let n = 0

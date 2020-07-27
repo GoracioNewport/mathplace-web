@@ -1,16 +1,16 @@
 <template lang="pug">
   .content-wrapper
-    section.header-title(v-if="this.isLoading && !this.error")
+    section.header-title(v-if="(this.isLoading && !this.error) || this.arrayPopular.length === 0")
       .container
         h1.ui-title-1
           strong Темы
         .loading-indicator
           loading(
-            :active.sync = "this.isLoading"
+            :active.sync = "this.trueVar"
             :is-full-page = 'false'
             color = "#763dca"
             opacity = 0)
-    section(v-if = "!this.isLoading && !this.error")
+    section(v-if = "!this.isLoading && !this.error && this.arrayPopular.length !== 0")
       .sidebar
         <a href="#school" v-smooth-scroll>
           img(src="@/components/images/school1.png", width= "50px", height = "50px")
@@ -345,22 +345,26 @@ export default {
       isLoading: true,
       joinMenuShow: false,
       customTopicId: '',
-      error: false
+      error: false,
+      trueVar: true
     }
   },
   computed: mapGetters(['getTopics', 'isTopicsLoaded', 'getUser', 'getCustomTopic']),
   async mounted () {
     if (this.getUser === null) this.$router.push('/login')
     try {
+      console.log('Fetching...')
       await this.fetchTopics()
-      this.arrayPopular = this.$store.getters.getTopics.get('популярные')
-      this.arraySchool = this.$store.getters.getTopics.get('школа')
-      this.arrayOGE = this.$store.getters.getTopics.get('огэ')
-      this.arrayGeometry = this.$store.getters.getTopics.get('геометрия')
-      this.arrayAlgebra = this.$store.getters.getTopics.get('алгебра')
-      this.arrayKomba = this.$store.getters.getTopics.get('комбина{торика')
-      this.arrayLogics = this.$store.getters.getTopics.get('логика')
-      this.arrayGraphs = this.$store.getters.getTopics.get('графы')
+      console.log('Topics fetched')
+      this.arrayPopular = await this.$store.getters.getTopics.get('популярные')
+      this.arraySchool = await this.$store.getters.getTopics.get('школа')
+      this.arrayOGE = await this.$store.getters.getTopics.get('огэ')
+      this.arrayGeometry = await this.$store.getters.getTopics.get('геометрия')
+      this.arrayAlgebra = await this.$store.getters.getTopics.get('алгебра')
+      this.arrayKomba = await this.$store.getters.getTopics.get('комбина{торика')
+      this.arrayLogics = await this.$store.getters.getTopics.get('логика')
+      this.arrayGraphs = await this.$store.getters.getTopics.get('графы')
+      console.log('Topics loaded', this.arrayGraphs)
     } catch (error) {
       this.error = true
       throw error
