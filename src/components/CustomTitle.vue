@@ -12,13 +12,16 @@
         .tasksInfo
           .tasksContent
             .task(v-for = 'task in tasks')
-              .taskType
-                label(for='theory') Теория
-                  input#theory(type = 'radio', value = 'theory', v-model = "task.type")
-                label(for='task') Задача
-                  input#task(type = 'radio', value = 'task', v-model = "task.type")
-
               .button.img.delete_button(@click='tasks.splice(tasks.indexOf(task), 1)')
+              .componentName
+                strong(v-if = 'task.type === "theory"') Теория
+                strong(v-if = 'task.type === "task"') Задача
+              //- .taskType
+              //-   label(for='theory') Теория
+              //-     input#theory(type = 'radio', value = 'theory', v-model = "task.type")
+              //-   label(for='task') Задача
+              //-     input#task(type = 'radio', value = 'task', v-model = "task.type")
+
               .theoryEditBox
                 .theoryComponent(
                   v-for = 'component in task.text'
@@ -39,16 +42,21 @@
                 input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
                 br
                 span Выберите сложность своей задачи:
+                br
 
-                label(for='difOne') Легкая
-                  input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
-                label(for='difTwo') Средняя
-                  input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
-                label(for='difThree') Трудная
-                  input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
+                select.olympTheme(v-model = "task.difficulty")
+                  option(v-for = 'diff in difficultyList') {{ diff }}
 
-                textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи', v-model = "task.solution")
-          .button.button--round.button-success(@click='addTask()') Добавить теорию или задачу
+                //- label(for='difOne') Легкая
+                //-   input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
+                //- label(for='difTwo') Средняя
+                //-   input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
+                //- label(for='difThree') Трудная
+                //-   input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
+
+                textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
+          .button.button--round.button-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
+          .button.button--round.button-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
         .button.button--round.button-success.buttonPost(@click='sendTitle()') Опубликовать тему
     .successMenu(v-if = 'this.success')
       .successMenuBox
@@ -107,6 +115,11 @@ export default {
         'Логика',
         'Графы'
       ],
+      difficultyList: [
+        'Легкая',
+        'Средняя',
+        'Сложная'
+      ],
       currTaskId: 0,
       currComponentId: 0,
       success: false,
@@ -120,13 +133,13 @@ export default {
     goToProfile () {
       this.$router.push('/profile')
     },
-    addTask () {
+    addTask (type) {
       var task = {
         text: [],
-        type: 'theory',
+        type: type,
         answer: '',
         solution: '',
-        difficulty: '1'
+        difficulty: 'Легкая'
       }
       this.tasks.push(task)
     },
@@ -158,7 +171,13 @@ export default {
           var j = (Math.random() * (a.length - 1)).toFixed(0)
           b[i] = a[j]
         }
-        succes = await this.isTokenValid(b.join(''))
+        try {
+          succes = await this.isTokenValid(b.join(''))
+        } catch (error) {
+          b = ['a', 'a', 'a', 'a', 'a']
+          succes = true
+          throw error
+        }
       }
       return b.join('')
     },
@@ -202,10 +221,16 @@ export default {
           }
         }
         this.tasks[i].type === 'theory' ? task.push('theory') : task.push(this.tasks[i].answer)
-        this.tasks[i].type === 'theory' ? task.push('null') : task.push(this.tasks[i].difficulty)
+        if (this.tasks[i].type === 'theory') task.push('null')
+        else {
+          if (this.tasks[i].difficulty === 'Легкая') task.push(1)
+          else if (this.tasks[i].difficulty === 'Средняя') task.push(2)
+          else task.push(3)
+        }
         this.tasks[i].type === 'theory' ? task.push('null') : task.push(this.tasks[i].solution)
         data['task'.concat(i.toString())] = task
       }
+      console.log(data)
       var token = await this.generateToken(5)
       var sendInformation = {
         token: token,
@@ -237,6 +262,25 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .componentName
+    font-size 2em
+    padding 3%
+    padding-left 0%
+  .taskAnswer
+    border-radius 10px
+    padding 1%
+    margin 3%
+    margin-left 0%
+  .buttonAddContent
+    margin 1%
+  .olympTheme
+    option
+      font-size 0.8em
+      margin 1%
+    font-size 1em
+    padding 0
+  #isPrivate
+    border-width 3px
   .vld-parent
     position relavite
     padding 5%
@@ -360,7 +404,7 @@ export default {
     border 1px solid #999
     border-radius 10px
     margin 1%
-    padding 1%
+    padding 3%
   .taskName
     margin 1%
 </style>

@@ -7,7 +7,7 @@
             <div id="leftMain">
 
                 <div id="leftText">
-                    <p class="textMargin" style="color:#000000; letter-spacing: 3px; font-family: 'Roboto', sans-serif; font-size: 1.1em; font-weight: bold;">платформа</p>
+                    <p class="textMargin" style="color:#000000; font-family: 'Roboto', sans-serif; font-size: 1.1em; font-weight: bold;">платформа</p>
                     <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 3.8em; font-weight: bold;">MathPlace</p>
                     <h3 class="textMargin" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень в математике</h3>
                     <div id="DownloadButton" class="gradient2">
