@@ -302,16 +302,17 @@
                 )
     .joinMenu(v-if = 'this.joinMenuShow')
       .joinMenuBox
+        .joinMenuText
+          span Введите ключ темы
         .joinMenuField
-          label Введите идентификатор курса
           input(
                   type="text"
-                  placeholder="ID Курса"
+                  placeholder="Ключ темы"
                   v-model="customTopicId"
           )
-          .button.button--round.button-success(@click ='joinCourse(customTopicId)') Let's go!
         .joinMenuCancel
-          .button.button--round.button-warning(@click ='joinMenuShow = false') Отмена
+          .button.button--round.button-success(@click ='joinCourse(customTopicId)') Подключиться
+          .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
     .errorBox(v-if = 'this.error')
       strong Ой-ой... :(
       br
@@ -382,11 +383,27 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .joinMenuBox
+    padding 5%
+    padding-left 10%
+    padding-right 10%
+    .button
+      font-size 0.6em
+      margin 2%
+
+  .joinMenuText
+    font-size 1.3em
+
+  .joinMenuField
+    input
+      border-color #000000
+      border-width 1%
+
   .errorBox
     padding-top 10%
     text-align center
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-    font-size 3em
+    font-size 2em
     strong
       font-size 2em
 
