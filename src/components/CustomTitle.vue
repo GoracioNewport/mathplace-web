@@ -230,8 +230,8 @@ export default {
         this.tasks[i].type === 'theory' ? task.push('null') : task.push(this.tasks[i].solution)
         data['task'.concat(i.toString())] = task
       }
-      console.log(data)
       var token = await this.generateToken(5)
+      console.log(token)
       var sendInformation = {
         token: token,
         title: data
@@ -244,15 +244,18 @@ export default {
       }
       this.loading = false
     },
-    isTokenValid (token) {
+    async isTokenValid (token) {
       const db = firebase.firestore()
-      db.collection('olympiad').doc(token)
+      var result
+      await db.collection('olympiad').doc(token)
         .get().then(
           doc => {
             if (doc.data() !== undefined) {
-              return false
-            } else return true
+              result = false
+            } else result = true
           })
+      console.log('Result: ', result)
+      return result
     }
   },
   computed: {
