@@ -361,7 +361,7 @@ export default {
       this.arrayOGE = await this.$store.getters.getTopics.get('огэ')
       this.arrayGeometry = await this.$store.getters.getTopics.get('геометрия')
       this.arrayAlgebra = await this.$store.getters.getTopics.get('алгебра')
-      this.arrayKomba = await this.$store.getters.getTopics.get('комбина{торика')
+      this.arrayKomba = await this.$store.getters.getTopics.get('комбинаторика')
       this.arrayLogics = await this.$store.getters.getTopics.get('логика')
       this.arrayGraphs = await this.$store.getters.getTopics.get('графы')
       console.log('Topics loaded', this.arrayGraphs)

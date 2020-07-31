@@ -46,7 +46,7 @@
                 ) {{ part.condition }}
                 p.achivProgress(
                 ) {{"Прогресс "}} {{ part.progress }}{{" %"}}
-                k-progress(status='success', type='line', :percent='20')
+                //- k-progress(status='success', type='line', :percent='20')
             .icon(
             v-if = 'part.difficulty == "complicated"'
             )

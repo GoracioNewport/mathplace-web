@@ -3,6 +3,7 @@ import 'firebase/firestore'
 
 // import { sort } from 'semver'
 // import User from './user'
+import store from '@/store'
 
 export default {
   actions: {
@@ -146,7 +147,6 @@ export default {
       mapTopic.set('идеи', komba)
       ctx.commit('updateTopics', mapTopic)
       ctx.commit('updateTopicsLoaded', true)
-      console.log('!!!')
     },
     like (ctx, liked) {
       let n = 0
@@ -165,13 +165,6 @@ export default {
       // console.log(payload.token, payload.title)
       const db = firebase.firestore()
       db.collection('olympiad').doc(payload.token).set(payload.title)
-      var myTopics
-      db.collection('accounts').doc(this.getters.getUser.id).get().then(doc => {
-        myTopics = doc.data().myTopics
-      })
-      if (myTopics === undefined) myTopics = []
-      myTopics.push(payload.token)
-      db.collection('accounts').doc(this.getters.getUser.id).update({ 'myTopics': myTopics })
     },
     async fetchCustomTopic (ctx, payload) {
       const db = firebase.firestore()
@@ -181,15 +174,50 @@ export default {
         else ctx.commit('updateCustomTopic', doc.data().name)
       })
     },
-    addUserToTopicList (ctx) {
+    async addUserToTopicList (ctx) {
       const db = firebase.firestore()
       var users
-      db.collection('task2').doc(this.getters.getCurrentTopic).get().then(doc => {
-        users = doc.data().visited
+      await db.collection('task2').doc(this.getters.getCurrentTopic).get().then(doc => {
+        users = doc.data().members
       })
       if (users === undefined) users = []
-      users.push(this.getters.getUser.id)
-      db.collection('task2').doc(this.getters.getCurrentTopic).update({ 'visited': users })
+      if (!users.includes(this.getters.getUser.id)) {
+        users.push(this.getters.getUser.id)
+        db.collection('task2').doc(this.getters.getCurrentTopic).update({ 'members': users })
+      }
+    },
+    async fetchMyTopics (ctx) {
+      const db = firebase.firestore()
+      var topics
+      await db.collection('account').doc(this.getters.getUser.id).get().then(doc => {
+        if (doc.data().myTopics === undefined) topics = undefined
+        else topics = doc.data().myTopics
+      })
+      ctx.commit('updateMyTopics', topics)
+    },
+    async addMyTopicsToList (ctx, payload) {
+      const db = firebase.firestore()
+      await store.dispatch('fetchMyTopics')
+      var topics = this.getters.getMyTopics
+      if (topics === undefined) topics = []
+      topics.push(payload)
+      ctx.commit('updateMyTopics', topics)
+      db.collection('account').doc(this.getters.getUser.id).set({
+        myTopics: topics
+      }, { merge: true })
+    },
+    async fetchMyTopicsDetailedInfo (ctx) {
+      const db = firebase.firestore()
+      var topicList = this.getters.getMyTopics
+      var topicInfo = {}
+      for (let i = 0; i < topicList.length; i++) {
+        var topicsData = {}
+        await db.collection('olympiad').doc(topicList[i]).get().then(doc => {
+          topicsData['name'] = doc.data().name
+        })
+        topicInfo[topicList[i]] = topicsData
+      }
+      ctx.commit('updateMyTopicsDetailedInfo', topicInfo)
     }
   },
   mutations: {
@@ -209,16 +237,22 @@ export default {
       state.likes = payload
     },
     updateCustomTopic (state, payload) {
-      console.log('Update to ', payload)
       if (payload !== undefined) state.customTopicTitle = payload
       else state.customTopicTitle = null
+    },
+    updateMyTopics (state, payload) {
+      state.myTopics = payload
+    },
+    updateMyTopicsDetailedInfo (state, payload) {
+      state.myTopicsDetailedInfo = payload
     }
   },
   state: {
     topicsLoaded: false,
     mapTopic: new Map(),
     likes: 0,
-    customTopicTitle: ''
+    customTopicTitle: '',
+    myTopics: []
   },
   getters: {
     getTopics (state) {
@@ -232,6 +266,12 @@ export default {
     },
     getCustomTopic (state) {
       return state.customTopicTitle
+    },
+    getMyTopics (state) {
+      return state.myTopics
+    },
+    getMyTopicsDetailedInfo (state) {
+      return state.myTopicsDetailedInfo
     }
   }
 }

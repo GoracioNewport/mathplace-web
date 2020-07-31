@@ -33,7 +33,7 @@
                     label(for='img') Выберите картинку
                     input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
 
-                .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
+                .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить текст
 
                 .button.button--round.button-success(
                   @click='addContent(tasks.indexOf(task), "img")'
@@ -41,7 +41,7 @@
               .taskEditBox(v-if ="task.type === 'task'")
                 input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
                 br
-                span Выберите сложность своей задачи:
+                span Выберите сложность
                 br
 
                 select.olympTheme(v-model = "task.difficulty")
@@ -129,13 +129,16 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['sendTopic']),
+    ...mapActions(['sendTopic', 'addMyTopicsToList']),
     goToProfile () {
       this.$router.push('/profile')
     },
     addTask (type) {
       var task = {
-        text: [],
+        text: [{
+          type: 'text',
+          inner: ''
+        }],
         type: type,
         answer: '',
         solution: '',
@@ -231,7 +234,6 @@ export default {
         data['task'.concat(i.toString())] = task
       }
       var token = await this.generateToken(5)
-      console.log(token)
       var sendInformation = {
         token: token,
         title: data
@@ -242,6 +244,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      this.addMyTopicsToList(token)
       this.loading = false
     },
     async isTokenValid (token) {
@@ -268,7 +271,8 @@ export default {
   .componentName
     font-size 2em
     padding 3%
-    padding-left 0%
+    padding-left 0
+    padding-top 0
   .taskAnswer
     border-radius 10px
     padding 1%
