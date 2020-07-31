@@ -208,6 +208,7 @@ export default {
     },
     async fetchMyTopicsDetailedInfo (ctx) {
       const db = firebase.firestore()
+      await store.dispatch('fetchMyTopics')
       var topicList = this.getters.getMyTopics
       var topicInfo = {}
       for (let i = 0; i < topicList.length; i++) {
