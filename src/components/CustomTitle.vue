@@ -50,41 +50,13 @@
                 textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи', v-model = "task.solution")
           .button.button--round.button-success(@click='addTask()') Добавить теорию или задачу
         .button.button--round.button-success.buttonPost(@click='sendTitle()') Опубликовать тему
-    .successMenu(v-if = 'this.success')
-      .successMenuBox
-        .successText(v-if = 'this.loading')
-          strong.titleTokenText Пожалуйста, подождите
-          br
-          span Мы публикуем вашу тему. Это может занять некоторое время.
-          .loading-indicator
-            loading(
-              :active.sync = "this.loading",
-              :is-full-page = 'false',
-              color = "#763dca")
-        .successText(v-else)
-          strong.titleTokenText  Готово!
-          br
-          span.titleTokenText Ключ темы:
-          strong.titleTokenText  {{ this.token }}
-          br
-          br
-          span Тема появится в сети через несколько минут.
-          br
-          span Поделитесь ключом со своими учениками, что бы они могли изучать вашу тему!
-          .successGoButton
-            .button.button--round.successButton.button-primary(@click = 'goToProfile') Понятно!
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import firebase from 'firebase/app'
-import Loading from 'vue-loading-overlay'
-import 'vue-loading-overlay/dist/vue-loading.css'
 import 'firebase/storage'
 export default {
-  components: {
-    Loading
-  },
   data () {
     return {
       name: '',
@@ -105,17 +77,11 @@ export default {
         'Графы'
       ],
       currTaskId: 0,
-      currComponentId: 0,
-      success: false,
-      token: 'null',
-      loading: false
+      currComponentId: 0
     }
   },
   methods: {
     ...mapActions(['sendTopic']),
-    goToProfile () {
-      this.$router.push('/profile')
-    },
     addTask () {
       var task = {
         text: [],
@@ -160,8 +126,6 @@ export default {
       return returnTo
     },
     async sendTitle () {
-      this.success = true
-      this.loading = true
       this.theme = this.theme.toLowerCase()
       for (let i = 0; i < this.tasks.length; i++) {
         if (this.tasks[i].type === 'task') this.cnt_task++
@@ -208,13 +172,8 @@ export default {
         token: token,
         title: data
       }
-      this.token = token
-      try {
-        await this.sendTopic(sendInformation)
-      } catch (error) {
-        console.log(error)
-      }
-      this.loading = false
+      console.log(sendInformation)
+      this.sendTopic(sendInformation)
     }
   },
   computed: {
@@ -224,36 +183,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .titleTokenText
-    font-size 1.4em
-  .successText
-    padding 10%
-  .successGoButton
-    padding 5%
-    padding-bottom 0
-  .successMenu
-    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-    font-size 2vw
-    background-color rgba(0, 0, 0, .5)
-    width 100%
-    height 100%
-    position fixed
-    top 0
-    left 0
-  .successButton
-    width 20%
-    height 20%
-
-  .successMenuBox
-    text-align center
-    background-color #FFFFFF
-    margin-top 10%
-    margin-left 20%
-    margin-right 20%
-    min-width 350px
-    border 2px #000000 solid
-    border-radius 10px
-
   .editBox
     position relative
     margin-top 50px
@@ -278,7 +207,7 @@ export default {
     width 90%
     margin-bottom 0px
     display inline-block
-    margin-top 0p
+    margin-top 0px
 
   .marginBox
     position relative
@@ -293,7 +222,7 @@ export default {
 
   .olympTitle
     position relative
-    width autod
+    width auto
     font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     font-size 2em
     font-weight 700
@@ -302,7 +231,7 @@ export default {
       position relative
       font-size 19px
       float right
-      background #763dcb
+      background #763dca
       font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
       width auto
       font-weight 500
