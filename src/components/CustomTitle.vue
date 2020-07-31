@@ -198,7 +198,8 @@ export default {
         public: !this.private,
         theme: this.theme,
         cnt_task: this.cnt_task,
-        items: this.items
+        items: this.items,
+        members: []
       }
 
       for (let i = 0; i < this.tasks.length; i++) {

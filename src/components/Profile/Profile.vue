@@ -18,11 +18,8 @@
                     p.textInf Решено {{this.getUser.right}}
                     p.textInf Тугриков {{this.getUser.money}}
                   router-link.button--round.button.button-primary(to='/logout') Выйти
-                  router-link.button--round.button.button-primary(to='/statistics') Статистика
+                  router-link.button--round.button.button-primary(to='/statistics') Мои уроки
                   router-link.button--round.button.button-primary(to='/editProfile') Редактировать
-
-            //- .name
-            //-     strong {{this.getUser.name}}
 
         .content-achieve
           .text-part(

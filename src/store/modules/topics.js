@@ -177,13 +177,13 @@ export default {
     async addUserToTopicList (ctx) {
       const db = firebase.firestore()
       var users
-      await db.collection('task2').doc(this.getters.getCurrentTopic).get().then(doc => {
+      await db.collection(this.getters.getCollection).doc(this.getters.getCurrentTopic).get().then(doc => {
         users = doc.data().members
       })
       if (users === undefined) users = []
       if (!users.includes(this.getters.getUser.id)) {
         users.push(this.getters.getUser.id)
-        db.collection('task2').doc(this.getters.getCurrentTopic).update({ 'members': users })
+        db.collection(this.getters.getCollection).doc(this.getters.getCurrentTopic).update({ 'members': users })
       }
     },
     async fetchMyTopics (ctx) {
@@ -215,6 +215,7 @@ export default {
         var topicsData = {}
         await db.collection('olympiad').doc(topicList[i]).get().then(doc => {
           topicsData['name'] = doc.data().name
+          topicsData['members'] = doc.data().members
         })
         topicInfo[topicList[i]] = topicsData
       }

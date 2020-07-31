@@ -29,5 +29,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
+  .topicsBox
+    border 1px solid
+    border-radius 5px
 </style>
