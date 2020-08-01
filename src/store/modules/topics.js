@@ -1,8 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
-// import { sort } from 'semver'
-// import User from './user'
 import store from '@/store'
 
 export default {
@@ -22,8 +20,6 @@ export default {
       var innderId = 0
       var mapTopic = new Map()
       const db = firebase.firestore()
-      // var docRef = db.collection('account').doc('FGffHhxvVUfa79meSj7bHMYviRs2')
-      // docRef.get().then(function (doc2) {
       await db.collection('account').doc(this.getters.getUser.id).get()
         .then(usr => {
           db.collection('task2').get()
@@ -162,7 +158,6 @@ export default {
       })
     },
     sendTopic (ctx, payload) {
-      // console.log(payload.token, payload.title)
       const db = firebase.firestore()
       db.collection('olympiad').doc(payload.token).set(payload.title)
     },
@@ -214,12 +209,35 @@ export default {
       for (let i = 0; i < topicList.length; i++) {
         var topicsData = {}
         await db.collection('olympiad').doc(topicList[i]).get().then(doc => {
+          topicsData['token'] = topicList[i]
           topicsData['name'] = doc.data().name
           topicsData['members'] = doc.data().members
+          topicsData['showStats'] = false
+          topicsData['stats'] = {}
         })
         topicInfo[topicList[i]] = topicsData
       }
       ctx.commit('updateMyTopicsDetailedInfo', topicInfo)
+    },
+    async fetchTopicStatistics (ctx, id) {
+      const db = firebase.firestore()
+      var members = this.getters.getMyTopicsDetailedInfo[id].members
+      var sendData = []
+      for (let i = 0; i < members.length; i++) {
+        var info = {}
+        await db.collection('account').doc(members[i]).get().then(doc => {
+          info['id'] = members[i]
+          info['name'] = doc.data().name
+          info['solveStats'] = doc.data()[id]
+        })
+        sendData.push(info)
+      }
+      console.log(sendData)
+      var usrData = {
+        id: id,
+        data: sendData
+      }
+      ctx.commit('updateTopicStats', usrData)
     }
   },
   mutations: {
@@ -247,6 +265,9 @@ export default {
     },
     updateMyTopicsDetailedInfo (state, payload) {
       state.myTopicsDetailedInfo = payload
+    },
+    updateTopicStats (state, payload) {
+      state.myTopicsDetailedInfo[payload.id].stats = payload.data
     }
   },
   state: {
