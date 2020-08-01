@@ -19,9 +19,9 @@
                   md-table-cell(md-label='Name', md-sort-by='name') {{ item.name }}
                   md-table-cell(v-for = '(task, index) in item.solveStats' :key = 'index'
                   :md-label = '(index + 1).toString()')
-                    Dots(v-if = 'task === 1')
-                    Wrong(v-else-if = 'task == 0')
-                    Right(v-else)
+                    Dots.answerNo(v-if = 'task === 1')
+                    Wrong.answerWrong(v-else-if = 'task == 0')
+                    Right.answerRight(v-else)
 
 </template>
 
@@ -89,6 +89,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .answerRight
+    height 2em !important
+    width 2em
   .topicItem
     border 1px solid
     border-radius 5px

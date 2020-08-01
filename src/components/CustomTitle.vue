@@ -4,11 +4,21 @@
       .marginBox
         .titleInfo
           p.olympTitle Создать урок
-          input.olympName(type = 'text', placeholder = 'Введите название вашей темы', v-model = "name")
-          label(for = 'isPrivate') Приватная тема
-            input#isPrivate(type = 'checkbox', v-model = "private")
-          select.olympTheme(v-model = "theme")
+          //- input.olympName(type = 'text', placeholder = 'Введите название вашей темы', v-model = "name")
+          md-field.olympName
+            label Type here!
+            md-input(v-model='name')
+            span.md-helper-text Helper text
+
+          //- label(for = 'isPrivate') Приватная тема
+            //- input#isPrivate(type = 'checkbox', v-model = "private")
+          md-checkbox(v-model='private') Приватная тема
+
+          //- select.olympTheme(v-model = "theme")
             option(v-for = 'theme in themeList') {{ theme }}
+          md-select(v-model="theme", name='Выберите тему')
+            md-option(v-for = "theme in themeList" :value = 'theme') {{ theme }}
+
         .tasksInfo
           .tasksContent
             .task(v-for = 'task in tasks')
