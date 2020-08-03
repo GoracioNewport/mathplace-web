@@ -29,7 +29,7 @@
 
       .topic-item-body
         a.topic-item-title
-          strong {{title}}
+          strong.md-title {{title}}
       a
         .topic-item-solve(@click="openTopic()")
           .button.button--round.button-success Решать
@@ -79,6 +79,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .md-title
+    color #FFFFFF
 
   .button
     font-family: 'Roboto', sans-serif

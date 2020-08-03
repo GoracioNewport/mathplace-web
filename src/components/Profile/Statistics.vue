@@ -3,25 +3,28 @@
       .topicsBox(v-if = 'myTopics.length !== 0')
         .topicItem(v-for = 'topic in myTopics'
         :key = 'topic.token')
-          span.topicName() {{ topic.name }}
-          .button.button--round.button-primary.showStatsButton(@click ='toggleStats(topic.token)') Показать подробную статистику
+          .button.button--round.button-primary.showStatsButton(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть подробную статистику
+          .button.button--round.button-primary.showStatsButton(v-else @click ='toggleStats(topic.token)') Показать подробную статистику
+          span.md-title.topicName {{ topic.name }}
+          span.md-body-1 Ключ: {{ topic.token }}
           .statsBox(v-if = 'topic.showStats')
             span.loadingBox(v-if = 'Object.keys(topic.stats).length == 0') Загрузка...
             .loadedBox(v-else)
-              md-table(v-model='myTopics[myTopics.indexOf(topic)].stats', md-sort='name', md-sort-order='asc', md-fixed-header='')
+              md-table.statsTable(v-model='myTopics[myTopics.indexOf(topic)].stats', md-sort='name', md-sort-order='asc', md-fixed-header='')
                 md-table-toolbar
                   .md-toolbar-section-start
                     h1.md-title Пользователи
-                  md-field.md-toolbar-section-end(md-clearable='')
+                  //- md-field.md-toolbar-section-end(md-clearable='')
                     md-input(placeholder='Поиск по имени...', v-model='search', @input='searchOnTable')
                 md-table-empty-state(md-label='Пользователи не найдены', :md-description="`По запросу '${search}' ничего не нашлось. Попробуйте другое имя.`")
                 md-table-row(slot='md-table-row', slot-scope='{ item }')
-                  md-table-cell(md-label='Name', md-sort-by='name') {{ item.name }}
-                  md-table-cell(v-for = '(task, index) in item.solveStats' :key = 'index'
+                  md-table-cell.nameSlot(md-label='Имя', md-sort-by='name') {{ item.name }}
+                  md-table-cell.taskSlot(v-for = '(task, index) in item.solveStats' :key = 'index'
                   :md-label = '(index + 1).toString()')
-                    Dots.answerNo(v-if = 'task === 1')
-                    Wrong.answerWrong(v-else-if = 'task == 0')
-                    Right.answerRight(v-else)
+                    Dots.answerNo.answerLabel(v-if = 'task === 1')
+                    img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'task == 0')
+                    img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else)
+                  md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
 
 </template>
 
@@ -69,7 +72,6 @@ export default {
       if (this.myTopics[index].showStats) {
         await this.fetchTopicStatistics(id)
         this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
-        console.log(this.myTopics)
       }
     },
     searchOnTable () {
@@ -89,12 +91,37 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .md-body-1
+    margin-left 5%
+  .topicName
+    font-size 2.5em
+  .loadedBox
+   margin-top 3%
+  .taskSlot
+    width 50px
+    margin auto
+  .answerLabel
+    display block
+    margin-left auto
+    margin-right auto
+    align-items flex
+    max-width 15px
+    max-height  15px
+  .statsTable
+    margin auto
+    width 100%
+  .showStatsButton
+    background-color #763dca
+    float right
   .answerRight
     height 2em !important
     width 2em
   .topicItem
-    border 1px solid
-    border-radius 5px
+    background-color #ffffff
+    box-shadow 0 0 5px rgba(0,0,0,0.5)
+    border-radius 20px 20px 20px 20px
     margin 3%
+    margin-left 17%
+    margin-right 17%
     padding 2%
 </style>

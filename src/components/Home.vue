@@ -303,7 +303,7 @@
     .joinMenu(v-if = 'this.joinMenuShow')
       .joinMenuBox
         .joinMenuText
-          span Введите ключ темы
+          span.md-headline Введите ключ темы
         .joinMenuField
           input(
                   type="text"
@@ -387,6 +387,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .md-headline
+    font-size 1em
+  strong
+    color #000000
   .joinMenuBox
     padding 5%
     padding-left 10%
@@ -394,9 +398,9 @@ export default {
     .button
       font-size 0.6em
       margin 2%
-
   .joinMenuText
     font-size 1.3em
+    padding-bottom 10%
 
   .joinMenuField
     input

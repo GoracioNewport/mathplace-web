@@ -6,18 +6,17 @@
           p.olympTitle Создать урок
           //- input.olympName(type = 'text', placeholder = 'Введите название вашей темы', v-model = "name")
           md-field.olympName
-            label Type here!
+            label Введите название темы
             md-input(v-model='name')
-            span.md-helper-text Helper text
 
           //- label(for = 'isPrivate') Приватная тема
             //- input#isPrivate(type = 'checkbox', v-model = "private")
           md-checkbox(v-model='private') Приватная тема
 
-          //- select.olympTheme(v-model = "theme")
+          select.olympTheme(v-model = "theme")
             option(v-for = 'theme in themeList') {{ theme }}
-          md-select(v-model="theme", name='Выберите тему')
-            md-option(v-for = "theme in themeList" :value = 'theme') {{ theme }}
+          //- md-select(v-model="theme", name='Выберите тему')
+          //-   md-option(v-for = "theme in themeList" :value = 'theme') {{ theme }}
 
         .tasksInfo
           .tasksContent
@@ -83,7 +82,7 @@
               opacity = 0
               width = 150)
         .successText(v-else)
-          strong.titleTokenText Готово!
+          strong.md-title.titleTokenText Готово!
           br
           span.titleTokenText Ключ темы:
           strong.titleTokenText  {{ this.token }}
@@ -279,6 +278,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  body
+    line-height auto
+  .md-input
+    margin-bottom 1%
   .componentName
     font-size 2em
     padding 3%

@@ -5,7 +5,7 @@
         .container
           .navbar-content
             .header-logo
-              <strong class="mathplace-logo"> MathPlace </strong>
+              strong.mathplace-logo.md-display-3 MathPlace
             .button-burger(
               @click = "menuShow = !menuShow"
               :class="{ active: menuShow}"

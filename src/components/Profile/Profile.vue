@@ -1,7 +1,7 @@
 <template lang='pug'>
     .content-wrapper
       .test_button
-        router-link.button--round.button.button-primary.bottom_button(to='/customTitle') Создать свою тему
+        router-link.button--round.button.button-primary.bottom_button.md-button(to='/customTitle') Создать свою тему
 
       .content-block
 
@@ -17,9 +17,9 @@
                     p.textInf Посылок {{this.getUser.submit}}
                     p.textInf Решено {{this.getUser.right}}
                     p.textInf Тугриков {{this.getUser.money}}
-                  router-link.button--round.button.button-primary(to='/logout') Выйти
-                  router-link.button--round.button.button-primary(to='/statistics') Мои уроки
-                  router-link.button--round.button.button-primary(to='/editProfile') Редактировать
+                  router-link.button.button--round.button.button-primary(to='/logout') Выйти
+                  router-link.button.button--round.button.button-primary(to='/statistics') Мои уроки
+                  router-link.button.button--round.button.button-primary(to='/editProfile') Редактировать
 
         .content-achieve
           .text-part(
@@ -145,9 +145,8 @@ export default {
 
 <style scoped lang='stylus'>
 
-    // .content-wrapper
-    //   height 100%
-    //   width 100%
+    .button
+      color #FFFFFF !important
 
     .button-primary
       margin-right 10px
