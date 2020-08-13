@@ -83,20 +83,48 @@ export default {
                     })
                 }
             })
-            console.log(achivementsFull.length + ' ' + achivementsFull[0].name)
             ctx.commit('updateAchievesLoaded', true)
             ctx.commit('updateTopics', achivementsFull)
+        },
+        async fetchMyChats (ctx) {
+            const db = firebase.firestore()
+            var moment = require('moment')
+            var nameList = []
+            await db.collection('account').doc(this.getters.getUser.id).get().then(doc => { doc.data().myChats !== undefined ? nameList = doc.data().myChats : nameList  = [] })
+            var chatList = []
+            for (let i = 0; i < nameList.length; i++) {
+                var info = {}
+                await db.collection('chat').doc(nameList[i]).get().then(doc => {
+                    info['msgCnt'] = doc.data().all_message
+                    info['name'] = doc.data().name
+                    info['members'] = doc.data().members
+                    info['msgs'] = {}
+                    for (let j = 0; j < doc.data().all_message; j++) {
+                       info['msgs'][i] = doc.data()['message' + j.toString()]
+                       let myDate = new Date(info['msgs'][i].time.seconds * 1000)
+                       info['msgs'][i].time = moment().startOf(myDate).calendar()
+                  }
+                })
+                chatList.push(info)
+                console.log(info)
+            }
+            console.log(chatList)
+            ctx.commit('updateMyChats', chatList)
         }
     },
     state: {
         achievements: [],
         tasksLoading: false,
-        logo: 'MathPlace'
+        logo: 'MathPlace',
+        chatList: []
     },
     getters: {
         getAchievements (state) {
-          return state.achievements
+            return state.achievements
         },
+        getMyChats (state) {
+            return state.chatList
+        }
     },
     mutations: {
         updateAchievesLoaded (state, isLoaded) {
@@ -105,6 +133,9 @@ export default {
         updateTopics (state, list) {
             // state.topics = topics
             state.achievements = list
+        },
+        updateMyChats (state, payload) {
+            state.chatList = payload
         }
     }
 }

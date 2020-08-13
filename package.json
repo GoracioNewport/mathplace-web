@@ -20,6 +20,7 @@
     "firebase": "^7.14.3",
     "jade": "^1.11.0",
     "k-progress": "^1.5.0",
+    "moment": "^2.27.0",
     "node-sass": "^4.14.1",
     "pug": "^2.0.4",
     "sass-loader": "^8.0.2",
