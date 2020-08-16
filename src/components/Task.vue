@@ -138,8 +138,8 @@ export default {
     await this.fetchLikes(this.getCollection)
     await this.fetchTasks(this.getCollection)
     this.taskList = this.$store.getters.getTasks
-    this.isLoading = false
     if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
+    this.isLoading = false
   },
   data () {
     return {

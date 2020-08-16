@@ -2,16 +2,19 @@
   .content-wrapper
     .chatList
       .chat-fragment(v-for = '(chats, i) in chatList')
-        .chat-image(v-if = 'chats.img === undefined')
-          img(src="@/components/images/user.png", width= "100px", height = "100px")
-        .chat-info
-          .chat-name
-            label
-              strong {{ chats.name }}
-          .chat-message
+        .chat-header(v-if = 'chats.type === "group"')
+          .chat-image(v-if = 'chats.image === undefined')
+            img(src="@/components/images/user.png", width = "100px", height = "100px")
+          .chat-image(v-else)
+            img(:src = "chats.image", width = "100px", height = "100px")
+          .chat-info
+            .chat-name
+              label
+                strong {{ chats.name }}
+          .chat-message(v-if = 'chats.msgCnt > 0')
             label
               span {{ chats.msgs[chats.msgCnt - 1].sender }}: {{ chats.msgs[chats.msgCnt - 1].text }}
-          .chat-time
+          .chat-time(v-if = 'chats.msgCnt > 0')
             label {{ chats.msgs[chats.msgCnt - 1].time }}
         //- .chat-image
         //-   img(src="@/components/images/user.png", width= "100px", height = "100px")
@@ -30,7 +33,6 @@
 
 <script>
 
-import Chat from './Chat'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -39,16 +41,12 @@ export default {
       chatList: []
     }
   },
-  components: {
-    Chat
-  },
   methods: {
     ...mapActions(['fetchMyChats'])
   },
   async mounted () {
     await this.fetchMyChats()
     this.chatList = this.getMyChats
-    console.log(this.chatList.length, this.chatList)
   },
   computed: {
     ...mapGetters(['getMyChats'])

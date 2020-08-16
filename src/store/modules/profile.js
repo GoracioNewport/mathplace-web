@@ -92,19 +92,26 @@ export default {
             var nameList = []
             await db.collection('account').doc(this.getters.getUser.id).get().then(doc => { doc.data().myChats !== undefined ? nameList = doc.data().myChats : nameList  = [] })
             var chatList = []
+            var ind
             for (let i = 0; i < nameList.length; i++) {
                 var info = {}
+                console.log(nameList[i])
                 await db.collection('chat').doc(nameList[i]).get().then(doc => {
                     info['msgCnt'] = doc.data().all_message
+                    info['type'] = doc.data().chat_type
                     info['name'] = doc.data().name
                     info['members'] = doc.data().members
-                    info['msgs'] = {}
+                    if (doc.data().chat_type === 'group') info['image'] = doc.data().image
+                    else {
+                        info['members'][0] === this.getters.getUser.id ? ind = 1 : ind = 0
+                    } info['msgs'] = {}
                     for (let j = 0; j < doc.data().all_message; j++) {
-                       info['msgs'][i] = doc.data()['message' + j.toString()]
-                       let myDate = new Date(info['msgs'][i].time.seconds * 1000)
-                       info['msgs'][i].time = moment().startOf(myDate).calendar()
-                  }
+                       info['msgs'][j] = doc.data()['message' + j.toString()]
+                       info['msgs'][j].time = moment().format('MMMM Do YYYY, h:mm:ss a')
+                    }
                 })
+                console.log(ind, info['members'][ind])
+                if (info['type'] === 'personal') await db.collection('account').doc(info['members'][ind]).get().then(doc => {info['image'] = doc.data().image })
                 chatList.push(info)
                 console.log(info)
             }
@@ -116,7 +123,8 @@ export default {
         achievements: [],
         tasksLoading: false,
         logo: 'MathPlace',
-        chatList: []
+        chatList: [],
+        currentChat: []
     },
     getters: {
         getAchievements (state) {
@@ -124,6 +132,9 @@ export default {
         },
         getMyChats (state) {
             return state.chatList
+        },
+        getCurrentChat (state) {
+            return state.currentChat
         }
     },
     mutations: {
@@ -136,6 +147,9 @@ export default {
         },
         updateMyChats (state, payload) {
             state.chatList = payload
+        },
+        updateCurrentChat (state, payload) {
+            state.currentChat = payload
         }
     }
 }
