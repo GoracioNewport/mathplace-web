@@ -1,8 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
-// import { sort } from 'semver'
-// import User from './user'
+import store from '@/store'
 
 export default {
   actions: {
@@ -21,10 +20,7 @@ export default {
       var innderId = 0
       var mapTopic = new Map()
       const db = firebase.firestore()
-      // var docRef = db.collection('account').doc('FGffHhxvVUfa79meSj7bHMYviRs2')
-      // docRef.get().then(function (doc2) {
-      var userData = db.collection('account').doc(this.getters.getUser.id)
-      await userData.get()
+      await db.collection('account').doc(this.getters.getUser.id).get()
         .then(usr => {
           db.collection('task2').get()
             .then((snapshot) => {
@@ -161,8 +157,7 @@ export default {
         ctx.commit('updateLikes', doc.data().like)
       })
     },
-    async sendTopic (ctx, payload) {
-      // console.log(payload.token, payload.title)
+    sendTopic (ctx, payload) {
       const db = firebase.firestore()
       db.collection('olympiad').doc(payload.token).set(payload.title)
     },
@@ -173,11 +168,81 @@ export default {
         if (doc.data() === undefined) ctx.commit('updateCustomTopic', null)
         else ctx.commit('updateCustomTopic', doc.data().name)
       })
+    },
+    async addUserToTopicList (ctx) {
+      const db = firebase.firestore()
+      var users
+      await db.collection(this.getters.getCollection).doc(this.getters.getCurrentTopic).get().then(doc => {
+        users = doc.data().members
+      })
+      if (users === undefined) users = []
+      if (!users.includes(this.getters.getUser.id)) {
+        users.push(this.getters.getUser.id)
+        db.collection(this.getters.getCollection).doc(this.getters.getCurrentTopic).update({ 'members': users })
+      }
+    },
+    async fetchMyTopics (ctx) {
+      const db = firebase.firestore()
+      var topics
+      await db.collection('account').doc(this.getters.getUser.id).get().then(doc => {
+        if (doc.data().myTopics === undefined) topics = undefined
+        else topics = doc.data().myTopics
+      })
+      ctx.commit('updateMyTopics', topics)
+    },
+    async addMyTopicsToList (ctx, payload) {
+      const db = firebase.firestore()
+      await store.dispatch('fetchMyTopics')
+      var topics = this.getters.getMyTopics
+      if (topics === undefined) topics = []
+      topics.push(payload)
+      ctx.commit('updateMyTopics', topics)
+      db.collection('account').doc(this.getters.getUser.id).set({
+        myTopics: topics
+      }, { merge: true })
+    },
+    async fetchMyTopicsDetailedInfo (ctx) {
+      const db = firebase.firestore()
+      await store.dispatch('fetchMyTopics')
+      var topicList = this.getters.getMyTopics
+      var topicInfo = {}
+      for (let i = 0; i < topicList.length; i++) {
+        var topicsData = {}
+        await db.collection('olympiad').doc(topicList[i]).get().then(doc => {
+          topicsData['token'] = topicList[i]
+          topicsData['name'] = doc.data().name
+          topicsData['members'] = doc.data().members
+          topicsData['showStats'] = false
+          topicsData['stats'] = {}
+        })
+        topicInfo[topicList[i]] = topicsData
+      }
+      ctx.commit('updateMyTopicsDetailedInfo', topicInfo)
+    },
+    async fetchTopicStatistics (ctx, id) {
+      const db = firebase.firestore()
+      var members = this.getters.getMyTopicsDetailedInfo[id].members
+      var sendData = []
+      for (let i = 0; i < members.length; i++) {
+        var info = {}
+        await db.collection('account').doc(members[i]).get().then(doc => {
+          info['id'] = members[i]
+          info['name'] = doc.data().name
+          info['solveStats'] = doc.data()[id]
+        })
+        sendData.push(info)
+      }
+      console.log(sendData)
+      var usrData = {
+        id: id,
+        data: sendData
+      }
+      ctx.commit('updateTopicStats', usrData)
     }
   },
   mutations: {
     updateTopics (state, map) {
-      // state.topics = topics
+      // state.topics = topicsg
       state.mapTopic = map
     },
     updateTopicsLoaded (state, isLoaded) {
@@ -192,16 +257,25 @@ export default {
       state.likes = payload
     },
     updateCustomTopic (state, payload) {
-      console.log('Update to ', payload)
       if (payload !== undefined) state.customTopicTitle = payload
       else state.customTopicTitle = null
+    },
+    updateMyTopics (state, payload) {
+      state.myTopics = payload
+    },
+    updateMyTopicsDetailedInfo (state, payload) {
+      state.myTopicsDetailedInfo = payload
+    },
+    updateTopicStats (state, payload) {
+      state.myTopicsDetailedInfo[payload.id].stats = payload.data
     }
   },
   state: {
     topicsLoaded: false,
     mapTopic: new Map(),
     likes: 0,
-    customTopicTitle: ''
+    customTopicTitle: '',
+    myTopics: []
   },
   getters: {
     getTopics (state) {
@@ -213,18 +287,14 @@ export default {
     getTopicLikes (state) {
       return state.likes
     },
-    isTokenValid (state) {
-      const db = firebase.firestore()
-      db.collection('olympiad').doc('token')
-        .get().then(
-          doc => {
-            if (doc.exists) {
-              return false
-            } else return true
-          })
-    },
     getCustomTopic (state) {
       return state.customTopicTitle
+    },
+    getMyTopics (state) {
+      return state.myTopics
+    },
+    getMyTopicsDetailedInfo (state) {
+      return state.myTopicsDetailedInfo
     }
   }
 }

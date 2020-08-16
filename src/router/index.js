@@ -62,17 +62,26 @@ export default new Router({
     {
       path: '/profile',
       name: 'profile',
-      component: Profile
+      component: Profile,
+      beforeEnter (to, from, next) {
+        Store.getters.checkUser ? next() : next('/login')
+      }
     },
     {
       path: '/customTitle',
       name: 'customTitle',
-      component: CustomTitle
+      component: CustomTitle,
+      beforeEnter (to, from, next) {
+        Store.getters.checkUser ? next() : next('/login')
+      }
     },
     {
       path: '/statistics',
       name: 'statistics',
-      component: Statistics
+      component: Statistics,
+      beforeEnter (to, from, next) {
+        Store.getters.checkUser ? next() : next('/login')
+      }
     }
   ]
 })

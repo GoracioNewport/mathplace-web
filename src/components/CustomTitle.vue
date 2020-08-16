@@ -4,21 +4,34 @@
       .marginBox
         .titleInfo
           p.olympTitle Создать урок
-          input.olympName(type = 'text', placeholder = 'Введите название вашей темы', v-model = "name")
-          label(for = 'isPrivate') Приватная тема
-            input#isPrivate(type = 'checkbox', v-model = "private")
-          select.olympTheme(v-model = "theme")
+          //- input.olympName(type = 'text', placeholder = 'Введите название вашей темы', v-model = "name")
+          md-field.olympName
+            label Type here!
+            md-input(v-model='name')
+            span.md-helper-text Helper text
+
+          //- label(for = 'isPrivate') Приватная тема
+            //- input#isPrivate(type = 'checkbox', v-model = "private")
+          md-checkbox(v-model='private') Приватная тема
+
+          //- select.olympTheme(v-model = "theme")
             option(v-for = 'theme in themeList') {{ theme }}
+          md-select(v-model="theme", name='Выберите тему')
+            md-option(v-for = "theme in themeList" :value = 'theme') {{ theme }}
+
         .tasksInfo
           .tasksContent
             .task(v-for = 'task in tasks')
-              .taskType
-                label(for='theory') Теория
-                  input#theory(type = 'radio', value = 'theory', v-model = "task.type")
-                label(for='task') Задача
-                  input#task(type = 'radio', value = 'task', v-model = "task.type")
-
               .button.img.delete_button(@click='tasks.splice(tasks.indexOf(task), 1)')
+              .componentName
+                strong(v-if = 'task.type === "theory"') Теория
+                strong(v-if = 'task.type === "task"') Задача
+              //- .taskType
+              //-   label(for='theory') Теория
+              //-     input#theory(type = 'radio', value = 'theory', v-model = "task.type")
+              //-   label(for='task') Задача
+              //-     input#task(type = 'radio', value = 'task', v-model = "task.type")
+
               .theoryEditBox
                 .theoryComponent(
                   v-for = 'component in task.text'
@@ -30,7 +43,7 @@
                     label(for='img') Выберите картинку
                     input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
 
-                .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
+                .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить текст
 
                 .button.button--round.button-success(
                   @click='addContent(tasks.indexOf(task), "img")'
@@ -38,18 +51,49 @@
               .taskEditBox(v-if ="task.type === 'task'")
                 input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
                 br
-                span Выберите сложность своей задачи:
+                span Выберите сложность
+                br
 
-                label(for='difOne') Легкая
-                  input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
-                label(for='difTwo') Средняя
-                  input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
-                label(for='difThree') Трудная
-                  input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
+                select.olympTheme(v-model = "task.difficulty")
+                  option(v-for = 'diff in difficultyList') {{ diff }}
 
-                textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи', v-model = "task.solution")
-          .button.button--round.button-success(@click='addTask()') Добавить теорию или задачу
+                //- label(for='difOne') Легкая
+                //-   input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
+                //- label(for='difTwo') Средняя
+                //-   input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
+                //- label(for='difThree') Трудная
+                //-   input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
+
+                textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
+          .button.button--round.button-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
+          .button.button--round.button-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
         .button.button--round.button-success.buttonPost(@click='sendTitle()') Опубликовать тему
+    .successMenu(v-if = 'this.success')
+      .successMenuBox
+        .successText(v-if = 'this.loading')
+          strong.titleTokenText Пожалуйста, подождите
+          br
+          span Мы публикуем вашу тему. Это может занять некоторое время.
+          .vld-parent
+            loading(
+              :active.sync = "this.loading"
+              :is-full-page = "this.falseVar"
+              color = "#763dca"
+              loader = 'dots'
+              opacity = 0
+              width = 150)
+        .successText(v-else)
+          strong.titleTokenText Готово!
+          br
+          span.titleTokenText Ключ темы:
+          strong.titleTokenText  {{ this.token }}
+          br
+          br
+          span Тема появится в сети через несколько минут.
+          br
+          span Поделитесь ключом со своими учениками, что бы они могли изучать вашу тему!
+          .successGoButton
+            .button.button--round.successButton.button-primary(@click = 'goToProfile') Понятно!
 </template>
 
 <script>
@@ -76,19 +120,34 @@ export default {
         'Логика',
         'Графы'
       ],
+      difficultyList: [
+        'Легкая',
+        'Средняя',
+        'Сложная'
+      ],
       currTaskId: 0,
-      currComponentId: 0
+      currComponentId: 0,
+      success: false,
+      token: 'null',
+      loading: false,
+      falseVar: false
     }
   },
   methods: {
-    ...mapActions(['sendTopic']),
-    addTask () {
+    ...mapActions(['sendTopic', 'addMyTopicsToList']),
+    goToProfile () {
+      this.$router.push('/profile')
+    },
+    addTask (type) {
       var task = {
-        text: [],
-        type: 'theory',
+        text: [{
+          type: 'text',
+          inner: ''
+        }],
+        type: type,
         answer: '',
         solution: '',
-        difficulty: '1'
+        difficulty: 'Легкая'
       }
       this.tasks.push(task)
     },
@@ -109,21 +168,26 @@ export default {
     },
     onFileSelected (event) {
       this.tasks[this.currTaskId].text[this.currComponentId].inner = event.target.files[0]
-      console.log(event.target.files[0])
     },
-    generateToken (length) {
+    async generateToken (length) {
       var a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('')
       var b = []
-      for (var i = 0; i < length; i++) {
-        var j = (Math.random() * (a.length - 1)).toFixed(0)
-        b[i] = a[j]
-      }
 
-      // var succes = await this.isTokenValid
-      var succes = true
-      var returnTo = ''
-      succes ? returnTo = b.join('') : returnTo = this.generateToken(length)
-      return returnTo
+      var succes = false
+      while (!succes) {
+        for (var i = 0; i < length; i++) {
+          var j = (Math.random() * (a.length - 1)).toFixed(0)
+          b[i] = a[j]
+        }
+        try {
+          succes = await this.isTokenValid(b.join(''))
+        } catch (error) {
+          b = ['a', 'a', 'a', 'a', 'a']
+          succes = true
+          throw error
+        }
+      }
+      return b.join('')
     },
     async sendTitle () {
       this.theme = this.theme.toLowerCase()
@@ -137,7 +201,8 @@ export default {
         public: !this.private,
         theme: this.theme,
         cnt_task: this.cnt_task,
-        items: this.items
+        items: this.items,
+        members: []
       }
 
       for (let i = 0; i < this.tasks.length; i++) {
@@ -163,26 +228,104 @@ export default {
           }
         }
         this.tasks[i].type === 'theory' ? task.push('theory') : task.push(this.tasks[i].answer)
-        this.tasks[i].type === 'theory' ? task.push('null') : task.push(this.tasks[i].difficulty)
+        if (this.tasks[i].type === 'theory') task.push('null')
+        else {
+          if (this.tasks[i].difficulty === 'Легкая') task.push(1)
+          else if (this.tasks[i].difficulty === 'Средняя') task.push(2)
+          else task.push(3)
+        }
         this.tasks[i].type === 'theory' ? task.push('null') : task.push(this.tasks[i].solution)
         data['task'.concat(i.toString())] = task
       }
-      var token = this.generateToken(5)
+      var token = await this.generateToken(5)
       var sendInformation = {
         token: token,
         title: data
       }
-      console.log(sendInformation)
-      this.sendTopic(sendInformation)
+      this.token = token
+      try {
+        await this.sendTopic(sendInformation)
+      } catch (error) {
+        console.log(error)
+      }
+      this.addMyTopicsToList(token)
+      this.loading = false
+    },
+    async isTokenValid (token) {
+      const db = firebase.firestore()
+      var result
+      await db.collection('olympiad').doc(token)
+        .get().then(
+          doc => {
+            if (doc.data() !== undefined) {
+              result = false
+            } else result = true
+          })
+      console.log('Result: ', result)
+      return result
     }
   },
   computed: {
-    ...mapGetters(['getUser', 'isTokenValid'])
+    ...mapGetters(['getUser'])
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+  .componentName
+    font-size 2em
+    padding 3%
+    padding-left 0
+    padding-top 0
+  .taskAnswer
+    border-radius 10px
+    padding 1%
+    margin 3%
+    margin-left 0%
+  .buttonAddContent
+    margin 1%
+  .olympTheme
+    option
+      font-size 0.8em
+      margin 1%
+    font-size 1em
+    padding 0
+  #isPrivate
+    border-width 3px
+  .vld-parent
+    position relavite
+    padding 5%
+    padding-top 10%
+  .titleTokenText
+    font-size 1.4em
+  .successText
+    padding 10%
+  .successGoButton
+    padding 5%
+    padding-bottom 0
+  .successMenu
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-size 2vw
+    background-color rgba(0, 0, 0, .5)
+    width 100%
+    height 100%
+    position fixed
+    top 0
+    left 0
+  .successButton
+    width 20%
+    height 20%
+
+  .successMenuBox
+    text-align center
+    background-color #FFFFFF
+    margin-top 10%
+    margin-left 20%
+    margin-right 20%
+    min-width 350px
+    border 2px #000000 solid
+    border-radius 10px
+
   .editBox
     position relative
     margin-top 50px
@@ -272,7 +415,7 @@ export default {
     border 1px solid #999
     border-radius 10px
     margin 1%
-    padding 1%
+    padding 3%
   .taskName
     margin 1%
 </style>

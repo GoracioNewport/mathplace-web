@@ -30,6 +30,8 @@
     "vue-firebase": "^1.0.8",
     "vue-firestore": "^0.3.30",
     "vue-loading-overlay": "^3.3.2",
+    "vue-material": "^1.0.0-beta-14",
+    "vue-material-design-icons": "^4.8.0",
     "vue-router": "^3.0.1",
     "vue-youtube-embed": "^2.2.2",
     "vue2-circle-progress": "^1.2.3",

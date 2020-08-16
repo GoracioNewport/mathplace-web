@@ -1,15 +1,16 @@
 <template lang="pug">
   .content-wrapper
-    section.header-title(v-if="this.isLoading")
+    section.header-title(v-if="(this.isLoading && !this.error) || this.arrayPopular.length === 0")
       .container
         h1.ui-title-1
           strong Темы
         .loading-indicator
           loading(
-            :active.sync = "this.isLoading",
-            :is-full-page = 'false',
-            color = "#763dca")
-    section(v-if="!this.isLoading")
+            :active.sync = "this.trueVar"
+            :is-full-page = 'false'
+            color = "#763dca"
+            opacity = 0)
+    section(v-if = "!this.isLoading && !this.error && this.arrayPopular.length !== 0")
       .sidebar
         <a href="#school" v-smooth-scroll>
           img(src="@/components/images/school1.png", width= "50px", height = "50px")
@@ -301,16 +302,23 @@
                 )
     .joinMenu(v-if = 'this.joinMenuShow')
       .joinMenuBox
+        .joinMenuText
+          span Введите ключ темы
         .joinMenuField
-          label Введите идентификатор курса
           input(
                   type="text"
-                  placeholder="ID Курса"
+                  placeholder="Ключ темы"
                   v-model="customTopicId"
           )
-          .button.button--round.button-success(@click ='joinCourse(customTopicId)') Let's go!
         .joinMenuCancel
-          .button.button--round.button-warning(@click ='joinMenuShow = false') Отмена
+          .button.button--round.button-success(@click ='joinCourse(customTopicId)') Подключиться
+          .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
+    .errorBox(v-if = 'this.error')
+      strong Ой-ой... :(
+      br
+      span Похоже, что-то пошло не так.
+      br
+      span Пожалуйста, проверьте свое подключение к интернету.
 </template>
 
 <script>
@@ -336,22 +344,32 @@ export default {
       arrayGraphs: [],
       isLoading: true,
       joinMenuShow: false,
-      customTopicId: ''
+      customTopicId: '',
+      error: false,
+      trueVar: true
     }
   },
   computed: mapGetters(['getTopics', 'isTopicsLoaded', 'getUser', 'getCustomTopic']),
   async mounted () {
     if (this.getUser === null) this.$router.push('/login')
-    await this.fetchTopics()
+    try {
+      console.log('Fetching...')
+      await this.fetchTopics()
+      console.log('Topics fetched')
+      this.arrayPopular = await this.$store.getters.getTopics.get('популярные')
+      this.arraySchool = await this.$store.getters.getTopics.get('школа')
+      this.arrayOGE = await this.$store.getters.getTopics.get('огэ')
+      this.arrayGeometry = await this.$store.getters.getTopics.get('геометрия')
+      this.arrayAlgebra = await this.$store.getters.getTopics.get('алгебра')
+      this.arrayKomba = await this.$store.getters.getTopics.get('комбинаторика')
+      this.arrayLogics = await this.$store.getters.getTopics.get('логика')
+      this.arrayGraphs = await this.$store.getters.getTopics.get('графы')
+      console.log('Topics loaded', this.arrayGraphs)
+    } catch (error) {
+      this.error = true
+      throw error
+    }
     this.isLoading = false
-    this.arrayPopular = this.$store.getters.getTopics.get('популярные')
-    this.arraySchool = this.$store.getters.getTopics.get('школа')
-    this.arrayOGE = this.$store.getters.getTopics.get('огэ')
-    this.arrayGeometry = this.$store.getters.getTopics.get('геометрия')
-    this.arrayAlgebra = this.$store.getters.getTopics.get('алгебра')
-    this.arrayKomba = this.$store.getters.getTopics.get('комбинаторика')
-    this.arrayLogics = this.$store.getters.getTopics.get('логика')
-    this.arrayGraphs = this.$store.getters.getTopics.get('графы')
   },
   methods: {
     ...mapActions(['fetchTopics', 'fetchCustomTopic']),
@@ -369,6 +387,29 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .joinMenuBox
+    padding 5%
+    padding-left 10%
+    padding-right 10%
+    .button
+      font-size 0.6em
+      margin 2%
+
+  .joinMenuText
+    font-size 1.3em
+
+  .joinMenuField
+    input
+      border-color #000000
+      border-width 1%
+
+  .errorBox
+    padding-top 10%
+    text-align center
+    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-size 2em
+    strong
+      font-size 2em
 
   .joinCustomTitle
     z-index 10000

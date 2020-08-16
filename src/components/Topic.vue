@@ -15,9 +15,7 @@
           :start-angle='-90',
           insert-mode='append',
           :thickness='5',
-          :show-percent='true',
-          @vue-circle-progress='progress',
-          @vue-circle-end='progress_end')
+          :show-percent='true')
 
           .topic-item-theme(v-if='theme.length < 9')
             span
@@ -71,12 +69,6 @@ export default {
     }
   },
   methods: {
-    progress (event, progress, stepValue) {
-      // console.log(stepValue)
-    },
-    progress_end (event) {
-      // console.log('Circle progress end')
-    },
     openTopic (event) {
       this.$store.dispatch('changeCurrentTopic', this.title)
       this.$store.dispatch('changeCollection', 'task2')

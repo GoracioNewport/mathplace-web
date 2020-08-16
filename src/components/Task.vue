@@ -133,6 +133,7 @@ export default {
   },
   async mounted () {
     this.updateUser(['lastTheme', this.getCurrentTopic])
+    this.addUserToTopicList()
     this.isLoading = true
     await this.fetchLikes(this.getCollection)
     await this.fetchTasks(this.getCollection)
@@ -163,7 +164,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo']),
+    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList']),
     changeActiveTask (i, thisTask) {
       console.log('Change Active Task', i + 1)
       this.status = 'Idle'

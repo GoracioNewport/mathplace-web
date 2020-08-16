@@ -11,6 +11,13 @@ import firebase from 'firebase/app'
 import Topic from './components/Topic'
 import vueSmoothScroll from 'vue2-smooth-scroll'
 
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
+import 'vue-material-design-icons/styles.css'
+
+Vue.use(VueMaterial)
+
 Vue.use(Topic)
 Vue.use(Vuelidate)
 Vue.use(vueSmoothScroll)
