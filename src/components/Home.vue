@@ -303,7 +303,7 @@
     .joinMenu(v-if = 'this.joinMenuShow')
       .joinMenuBox
         .joinMenuText
-          span Введите ключ темы
+          span.md-headline Введите ключ темы
         .joinMenuField
           input(
                   type="text"
@@ -387,6 +387,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .md-headline
+    font-size 1em
+  strong
+    color #000000
   .joinMenuBox
     padding 5%
     padding-left 10%
@@ -394,9 +398,9 @@ export default {
     .button
       font-size 0.6em
       margin 2%
-
   .joinMenuText
     font-size 1.3em
+    padding-bottom 10%
 
   .joinMenuField
     input
@@ -507,13 +511,11 @@ export default {
     box-shadow 0 0 7px rgba(0,0,0,0.5)
     border-radius 100%
 
-  /* Ссылки при наведении мыши */
   .sidebar a:hover:not(.active)
     opacity 0.7
     -moz-opacity 0.7
     -khtml-opacity 0.7
 
-  /* Содержание страницы. Значение свойства margin-left должно соответствовать значению свойства width боковой панели */
   div.content {
     margin-left: 200px;
     padding: 1px 16px;
@@ -568,12 +570,10 @@ export default {
   .pesontedan-content p {
     margin: 1em;
   }
-  /* :checked */
   .pesontedan input:checked ~ .pesontedan-content {
     max-height: 10000vh;
   }
 
-  /* Icon */
   .pesontedan label::after {
     position: absolute;
     right: 0;
@@ -600,7 +600,6 @@ export default {
     transform: rotateX(180deg);
   }
 
-  /* На экранах шириной менее 700 пикселей превратить боковую панель в верхнюю панель */
   @media screen and (max-width: 700px) {
     .sidebar {
       position relative

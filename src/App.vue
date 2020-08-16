@@ -5,7 +5,7 @@
         .container
           .navbar-content
             .header-logo
-              <strong class="mathplace-logo"> MathPlace </strong>
+              strong.mathplace-logo.md-display-3 MathPlace
             .button-burger(
               @click = "menuShow = !menuShow"
               :class="{ active: menuShow}"
@@ -42,7 +42,8 @@ export default {
         return [
           {title: 'Главная', url: '/main'},
           {title: 'Темы', url: '/'},
-          {title: 'Профиль', url: '/profile'}
+          {title: 'Профиль', url: '/profile'},
+          {title: 'Чат', url: '/chat'}
         ]
       } else {
         return [
@@ -62,7 +63,7 @@ export default {
 
   .navbar
     margin 0
-    height 10px
+    height 80px
     background-color #763DCA
     border-bottom-width 0px
     border-bottom-color #000000

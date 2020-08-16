@@ -13,6 +13,8 @@ import Logout from '@/components/Auth/Logout'
 import Profile from '@/components/Profile/Profile'
 import CustomTitle from '@/components/CustomTitle'
 import Statistics from '@/components/Profile/Statistics'
+import ChatList from '@/components/Profile/ChatList'
+import Chat from '@/components/Profile/Chat'
 
 Vue.use(Router)
 Vue.use(VueFirestore)
@@ -79,6 +81,22 @@ export default new Router({
       path: '/statistics',
       name: 'statistics',
       component: Statistics,
+      beforeEnter (to, from, next) {
+        Store.getters.checkUser ? next() : next('/login')
+      }
+    },
+    {
+      path: '/chat',
+      name: 'chatList',
+      component: ChatList,
+      beforeEnter (to, from, next) {
+        Store.getters.checkUser ? next() : next('/login')
+      }
+    },
+    {
+      path: '/pm/:chatId',
+      name: 'chat',
+      component: Chat,
       beforeEnter (to, from, next) {
         Store.getters.checkUser ? next() : next('/login')
       }

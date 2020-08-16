@@ -229,10 +229,15 @@ export default {
           info['id'] = members[i]
           info['name'] = doc.data().name
           info['solveStats'] = doc.data()[id]
+          info['solveSum'] = 0
         })
+        var cnt = 0
+        for (let i = 0; i < info.solveStats.length; i++) {
+          if (info.solveStats[i] === 3 || info.solveStats[i] === 2) cnt++
+        }
+        info.solveSum = cnt
         sendData.push(info)
       }
-      console.log(sendData)
       var usrData = {
         id: id,
         data: sendData
