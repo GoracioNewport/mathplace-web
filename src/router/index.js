@@ -6,7 +6,8 @@ import Store from '../store'
 
 import Home from '@/components/Home'
 import Main from '@/components/Main'
-import Task from '@/components/Task'
+import Lesson from '@/components/Lesson'
+import Olympiad from '@/components/Olympiad'
 import Registration from '@/components/Auth/Registration'
 import Login from '@/components/Auth/Login'
 import Logout from '@/components/Auth/Logout'
@@ -34,9 +35,17 @@ export default new Router({
       component: Home
     },
     {
-      path: '/task',
-      name: 'task',
-      component: Task,
+      path: '/lesson/:taskId',
+      name: 'lesson',
+      component: Lesson,
+      beforeEnter (to, from, next) {
+        Store.getters.checkUser ? next() : next('/login')
+      }
+    },
+    {
+      path: '/olympiad/:taskId',
+      name: 'olympiad',
+      component: Olympiad,
       beforeEnter (to, from, next) {
         Store.getters.checkUser ? next() : next('/login')
       }

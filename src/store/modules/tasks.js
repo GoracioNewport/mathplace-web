@@ -18,6 +18,8 @@ export default {
         .then(usr => {
           tasksDb.get()
             .then(doc => {
+              // Обновление значений юзера в бд
+
               userTopicDetails = usr.data()[this.getters.getCurrentTopic]
               itemCount = doc.data().items
               if (userTopicDetails === undefined) {
@@ -30,18 +32,39 @@ export default {
                   [solveStatus]: blankArray
                 })
                 userTopicDetails = blankArray
+              } else if (userTopicDetails.length < itemCount) {
+                let blankArray = []
+                for (let i = 0; i < itemCount; i++) blankArray.push(1)
+                for (let i = userTopicDetails.length; i < itemCount; i++) userTopicDetails.push(1)
+                let topicStatus = this.getters.getCurrentTopic
+                let solveStatus = this.getters.getCurrentTopic + 'Solution'
+                db.collection('account').doc(this.getters.getUser.id).update({
+                  [topicStatus]: userTopicDetails,
+                  [solveStatus]: blankArray
+                })
               }
+
+              // Парсинг задачи
+              // 1 - Текст, 2 - Ответ, 3 - Сложность, 4 - Решение
 
               for (let i = 0; i < itemCount; i++) {
                 let subTask = doc.data()['task' + String(i)]
-                let taskKind = ''
-                subTask[1] === 'theory' ? taskKind = 'theory' : taskKind = 'task'
-                if (taskKind === 'task') taskCount++
+                let taskKind = '' // Теория, обычная, на доказательство, с загрузкой, множественный выбор, несколько ответов
+                if (subTask[1] === 'theory') taskKind = 'theory'
+                else if (subTask[1] === 'null') taskKind = 'proof'
+                else if (subTask[1] === 'image') taskKind = 'upload'
+                else if (subTask.length === 5) taskKind = 'multipleChoice'
+                else if (subTask[1].indexOf('|') !== -1) taskKind = 'multipleAnswer'
+                else taskKind = 'task'
+
+                if (taskKind !== 'theory') taskCount++
+
+                // Парсинг текста и картинок
+
                 let comma = '\\'.concat('n')
                 var splittedText = subTask[0].split(comma)
                 var formattedText = []
                 splittedText[splittedText.length - 1] += ' '
-
                 for (let j = 0; j < splittedText.length; j++) {
                   let partition = []
                   let pointer = 0
@@ -67,15 +90,27 @@ export default {
                   formattedText = formattedText.concat(partition)
                 }
 
-                var task = {
+                // Пуш задачи в общий массив
+                var options
+                var answer = subTask[1]
+                if (taskKind === 'multipleChoice') {
+                  answer = subTask[1].split('|')
+                  options = subTask[4].split('|')
+                  answer.pop()
+                  options.pop()
+                } else if (taskKind === 'multipleAnswer') {
+                  answer = subTask[1].split('|')
+                  answer.pop()
+                } var task = {
                   id: i,
                   taskId: taskCount,
                   text: formattedText,
                   type: taskKind,
-                  answer: subTask[1],
+                  answer: answer,
                   difficulty: subTask[2],
                   solution: subTask[3],
-                  tries: userTopicDetails[i]
+                  tries: userTopicDetails[i],
+                  options: options
                 }
                 tasksList.push(task)
               }

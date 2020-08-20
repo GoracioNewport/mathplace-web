@@ -5,7 +5,7 @@
         .container
           .navbar-content
             .header-logo
-              strong.mathplace-logo.md-display-3 MathPlace
+              router-link(to = '/main').mathplace-logo.md-display-3 MathPlace
             .button-burger(
               @click = "menuShow = !menuShow"
               :class="{ active: menuShow}"
@@ -40,14 +40,14 @@ export default {
     linkMenu () {
       if (this.$store.getters.checkUser) {
         return [
-          {title: 'Главная', url: '/main'},
+          // {title: 'Главная', url: '/main'},
           {title: 'Темы', url: '/'},
           {title: 'Профиль', url: '/profile'},
           {title: 'Чат', url: '/chat'}
         ]
       } else {
         return [
-          {title: 'Главная', url: '/Main'},
+          // {title: 'Главная', url: '/Main'},
           {title: 'Войти', url: '/login'},
           {title: 'Регистрация', url: '/registration'}
         ]

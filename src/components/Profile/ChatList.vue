@@ -1,8 +1,10 @@
 <template lang="pug">
   .content-wrapper
     .chatList
-      .chat-fragment(v-for = '(chats, i) in chatList')
-        .chat-header(v-if = 'chats.type === "group"')
+      .chat-fragment(v-for = '(chats, i) in chatList'
+      @click = 'goToChat(chats.id)'
+      )
+        .chat-header
           .chat-image(v-if = 'chats.image === undefined')
             img(src="@/components/images/user.png", width = "100px", height = "100px")
           .chat-image(v-else)
@@ -42,7 +44,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchMyChats'])
+    ...mapActions(['fetchMyChats']),
+    goToChat (id) {
+      this.$router.push('/pm/' + id)
+    }
   },
   async mounted () {
     await this.fetchMyChats()
@@ -70,6 +75,8 @@ export default {
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     display flex
     border 1px solid #aaaaaa
+    &:hover
+      cursor pointer
   .chat-image
     margin 10px
   .chat-info
