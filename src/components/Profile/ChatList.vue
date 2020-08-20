@@ -1,7 +1,9 @@
 <template lang="pug">
   .content-wrapper
     .chatList
-      .chat-fragment(v-for = '(chats, i) in chatList')
+      .chat-fragment(v-for = '(chats, i) in chatList'
+      @click = 'goToChat(chats.id)'
+      )
         .chat-header
           .chat-image(v-if = 'chats.image === undefined')
             img.img_round(src="@/components/images/user.png")
@@ -16,6 +18,7 @@
                 span {{ chats.msgs[chats.msgCnt - 1].sender }}: {{ chats.msgs[chats.msgCnt - 1].text }}
           .chat-time(v-if = 'chats.msgCnt > 0')
             label {{ chats.msgs[chats.msgCnt - 1].time }}
+          .chat-border
         //- .chat-image
         //-   img(src="@/components/images/user.png", width= "100px", height = "100px")
         //- .chat-info
@@ -42,7 +45,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchMyChats'])
+    ...mapActions(['fetchMyChats']),
+    goToChat (id) {
+      this.$router.push('/pm/' + id)
+    }
   },
   async mounted () {
     await this.fetchMyChats()
@@ -80,12 +86,19 @@ export default {
     margin-top 30px
     margin-bottom 30px
     margin-left 30px
+    border-margin-left 20px
+
+  .chat-border
+    width auto
+    height 2px
+    margin-top 20px
+    margin-left 230px
+    background-color #aaaaaa
 
   .chatFrame
     width 100%
     height auto
     float right
-    border 1px solid #aaaaaa
 
   .chat-fragment
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif

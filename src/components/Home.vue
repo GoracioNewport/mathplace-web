@@ -307,7 +307,7 @@
         .joinMenuField
           input(
                   type="text"
-                  placeholder="Ключ темы"
+                  :placeholder="this.placeholder"
                   v-model="customTopicId"
           )
         .joinMenuCancel
@@ -346,7 +346,8 @@ export default {
       joinMenuShow: false,
       customTopicId: '',
       error: false,
-      trueVar: true
+      trueVar: true,
+      placeholder: 'Введите ключ темы'
     }
   },
   computed: mapGetters(['getTopics', 'isTopicsLoaded', 'getUser', 'getCustomTopic']),
@@ -377,9 +378,11 @@ export default {
       await this.fetchCustomTopic(id)
       var res = this.getCustomTopic
       if (res !== null) {
-        this.$store.dispatch('changeCurrentTopic', id)
-        this.$store.dispatch('changeCollection', 'olympiad')
-        this.$router.push('/task')
+        this.$router.push('/olympiad/' + id)
+      } else {
+        this.customTopicId = ''
+        this.placeholder = 'Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа'
+        alert('Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа')
       }
     }
   }

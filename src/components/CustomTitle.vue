@@ -272,7 +272,7 @@ export default {
 
 <style lang="stylus" scoped>
   body
-    line-height auto
+    line-height auto !important
   .md-input
     margin-bottom 1%
   .componentName

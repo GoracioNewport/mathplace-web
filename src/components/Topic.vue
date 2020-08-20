@@ -72,7 +72,7 @@ export default {
     openTopic (event) {
       this.$store.dispatch('changeCurrentTopic', this.title)
       this.$store.dispatch('changeCollection', 'task2')
-      this.$router.push('/task')
+      this.$router.push('/lesson/' + this.title)
     }
   }
 }

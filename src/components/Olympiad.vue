@@ -15,15 +15,18 @@
                 :key = "task.id"
               )
                 .taskbar-link
-
-                  img.img_taskbar(
-                    v-if = 'task.type == "task"'
-                    :class = '{ solvedTask : task.tries === 2, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
-                    :src = 'taskImage')
                   img.img_taskbar(
                     v-if = "task.type == 'theory'"
-                    :class = '{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
+                    :class ='{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
                     :src = "theoryImage")
+                  img.img_taskbar(
+                      v-else-if = 'task.type == "proof"'
+                      :class = '{ solvedTask : task.tries === 2, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
+                      :src = 'proofImage')
+                  img.img_taskbar(
+                      v-else
+                      :class = '{ solvedTask : task.tries === 2, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
+                      :src = 'taskImage')
 
     .loading-indicator
         loading(
@@ -32,12 +35,8 @@
           color = '#763dca')
     .content(v-if="taskList.length > 1")
       .name
-        span(
-          v-if = 'this.taskList[this.activeTask].type == "task"'
-        ) Задача {{ this.taskList[this.activeTask].taskId }}
-        span(
-          v-if = 'this.taskList[this.activeTask].type == "theory"'
-        ) {{ getCurrentTopic }}
+        span(v-if = 'this.taskList[this.activeTask].type == "theory"') {{ getCurrentTopic }}
+        span(v-else) Задача {{ this.taskList[this.activeTask].taskId }}
 
         img.star(
           class = "star1",
@@ -46,9 +45,7 @@
           v-for = 'i in getDifficulty')
 
       .condition
-        .text-part(
-          v-for = "part in this.taskList[this.activeTask].text"
-        )
+        .text-part(v-for = "part in this.taskList[this.activeTask].text")
           span(
             v-if = 'part.type == "text"'
           ) {{ part.content }}
@@ -57,10 +54,9 @@
             v-else-if = 'part.type == "img"'
             :src = 'part.content'
           )
-      .answ(
-        v-if='this.taskList[this.activeTask].type == "task"'
-      )
+      .answ(v-if='this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"')
         input.submit-field(
+          v-if ='this.taskList[this.activeTask].type === "task"'
           size = "40",
           placeholder = "Введите ответ",
           class = "ans",
@@ -68,6 +64,19 @@
           v-model = 'answer',
           @keyup.enter = 'sendAnswer',
           v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 || this.taskList[this.activeTask].tries == 3 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
+        label(for='img' v-else-if ='this.taskList[this.activeTask].type === "upload"') Выберите картинку
+          input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
+        .multipleChoiceBox(v-else-if ='this.taskList[this.activeTask].type === "multipleChoice"')
+          span {{ answer }}
+          .choiceBox(v-for = "choice in this.taskList[this.activeTask].answer")
+            md-checkbox(v-model = 'answer', :value = "choice") {{ choice }}
+        .multipleAnswerBox(v-else-if ='this.taskList[this.activeTask].type === "multipleAnswer"')
+          span {{ answer }}
+          br
+          .answerBox(v-for = "(answers, i) in answer")
+            input(v-model = "answer[i]")
+            .button.button-round.button-warning.delete_button(@click='answer.splice(answer.indexOf(answers), 1)') X
+          .button.button--round.button-success.buttonAdd(@click='answer.push("")') Добавить вариант ответа
       .enter
         .send
           a.but(@click='solutionShown = true',
@@ -107,7 +116,7 @@
           button.sub.submit-button(
             type = 'submit',
             @click = 'sendAnswer')
-              span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory"') Отправить
+              span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Отправить
               span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
               span(v-else) Завершить
     .solution(v-if = 'this.solutionShown', @click='solutionShown = !solutionShown')
@@ -123,28 +132,44 @@
 import Loading from 'vue-loading-overlay'
 import theoryImage from '@/assets/images/theory.png'
 import taskImage from '@/assets/images/question.png'
+import proofImage from '@/assets/images/star_evidence.png'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions, mapGetters } from 'vuex'
 // import { beforeRouteLeave } from 'vue-router'
 
 export default {
+  watch: {
+    '$route' (to, from) {
+      this.taskId = to.params.taskId
+      this.collection = 'olympiad'
+      this.$store.dispatch('changeCurrentTopic', this.taskId)
+      this.$store.dispatch('changeCollection', 'olympiad')
+    }
+  },
   components: {
     Loading
   },
   async mounted () {
+    this.$store.dispatch('changeCurrentTopic', this.taskId)
+    this.$store.dispatch('changeCollection', 'olympiad')
     this.updateUser(['lastTheme', this.getCurrentTopic])
     this.addUserToTopicList()
     this.isLoading = true
-    await this.fetchLikes(this.getCollection)
-    await this.fetchTasks(this.getCollection)
+    await this.fetchLikes(this.collection)
+    await this.fetchTasks(this.collection)
     this.taskList = this.$store.getters.getTasks
     if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
     this.isLoading = false
+    console.log(this.taskList)
+    // this.changeActiveTask(0, this.taskList[0])
   },
   data () {
     return {
+      collection: 'olympiad',
+      taskId: this.$route.params.taskId,
       theoryImage,
       taskImage,
+      proofImage,
       activeTask: 0,
       taskList: [{
         id: 0,
@@ -154,7 +179,8 @@ export default {
         answer: 0,
         difficulty: 0,
         solution: 0,
-        tries: 1
+        tries: 1,
+        options: []
       }],
       isLoading: true,
       answer: '',
@@ -171,34 +197,35 @@ export default {
       this.activeTask = i
       thisTask.activeTask = i
       this.taskList[this.activeTask].tries === 2 ? this.answer = this.taskList[this.activeTask].answer : this.answer = ''
+      this.taskList[this.activeTask].type === 'multipleChoice' || this.taskList[this.activeTask].type === 'multipleAnswer' ? this.answer = [] : this.answer = ''
     },
     sendAnswer () {
-      if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory') alert('Поле для ввода пустое!')
+      if (this.answer === '' && (this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof')) alert('Поле для ввода пустое!')
       else {
         if (this.$store.getters.getUser === null) this.$router.push('/login')
         else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/')
         else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) { // Task complition
           this.answer = this.answer.replace(',', '.')
           let verdict = 1
-          if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory') {
-            if (this.taskList[this.activeTask].type !== 'theory') {
+          if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') {
+            if (this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') {
               this.updateUser(['money', this.getUser.money + 3])
               this.updateUser(['right', this.getUser.right + 1])
             } this.status = 'Correct'
-            if (this.taskList[this.activeTask].type === 'theory') verdict = 3
+            if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') verdict = 3
             else verdict = 2
           } else {
             this.status = 'Wrong'
             verdict = 0
           }
 
-          if (this.taskList[this.activeTask].type !== 'theory') this.updateUser(['submit', this.getUser.submit + 1])
+          if (this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') this.updateUser(['submit', this.getUser.submit + 1])
           let newStatus = []
           for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
           newStatus[this.activeTask] = verdict
           this.updateUser([this.getCurrentTopic, newStatus])
           this.taskList[this.activeTask].tries = verdict
-          if (this.taskList[this.activeTask].type === 'theory') this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
+          if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
         } else {
           this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
         }
@@ -207,11 +234,9 @@ export default {
     likeButton () {
       let liked = this.getUser.like
       if (this.getUser.like.find(t => t === this.getCurrentTopic)) {
-        console.log('ok')
         liked.splice(liked.indexOf(this.getCurrentTopic), 1)
         this.like(false)
       } else {
-        console.log('not ok')
         liked.push(this.getCurrentTopic)
         this.like(true)
       }

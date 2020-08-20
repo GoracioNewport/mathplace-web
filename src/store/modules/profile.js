@@ -101,6 +101,7 @@ export default {
                     info['type'] = doc.data().chat_type
                     info['name'] = doc.data().name
                     info['members'] = doc.data().members
+                    info['id'] = nameList[i]
                     if (doc.data().chat_type === 'group') info['image'] = doc.data().image
                     else {
                         info['members'][0] === this.getters.getUser.id ? ind = 1 : ind = 0
