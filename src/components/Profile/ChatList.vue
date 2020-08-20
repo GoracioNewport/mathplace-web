@@ -2,18 +2,18 @@
   .content-wrapper
     .chatList
       .chat-fragment(v-for = '(chats, i) in chatList')
-        .chat-header(v-if = 'chats.type === "group"')
+        .chat-header
           .chat-image(v-if = 'chats.image === undefined')
-            img(src="@/components/images/user.png", width = "100px", height = "100px")
+            img.img_round(src="@/components/images/user.png")
           .chat-image(v-else)
-            img(:src = "chats.image", width = "100px", height = "100px")
+            img.image_round(:src = "chats.image")
           .chat-info
             .chat-name
               label
-                strong {{ chats.name }}
-          .chat-message(v-if = 'chats.msgCnt > 0')
-            label
-              span {{ chats.msgs[chats.msgCnt - 1].sender }}: {{ chats.msgs[chats.msgCnt - 1].text }}
+                strong kdskd
+            .chat-message(v-if = 'chats.msgCnt > 0')
+              label
+                span {{ chats.msgs[chats.msgCnt - 1].sender }}: {{ chats.msgs[chats.msgCnt - 1].text }}
           .chat-time(v-if = 'chats.msgCnt > 0')
             label {{ chats.msgs[chats.msgCnt - 1].time }}
         //- .chat-image
@@ -58,42 +58,72 @@ export default {
   .body
     height 100%
   .chatList
-    width 30%
-    height 100vh
-    border 1px solid #aaaaaa
+    margin-left 25%
+    margin-right 25%
+    margin-top 5%
+    width auto
+    height auto
+    background-color #FCFCFF
+    box-shadow 0 0 5px rgba(0,0,0,0.5)
+    border-radius 20px 20px 20px 20px
+    @media screen and (max-width: 2600px) {
+      margin-left 16%
+      margin-right 16%
+    }
+    @media screen and (max-width: 2100px) {
+      margin-left 16%
+      margin-right 16%
+    }
+
+  .chat-header
+    width 100%
+    margin-top 30px
+    margin-bottom 30px
+    margin-left 30px
+
   .chatFrame
-    width 70%
+    width 100%
+    height auto
     float right
     border 1px solid #aaaaaa
 
   .chat-fragment
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     display flex
-    border 1px solid #aaaaaa
   .chat-image
-    margin 10px
+    display inline-block
+    width 200px
+    height auto
+    overflow hidden
+    border-radius 50%
+    vertical-align middle
+
   .chat-info
-    margin-left 1%
+    display inline-block
+    margin-left 50px
+    vertical-align middle
   .chat-name
-    margin-top 15%
+    margin-top 10px
     label
-      font-size 1.2em
+      font-size 2.6em
       color #763DCA
   .chat-message
     margin-top 10%
     margin-bottom 2%
     label
-      color #696174
+      font-size 1.5em
+      color #666174
       text-align bottom
   .chat-empty
     width 60%
   .chat-time
-    width 10%
+    display inline-block
+    width 300px
+    height auto
     float right
-    margin-right 1%
+    margin-top 40px
     label
-      margin-top 50%
-      margin-bottom 50%
+      font-size 1.2em
       color #696174
       text-align center
 </style>
