@@ -15,13 +15,9 @@ import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material-design-icons/styles.css'
 
-import PrettyCheckbox from 'pretty-checkbox-vue'
-
-Vue.use(PrettyCheckbox)
-
 // import { MdButton, MdContent, MdTabs } from 'vue-material/dist/components'
 // import 'vue-material/dist/vue-material.min.css'
-// import 'vue-material/dist/theme/default.css'
+import 'vue-material/dist/theme/default.css'
 
 // Vue.use(MdButton)
 // Vue.use(MdContent)

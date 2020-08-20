@@ -59,7 +59,7 @@ export default {
           info['members'] = doc.data().members
           if (doc.data().chat_type === 'group') info['image'] = doc.data().image
           else {
-            info['members'][0] === this.getUser.id ? ind = 1 : ind = 0
+            info['members'][0] === vueInstance.getUser.id ? ind = 1 : ind = 0
           } info['msgs'] = {}
           for (let j = 0; j < doc.data().all_message; j++) {
             info['msgs'][j] = doc.data()['message' + j.toString()]

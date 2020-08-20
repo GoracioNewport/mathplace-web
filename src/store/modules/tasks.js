@@ -98,9 +98,12 @@ export default {
                   options = subTask[4].split('|')
                   answer.pop()
                   options.pop()
+                  answer.sort()
+                  options.sort()
                 } else if (taskKind === 'multipleAnswer') {
                   answer = subTask[1].split('|')
                   answer.pop()
+                  answer.sort()
                 } var task = {
                   id: i,
                   taskId: taskCount,

@@ -378,7 +378,7 @@ export default {
       await this.fetchCustomTopic(id)
       var res = this.getCustomTopic
       if (res !== null) {
-        this.$router.push('/olympiad/' + id)
+        this.$router.push('/lesson/olympiad=' + id)
       } else {
         this.customTopicId = ''
         this.placeholder = 'Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа'
@@ -390,6 +390,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  label
+    background-color #fafafa !important
   .md-headline
     font-size 1em
   strong
