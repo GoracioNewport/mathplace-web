@@ -69,10 +69,10 @@
         .button.button--round.button-success.buttonPost(@click='sendTitle()') Опубликовать тему
     .successMenu(v-if = 'this.success')
       .successMenuBox
-        .successText(v-if = 'this.loading')
-          strong.titleTokenText Пожалуйста, подождите
+        .successText(v-if = 'this.isLoading')
+          strong.md-display-3.titleTokenText Пожалуйста, подождите
           br
-          span Мы публикуем вашу тему. Это может занять некоторое время.
+          span.md-title Мы публикуем вашу тему. Это может занять некоторое время.
           .vld-parent
             loading(
               :active.sync = "this.loading"
@@ -82,15 +82,15 @@
               opacity = 0
               width = 150)
         .successText(v-else)
-          strong.md-title.titleTokenText Готово!
+          strong.md-title.titleTokenText.md-display-3 Готово!
           br
-          span.titleTokenText Ключ темы:
+          span.titleTokenText.md-display-3 Ключ темы:
           strong.titleTokenText  {{ this.token }}
           br
           br
-          span Тема появится в сети через несколько минут.
+          span.md-title Тема появится в сети через несколько минут.
           br
-          span Поделитесь ключом со своими учениками, что бы они могли изучать вашу тему!
+          span.md-title Поделитесь ключом со своими учениками, что бы они могли изучать вашу тему!
           .successGoButton
             .button.button--round.successButton.button-primary(@click = 'goToProfile') Понятно!
 </template>
@@ -307,6 +307,7 @@ export default {
     padding 5%
     padding-top 10%
   .titleTokenText
+    color #000000
     font-size 1.4em
   .successText
     padding 10%
@@ -314,6 +315,7 @@ export default {
     padding 5%
     padding-bottom 0
   .successMenu
+    z-index 5
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-size 2vw
     background-color rgba(0, 0, 0, .5)

@@ -1,7 +1,7 @@
 <template lang='pug'>
     .content-wrapper
       .test_button
-        router-link.button--round.button.button-primary.bottom_button.md-button(to='/customTitle') Создать свою тему
+        router-link.button--round.button.button-primary.bottom_button(to='/customTitle') Создать свою тему
 
       .content-block
 

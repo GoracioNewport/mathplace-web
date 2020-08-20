@@ -69,7 +69,7 @@ export default {
     border-bottom-color #000000
     box-shadow 0 0 10px
   .mathplace-logo
-    color #FFFFFF
+    color #FFFFFF !important
     font-size 1.5em
 
   .wrapper
