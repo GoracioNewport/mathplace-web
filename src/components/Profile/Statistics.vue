@@ -54,7 +54,7 @@ export default {
   },
   async mounted () {
     await this.fetchMyTopicsDetailedInfo()
-    this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo).reverse()
+    this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
   },
   data () {
     return {
