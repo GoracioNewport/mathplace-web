@@ -12,10 +12,10 @@
           .chat-info
             .chat-name
               label
-                strong kdskd
+                strong {{ chats.name }}
             .chat-message(v-if = 'chats.msgCnt > 0')
               label
-                span {{ chats.msgs[chats.msgCnt - 1].sender }}: {{ chats.msgs[chats.msgCnt - 1].text }}
+                span {{ chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] }}: {{ chats.msgs[chats.msgCnt - 1].text }}
           .chat-time(v-if = 'chats.msgCnt > 0')
             label {{ chats.msgs[chats.msgCnt - 1].time }}
           .chat-border
@@ -53,6 +53,7 @@ export default {
   async mounted () {
     await this.fetchMyChats()
     this.chatList = this.getMyChats
+    console.log(this.chatList)
   },
   computed: {
     ...mapGetters(['getMyChats'])

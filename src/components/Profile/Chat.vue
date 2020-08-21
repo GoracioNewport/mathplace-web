@@ -9,12 +9,13 @@
             img(:src = "chat.image", width = "100px", height = "100px")
           .chat-name
             label
-              strong chatName
-        .message(v-for = 'msg in chat.msgs')
+              strong {{ chat.name }}
+        .message(v-for = '(msg, i) in chat.msgs')
           .message-fragment
             .message-info
               .message-sender
-                label {{ msg.sender }}
+                //- span {{ chat['members'] }}
+                label {{ chat['members'][msg.sender] }}
               .message-message
                 label {{ msg.text }}
             .message-time
@@ -54,13 +55,20 @@ export default {
       var vueInstance = this
       await db.collection('chat').doc(id)
         .onSnapshot(function (doc) {
+          var memb
           info['msgCnt'] = doc.data().all_message
           info['type'] = doc.data().chat_type
           info['name'] = doc.data().name
-          info['members'] = doc.data().members
+          info['members'] = {}
+          memb = doc.data().members
+          for (let i = 0; i < memb.length; i++) {
+            db.collection('account').doc(memb[i]).get().then(doc => {
+              vueInstance.chat['members'][memb[i]] = doc.data().name
+            })
+          }
           if (doc.data().chat_type === 'group') info['image'] = doc.data().image
           else {
-            info['members'][0] === vueInstance.getUser.id ? ind = 1 : ind = 0
+            memb[0] === this.getters.getUser.id ? ind = memb[1] : ind = memb[0]
           } info['msgs'] = {}
           for (let j = 0; j < doc.data().all_message; j++) {
             info['msgs'][j] = doc.data()['message' + j.toString()]

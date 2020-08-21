@@ -92,31 +92,37 @@ export default {
             var nameList = []
             await db.collection('account').doc(this.getters.getUser.id).get().then(doc => { doc.data().myChats !== undefined ? nameList = doc.data().myChats : nameList  = [] })
             var chatList = []
-            var ind
+            var ind = this.getters.getUser.id
             for (let i = 0; i < nameList.length; i++) {
                 var info = {}
+                var memb = []
                 console.log(nameList[i])
                 await db.collection('chat').doc(nameList[i]).get().then(doc => {
                     info['msgCnt'] = doc.data().all_message
                     info['type'] = doc.data().chat_type
                     info['name'] = doc.data().name
-                    info['members'] = doc.data().members
+                    info['members'] = {}
+                    memb = doc.data().members
                     info['id'] = nameList[i]
                     if (doc.data().chat_type === 'group') info['image'] = doc.data().image
                     else {
-                        info['members'][0] === this.getters.getUser.id ? ind = 1 : ind = 0
+                        memb[0] === this.getters.getUser.id ? ind = memb[1] : ind = memb[0]
                     } info['msgs'] = {}
                     for (let j = 0; j < doc.data().all_message; j++) {
                        info['msgs'][j] = doc.data()['message' + j.toString()]
                        info['msgs'][j].time = moment().format('MMMM Do YYYY, h:mm:ss a')
                     }
                 })
-                console.log(ind, info['members'][ind])
-                if (info['type'] === 'personal') await db.collection('account').doc(info['members'][ind]).get().then(doc => {info['image'] = doc.data().image })
+                
+                for (let i = 0; i < memb.length; i++) {
+                    await db.collection('account').doc(memb[i]).get().then(doc => { 
+                        info['members'][memb[i]] = doc.data().name 
+                    })
+                }
+                // if (info['type'] === 'personal') await db.collection('account').doc(info['members'][ind]).get().then(doc => {info['image'] = doc.data().image })
                 chatList.push(info)
                 console.log(info)
             }
-            console.log(chatList)
             ctx.commit('updateMyChats', chatList)
         }
     },

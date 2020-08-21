@@ -67,7 +67,10 @@
             md-checkbox(v-model = 'answer', :value = "choice") {{ choice }}
         .multipleAnswerBox(v-else-if ='this.taskList[this.activeTask].type === "multipleAnswer"')
           .answerBox(v-for = "(answers, i) in answer")
-            input(v-model = "answer[i]")
+            md-field
+              label Введите ответ
+              //- md-input(v-model = "answer[i]" disabled = '')
+              md-input(v-model = "answer[i]")
             .button.button-round.button-warning.delete_button(@click='answer.splice(answer.indexOf(answers), 1)') X
           .button.button--round.button-success.buttonAdd(@click='answer.push("")') Добавить вариант ответа
       .enter
@@ -189,8 +192,12 @@ export default {
       this.status = 'Idle'
       this.activeTask = i
       thisTask.activeTask = i
-      this.taskList[this.activeTask].tries === 2 ? this.answer = this.taskList[this.activeTask].answer : this.answer = ''
-      this.taskList[this.activeTask].type === 'multipleChoice' || this.taskList[this.activeTask].type === 'multipleAnswer' ? this.answer = [] : this.answer = ''
+      if (this.taskList[this.activeTask].tries === 2) {
+        this.answer = this.taskList[this.activeTask].answer
+      } else {
+        if (this.taskList[this.activeTask].type === 'multipleChoice' || this.taskList[this.activeTask].type === 'multipleAnswer') this.answer = []
+        else this.answer = ''
+      }
     },
     sendAnswer () {
       if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
@@ -259,6 +266,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  input
+    margin-bottom auto
   .solution
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-size 2vw

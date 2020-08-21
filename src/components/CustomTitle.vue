@@ -17,6 +17,9 @@
             option(v-for = 'theme in themeList') {{ theme }}
           //- md-select(v-model="theme", name='Выберите тему')
           //-   md-option(v-for = "theme in themeList" :value = 'theme') {{ theme }}
+          md-field.class
+            label Введите класс
+            md-input(v-model='classNum')
 
         .tasksInfo
           .tasksContent
@@ -104,6 +107,7 @@ export default {
     return {
       name: '',
       class: '',
+      classNum: '',
       cnt_task: 0,
       items: 0,
       like: 0,
@@ -189,6 +193,8 @@ export default {
       return b.join('')
     },
     async sendTitle () {
+      console.log('send')
+      this.loading = true
       this.theme = this.theme.toLowerCase()
       for (let i = 0; i < this.tasks.length; i++) {
         if (this.tasks[i].type === 'task') this.cnt_task++
@@ -201,7 +207,8 @@ export default {
         theme: this.theme,
         cnt_task: this.cnt_task,
         items: this.items,
-        members: []
+        members: [],
+        class: this.classNum
       }
 
       for (let i = 0; i < this.tasks.length; i++) {
@@ -249,6 +256,7 @@ export default {
       }
       this.addMyTopicsToList(token)
       this.loading = false
+      console.log('done')
     },
     async isTokenValid (token) {
       const db = firebase.firestore()
