@@ -1,29 +1,30 @@
 <template lang="pug">
   .content-wrapper
-    .chat-box
-      .chat-info(v-if = 'chat !== null')
-        .chat-image(v-if = 'chat.image === undefined')
-          img(src="@/components/images/user.png", width = "100px", height = "100px")
-        .chat-image(v-else)
-          img(:src = "chat.image", width = "100px", height = "100px")
-        .chat-name
-          label
-            strong {{ chat.name }}
-      .message(v-for = 'msg in chat.msgs')
-        .message-fragment
-          .message-info
-            .message-sender
-              label {{ msg.sender }}
-            .message-message
-              label {{ msg.text }}
-          .message-time
-            label {{ msg.time }}
-    .send-field-box
-      input(
-        @keyup.enter = 'sendMessage'
-        v-model = 'messageField'
-        type = 'text'
-        placeholder = 'Введите сообщение')
+    .chat-main
+      .chat-box
+        .chat-info(v-if = 'chat !== null')
+          .chat-image(v-if = 'chat.image === undefined')
+            img(src="@/components/images/user.png", width = "100px", height = "100px")
+          .chat-image(v-else)
+            img(:src = "chat.image", width = "100px", height = "100px")
+          .chat-name
+            label
+              strong chatName
+        .message(v-for = 'msg in chat.msgs')
+          .message-fragment
+            .message-info
+              .message-sender
+                label {{ msg.sender }}
+              .message-message
+                label {{ msg.text }}
+            .message-time
+              label {{ msg.time }}
+      .send-field-box
+        input(
+          @keyup.enter = 'sendMessage'
+          v-model = 'messageField'
+          type = 'text'
+          placeholder = 'Введите сообщение')
 </template>
 
 <script>
@@ -103,28 +104,77 @@ export default {
 
 <style lang="stylus" scoped>
 
+  .chat-main
+    margin-left 25%
+    margin-right 25%
+    margin-top 5%
+    width auto
+    height auto
+    background-color #FCFCFF
+    box-shadow 0 0 5px rgba(0,0,0,0.5)
+    border-radius 20px 20px 20px 20px
+    @media screen and (max-width: 2600px) {
+      margin-left 16%
+      margin-right 16%
+    }
+    @media screen and (max-width: 2100px) {
+      margin-left 16%
+      margin-right 16%
+    }
+
   .chat-info
-    background-color #763dca
+    height 100%
+    width  100%
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-    display flex
+    background-color #763DCA
+    border-radius 10px 10px 0px 0px
+    box-shadow 0 0 5px rgba(0,0,0,0.5)
+
+  .chat-image
+    display inline-block
+    margin 6px
+    overflow hidden
+    border-radius 50%
+    vertical-align middle
+
+  .chat-name
+    display inline-block
+    height 100%
+    width auto
+    margin-left 20px
+    vertical-align middle
+    label
+      color #FFFFFF
+      font-size 2.9em
+
+  .message-sender
+    margin 15px
+    label
+      font-size 1.8em
+      font-weight 500
+      font-family Roboto
+      color #FFFFFF
+      text-align bottom
+
   .message-fragment
-    max-width 60%
-    min-width 8%
+    margin-left 40%
+    width auto
+    display inline
     float right
     border-radius 10px 0px 10px 10px
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     margin-top 10px
     margin-right 10px
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-    display flex
     background-color #763DCA
   .message-info
+    width 100%
+    height auto
     margin-left 1%
+
   .message-message
-    margin-bottom 2%
     label
-      margin-top 50%
-      margin-bottom 50%
+      font-size 1.9em
       color #FFFFFF
       text-align center
   .message-time
@@ -132,40 +182,18 @@ export default {
     float right
     margin-right 1%
     label
-      margin-top 100%
+      font-size 1.2em
       color #FFFFFF
       text-align bottom
 
-  // .message-fragment2
-  //   max-width 60%
-  //   min-width 8%
-  //   margin-top 10px
-  //   margin-left 10px
-  //   float left
-  //   font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-  //   display flex
-  //   border-radius 0px 10px 10px 10px
-  //   box-shadow 0 0 5px rgba(0,0,0,0.5)
-  //   background-color #FFFFFF
-  // .message-image2
-  //   margin 10px
-  // .message-info2
-  //   margin-left 1%
-  // .message-message2
-  //   margin-bottom 2%
-  //   margin-right 10%
-  //   label
-  //     margin-left 10%
-  //     margin-top 50%
-  //     margin-bottom 50%
-  //     color #763dca
-  //     text-align center
-  // .message-time2
-  //   float right
-  //   margin-right 1%
-  //   label
-  //     margin-top 80%
-  //     margin-bottom 20%
-  //     color #763dca
-  //     text-align bottom
+  .send-field-box
+    height 100%
+    margin-bottom 0px
+    input
+      height 50px
+      width 100%
+      margin-bottom 0px
+      border-radius 0px 0px 20px 20px
+      background-color #FF6FFF
+      margin-top 20px
 </style>
