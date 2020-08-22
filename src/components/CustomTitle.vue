@@ -17,9 +17,10 @@
             option(v-for = 'theme in themeList') {{ theme }}
           //- md-select(v-model="theme", name='Выберите тему')
           //-   md-option(v-for = "theme in themeList" :value = 'theme') {{ theme }}
-          md-field.class
-            label Введите класс
-            md-input(v-model='classNum')
+
+          md-field.classCnt
+            label Введите клас
+            md-input(v-model='classCnt')
 
         .tasksInfo
           .tasksContent
@@ -72,7 +73,7 @@
         .button.button--round.button-success.buttonPost(@click='sendTitle()') Опубликовать тему
     .successMenu(v-if = 'this.success')
       .successMenuBox
-        .successText(v-if = 'this.isLoading')
+        .successText(v-if = 'this.loading')
           strong.md-display-3.titleTokenText Пожалуйста, подождите
           br
           span.md-title Мы публикуем вашу тему. Это может занять некоторое время.
@@ -101,13 +102,17 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import firebase from 'firebase/app'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
 import 'firebase/storage'
 export default {
+  components: {
+    Loading
+  },
   data () {
     return {
       name: '',
       class: '',
-      classNum: '',
       cnt_task: 0,
       items: 0,
       like: 0,
@@ -133,7 +138,8 @@ export default {
       success: false,
       token: 'null',
       loading: false,
-      falseVar: false
+      falseVar: false,
+      classCnt: ''
     }
   },
   methods: {
@@ -193,7 +199,7 @@ export default {
       return b.join('')
     },
     async sendTitle () {
-      console.log('send')
+      this.success = true
       this.loading = true
       this.theme = this.theme.toLowerCase()
       for (let i = 0; i < this.tasks.length; i++) {
@@ -208,7 +214,7 @@ export default {
         cnt_task: this.cnt_task,
         items: this.items,
         members: [],
-        class: this.classNum
+        class: this.classCnt
       }
 
       for (let i = 0; i < this.tasks.length; i++) {
@@ -256,7 +262,6 @@ export default {
       }
       this.addMyTopicsToList(token)
       this.loading = false
-      console.log('done')
     },
     async isTokenValid (token) {
       const db = firebase.firestore()
@@ -363,7 +368,7 @@ export default {
     width 90%
     margin-bottom 0px
     display inline-block
-    margin-top 0px
+    margin-top 0p
 
   .marginBox
     position relative
@@ -378,7 +383,7 @@ export default {
 
   .olympTitle
     position relative
-    width auto
+    width autod
     font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     font-size 2em
     font-weight 700
@@ -387,7 +392,7 @@ export default {
       position relative
       font-size 19px
       float right
-      background #763dca
+      background #763dcb
       font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
       width auto
       font-weight 500
