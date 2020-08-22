@@ -243,6 +243,14 @@ export default {
         data: sendData
       }
       ctx.commit('updateTopicStats', usrData)
+    },
+    markDBSolutionAs (ctx, payload) {
+      // console.log(payload)
+      const db = firebase.firestore()
+      db.collection('account').doc(payload.userId).set({
+        [payload.topicName]: payload.newStats
+      }, { merge: true })
+      // console.log(payload.topicName, payload.newStats)
     }
   },
   mutations: {
