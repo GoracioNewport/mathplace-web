@@ -97,9 +97,11 @@ export default {
           vueInstance.chat = info
         })
     },
-    sendMessage () {
+    async sendMessage () {
       const db = firebase.firestore()
-      var varName = 'message'.concat(this.chat.msgCnt)
+      var curMsg
+      await db.collection('chat').doc(this.id).get().then(doc => { curMsg = doc.data().all_message })
+      var varName = 'message'.concat(curMsg)
       var data = {
         text: this.messageField,
         sender: this.getUser.id,
@@ -112,8 +114,7 @@ export default {
       var chatRef = db.collection('chat').doc(this.id)
       db.runTransaction(function (transaction) {
         return transaction.get(chatRef).then(function (chatDoc) {
-          var newCnt = chatDoc.data().all_message + 1
-          transaction.update(chatRef, { all_message: newCnt })
+          transaction.update(chatRef, { all_message: curMsg + 1 })
         })
       })
       this.messageField = null
