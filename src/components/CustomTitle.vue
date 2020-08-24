@@ -20,7 +20,7 @@
 
           md-field.classCnt
             label Введите клас
-            md-input(v-model='classCnt')
+            md-input(v-model='classCnt' type='number')
 
         .tasksInfo
           .tasksContent

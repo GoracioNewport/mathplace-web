@@ -107,6 +107,7 @@ export default {
                     if (doc.data().chat_type === 'group') info['image'] = doc.data().image
                     else {
                         memb[0] === this.getters.getUser.id ? ind = memb[1] : ind = memb[0]
+                        info['name'] = ind
                     } info['msgs'] = {}
                     for (let j = 0; j < doc.data().all_message; j++) {
                        info['msgs'][j] = doc.data()['message' + j.toString()]
@@ -119,7 +120,7 @@ export default {
                         info['members'][memb[i]] = doc.data().name 
                     })
                 }
-                // if (info['type'] === 'personal') await db.collection('account').doc(info['members'][ind]).get().then(doc => {info['image'] = doc.data().image })
+                if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {info['image'] = doc.data().image })
                 chatList.push(info)
                 console.log(info)
             }

@@ -1,6 +1,6 @@
 <template lang="pug">
   .content-wrapper
-    .chat-main
+    .chat-main(v-if = 'chat !== null')
       .chat-box
         .chat-info(v-if = 'chat !== null')
           .chat-image(v-if = 'chat.image === undefined')
@@ -9,7 +9,8 @@
             img(:src = "chat.image", width = "100px", height = "100px")
           .chat-name
             label
-              strong {{ chat.name }}
+              strong(v-if = 'chat.type === "group"') {{ chat.name }}
+              strong(v-else) {{ chat['members'][chat.name] }}
         .message(v-for = '(msg, i) in chat.msgs')
           .message-fragment
             .message-info
@@ -26,14 +27,25 @@
           v-model = 'messageField'
           type = 'text'
           placeholder = 'Введите сообщение')
+    .loadingOverlay(v-else)
+      .loading-indicator
+          loading(
+            active.sync = "chat === null"
+            :is-full-page = 'false'
+            color = "#763dca"
+            :opacity = 0)
 </template>
 
 <script>
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import Loading from 'vue-loading-overlay'
 import { mapGetters } from 'vuex'
 
 export default {
+  components: {
+    Loading
+  },
   watch: {
     '$route' (to, from) {
       this.id = to.params.chatId
@@ -53,8 +65,9 @@ export default {
       var info = {}
       var ind
       var vueInstance = this
-      await db.collection('chat').doc(id)
+      db.collection('chat').doc(id)
         .onSnapshot(function (doc) {
+          console.log(doc.data())
           var memb
           info['msgCnt'] = doc.data().all_message
           info['type'] = doc.data().chat_type
@@ -64,17 +77,22 @@ export default {
           for (let i = 0; i < memb.length; i++) {
             db.collection('account').doc(memb[i]).get().then(doc => {
               vueInstance.chat['members'][memb[i]] = doc.data().name
+              console.log(vueInstance.chat['members'])
+              if (vueInstance.messageField === '') vueInstance.messageField = null
+              else if (vueInstance.messageField === null) vueInstance.messageField = ''
+              else vueInstance.messageField += ' '
             })
           }
           if (doc.data().chat_type === 'group') info['image'] = doc.data().image
           else {
-            memb[0] === this.getters.getUser.id ? ind = memb[1] : ind = memb[0]
+            memb[0] === vueInstance.getUser.id ? ind = memb[1] : ind = memb[0]
+            info['name'] = ind
           } info['msgs'] = {}
           for (let j = 0; j < doc.data().all_message; j++) {
             info['msgs'][j] = doc.data()['message' + j.toString()]
             info['msgs'][j].time = moment().format('MMMM Do YYYY, h:mm:ss a')
           }
-          if (info['type'] === 'personal') db.collection('account').doc(info['members'][ind]).get().then(doc => { info['image'] = doc.data().image })
+          if (info['type'] === 'personal') db.collection('account').doc(ind).get().then(doc => { info['image'] = doc.data().image })
           console.log('Got update!', info)
           vueInstance.chat = info
         })
@@ -111,6 +129,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
+  .chat-box
+    max-height 70vh
+    overfolow auto
 
   .chat-main
     margin-left 25%
@@ -202,6 +224,6 @@ export default {
       width 100%
       margin-bottom 0px
       border-radius 0px 0px 20px 20px
-      background-color #FF6FFF
+      // background-color #FF6FFF
       margin-top 20px
 </style>

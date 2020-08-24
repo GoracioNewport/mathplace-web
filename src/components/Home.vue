@@ -438,6 +438,7 @@ export default {
     right 20px
 
   .joinMenu
+    z-index 50000
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-size 2vw
     background-color rgba(0, 0, 0, .5)

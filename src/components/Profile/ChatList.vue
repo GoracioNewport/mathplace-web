@@ -12,7 +12,8 @@
           .chat-info
             .chat-name
               label
-                strong {{ chats.name }}
+                strong(v-if = 'chats.type === "group"') {{ chats.name }}
+                strong(v-else) {{ chats['members'][chats.name] }}
             .chat-message(v-if = 'chats.msgCnt > 0')
               label
                 span {{ chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] }}: {{ chats.msgs[chats.msgCnt - 1].text }}
