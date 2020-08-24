@@ -85,6 +85,14 @@
               .buttons-list-reference
                 span Уже есть аккаунт?
                   router-link(style="color: #763DCA" to='/login')  Войдите
+    .successMenu(v-if = 'submitStatus === "Validation Pending"')
+      .successMenuBox
+        .successText
+          strong.md-title.titleTokenText.md-display-3 Готово!
+          br
+          span.titleTokenText.md-display-1 Осталось только подтвердить ваш аккаунт
+          .successGoButton
+            .md-button.md-raised.successButton(@click = '$router.push("/login")') Сделано
 </template>
 
 <script>
@@ -139,6 +147,7 @@ export default {
           .then(() => {
             this.submitStatus = 'OK'
             this.registerUserInDatabase(this.name, user)
+            this.submitStatus = 'Validation Pending'
           })
           .catch(err => {
             this.submitStatus = err.message
@@ -146,6 +155,7 @@ export default {
       }
     },
     registerUserInDatabase (name, user) {
+      console.log('Calling func', name, user)
       const db = firebase.firestore()
 
       var achivmentCount = 8
@@ -180,7 +190,7 @@ export default {
             'ОГЭ Вариант 1Solution': tasks
           }
 
-          db.collection('account').doc(this.$store.state.user.user.id).set(data)
+          db.collection('account').doc(this.$store.getters.getPreId).set(data)
           this.$router.push('/')
         })
     }
@@ -189,6 +199,36 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .successText
+    padding 10%
+    text-color #000000 !important
+  .successGoButton
+    padding 5%
+    padding-bottom 0
+  .successMenu
+    z-index 5
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-size 2vw
+    background-color rgba(0, 0, 0, .5)
+    width 100%
+    height 100%
+    position fixed
+    top 0
+    left 0
+  .successButton
+    width 20%
+    height 20%
+
+  .successMenuBox
+    text-align center
+    background-color #FFFFFF
+    margin-top 10%
+    margin-left 20%
+    margin-right 20%
+    min-width 350px
+    border 2px #000000 solid
+    border-radius 10px
+
   .navbar
     display none
   .auth

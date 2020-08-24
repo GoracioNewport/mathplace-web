@@ -54,9 +54,21 @@
               .buttons-list-reference
                 span Нет аккаунта?
                   router-link(style="color: #763DCA" to='/registration')  Создайте его!
+    .successMenu(v-if = 'submitStatus === "Validation Required"')
+      .successMenuBox
+        .successText
+          strong.md-title.titleTokenText.md-display-3 Внимание!
+          br
+          span.titleTokenText.md-display-1 Ваш аккаунт не подтвержден
+          br
+          span.titleTokenText.md-display-1 Пожалуйста, перейдите по ссылке, которую мы прислали вам на почту
+          .successGoButton
+            .md-button.md-raised.successButton(@click = 'sendEmailConfirmationMessage') Отправить письмо повторно
+            .md-button.md-raised.successButton(@click ='submitStatus = null') Сделано
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import { required, email, minLength } from 'vuelidate/lib/validators'
 export default {
   data () {
@@ -83,6 +95,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['sendEmailConfirmationMessage']),
     onSubmit () {
       this.$v.$touch()
       if (this.$v.$invalid) {
@@ -94,8 +107,8 @@ export default {
         }
         this.$store.dispatch('loginUser', user)
           .then(() => {
-            this.submitStatus = 'OK'
-            this.$router.push('/')
+            this.submitStatus = this.$store.getters.getErrors
+            if (this.submitStatus === null) this.$router.push('/')
           })
           .catch(err => {
             this.submitStatus = err.message
@@ -107,6 +120,36 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.successText
+    padding 10%
+    text-color #000000 !important
+  .successGoButton
+    padding 5%
+    padding-bottom 0
+  .successMenu
+    z-index 5
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-size 2vw
+    background-color rgba(0, 0, 0, .5)
+    width 100%
+    height 100%
+    position fixed
+    top 0
+    left 0
+  .successButton
+    width 20%
+    height 20%
+
+  .successMenuBox
+    text-align center
+    background-color #FFFFFF
+    margin-top 10%
+    margin-left 20%
+    margin-right 20%
+    min-width 350px
+    border 2px #000000 solid
+    border-radius 10px
+
 .auth
   font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
   display flex

@@ -7,11 +7,11 @@
           //- input.olympName(type = 'text', placeholder = 'Введите название вашей темы', v-model = "name")
           md-field.olympName
             label Введите название темы
-            md-input(v-model='name')
+            md-input(v-model='name' maxlength = "30")
 
           //- label(for = 'isPrivate') Приватная тема
             //- input#isPrivate(type = 'checkbox', v-model = "private")
-          md-checkbox(v-model='private') Приватная тема
+          md-checkbox.olympPrivate(v-model='private') Приватная тема
 
           select.olympTheme(v-model = "theme")
             option(v-for = 'theme in themeList') {{ theme }}
@@ -41,18 +41,20 @@
                 )
                   .button.img.delete_button(@click='task.text.splice(task.text.indexOf(component), 1)')
                   .theoryTextField(v-if ='component.type === "text"')
-                    textarea.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner")
+                    md-field.theoryText
+                      md-textarea(placeholder = 'Введите текст здесь', v-model = "component.inner")
                   .theoryText(v-if ='component.type === "img"')
                     label(for='img') Выберите картинку
                     input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
 
-                .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить текст
+                .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
 
                 .button.button--round.button-success(
                   @click='addContent(tasks.indexOf(task), "img")'
                   ) Добавить картинку
               .taskEditBox(v-if ="task.type === 'task'")
-                input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
+                md-field
+                  md-input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
                 br
                 span Выберите сложность
                 br
@@ -101,6 +103,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { required, minLength, maxLength, between } from 'vuelidate/lib/validators'
 import firebase from 'firebase/app'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
@@ -139,7 +142,34 @@ export default {
       token: 'null',
       loading: false,
       falseVar: false,
-      classCnt: ''
+      classCnt: '',
+      submitStatus: null
+    }
+  },
+  validations: {
+    name: {
+      required,
+      minLength: minLength(3),
+      maxLength: maxLength(30)
+    },
+    classCnt: {
+      required,
+      between: between(1, 11)
+    },
+    tasks: {
+      required,
+      $each: {
+        answer: {
+        },
+        text: {
+          minLength: minLength(1),
+          $each: {
+            inner: {
+              required
+            }
+          }
+        }
+      }
     }
   },
   methods: {
@@ -148,13 +178,16 @@ export default {
       this.$router.push('/profile')
     },
     addTask (type) {
+      console.log(this.tasks)
+      var answ
+      type === 'theory' ? answ = 'null' : answ = ''
       var task = {
         text: [{
           type: 'text',
           inner: ''
         }],
         type: type,
-        answer: '',
+        answer: answ,
         solution: '',
         difficulty: 'Легкая'
       }
@@ -199,6 +232,13 @@ export default {
       return b.join('')
     },
     async sendTitle () {
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        this.submitStatus = 'error'
+        console.log('Error!')
+        console.log(this.$v)
+        return
+      }
       this.success = true
       this.loading = true
       this.theme = this.theme.toLowerCase()
@@ -284,6 +324,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  textarea
+    margin-bottom auto
   body
     line-height auto !important
   .md-input
