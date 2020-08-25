@@ -1,6 +1,12 @@
 <template lang="pug">
   .content-wrapper
-    .editBox
+    .loading-indicator(v-if = 'myTopicLoading')
+          loading(
+            :active.sync = "this.myTopicLoading"
+            :is-full-page = 'true'
+            color = "#763dca"
+            opacity = 0)
+    .editBox(v-else)
       .marginBox
         .titleInfo
           p.olympTitle Создать урок
@@ -72,13 +78,14 @@
                 textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
           .button.button--round.button-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
           .button.button--round.button-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
-        .button.button--round.button-success.buttonPost(@click='sendTitle()') Опубликовать тему
+        .button.button--round.button-success.buttonPost(@click='sendTitle()')
+          span {{ this.edit ? 'Обновить' : 'Опубликовать' }} тему
     .successMenu(v-if = 'this.success')
       .successMenuBox
         .successText(v-if = 'this.loading')
           strong.md-display-3.titleTokenText Пожалуйста, подождите
           br
-          span.md-title Мы публикуем вашу тему. Это может занять некоторое время.
+          span.md-title Мы {{ this.edit ? 'обновляем' : 'публикуем' }} вашу тему. Это может занять некоторое время.
           .vld-parent
             loading(
               :active.sync = "this.loading"
@@ -94,7 +101,7 @@
           strong.titleTokenText  {{ this.token }}
           br
           br
-          span.md-title Тема появится в сети через несколько минут.
+          span.md-title Тема {{ this.edit ? 'обновится' : 'появится в сети' }} через несколько секунд.
           br
           span.md-title Поделитесь ключом со своими учениками, что бы они могли изучать вашу тему!
           .successGoButton
@@ -143,7 +150,9 @@ export default {
       loading: false,
       falseVar: false,
       classCnt: '',
-      submitStatus: null
+      submitStatus: null,
+      myTopicLoading: false,
+      edit: false
     }
   },
   validations: {
@@ -173,7 +182,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['sendTopic', 'addMyTopicsToList']),
+    ...mapActions(['sendTopic', 'addMyTopicsToList', 'fetchMyTopic']),
     goToProfile () {
       this.$router.push('/profile')
     },
@@ -237,6 +246,7 @@ export default {
         this.submitStatus = 'error'
         console.log('Error!')
         console.log(this.$v)
+        alert('Проверьте правильность заполнения полей!')
         return
       }
       this.success = true
@@ -246,7 +256,7 @@ export default {
         if (this.tasks[i].type === 'task') this.cnt_task++
       } this.items = this.tasks.length
       var data = {
-        author: this.getUser.name,
+        author: this.getUser.id,
         like: 0,
         name: this.name,
         public: !this.private,
@@ -259,10 +269,10 @@ export default {
 
       for (let i = 0; i < this.tasks.length; i++) {
         var task = ['']
-        console.log(this.tasks)
         for (let j = 0; j < this.tasks[i].text.length; j++) {
+          let comma = '\\'.concat('n')
           if (this.tasks[i].text[j].type === 'text') {
-            task[0] += this.tasks[i].text[j].inner.toString() + ' \n'
+            task[0] += this.tasks[i].text[j].inner.toString() + ' ' + comma
           } else {
             let file = this.tasks[i].text[j].inner
             let fileName = file.name
@@ -276,7 +286,7 @@ export default {
             await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) {
               imageUrl = url
             })
-            task[0] += '[' + imageUrl.toString() + '] \n'
+            task[0] += '[' + imageUrl.toString() + '] ' + comma
           }
         }
         this.tasks[i].type === 'theory' ? task.push('theory') : task.push(this.tasks[i].answer)
@@ -289,7 +299,9 @@ export default {
         this.tasks[i].type === 'theory' ? task.push('null') : task.push(this.tasks[i].solution)
         data['task'.concat(i.toString())] = task
       }
-      var token = await this.generateToken(5)
+      var token
+      if (!this.edit) token = await this.generateToken(5)
+      else token = this.token
       var sendInformation = {
         token: token,
         title: data
@@ -317,8 +329,30 @@ export default {
       return result
     }
   },
+  async mounted () {
+    if (this.$route.params.topicId !== undefined) {
+      this.myTopicLoading = true
+      await this.fetchMyTopic(this.$route.params.topicId)
+      console.log(this.getMyTopic)
+      var myTopic = this.getMyTopic
+      console.log(myTopic.author.length, this.getUser.id.length)
+      if (myTopic.author !== this.getUser.id) this.$router.push('/customTitle')
+      else {
+        this.edit = true
+        this.name = myTopic.name
+        this.classCnt = myTopic.class
+        this.cnt_task = myTopic.cnt_task
+        this.items = myTopic.cnt_items
+        this.private = myTopic.private
+        this.theme = myTopic.theme
+        this.tasks = myTopic.tasks
+        this.token = this.$route.params.topicId
+      }
+      this.myTopicLoading = false
+    }
+  },
   computed: {
-    ...mapGetters(['getUser'])
+    ...mapGetters(['getUser', 'getMyTopic'])
   }
 }
 </script>

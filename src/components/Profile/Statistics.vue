@@ -3,6 +3,8 @@
     .topicsBox(v-if = 'myTopics.length !== 0')
       .topicItem(v-for = '(topic, topicIndex) in myTopics'
       :key = 'topic.token')
+        .button.button--round.button-primary.showStatsButton(@click ='$router.push("/customTitle/" + topic.token)') Редактировать
+        .button.button--round.button-primary.showStatsButton(@click ='deleteMyTopic(topic.token, topicIndex)') Удалить
         .button.button--round.button-primary.showStatsButton(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть подробную статистику
         .button.button--round.button-primary.showStatsButton(v-else @click ='toggleStats(topic.token)') Показать подробную статистику
         span.md-title.topicName {{ topic.name }}
@@ -78,7 +80,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchTopicStatistics', 'markDBSolutionAs']),
+    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchTopicStatistics', 'markDBSolutionAs', 'deleteTopic']),
     async toggleStats (id) {
       let obj = this.myTopics.find(x => x.token === id)
       let index = this.myTopics.indexOf(obj)
@@ -111,6 +113,11 @@ export default {
       if (status === 'right') this.myTopics[this.imageTopic].stats[this.imageUser].solveSum++
       this.solutionImageShown = false
       this.markDBSolutionAs({ userId: this.imageUserId, topicName: this.myTopics[this.imageTopic].token, taskId: this.imageTask, newStats: this.myTopics[this.imageTopic].stats[this.imageUser].solveStats })
+    },
+    deleteMyTopic (token, i) {
+      this.myTopics.splice(i, 1)
+      console.log(token, i)
+      this.deleteTopic(token)
     }
   },
   created () {

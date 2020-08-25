@@ -209,6 +209,7 @@ export default {
       for (let i = 0; i < topicList.length; i++) {
         var topicsData = {}
         await db.collection('olympiad').doc(topicList[i]).get().then(doc => {
+          console.log(topicList[i])
           topicsData['token'] = topicList[i]
           topicsData['name'] = doc.data().name
           topicsData['members'] = doc.data().members
@@ -251,6 +252,67 @@ export default {
         [payload.topicName]: payload.newStats
       }, { merge: true })
       // console.log(payload.topicName, payload.newStats)
+    },
+    async fetchMyTopic (ctx, id) {
+      const db = firebase.firestore()
+      var topic = {}
+      await db.collection('olympiad').doc(id).get().then(doc => {
+        var rawTopic = doc.data()
+        topic['author'] = rawTopic.author
+        topic['name'] = rawTopic.name
+        topic['cnt_task'] = rawTopic.cnt_task
+        topic['items'] = rawTopic.items
+        topic['private'] = !rawTopic.public
+        topic['theme'] = rawTopic.theme.charAt(0).toUpperCase() + rawTopic.theme.slice(1)
+        topic['class'] = rawTopic.class
+        topic['tasks'] = []
+        for (let i = 0; i < rawTopic.items; i++) {
+          var rawTask = rawTopic['task' + String(i)]
+          var task = {}
+          task['answer'] = rawTask[1]
+          if (rawTask[2] === 1) task['difficulty'] = 'Легкая'
+          else if (rawTask[2] === 2) task['difficulty'] = 'Средняя'
+          else task['difficulty'] = 'Сложная'
+          task['solution'] = rawTask[3]
+          let comma = '\\'.concat('n')
+          var rawText = rawTask[0].split(comma)
+          console.log(comma, rawText)
+          var text = []
+          for (let j = 0; j < rawText.length; j++) {
+            var type
+            rawText[j].slice(0, 5) === '[http' ? type = 'img' : type = 'text'
+            text.push({ type: type, inner: rawText[j] })
+          }
+          if (text.length !== 1) text.pop()
+          task['text'] = text
+          if (rawTask[4] !== undefined) task['options'] = rawTask[4]
+          let taskKind = '' // Теория, обычная, на доказательство, с загрузкой, множественный выбор, несколько ответов
+          if (rawTask[1] === 'theory') taskKind = 'theory'
+          else if (rawTask[1] === 'null') taskKind = 'proof'
+          else if (rawTask[1] === 'image') taskKind = 'upload'
+          else if (rawTask.length === 5) taskKind = 'multipleChoice'
+          else if (rawTask[1].indexOf('|') !== -1) taskKind = 'multipleAnswer'
+          else taskKind = 'task'
+          task['type'] = taskKind
+          topic['tasks'].push(task)
+        }
+      })
+      console.log(topic)
+      ctx.commit('updateMyTopic', topic)
+    },
+    deleteTopic (ctx, payload) {
+      console.log('Deleting ', payload)
+      const db = firebase.firestore()
+      var docRef = db.collection('account').doc(this.getters.getUser.id)
+      db.runTransaction(function (transaction) {
+        return transaction.get(docRef).then(function (doc) {
+          var list = doc.data().myTopics
+          list.splice(payload, 1)
+          transaction.update(docRef, { myTopics: list })
+        })
+      })
+      console.log(this.getters.getUser.id, payload)
+      db.collection('olympiad').doc(payload).delete()
     }
   },
   mutations: {
@@ -281,6 +343,9 @@ export default {
     },
     updateTopicStats (state, payload) {
       state.myTopicsDetailedInfo[payload.id].stats = payload.data
+    },
+    updateMyTopic (state, payload) {
+      state.myTopic = payload
     }
   },
   state: {
@@ -288,7 +353,8 @@ export default {
     mapTopic: new Map(),
     likes: 0,
     customTopicTitle: '',
-    myTopics: []
+    myTopics: [],
+    myTopic: {}
   },
   getters: {
     getTopics (state) {
@@ -308,6 +374,9 @@ export default {
     },
     getMyTopicsDetailedInfo (state) {
       return state.myTopicsDetailedInfo
+    },
+    getMyTopic (state) {
+      return state.myTopic
     }
   }
 }

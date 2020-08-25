@@ -70,7 +70,7 @@ export default new Router({
       }
     },
     {
-      path: '/customTitle',
+      path: '/customTitle/:topicId?',
       name: 'customTitle',
       component: CustomTitle,
       beforeEnter (to, from, next) {
