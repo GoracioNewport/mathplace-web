@@ -84,7 +84,7 @@ export default {
 
   .button
     font-family: 'Roboto', sans-serif
-    font-size 0.9em
+    font-size 1.2em
     font-weight 400
 
   .LikeBox
@@ -151,16 +151,16 @@ export default {
   .topic-item-theme
     float right
     font-size 0.8em
-    margin 7%
+    margin 10%
 
   .topic-item-theme_gey
     float right
     font-size 0.7em
-    margin 8%
+    margin 10%
 
   .topic-item-theme_komba
     float right
-    font-size 0.55em
+    font-size 0.85em
     margin-top 9%
     margin-right 5%
 

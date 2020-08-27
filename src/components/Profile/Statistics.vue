@@ -3,12 +3,12 @@
     .topicsBox(v-if = 'myTopics.length !== 0')
       .topicItem(v-for = '(topic, topicIndex) in myTopics'
       :key = 'topic.token')
-        .button.button--round.button-primary.showStatsButton(@click ='$router.push("/customTitle/" + topic.token)') Редактировать
-        .button.button--round.button-primary.showStatsButton(@click ='deleteMyTopic(topic.token, topicIndex)') Удалить
-        .button.button--round.button-primary.showStatsButton(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть подробную статистику
+        .button.button--round.button-primary.showStatsButton.editButton(@click ='$router.push("/customTitle/" + topic.token)') Редактировать
+        .button.button--round.button-primary.showStatsButton.editButton(@click ='deleteMyTopic(topic.token, topicIndex)') Удалить
+        .button.button--round.button-primary.showStatsButton.editButton(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть подробную статистику
         .button.button--round.button-primary.showStatsButton(v-else @click ='toggleStats(topic.token)') Показать подробную статистику
         span.md-title.topicName {{ topic.name }}
-        span.md-body-1 Ключ: {{ topic.token }}
+        span.md-body-1.topicToken Ключ: {{ topic.token }}
         .statsBox(v-if = 'topic.showStats')
           span.loadingBox(v-if = 'Object.keys(topic.stats).length == 0') Загрузка...
           .loadedBox(v-else)
@@ -142,7 +142,11 @@ export default {
   .solutionMenuText
     font-size 1.3em
     padding-bottom 10%
-
+  .topicsBox
+    position relative
+    width 100%
+  .editButton
+    margin-left 10px
   .solutionMenuField
     input
       border-color #000000
@@ -169,7 +173,14 @@ export default {
   .md-body-1
     margin-left 5%
   .topicName
+    display block
     font-size 2.5em
+  .topicToken
+    position relative
+    margin-top 20px
+    margin-left 10px
+    display block
+    font-size 1.3em
   .loadedBox
    margin-top 3%
   .taskSlot

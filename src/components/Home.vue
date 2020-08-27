@@ -234,39 +234,39 @@
                   v-bind:theme='topic.theme'
                   v-bind:like='topic.like'
                 )
-        .pesontedan
-          input(id='pesontedan-seven',type='checkbox', name='pesontedans')
-          label#logic(for='pesontedan-seven')
-            a.title_topic2(name='logic')
-              strong Логика
-            //- p(:name='gggg').title_topic {{ array[0] }}
-          .topic-list
-            .topic-item-wrapper(
-              v-for = "(topic, index) in this.arrayLogics",
-              v-if='index<4',
-              :key = "topic.id"
-            )
-              Topic(
-                v-bind:id='topic.id',
-                v-bind:title='topic.title'
-                v-bind:percentage='topic.completed'
-                v-bind:theme='topic.theme'
-                v-bind:like='topic.like'
-              )
-          .pesontedan-content
-            .topic-list
-              .topic-item-wrapper(
-                v-for = "(topic, index) in this.arrayLogics"
-                v-if='index>=4',
-                :key = "topic.id"
-              )
-                Topic(
-                  v-bind:id='topic.id',
-                  v-bind:title='topic.title'
-                  v-bind:percentage='topic.completed'
-                  v-bind:theme='topic.theme'
-                  v-bind:like='topic.like'
-                )
+        //- .pesontedan
+        //-   input(id='pesontedan-seven',type='checkbox', name='pesontedans')
+        //-   label#logic(for='pesontedan-seven')
+        //-     a.title_topic2(name='logic')
+        //-       strong Логика
+        //-     //- p(:name='gggg').title_topic {{ array[0] }}
+        //-   .topic-list
+        //-     .topic-item-wrapper(
+        //-       v-for = "(topic, index) in this.arrayLogics",
+        //-       v-if='index<4',
+        //-       :key = "topic.id"
+        //-     )
+        //-       Topic(
+        //-         v-bind:id='topic.id',
+        //-         v-bind:title='topic.title'
+        //-         v-bind:percentage='topic.completed'
+        //-         v-bind:theme='topic.theme'
+        //-         v-bind:like='topic.like'
+        //-       )
+        //-   .pesontedan-content
+        //-     .topic-list
+        //-       .topic-item-wrapper(
+        //-         v-for = "(topic, index) in this.arrayLogics"
+        //-         v-if='index>=4',
+        //-         :key = "topic.id"
+        //-       )
+        //-         Topic(
+        //-           v-bind:id='topic.id',
+        //-           v-bind:title='topic.title'
+        //-           v-bind:percentage='topic.completed'
+        //-           v-bind:theme='topic.theme'
+        //-           v-bind:like='topic.like'
+        //-         )
         .pesontedan
           input(id='pesontedan-nine',type='checkbox', name='pesontedans')
           label#graphs(for='pesontedan-nine')
@@ -314,11 +314,11 @@
           .button.button--round.button-success(@click ='joinCourse(customTopicId)') Подключиться
           .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
     .errorBox(v-if = 'this.error')
-      strong Ой-ой... :(
+      strong.marginText.errorText Ой-ой... :(
       br
-      span Похоже, что-то пошло не так.
+      span.marginTex Похоже, что-то пошло не так.
       br
-      span Пожалуйста, проверьте свое подключение к интернету.
+      span.marginTex Пожалуйста, проверьте свое подключение к интернету.
 </template>
 
 <script>
@@ -390,6 +390,11 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .marginText
+    position relative
+    margin 20px
+  .errorText
+    text-color #763dca
   label
     background-color #fafafa !important
   .md-headline
