@@ -162,59 +162,71 @@ export default {
     box-shadow 0 0 5px rgba(0,0,0,0.5)
 
   .chat-image
+    position relative
     display inline-block
-    margin 6px
+    margin 10px
     overflow hidden
     border-radius 50%
     vertical-align middle
 
   .chat-name
+    position relative
     display inline-block
     height 100%
     width auto
+    margin-top 7px
     margin-left 20px
     vertical-align middle
     label
       color #FFFFFF
-      font-size 2.9em
+      font-size 2.5em
 
   .message-sender
     margin 15px
     label
-      font-size 1.8em
+      font-size 1.55em
       font-weight 500
       font-family Roboto
-      color #FFFFFF
+      color #763DCA
       text-align bottom
 
-  .message-fragment
-    margin-left 40%
+  .message-info
+    margin-left 10%
     width auto
-    display inline
-    float right
-    border-radius 10px 0px 10px 10px
-    box-shadow 0 0 5px rgba(0,0,0,0.5)
-    margin-top 10px
+    display block
+    float left
+  .message-fragment
+    positine relative
+    margin-left 2%
+    width auto
+    height auto
+    float left
+    clear both
+    border-radius 0px 15px 15px 15px
+    margin-top 20px
     margin-right 10px
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-    background-color #763DCA
+    background-color #EAE9EC
   .message-info
     width 100%
     height auto
     margin-left 1%
 
   .message-message
+    margin-left 15px
     label
-      font-size 1.9em
-      color #FFFFFF
-      text-align center
+      font-size 2.0em
+      font-family Roboto
+      color #000000
+      text-align left
   .message-time
     height 100%
     float right
-    margin-right 1%
+    margin-top 10px
+    margin-right 10px
     label
-      font-size 1.2em
-      color #FFFFFF
+      font-size 1.0em
+      color #000000
       text-align bottom
 
   .send-field-box
