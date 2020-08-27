@@ -22,16 +22,18 @@ export default {
       const db = firebase.firestore()
       await db.collection('account').doc(this.getters.getUser.id).get()
         .then(usr => {
+          var usrData = usr.data()
           db.collection('task2').get()
             .then((snapshot) => {
               snapshot.forEach((doc) => {
+                var docData = doc.data()
                 var right = 0
-                var all = doc.data().cnt_task
-                var like = Number(doc.data().like)
+                var all = docData.cnt_task
+                var like = Number(docData.like)
                 let title = doc.id
                 if (goodTheme.indexOf(title.toString()) === -1) {
-                  var topic = usr.data()[title]
-                  var theme = doc.data().theme
+                  var topic = usrData[title]
+                  var theme = docData.theme
                   if (topic != null) {
                     for (let i = 0; i < topic.length; i++) {
                       if (topic[i] === 2) {
@@ -165,8 +167,9 @@ export default {
       const db = firebase.firestore()
       ctx.commit('updateCustomTopic', '')
       await db.collection('olympiad').doc(payload).get().then(doc => {
-        if (doc.data() === undefined) ctx.commit('updateCustomTopic', null)
-        else ctx.commit('updateCustomTopic', doc.data().name)
+        var data = doc.data()
+        if (data === undefined) ctx.commit('updateCustomTopic', null)
+        else ctx.commit('updateCustomTopic', data.name)
       })
     },
     async addUserToTopicList (ctx) {
@@ -185,8 +188,9 @@ export default {
       const db = firebase.firestore()
       var topics
       await db.collection('account').doc(this.getters.getUser.id).get().then(doc => {
-        if (doc.data().myTopics === undefined) topics = undefined
-        else topics = doc.data().myTopics
+        var data = doc.data()
+        if (data.myTopics === undefined) topics = undefined
+        else topics = data.myTopics
       })
       ctx.commit('updateMyTopics', topics)
     },
@@ -209,10 +213,11 @@ export default {
       for (let i = 0; i < topicList.length; i++) {
         var topicsData = {}
         await db.collection('olympiad').doc(topicList[i]).get().then(doc => {
+          var data = doc.data()
           console.log(topicList[i])
           topicsData['token'] = topicList[i]
-          topicsData['name'] = doc.data().name
-          topicsData['members'] = doc.data().members
+          topicsData['name'] = data.name
+          topicsData['members'] = data.members
           topicsData['showStats'] = false
           topicsData['stats'] = {}
         })
@@ -227,9 +232,10 @@ export default {
       for (let i = 0; i < members.length; i++) {
         var info = {}
         await db.collection('account').doc(members[i]).get().then(doc => {
+          var data = doc.data()
           info['id'] = members[i]
-          info['name'] = doc.data().name
-          info['solveStats'] = doc.data()[id]
+          info['name'] = data.name
+          info['solveStats'] = data[id]
           info['solveSum'] = 0
         })
         var cnt = 0

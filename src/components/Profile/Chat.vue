@@ -65,23 +65,34 @@ export default {
       var info = {}
       var ind
       var vueInstance = this
+      var memb
+      await db.collection('chat').doc(id).get().then(doc => { memb = doc.data().members })
+      for (let i = 0; i < memb.length; i++) {
+        db.collection('account').doc(memb[i]).get().then(doc => {
+          vueInstance.chat['members'][memb[i]] = doc.data().name
+          console.log(vueInstance.chat['members'])
+          if (vueInstance.messageField === '') vueInstance.messageField = null
+          else if (vueInstance.messageField === null) vueInstance.messageField = ''
+          else vueInstance.messageField += ' '
+        })
+      }
       db.collection('chat').doc(id)
         .onSnapshot(function (doc) {
           console.log(doc.data())
-          var memb
           info['msgCnt'] = doc.data().all_message
           info['type'] = doc.data().chat_type
           info['name'] = doc.data().name
-          info['members'] = {}
           memb = doc.data().members
-          for (let i = 0; i < memb.length; i++) {
-            db.collection('account').doc(memb[i]).get().then(doc => {
-              vueInstance.chat['members'][memb[i]] = doc.data().name
-              console.log(vueInstance.chat['members'])
-              if (vueInstance.messageField === '') vueInstance.messageField = null
-              else if (vueInstance.messageField === null) vueInstance.messageField = ''
-              else vueInstance.messageField += ' '
-            })
+          if (memb !== vueInstance.chat['members']) {
+            var newMemb = {}
+            for (let i = 0; i < memb.length; i++) {
+              db.collection('account').doc(memb[i]).get().then(doc => {
+                newMemb[memb[i]] = doc.data().name
+                console.log(vueInstance.chat['members'])
+                if (vueInstance.messageField[vueInstance.messageField.length - 1] !== ' ') vueInstance.messageField += ' '
+                else vueInstance.messageField.pop()
+              })
+            }
           }
           if (doc.data().chat_type === 'group') info['image'] = doc.data().image
           else {
