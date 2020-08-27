@@ -17,9 +17,9 @@
                     p.textInf Посылок {{this.getUser.submit}}
                     p.textInf Решено {{this.getUser.right}}
                     p.textInf Тугриков {{this.getUser.money}}
-                  router-link.button.button--round.button.button-primary(to='/logout') Выйти
                   router-link.button.button--round.button.button-primary(to='/statistics') Мои уроки
                   router-link.button.button--round.button.button-primary(to='/editProfile') Редактировать
+                  router-link.button.button--round.button.button-primary(to='/logout') Выйти
 
         .content-achieve
           .text-part(

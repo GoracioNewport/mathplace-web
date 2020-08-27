@@ -70,7 +70,7 @@ export default {
                   let pointer = 0
                   let inImg = false
                   for (let k = 0; k < splittedText[j].length; k++) {
-                    if ((splittedText[j].slice(k, k + 5) === '[http' && !inImg) && (splittedText[j][k - 1] === ']' && inImg)) {
+                    if ((splittedText[j].slice(k, k + 5) === '[http' && !inImg) || (splittedText[j][k - 1] === ']' && inImg)) {
                       let type = ''
                       inImg ? type = 'img' : type = 'text'
                       let partedText = splittedText[j].slice(pointer, k)

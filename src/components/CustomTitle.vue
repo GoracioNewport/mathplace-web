@@ -374,6 +374,9 @@ export default {
     padding 1%
     margin 3%
     margin-left 0%
+  .classCnt
+    position relative
+    width 300px
   .buttonAddContent
     margin 1%
   .olympTheme
@@ -451,15 +454,19 @@ export default {
     margin 20px
 
   .olympName
+    position relative
     width 300px
     height auto
+    margin-bottom 30px
     margin-top 20px
     font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     font-size 0.8em
+  .olympPrivate
+    width auto
 
   .olympTitle
     position relative
-    width autod
+    width auto
     font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     font-size 2em
     font-weight 700
@@ -478,6 +485,8 @@ export default {
 
   .olympTheme
     width 300px
+    position relative
+    display block
     font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     font-size 1.1em
     text-align center
