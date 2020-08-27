@@ -175,6 +175,7 @@ export default {
     async addUserToTopicList (ctx) {
       const db = firebase.firestore()
       var users
+      console.log(this.getters.getCollection, this.getters.getCurrentTopic)
       await db.collection(this.getters.getCollection).doc(this.getters.getCurrentTopic).get().then(doc => {
         users = doc.data().members
       })
