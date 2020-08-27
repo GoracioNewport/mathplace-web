@@ -98,29 +98,30 @@ export default {
                 var memb = []
                 console.log(nameList[i])
                 await db.collection('chat').doc(nameList[i]).get().then(doc => {
-                    info['msgCnt'] = doc.data().all_message
-                    info['type'] = doc.data().chat_type
-                    info['name'] = doc.data().name
+                    data = doc.data()
+                    info['msgCnt'] = data.all_message
+                    info['type'] = data.chat_type
+                    info['name'] = data.name
                     info['members'] = {}
-                    memb = doc.data().members
+                    memb = data.members
                     info['id'] = nameList[i]
-                    if (doc.data().chat_type === 'group') info['image'] = doc.data().image
+                    if (data.chat_type === 'group') info['image'] = data.image
                     else {
                         memb[0] === this.getters.getUser.id ? ind = memb[1] : ind = memb[0]
                         info['name'] = ind
                     } info['msgs'] = {}
-                    for (let j = 0; j < doc.data().all_message; j++) {
-                       info['msgs'][j] = doc.data()['message' + j.toString()]
+                    for (let j = 0; j < data.all_message; j++) {
+                       info['msgs'][j] = data['message' + j.toString()]
                        info['msgs'][j].time = moment().format('MMMM Do YYYY, h:mm:ss a')
                     }
                 })
                 
                 for (let i = 0; i < memb.length; i++) {
                     await db.collection('account').doc(memb[i]).get().then(doc => { 
-                        info['members'][memb[i]] = doc.data().name 
+                        info['members'][memb[i]] = data.name 
                     })
                 }
-                if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {info['image'] = doc.data().image })
+                if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {info['image'] = data.image })
                 chatList.push(info)
                 console.log(info)
             }

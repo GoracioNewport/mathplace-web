@@ -16,12 +16,14 @@ export default {
 
       await userData.get()
         .then(usr => {
+          var usrData = usr.data()
           tasksDb.get()
             .then(doc => {
+              var docData = doc.data()
               // Обновление значений юзера в бд
 
-              userTopicDetails = usr.data()[this.getters.getCurrentTopic]
-              itemCount = doc.data().items
+              userTopicDetails = usrData[this.getters.getCurrentTopic]
+              itemCount = docData.items
               if (userTopicDetails === undefined) {
                 let blankArray = []
                 for (let i = 0; i < itemCount; i++) blankArray.push(1)
@@ -48,7 +50,7 @@ export default {
               // 1 - Текст, 2 - Ответ, 3 - Сложность, 4 - Решение
 
               for (let i = 0; i < itemCount; i++) {
-                let subTask = doc.data()['task' + String(i)]
+                let subTask = docData['task' + String(i)]
                 let taskKind = '' // Теория, обычная, на доказательство, с загрузкой, множественный выбор, несколько ответов
                 if (subTask[1] === 'theory') taskKind = 'theory'
                 else if (subTask[1] === 'null') taskKind = 'proof'

@@ -139,7 +139,7 @@ export default {
       this.taskId = to.params.taskId
       this.collection = to.params.collectionId
       this.$store.dispatch('changeCurrentTopic', this.taskId)
-      this.$store.dispatch('changeCollection', 'olympiad')
+      this.$store.dispatch('changeCollection', this.collection)
     }
   },
   components: {
@@ -147,7 +147,7 @@ export default {
   },
   async mounted () {
     this.$store.dispatch('changeCurrentTopic', this.taskId)
-    this.$store.dispatch('changeCollection', 'olympiad')
+    this.$store.dispatch('changeCollection', this.collection)
     this.updateUser(['lastTheme', this.getCurrentTopic])
     this.addUserToTopicList()
     this.isLoading = true
