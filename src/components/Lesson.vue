@@ -140,6 +140,7 @@ export default {
       this.collection = to.params.collectionId
       this.$store.dispatch('changeCurrentTopic', this.taskId)
       this.$store.dispatch('changeCollection', this.collection)
+      this.updateUser(['lastTheme', this.getCollection + '|' + this.getCurrentTopic])
     }
   },
   components: {
@@ -148,7 +149,7 @@ export default {
   async mounted () {
     this.$store.dispatch('changeCurrentTopic', this.taskId)
     this.$store.dispatch('changeCollection', this.collection)
-    this.updateUser(['lastTheme', this.getCurrentTopic])
+    this.updateUser(['lastTheme', this.getCollection + '|' + this.getCurrentTopic])
     this.addUserToTopicList()
     this.isLoading = true
     await this.fetchLikes(this.collection)
