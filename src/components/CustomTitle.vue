@@ -282,7 +282,7 @@ export default {
           let comma = '\\'.concat('n')
           if (this.tasks[i].text[j].type === 'text') {
             task[0] += this.tasks[i].text[j].inner.toString() + ' ' + comma
-          } else if(this.tasks[i].text[j].type === 'img'){
+          } else if (this.tasks[i].text[j].type === 'img') {
             let file = this.tasks[i].text[j].inner
             let fileName = file.name
             const fileReader = new FileReader()
@@ -296,7 +296,7 @@ export default {
               imageUrl = url
             })
             task[0] += '[' + imageUrl.toString() + '] ' + comma
-          } else{
+          } else {
             let file = this.tasks[i].text[j].inner
             let fileName = file.name
             const fileReader = new FileReader()
