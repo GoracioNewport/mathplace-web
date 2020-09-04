@@ -319,7 +319,9 @@ export default {
           else if (this.tasks[i].difficulty === 'Средняя') task.push(2)
           else task.push(3)
         }
-        this.tasks[i].type === 'theory' ? task.push('null') : task.push(this.tasks[i].solution)
+        console.log(this.tasks)
+        this.tasks[i].type === 'theory' || this.tasks[i].solution === '' ? task.push('null') : task.push(this.tasks[i].solution)
+        console.log(task)
         data['task'.concat(i.toString())] = task
       }
       var token

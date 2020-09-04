@@ -203,7 +203,6 @@ export default {
     sendAnswer () {
       if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
-        console.log(this.activeTask, this.taskList.length)
         if (this.$store.getters.getUser === null) this.$router.push('/login')
         else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/')
         else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) { // Task complition
@@ -234,7 +233,10 @@ export default {
           newStatus[this.activeTask] = verdict
           this.updateUser([this.getCurrentTopic, newStatus])
           this.taskList[this.activeTask].tries = verdict
-          if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
+          if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') {
+            if (this.activeTask === this.taskList.length - 1) this.$router.push('/')
+            else this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
+          }
         } else {
           this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
         }
