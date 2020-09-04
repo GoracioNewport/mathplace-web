@@ -45,10 +45,15 @@
 
       .condition
         .text-part(v-for = "part in this.taskList[this.activeTask].text")
-          span(v-if = 'part.type == "text"') {{ part.content }}
+          span(v-if = 'part.type == "text"'
+              v-html = "part.content") {{ part.content }}
 
           img.condition-image(
             v-else-if = 'part.type == "img"'
+            :src = 'part.content')
+
+          pdf(
+            v-else-if = 'part.type == "pdf"'
             :src = 'part.content')
       .answ(v-if='this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"')
         input.submit-field(
@@ -131,6 +136,7 @@ import taskImage from '@/assets/images/question.png'
 import proofImage from '@/assets/images/star_evidence.png'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions, mapGetters } from 'vuex'
+import pdf from 'vue-pdf'
 // import { beforeRouteLeave } from 'vue-router'
 
 export default {
@@ -143,7 +149,8 @@ export default {
     }
   },
   components: {
-    Loading
+    Loading,
+    pdf
   },
   async mounted () {
     this.$store.dispatch('changeCurrentTopic', this.taskId)

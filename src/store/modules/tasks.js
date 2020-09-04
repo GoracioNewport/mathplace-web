@@ -71,8 +71,9 @@ export default {
                   let partition = []
                   let pointer = 0
                   let inImg = false
+                  let inPDF = false
                   for (let k = 0; k < splittedText[j].length; k++) {
-                    if ((splittedText[j].slice(k, k + 5) === '[http' && !inImg) || (splittedText[j][k - 1] === ']' && inImg)) {
+                    if (((splittedText[j].slice(k, k + 5) === '[http' && !inImg) || (splittedText[j][k - 1] === ']' && inImg)) && !inPDF) {
                       let type = ''
                       inImg ? type = 'img' : type = 'text'
                       let partedText = splittedText[j].slice(pointer, k)
@@ -84,6 +85,18 @@ export default {
                       pointer = k
                       inImg = !inImg
                     }
+                    // if (((splittedText[j].slice(k, k + 5) === '^http' && !inPDF) || (splittedText[j][k - 1] === '^' && inPDF)) && !inImg) {
+                    //   let type = ''
+                    //   inPDF ? type = 'pdf' : type = 'text'
+                    //   let partedText = splittedText[j].slice(pointer, k)
+                    //   if (inPDF) partedText = partedText.slice(1, partedText.length - 1)
+                    //   partition.push({
+                    //     type: type,
+                    //     content: partedText
+                    //   })
+                    //   pointer = k
+                    //   inPDF = !inPDF
+                    // }
                   }
                   partition.push({
                     type: 'text',

@@ -247,7 +247,8 @@ export default {
     .achivCondition
       font-size 1.3em
       color #5B6175
-
+      margin-top 10px
+      margin-bottom 10px
     .achivProgress
       font-size 1em
 
