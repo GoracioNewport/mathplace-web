@@ -47,17 +47,24 @@
                 )
                   .button.img.delete_button(@click='task.text.splice(task.text.indexOf(component), 1)')
                   .theoryTextField(v-if ='component.type === "text"')
-                    md-field.theoryText
-                      md-textarea(placeholder = 'Введите текст здесь', v-model = "component.inner")
+                    vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner")
+                    //- md-field.theoryText
+                    //-   md-textarea(placeholder = 'Введите текст здесь', v-model = "component.inner")
                   .theoryText(v-if ='component.type === "img"')
                     label(for='img') Выберите картинку
                     input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
+                  .theoryTextFile(v-if ='component.type === "file"')
+                    label(for='file') Выберите Файл
+                    input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
 
                 .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
 
                 .button.button--round.button-success(
                   @click='addContent(tasks.indexOf(task), "img")'
                   ) Добавить картинку
+                .button.button--round.button-success(
+                  @click='addContent(tasks.indexOf(task), "file")'
+                  ) Загрузить файл
               .taskEditBox(v-if ="task.type === 'task'")
                 md-field
                   md-input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
@@ -115,9 +122,11 @@ import firebase from 'firebase/app'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import 'firebase/storage'
+import { VueEditor } from 'vue2-editor'
 export default {
   components: {
-    Loading
+    Loading,
+    VueEditor
   },
   data () {
     return {
@@ -273,7 +282,7 @@ export default {
           let comma = '\\'.concat('n')
           if (this.tasks[i].text[j].type === 'text') {
             task[0] += this.tasks[i].text[j].inner.toString() + ' ' + comma
-          } else {
+          } else if (this.tasks[i].text[j].type === 'img') {
             let file = this.tasks[i].text[j].inner
             let fileName = file.name
             const fileReader = new FileReader()
@@ -287,6 +296,20 @@ export default {
               imageUrl = url
             })
             task[0] += '[' + imageUrl.toString() + '] ' + comma
+          } else {
+            let file = this.tasks[i].text[j].inner
+            let fileName = file.name
+            const fileReader = new FileReader()
+            fileReader.readAsDataURL(file)
+            const ext = fileName.slice(fileName.lastIndexOf('.'))
+            let currentTime = new Date().getTime()
+            let imageUrl
+            let imageTimeName = 'uploads/' + currentTime + ext
+            await firebase.storage().ref(imageTimeName).put(file)
+            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) {
+              imageUrl = url
+            })
+            task[0] += '^' + imageUrl.toString() + '^ ' + comma
           }
         }
         this.tasks[i].type === 'theory' ? task.push('theory') : task.push(this.tasks[i].answer)
@@ -438,13 +461,13 @@ export default {
 
   .theoryComponent
     position relative
-    width 450px
+    width 90%
     margin-bottom 20px
 
   .theoryTextField
     position relative
     height auto
-    width 90%
+    width 95%
     margin-bottom 0px
     display inline-block
     margin-top 0p
