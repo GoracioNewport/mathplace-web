@@ -98,7 +98,7 @@ export default {
                 var memb = []
                 console.log(nameList[i])
                 await db.collection('chat').doc(nameList[i]).get().then(doc => {
-                    data = doc.data()
+                    var data = doc.data()
                     info['msgCnt'] = data.all_message
                     info['type'] = data.chat_type
                     info['name'] = data.name
@@ -118,7 +118,7 @@ export default {
                 
                 for (let i = 0; i < memb.length; i++) {
                     await db.collection('account').doc(memb[i]).get().then(doc => { 
-                        info['members'][memb[i]] = data.name 
+                        info['members'][memb[i]] = doc.data().name 
                     })
                 }
                 if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {info['image'] = data.image })

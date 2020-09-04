@@ -16,7 +16,7 @@
             .message-info
               .message-sender
                 //- span {{ chat['members'] }}
-                label {{ chat['members'][msg.sender] }}
+                label {{ chatMembers[msg.sender] }}
               .message-message
                 label {{ msg.text }}
             .message-time
@@ -54,7 +54,8 @@ export default {
   data () {
     return {
       id: this.$route.params.chatId,
-      chat: null,
+      chat: {},
+      chatMembers: {},
       messageField: null
     }
   },
@@ -69,8 +70,8 @@ export default {
       await db.collection('chat').doc(id).get().then(doc => { memb = doc.data().members })
       for (let i = 0; i < memb.length; i++) {
         db.collection('account').doc(memb[i]).get().then(doc => {
-          vueInstance.chat['members'][memb[i]] = doc.data().name
-          console.log(vueInstance.chat['members'])
+          vueInstance.chatMembers[memb[i]] = doc.data().name
+          console.log(vueInstance.chatMembers)
           if (vueInstance.messageField === '') vueInstance.messageField = null
           else if (vueInstance.messageField === null) vueInstance.messageField = ''
           else vueInstance.messageField += ' '

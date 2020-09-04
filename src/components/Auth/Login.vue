@@ -37,6 +37,8 @@
                 )
                 .error(v-if="!$v.password.required") Это поле обязательно
                 .error(v-if="!$v.password.minLength") Минимальная длина пароля - {{ $v.password.$params.minLength.min }} символов
+              .form-item.stayInCheckbox
+                md-checkbox(v-model = 'staySigned') Запомнить меня
               .buttons-list
                 button.button.button-primary(
                   type="submit"
@@ -76,6 +78,7 @@ export default {
       email: '',
       password: '',
       repeatPassword: '',
+      staySigned: false,
       submitStatus: null
     }
   },
@@ -103,7 +106,8 @@ export default {
       } else {
         const user = {
           email: this.email,
-          password: this.password
+          password: this.password,
+          remember: this.staySigned
         }
         this.$store.dispatch('loginUser', user)
           .then(() => {
@@ -120,6 +124,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.stayInCheckbox
+  float left
+  margin 1%
 .successText
     padding 10%
     text-color #000000 !important

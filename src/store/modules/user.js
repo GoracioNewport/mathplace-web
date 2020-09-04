@@ -36,10 +36,11 @@ export default {
         throw error
       }
     },
-    async loginUser ({commit}, {email, password}) {
+    async loginUser ({commit}, {email, password, remember}) {
       commit('clearErrors')
       commit('setLoading', true)
       const db = firebase.firestore()
+      firebase.auth().setPersistence(remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION)
       try {
         const user = await firebase.auth().signInWithEmailAndPassword(email, password)
         if (!firebase.auth().currentUser.emailVerified && email !== 'test@user.com') {
@@ -59,7 +60,9 @@ export default {
           right = data.right
           like = data.like
         })
-        commit('setUser', new User(name, user.user.uid, lastTheme, money, right, submit, like))
+        var usr = new User(name, user.user.uid, lastTheme, money, right, submit, like)
+        commit('setUser', usr)
+        if (remember) localStorage.setItem('user', JSON.stringify(usr))
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)
