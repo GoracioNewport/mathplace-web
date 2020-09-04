@@ -314,7 +314,7 @@ export default {
       db.runTransaction(function (transaction) {
         return transaction.get(docRef).then(function (doc) {
           var list = doc.data().myTopics
-          list.splice(payload, 1)
+          list = list.filter(e => e !== payload)
           transaction.update(docRef, { myTopics: list })
         })
       })

@@ -12,7 +12,7 @@
             //img(class="picture", src='@/assets/miscellaneous.png', alt='Пикча')
             a(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
               //img(class="picture", src='@/assets/google_play.svg', alt='Пикча')
-              img(class="picture", src='@/assets/googleplay.png', alt='Пикча')
+              img(class="picture", src='@/assets/googleplay.png', alt='Наше приложение')
           .auth-form
             span.ui-title-2 Вход
             form(@submit.prevent="onSubmit")
