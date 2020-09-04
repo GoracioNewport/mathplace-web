@@ -144,7 +144,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
+  .content-wrapper
+    min-height 0
   .chat-box
     max-height 70vh
     overfolow auto

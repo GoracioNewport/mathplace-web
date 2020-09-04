@@ -148,6 +148,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.content-wrapper
+    min-height 0
 
 .answerCorrect
   background rgba(0, 255, 0, .5)

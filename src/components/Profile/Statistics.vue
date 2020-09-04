@@ -130,6 +130,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .content-wrapper
+    min-height 0
   .solutionImage
     height 50vh
   .solutionMenuBox

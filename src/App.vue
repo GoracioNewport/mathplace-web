@@ -73,8 +73,6 @@ export default {
     font-size 1.5em
 
   .wrapper
-    margin 0
-    margin-bottom 5%
     max-width 9999px
   .span
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif

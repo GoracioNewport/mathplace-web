@@ -33,6 +33,9 @@
         //-   label 16:30
     //- .chatFrame
       Chat
+    //- .newChatButton
+      md-button.md-fab.md-fab-bottom-right.md-primary
+        md-icon add
 </template>
 
 <script>
@@ -63,8 +66,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .body
-    height 100%
+  .content-wrapper
+    min-height 0
   .chatList
     margin-left 25%
     margin-right 25%

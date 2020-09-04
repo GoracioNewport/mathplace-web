@@ -383,6 +383,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .content-wrapper
+    min-height 0
   textarea
     margin-bottom auto
   body
