@@ -292,9 +292,7 @@ export default {
             let imageUrl
             let imageTimeName = 'uploads/' + currentTime + ext
             await firebase.storage().ref(imageTimeName).put(file)
-            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) {
-              imageUrl = url
-            })
+            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
             task[0] += '[' + imageUrl.toString() + '] ' + comma
           } else {
             let file = this.tasks[i].text[j].inner
@@ -306,9 +304,7 @@ export default {
             let imageUrl
             let imageTimeName = 'uploads/' + currentTime + ext
             await firebase.storage().ref(imageTimeName).put(file)
-            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) {
-              imageUrl = url
-            })
+            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
             task[0] += '^' + imageUrl.toString() + '^ ' + comma
           }
         }

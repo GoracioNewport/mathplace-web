@@ -67,16 +67,7 @@ export default {
       var ind
       var vueInstance = this
       var memb
-      await db.collection('chat').doc(id).get().then(doc => { memb = doc.data().members })
-      for (let i = 0; i < memb.length; i++) {
-        db.collection('account').doc(memb[i]).get().then(doc => {
-          vueInstance.chatMembers[memb[i]] = doc.data().name
-          console.log(vueInstance.chatMembers)
-          if (vueInstance.messageField === '') vueInstance.messageField = null
-          else if (vueInstance.messageField === null) vueInstance.messageField = ''
-          else vueInstance.messageField += ' '
-        })
-      }
+      await this.fetchMembers(id)
       db.collection('chat').doc(id)
         .onSnapshot(function (doc) {
           console.log(doc.data())
@@ -84,17 +75,6 @@ export default {
           info['type'] = doc.data().chat_type
           info['name'] = doc.data().name
           memb = doc.data().members
-          if (memb !== vueInstance.chat['members']) {
-            var newMemb = {}
-            for (let i = 0; i < memb.length; i++) {
-              db.collection('account').doc(memb[i]).get().then(doc => {
-                newMemb[memb[i]] = doc.data().name
-                console.log(vueInstance.chat['members'])
-                if (vueInstance.messageField[vueInstance.messageField.length - 1] !== ' ') vueInstance.messageField += ' '
-                else vueInstance.messageField.pop()
-              })
-            }
-          }
           if (doc.data().chat_type === 'group') info['image'] = doc.data().image
           else {
             memb[0] === vueInstance.getUser.id ? ind = memb[1] : ind = memb[0]
@@ -109,28 +89,40 @@ export default {
           vueInstance.chat = info
         })
     },
+    async fetchMembers (id) {
+      const db = firebase.firestore()
+      var vueInstance = this
+      var memb
+      await db.collection('chat').doc(id).get().then(doc => { memb = doc.data().members })
+      await db.collection('chat').doc(id).get().then(doc => { memb = doc.data().members })
+      for (let i = 0; i < memb.length; i++) {
+        await db.collection('account').doc(memb[i]).get().then(doc => {
+          vueInstance.chatMembers[memb[i]] = doc.data().name
+          console.log(vueInstance.chatMembers)
+          if (vueInstance.messageField === '') vueInstance.messageField = null
+          else if (vueInstance.messageField === null) vueInstance.messageField = ''
+          else vueInstance.messageField += ' '
+        })
+      }
+    },
     async sendMessage () {
       var data = {
         text: this.messageField,
         sender: this.getUser.id,
         time: firebase.firestore.Timestamp.now()
       }
-      this.chat['msgs'].push(data)
-      this.chat['msgs'].msgCnt++
+      console.log(this.chat)
+      this.chat.msgs[this.chat.msgs.length] = data
+      var varName = 'message'.concat(this.chat.msgCnt)
+      this.chat.msgCnt++
       const db = firebase.firestore()
       // var curMsg
       // await db.collection('chat').doc(this.id).get().then(doc => { curMsg = doc.data().all_message })
-      var varName = 'message'.concat(this.chat['msgs'].msgCnt)
       console.log(varName, data)
       db.collection('chat').doc(this.id).set({
-        [varName]: data
+        [varName]: data,
+        all_message: this.chat.msgCnt
       }, { merge: true })
-      var chatRef = db.collection('chat').doc(this.id)
-      db.runTransaction(function (transaction) {
-        return transaction.get(chatRef).then(function (chatDoc) {
-          transaction.update(chatRef, { all_message: this.chat['msgs'].msgCnt + 1 })
-        })
-      })
       this.messageField = null
     }
   },
