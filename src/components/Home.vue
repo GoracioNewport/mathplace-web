@@ -35,7 +35,10 @@
         </a>
 
       .joinCustomTitle(@click="joinMenuShow = !joinMenuShow")
-        .button.button--round.button-success.right_button Присоединиться
+        .button.button--round.button-success.right_button.mdc-fab.mdc-fab--extended.button--round.bottom-button
+          .mdc-fab__ripple
+          span.material-icons.mdc-fab__icon add
+          span.mdc-fab__label Присоединиться
       .container
         .pesontedan
           input(id='pesontedan-eight',type='checkbox', name='pesontedans')
@@ -430,6 +433,8 @@ export default {
     position fixed
     bottom 100px
     right 100px
+  .bottom-button
+    box-shadow 0px 0px 10px rgba(0,0,0,2)
 
   .right_button
     position fixed

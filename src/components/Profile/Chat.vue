@@ -166,20 +166,31 @@ export default {
       margin-left 16%
       margin-right 16%
     }
+    @media screen and (max-width: 700px) {
+      margin-left 5%
+      margin-right 5%
+    }
 
   .chat-info
-    height 100%
+    position relative
+    overflow hidden
+    height auto
     width  100%
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-    background-color #763DCA
+    background-color #EAE9EC
     border-radius 10px 10px 0px 0px
     box-shadow 0 0 5px rgba(0,0,0,0.5)
 
   .chat-image
     position relative
     display inline-block
-    margin 10px
+    margin 8px
+    height auto
+    widht 200px
     overflow hidden
+    background-repeat no-repeat
+    background-position 50%
+    background-size 100% 100%
     border-radius 50%
     vertical-align middle
 
@@ -192,9 +203,9 @@ export default {
     margin-left 20px
     vertical-align middle
     label
-      color #FFFFFF
-      font-size 2.5em
-
+      color #763DCA
+      font-size 2.0em
+      font-weight 600
   .message-sender
     margin 15px
     label

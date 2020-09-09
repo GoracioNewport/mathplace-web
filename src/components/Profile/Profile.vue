@@ -1,7 +1,10 @@
 <template lang='pug'>
     .content-wrapper
       .test_button
-        router-link.button--round.button.button-primary.bottom_button(to='/customTitle') Создать свою тему
+        router-link(to='/customTitle').button.mdc-fab.mdc-fab--extended.button--round.bottom_button
+          .mdc-fab__ripple
+          span.material-icons.mdc-fab__icon add
+          span.mdc-fab__label Создать свой урок
 
       .content-block
 
@@ -166,9 +169,9 @@ export default {
       font-weight 500
       height auto
       right 20px
-
+      box-shadow 0px 0px 10px rgba(0,0,0,0.5)
     .userInf
-      width 40%
+      width 70%
       display inline-block
     .textInf
       font-weight 600
@@ -181,6 +184,7 @@ export default {
       font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
       font-weight 700
       font-size 2.1em
+      margin-bottom 20px
 
     .content-block
       margin-left 25%
@@ -213,6 +217,12 @@ export default {
       display inline-block
       width 50%
       height auto
+      @media screen and (max-width: 1000px) {
+        width 100%
+        margin-left 15px
+        margin-right 15px
+        margin-top 50px
+      }
 
     .content-achieve
       position relative
@@ -234,6 +244,7 @@ export default {
         height 12%
 
     .achivText
+      position relative
       display inline-block
       margin-left 20px
       vertical-align middle
@@ -256,6 +267,7 @@ export default {
         margin-right 2%
         margin-bottom 5%
         margin-top 10px
+        font-size 1.2em
         strong
           margin 9%
     .logout
@@ -269,9 +281,9 @@ export default {
       position relative
       display inline-block
       min-width 250px
-      height 100%
       img
         width 19%
+        height auto
         margin-left 10%
         margin-bottom 3%
         margin-top 3%

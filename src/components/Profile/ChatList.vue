@@ -85,9 +85,9 @@ export default {
 
   .chat-header
     width 100%
-    margin-top 30px
-    margin-bottom 30px
-    margin-left 30px
+    margin-top 20px
+    margin-bottom 20px
+    margin-left 10px
     border-margin-left 20px
 
   .chat-border
@@ -107,11 +107,16 @@ export default {
     display flex
   .chat-image
     display inline-block
-    width 200px
+    width 15%
+    min-width 150px
     height auto
     overflow hidden
     border-radius 50%
     vertical-align middle
+    @media screen and (max-width: 1000px) {
+      width 10px
+    }
+
 
   .chat-info
     display inline-block
