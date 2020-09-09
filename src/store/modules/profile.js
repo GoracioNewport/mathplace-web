@@ -121,7 +121,7 @@ export default {
                         info['members'][memb[i]] = doc.data().name 
                     })
                 }
-                if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {info['image'] = data.image })
+                if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {info['image'] = doc.data().image })
                 chatList.push(info)
                 console.log(info)
             }

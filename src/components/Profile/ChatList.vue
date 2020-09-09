@@ -235,6 +235,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .md-fab
+   position fixed
   .loading-indicator
     z-index 50001
   .buttonAdd

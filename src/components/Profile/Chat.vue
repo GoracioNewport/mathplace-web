@@ -1,6 +1,12 @@
 <template lang="pug">
   .content-wrapper
-    .chat-main(v-if = 'chat !== null')
+    .loading-indicator
+      loading(
+        :active.sync = "this.loading"
+        is-full-page = true
+        color = "#763dca"
+        :opacity = 0.5)
+    .chat-main(v-if = '!loading')
       .chat-box
         .chat-info(v-if = 'chat !== null')
           .chat-image(v-if = 'chat.image === undefined')
@@ -10,17 +16,18 @@
           .chat-name
             label
               strong(v-if = 'chat.type === "group"') {{ chat.name }}
-              strong(v-else) {{ chat['members'][chat.name] }}
-        .message(v-for = '(msg, i) in chat.msgs')
-          .message-fragment
-            .message-info
-              .message-sender
-                //- span {{ chat['members'] }}
-                label {{ chatMembers[msg.sender] }}
-              .message-message
-                label {{ msg.text }}
-            .message-time
-              label {{ msg.time }}
+              strong(v-else) {{ chatMembers[chat.name] }}
+          .chat-modify(v-if = 'getUser.id === chat.members[0]')
+            img.settingIcon(@click ='settingsMenuShow = true' src='@/assets/images/settings.png')
+          .message(v-for = '(msg, i) in chat.msgs')
+            .message-fragment
+              .message-info
+                .message-sender
+                  label {{ chatMembers[msg.sender] }}
+                .message-message
+                  label {{ msg.text }}
+              .message-time
+                label {{ msg.time }}
       .send-field-box
         input(
           @keyup.enter = 'sendMessage'
@@ -34,6 +41,19 @@
             :is-full-page = 'false'
             color = "#763dca"
             :opacity = 0)
+    .settingsMenu(v-if = 'settingsMenuShow')
+      .settingsMenuBox
+        .settingsMenuText
+          span.md-headline Введите ключ темы
+        .jsettingsMenuField
+          input(
+                  type="text"
+                  :placeholder="this.placeholder"
+                  v-model="customTopicId"
+          )
+        .settingsMenuCancel
+          .button.button--round.button-success(@click ='joinCourse(customTopicId)') Подключиться
+          .button.button--round.button-warning(@click ='settingsMenuShow = false')  Отмена
 </template>
 
 <script>
@@ -56,7 +76,9 @@ export default {
       id: this.$route.params.chatId,
       chat: {},
       chatMembers: {},
-      messageField: null
+      messageField: null,
+      loading: false,
+      settingsMenuShow: false
     }
   },
   methods: {
@@ -68,25 +90,28 @@ export default {
       var vueInstance = this
       var memb
       await this.fetchMembers(id)
-      db.collection('chat').doc(id)
+      await db.collection('chat').doc(id)
         .onSnapshot(function (doc) {
-          console.log(doc.data())
-          info['msgCnt'] = doc.data().all_message
-          info['type'] = doc.data().chat_type
-          info['name'] = doc.data().name
-          memb = doc.data().members
-          if (doc.data().chat_type === 'group') info['image'] = doc.data().image
+          var data = doc.data()
+          info['msgCnt'] = data.all_message
+          info['type'] = data.chat_type
+          info['name'] = data.name
+          info['members'] = data.members
+          memb = data.members
+          if (data.chat_type === 'group') info['image'] = data.image
           else {
             memb[0] === vueInstance.getUser.id ? ind = memb[1] : ind = memb[0]
             info['name'] = ind
           } info['msgs'] = {}
-          for (let j = 0; j < doc.data().all_message; j++) {
-            info['msgs'][j] = doc.data()['message' + j.toString()]
-            info['msgs'][j].time = moment().format('MMMM Do YYYY, h:mm:ss a')
+          for (let j = 0; j < data.all_message; j++) {
+            info['msgs'][j] = data['message' + j.toString()]
+            info['msgs'][j].time = moment.unix(info['msgs'][j].time.seconds).format('MMMM Do YYYY, h:mm:ss a')
           }
           if (info['type'] === 'personal') db.collection('account').doc(ind).get().then(doc => { info['image'] = doc.data().image })
           console.log('Got update!', info)
           vueInstance.chat = info
+          vueInstance.loading = false
+          console.log(info.members[0] === vueInstance.getUser.id)
         })
     },
     async fetchMembers (id) {
@@ -98,27 +123,25 @@ export default {
       for (let i = 0; i < memb.length; i++) {
         await db.collection('account').doc(memb[i]).get().then(doc => {
           vueInstance.chatMembers[memb[i]] = doc.data().name
-          console.log(vueInstance.chatMembers)
-          if (vueInstance.messageField === '') vueInstance.messageField = null
-          else if (vueInstance.messageField === null) vueInstance.messageField = ''
-          else vueInstance.messageField += ' '
+          // if (vueInstance.messageField === '') vueInstance.messageField = null
+          // else if (vueInstance.messageField === null) vueInstance.messageField = ''
+          // else vueInstance.messageField += ' '
         })
       }
     },
     async sendMessage () {
+      if (this.messageField === '' || this.messageField === null) return
       var data = {
         text: this.messageField,
         sender: this.getUser.id,
         time: firebase.firestore.Timestamp.now()
       }
-      console.log(this.chat)
       this.chat.msgs[this.chat.msgs.length] = data
       var varName = 'message'.concat(this.chat.msgCnt)
       this.chat.msgCnt++
       const db = firebase.firestore()
       // var curMsg
       // await db.collection('chat').doc(this.id).get().then(doc => { curMsg = doc.data().all_message })
-      console.log(varName, data)
       db.collection('chat').doc(this.id).set({
         [varName]: data,
         all_message: this.chat.msgCnt
@@ -127,6 +150,7 @@ export default {
     }
   },
   async mounted () {
+    this.loading = true
     await this.fetchChatById(this.id)
   },
   computed: {
@@ -136,6 +160,47 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .settingsMenuBox
+    padding 5%
+    padding-left 10%
+    padding-right 10%
+    .button
+      font-size 0.6em
+      margin 2%
+  .settingsMenuText
+    font-size 1.3em
+    padding-bottom 10%
+
+  .settingsMenuField
+    input
+      border-color #000000
+      border-width 1%
+  .settingsMenu
+    z-index 50000
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-size 2vw
+    background-color rgba(0, 0, 0, .5)
+    width 100%
+    height 100%
+    position fixed
+    top 0
+    left 0
+  .settingsMenuBox
+    text-align center
+    background-color #FFFFFF
+    margin-top 10%
+    margin-left 20%
+    margin-right 20%
+    min-width 350px
+    border 2px #000000 solid
+    border-radius 10px
+  .chat-modify
+    position relative
+  .settingIcon
+    position absolute
+    width 5vh
+    right 1%
+    top -6.5vh
   .content-wrapper
     min-height 0
   .chat-box
