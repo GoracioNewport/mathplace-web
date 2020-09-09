@@ -32,9 +32,9 @@
           :active.sync = "this.isLoading",
           :is-full-page = 'true',
           color = '#763dca')
-    .content(v-if="taskList.length > 1")
+    .content(v-if="taskList.length > 0")
       .name
-        span(v-if = 'this.taskList[this.activeTask].type == "theory"') {{ getCurrentTopic }}
+        span(v-if = 'this.taskList[this.activeTask].type == "theory"') {{ taskInfo.name }}
         span(v-else) Задача {{ this.taskList[this.activeTask].taskId }}
 
         img.star(
@@ -162,6 +162,8 @@ export default {
     await this.fetchLikes(this.collection)
     await this.fetchTasks(this.collection)
     this.taskList = this.$store.getters.getTasks
+    this.taskInfo = this.getTasksInfo
+    console.log(this.taskInfo)
     if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
     this.isLoading = false
     console.log(this.taskList)
@@ -175,17 +177,8 @@ export default {
       taskImage,
       proofImage,
       activeTask: 0,
-      taskList: [{
-        id: 0,
-        taskId: 0,
-        text: '',
-        type: 'task',
-        answer: 0,
-        difficulty: 0,
-        solution: 0,
-        tries: 1,
-        options: []
-      }],
+      taskList: [],
+      tasksInfo: {},
       isLoading: true,
       answer: '',
       status: 'Idle',
@@ -240,7 +233,10 @@ export default {
           newStatus[this.activeTask] = verdict
           this.updateUser([this.getCurrentTopic, newStatus])
           this.taskList[this.activeTask].tries = verdict
-          if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
+          if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') {
+            if (this.activeTask === this.taskList.length - 1) this.$router.push('/')
+            else this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
+          }
         } else {
           this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
         }
@@ -259,7 +255,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection']),
+    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo']),
     getDifficulty () {
       var dif = this.taskList[this.activeTask].difficulty
       if (dif !== 'null') return parseInt(dif, 10)
@@ -274,6 +270,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .content-wrapper
+    min-height 0
   input
     margin-bottom auto
   .solution

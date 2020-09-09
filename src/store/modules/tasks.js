@@ -11,6 +11,7 @@ export default {
       var userData = db.collection('account').doc(this.getters.getUser.id)
       var itemCount = 0
       var taskCount = 0
+      var tasksInfo = {}
       var tasksList = []
       let userTopicDetails = []
 
@@ -132,9 +133,11 @@ export default {
                 }
                 tasksList.push(task)
               }
+              docData.name === undefined ? tasksInfo.name = this.getters.getCurrentTopic : tasksInfo.name = docData.name
             })
         })
       ctx.commit('updateTasks', tasksList)
+      ctx.commit('updateTasksInfo', tasksInfo)
     },
     changeCurrentTopic (ctx, topic) {
       ctx.commit('updateCurrentTopic', topic)
@@ -161,11 +164,15 @@ export default {
     },
     updateCollection (state, payload) {
       state.collection = payload
+    },
+    updateTasksInfo (state, payload) {
+      state.tasksInfo = payload
     }
   },
   state: {
     currentTopic: 'ОГЭ Вариант 1',
     tasks: [],
+    tasksInfo: {},
     tasksLoading: false,
     logo: 'MathPlace',
     collection: 'task2'
@@ -182,6 +189,9 @@ export default {
     },
     getCollection (state) {
       return state.collection
+    },
+    getTasksInfo (state) {
+      return state.tasksInfo
     }
   }
 }

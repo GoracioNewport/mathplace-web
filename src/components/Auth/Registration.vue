@@ -199,6 +199,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .content-wrapper
+    min-height 0
   .successText
     padding 10%
     text-color #000000 !important

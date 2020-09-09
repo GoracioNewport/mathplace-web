@@ -147,6 +147,8 @@ export default {
 </script>
 
 <style scoped lang='stylus'>
+    .content-wrapper
+      min-height 0
 
     .button
       color #FFFFFF !important

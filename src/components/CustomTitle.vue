@@ -292,9 +292,7 @@ export default {
             let imageUrl
             let imageTimeName = 'uploads/' + currentTime + ext
             await firebase.storage().ref(imageTimeName).put(file)
-            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) {
-              imageUrl = url
-            })
+            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
             task[0] += '[' + imageUrl.toString() + '] ' + comma
           } else {
             let file = this.tasks[i].text[j].inner
@@ -306,9 +304,7 @@ export default {
             let imageUrl
             let imageTimeName = 'uploads/' + currentTime + ext
             await firebase.storage().ref(imageTimeName).put(file)
-            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) {
-              imageUrl = url
-            })
+            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
             task[0] += '^' + imageUrl.toString() + '^ ' + comma
           }
         }
@@ -319,7 +315,9 @@ export default {
           else if (this.tasks[i].difficulty === 'Средняя') task.push(2)
           else task.push(3)
         }
-        this.tasks[i].type === 'theory' ? task.push('null') : task.push(this.tasks[i].solution)
+        console.log(this.tasks)
+        this.tasks[i].type === 'theory' || this.tasks[i].solution === '' ? task.push('null') : task.push(this.tasks[i].solution)
+        console.log(task)
         data['task'.concat(i.toString())] = task
       }
       var token
@@ -381,6 +379,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .content-wrapper
+    min-height 0
   textarea
     margin-bottom auto
   body
