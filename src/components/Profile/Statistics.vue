@@ -1,5 +1,11 @@
 <template lang='pug'>
   .content-wrapper
+    .loading-indicator(v-if = 'myTopicsLoading')
+      loading(
+        :active.sync = "this.myTopicsLoading"
+        :is-full-page = 'true'
+        color = "#763dca"
+        :opacity = 0.5)
     .topicsBox(v-if = 'myTopics.length !== 0')
       .topicItem(v-for = '(topic, topicIndex) in myTopics'
       :key = 'topic.token')
@@ -10,7 +16,15 @@
         span.md-title.topicName {{ topic.name }}
         span.md-body-1.topicToken Ключ: {{ topic.token }}
         .statsBox(v-if = 'topic.showStats')
-          span.loadingBox(v-if = 'Object.keys(topic.stats).length == 0') Загрузка...
+          .loadingBox(v-if = 'Object.keys(topic.stats).length == 0')
+            .vld-parent
+              loading(
+                :active.sync = "Object.keys(topic.stats).length == 0"
+                :is-full-page = 'false'
+                loader = 'dots'
+                color = "#763dca"
+                :opacity = 0.5)
+          //- .errorBox(v-else-if = 'topic.')
           .loadedBox(v-else)
             md-table.statsTable(v-model='myTopics[myTopics.indexOf(topic)].stats', md-sort='name', md-sort-order='asc', md-fixed-header='')
               md-table-toolbar
@@ -41,6 +55,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import Loading from 'vue-loading-overlay'
 import Right from 'vue-material-design-icons/CheckboxMarkedCircleOutline.vue'
 import Dots from 'vue-material-design-icons/DotsHorizontal.vue'
 import Wrong from 'vue-material-design-icons/Close.vue'
@@ -61,11 +76,14 @@ export default {
   components: {
     Right,
     Dots,
-    Wrong
+    Wrong,
+    Loading
   },
   async mounted () {
+    this.myTopicsLoading = true
     await this.fetchMyTopicsDetailedInfo()
     this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
+    this.myTopicsLoading = false
   },
   data () {
     return {
@@ -76,7 +94,8 @@ export default {
       imageTopic: 0,
       imageTask: 0,
       imageUser: 0,
-      imageUserId: ''
+      imageUserId: '',
+      myTopicsLoading: false
     }
   },
   methods: {
@@ -130,6 +149,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .vld-parent
+    min-height 15vh
   .content-wrapper
     min-height 0
   .solutionImage

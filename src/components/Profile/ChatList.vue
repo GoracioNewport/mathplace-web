@@ -138,23 +138,26 @@ export default {
         }
       }
       chatInfo.members = Array.from(chatMembers)
-      console.log(chatInfo.members)
       if (chatName === null) {
         this.error = 'Пользователь не найден'
-        console.log(this.error)
+        alert(this.error)
         return
       } else if (type === 'group' && chatInfo.members.length < 3) {
         this.groupEmail.length < 3 ? this.error = 'В групповом чате должно быть хотя бы 3 пользователя' : this.error = 'Пользователи не найдены'
-        console.log(this.error)
+        alert(this.error)
         return
       } else if (type === 'personal' && chatInfo.members.length === 1) {
         this.error = 'Нельзя создать диалог с самим собой'
-        console.log(this.error)
+        alert(this.error)
         return
       }
+      var exists = false
       if (type === 'personal') {
         chatInfo.members.sort()
         chatId = chatInfo.members[0] + '_' + chatInfo.members[1]
+        await db.collection('chat').doc(chatId).get().then(doc => {
+          if (doc.exists) exists = true
+        })
       } else {
         chatInfo.name = chatName
         chatId = await this.generateToken(7)
@@ -172,15 +175,27 @@ export default {
           chatInfo.image = imageUrl
         }
       }
+      if (exists) {
+        this.error = 'Диалог уже существует'
+        this.$router.push('/pm/' + chatId)
+        return
+      }
       // console.log(chatId, chatInfo)
       await db.collection('chat').doc(chatId).set(chatInfo)
-      var myChats = []
-      // Пробегаю по массивчику, что бы получить все чаты и добавить новый в их список
-      for (let i = 0; i < this.chatList.length; i++) { myChats.push(this.chatList[i].id) }
-      myChats.push(chatId)
-      await db.collection('account').doc(this.getUser.id).set({
-        myChats: myChats
-      }, { merge: true })
+      // Добавление в myChats для каждого пользователя
+      for (let j = 0; j < chatInfo.members.length; j++) {
+        var myChats = []
+        await db.collection('account').doc(chatInfo.members[j]).get().then(doc => {
+          var data = doc.data()
+          if (data.myChats !== undefined) myChats = data.myChats
+          // console.log('Existing data: ', myChats)
+        })
+        myChats.push(chatId)
+        // console.log('Writing new data: ', myChats, 'to ', chatInfo.members[j])
+        await db.collection('account').doc(chatInfo.members[j]).set({
+          myChats: myChats
+        }, { merge: true })
+      }
       this.loading = false
       this.$router.push('/pm/' + chatId)
     },
@@ -323,6 +338,8 @@ export default {
   .chat-fragment
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     display flex
+    &:hover
+      cursor pointer
   .chat-image
     display inline-block
     width 200px

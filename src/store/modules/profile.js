@@ -96,7 +96,6 @@ export default {
             for (let i = 0; i < nameList.length; i++) {
                 var info = {}
                 var memb = []
-                console.log(nameList[i])
                 await db.collection('chat').doc(nameList[i]).get().then(doc => {
                     var data = doc.data()
                     info['msgCnt'] = data.all_message
@@ -112,7 +111,7 @@ export default {
                     } info['msgs'] = {}
                     for (let j = 0; j < data.all_message; j++) {
                        info['msgs'][j] = data['message' + j.toString()]
-                       info['msgs'][j].time = moment().format('MMMM Do YYYY, h:mm:ss a')
+                       info['msgs'][j].time = moment.unix(info['msgs'][j].time.seconds).format('MMMM Do YYYY, h:mm:ss a')
                     }
                 })
                 
@@ -123,7 +122,7 @@ export default {
                 }
                 if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {info['image'] = doc.data().image })
                 chatList.push(info)
-                console.log(info)
+                console.log(nameList[i], '--->', info)
             }
             ctx.commit('updateMyChats', chatList)
         }

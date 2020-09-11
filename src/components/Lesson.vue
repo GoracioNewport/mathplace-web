@@ -2,7 +2,7 @@
   .content-wrapper
     //- img#imgSmile(src="@/components/images/back.png")
     .taskbar(v-if="!isLoading")
-      a(href="/")
+      router-link(to='/')
         img#imgBack(src="@/components/images/back.png")
       .container
         .taskbar-content

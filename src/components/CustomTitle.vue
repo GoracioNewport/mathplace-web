@@ -1,11 +1,11 @@
 <template lang="pug">
   .content-wrapper
     .loading-indicator(v-if = 'myTopicLoading')
-          loading(
-            :active.sync = "this.myTopicLoading"
-            :is-full-page = 'true'
-            color = "#763dca"
-            opacity = 0)
+      loading(
+        :active.sync = "myTopicLoading"
+        :is-full-page = 'true'
+        color = "#763dca"
+        :opacity = 0.5)
     .editBox(v-else)
       .marginBox
         .titleInfo

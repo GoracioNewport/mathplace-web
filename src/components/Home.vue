@@ -9,7 +9,7 @@
             :active.sync = "this.trueVar"
             :is-full-page = 'false'
             color = "#763dca"
-            opacity = 0)
+            :opacity = 0)
     section(v-if = "!this.isLoading && !this.error && this.arrayPopular.length !== 0")
       .sidebar
         <a href="#school" v-smooth-scroll>

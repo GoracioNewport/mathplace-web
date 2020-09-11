@@ -198,7 +198,7 @@ export default {
     async addMyTopicsToList (ctx, payload) {
       const db = firebase.firestore()
       await store.dispatch('fetchMyTopics')
-      var topics = this.getters.getMyTopics
+      var topics = [...new Set(this.getters.getMyTopics)]
       if (topics === undefined) topics = []
       topics.push(payload)
       ctx.commit('updateMyTopics', topics)
@@ -220,6 +220,7 @@ export default {
           topicsData['name'] = data.name
           topicsData['members'] = data.members
           topicsData['showStats'] = false
+          topicsData['statsLoaded'] = false
           topicsData['stats'] = {}
         })
         topicInfo[topicList[i]] = topicsData

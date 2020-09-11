@@ -21,13 +21,12 @@ export default new Vuex.Store({
       state.agreedToPrivacy = true
     },
     initialiseStore (state) {
-      console.log('Store Initiated')
+      console.log('[MathPlace] Store Initiated')
       if (localStorage.getItem('agreedToPrivacy')) {
         state.agreedToPrivacy = true
       }
 
       if (localStorage.getItem('user')) {
-        console.log(state)
         state.user.user = JSON.parse(localStorage.getItem('user'))
       }
     }
