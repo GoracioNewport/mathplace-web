@@ -32,7 +32,7 @@
     .joinMenu(v-if = 'this.joinMenuShow')
       .joinMenuBox(v-if = '!groupChat')
         .joinMenuText
-          span.md-headline Введите почту собеседника
+          span.md-headline.enterEmail Введите почту собеседника
         .joinMenuField
           input(
                   type="text"
@@ -48,7 +48,7 @@
 
       .joinMenuBox(v-else)
         .joinMenuText
-          span.groupHeadText.md-headline Добавить пользователя
+          span.groupHeadText.md-headline.enterEmail Добавить пользователя
           md-button.buttonAdd.md-fab.md-primary(@click ='groupEmail.push("")')
             md-icon add
         .joinMenuField
@@ -249,8 +249,13 @@ export default {
     width 30px
     height 30px
   .joinMenuText
-    font-size 1.3em
-    padding-bottom 1%
+    position relative
+    font-size 1.0em
+    padding-bottom 40px
+    span
+      font-size 1.1em
+      font-weight 600
+      color #763dca
   .joinMenuField
     input
       border-color #000000
@@ -266,6 +271,7 @@ export default {
     top 0
     left 0
   .joinMenuBox
+    positine relative
     padding 5%
     padding-left 10%
     padding-right 10%
@@ -280,7 +286,6 @@ export default {
     .button
       font-size 0.6em
       margin 2%
-
   .content-wrapper
     min-height 0
   .chatList
@@ -334,7 +339,6 @@ export default {
     @media screen and (max-width: 1000px) {
       width 10px
     }
-
 
   .chat-info
     display inline-block

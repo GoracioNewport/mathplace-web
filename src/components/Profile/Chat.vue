@@ -19,15 +19,15 @@
               strong(v-else) {{ chatMembers[chat.name] }}
           .chat-modify(v-if = 'getUser.id === chat.members[0]')
             img.settingIcon(@click ='settingsMenuShow = true' src='@/assets/images/settings.png')
-          .message(v-for = '(msg, i) in chat.msgs')
-            .message-fragment
-              .message-info
-                .message-sender
-                  label {{ chatMembers[msg.sender] }}
-                .message-message
-                  label {{ msg.text }}
-              .message-time
-                label {{ msg.time }}
+        .message(v-for = '(msg, i) in chat.msgs')
+          .message-fragment
+            .message-info
+              .message-sender
+                label {{ chatMembers[msg.sender] }}
+              .message-message
+                label {{ msg.text }}
+            .message-time
+              label {{ msg.time }}
       .send-field-box
         input(
           @keyup.enter = 'sendMessage'
