@@ -8,7 +8,6 @@ import tasks from './modules/tasks'
 import profile from './modules/profile'
 
 import createPersistedState from 'vuex-persistedstate'
-import { app } from 'firebase'
 
 Vue.use(Vuex)
 

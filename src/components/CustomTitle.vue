@@ -47,7 +47,7 @@
                 )
                   .button.img.delete_button(@click='task.text.splice(task.text.indexOf(component), 1)')
                   .theoryTextField(v-if ='component.type === "text"')
-                    vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner")
+                    vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner", :editorToolbar="customToolbar")
                     //- md-field.theoryText
                     //-   md-textarea(placeholder = 'Введите текст здесь', v-model = "component.inner")
                   .theoryText(v-if ='component.type === "img"')
@@ -55,7 +55,7 @@
                     input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
                   .theoryTextFile(v-if ='component.type === "file"')
                     label(for='file') Выберите Файл
-                    input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
+                    input#img(type='file', name='file', accept='application/pdf, application/msword, .docx', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
 
                 .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
 
@@ -122,7 +122,7 @@ import firebase from 'firebase/app'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import 'firebase/storage'
-import { VueEditor } from 'vue2-editor'
+import { VueEditor, Quill } from 'vue2-editor'
 export default {
   components: {
     Loading,
@@ -161,7 +161,25 @@ export default {
       classCnt: '',
       submitStatus: null,
       myTopicLoading: false,
-      edit: false
+      edit: false,
+      customToolbar: [[{ font: [] }],
+
+  [{ header: [false, 1, 2, 3, 4, 5, 6] }],
+
+  [{ size: ["small", false, "large", "huge"] }],
+
+  ["bold", "italic", "underline", "strike"],
+
+  [{ header: 1 }, { header: 2 }],
+
+  [{ script: "sub" }, { script: "super" }],
+
+  [{ color: [] }, { background: [] }],
+
+  ["link", "image", "video", "formula"],
+
+  [{ direction: "rtl" }],
+  ["clean"]]
     }
   },
   validations: {
@@ -282,7 +300,7 @@ export default {
           let comma = '\\'.concat('n')
           if (this.tasks[i].text[j].type === 'text') {
             task[0] += this.tasks[i].text[j].inner.toString() + ' ' + comma
-          } else if(this.tasks[i].text[j].type === 'img'){
+          } else if (this.tasks[i].text[j].type === 'img') {
             let file = this.tasks[i].text[j].inner
             let fileName = file.name
             const fileReader = new FileReader()
@@ -296,7 +314,7 @@ export default {
               imageUrl = url
             })
             task[0] += '[' + imageUrl.toString() + '] ' + comma
-          } else{
+          } else {
             let file = this.tasks[i].text[j].inner
             let fileName = file.name
             const fileReader = new FileReader()
@@ -309,7 +327,7 @@ export default {
             await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) {
               imageUrl = url
             })
-            task[0] += '^' + imageUrl.toString() + '^ ' + comma
+            task[0] += ']' + imageUrl.toString() + '[ ' + comma
           }
         }
         this.tasks[i].type === 'theory' ? task.push('theory') : task.push(this.tasks[i].answer)
@@ -461,7 +479,7 @@ export default {
 
   .theoryComponent
     position relative
-    width 90%
+    width 95%
     margin-bottom 20px
 
   .theoryTextField

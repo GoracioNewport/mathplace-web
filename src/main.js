@@ -20,6 +20,8 @@ import 'vue-material-design-icons/styles.css'
 import 'vue-material/dist/theme/default.css'
 import pdf from 'vue-pdf'
 import { VueEditor } from 'vue2-editor'
+// import MathLive from "./mathlive.js"
+// import Mathfield from "./vue-mathlive.mjs"
 
 // Vue.use(MdButton)
 // Vue.use(MdContent)
@@ -30,6 +32,7 @@ Vue.use(VueMaterial)
 Vue.use(Topic)
 Vue.use(Vuelidate)
 Vue.use(vueSmoothScroll)
+// Vue.use(Mathfield, MathLive)
 Vue.use(VueEditor)
 Vue.use(pdf)
 

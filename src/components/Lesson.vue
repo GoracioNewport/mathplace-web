@@ -43,7 +43,7 @@
           alt = 'Звезда',
           v-for = 'i in getDifficulty')
 
-      .condition
+      .condition(id='condition')
         .text-part(v-for = "part in this.taskList[this.activeTask].text")
           span(v-if = 'part.type == "text"'
               v-html = "part.content") {{ part.content }}
@@ -55,6 +55,13 @@
           pdf(
             v-else-if = 'part.type == "pdf"'
             :src = 'part.content')
+
+          iframe(v-else-if = 'part.type == "youtube"'
+            :src = 'part.content'
+            frameborder='0'
+            allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+            allowfullscreen='')
+
       .answ(v-if='this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"')
         input.submit-field(
           v-if ='this.taskList[this.activeTask].type === "task"'
@@ -80,6 +87,9 @@
           .button.button--round.button-success.buttonAdd(@click='answer.push("")') Добавить вариант ответа
       .enter
         .send
+          a.but(@click='generateReport()')
+            img(src='@/assets/images/dowload.png'
+              alt='Скачать',id="lock")
           a.but(@click='solutionShown = true',
                 v-if = 'this.taskList[this.activeTask].type =="task" && this.taskList[this.activeTask].solution != "null"')
             img(src='@/assets/images/lock.png'
@@ -127,6 +137,28 @@
         .solutionButtonClose
           .button.button--round.button-success(
             @click='solutionShown = false') ОК!
+
+    .pdf
+      vue-html2pdf(:show-layout='false', :enable-download='true', :preview-modal='false', :paginate-elements-by-height='2000', filename='hee hee', :pdf-quality='2', :manual-pagination='false', pdf-format='a4', pdf-orientation='landscape', pdf-content-width='800px', @progress='onProgress($event)', @hasstartedgeneration='hasStartedGeneration()', @hasgenerated='hasGenerated($event)', ref='html2Pdf')
+        section(slot='pdf-content', id='pdfd')
+          .text-part(v-for = "part in this.taskList[this.activeTask].text")
+            span(v-if = 'part.type == "text"'
+                v-html = "part.content") {{ part.content }}
+
+            img.condition-image(
+              v-else-if = 'part.type == "img"'
+              :src = 'part.content')
+
+            pdf(
+              v-else-if = 'part.type == "pdf"'
+              :src = 'part.content')
+
+            iframe(v-else-if = 'part.type == "youtube"'
+              :src = 'part.content'
+              frameborder='0'
+              allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+              allowfullscreen='')
+          
 </template>
 
 <script>
@@ -137,6 +169,7 @@ import proofImage from '@/assets/images/star_evidence.png'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions, mapGetters } from 'vuex'
 import pdf from 'vue-pdf'
+import VueHtml2pdf from 'vue-html2pdf'
 // import { beforeRouteLeave } from 'vue-router'
 
 export default {
@@ -150,7 +183,8 @@ export default {
   },
   components: {
     Loading,
-    pdf
+    pdf,
+    VueHtml2pdf
   },
   async mounted () {
     this.$store.dispatch('changeCurrentTopic', this.taskId)
@@ -189,10 +223,36 @@ export default {
       answer: '',
       status: 'Idle',
       topicLiked: false,
-      solutionShown: false
+      solutionShown: false,
+      htmlToPdfOptions: {
+    margin: 0,
+
+    filename: `hehehe.pdf`,
+
+    image: {
+        type: 'jpeg', 
+        quality: 0.98
+    },
+
+    enableLinks: false,
+
+    html2canvas: {
+        scale: 1,
+        useCORS: true
+    },
+
+    jsPDF: {
+        unit: 'in',
+        format: 'a4',
+        orientation: 'portrait'
+    }
+}
     }
   },
   methods: {
+    generateReport () {
+      this.$refs.html2Pdf.generatePdf()
+    },
     ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList']),
     changeActiveTask (i, thisTask) {
       console.log('Change Active Task', i)
