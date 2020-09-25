@@ -137,7 +137,11 @@ export default {
             })
         }
       }
-      chatInfo.members = Array.from(chatMembers)
+      var members = Array.from(chatMembers)
+      console.log(members)
+      for (let mem in members) {
+        chatInfo.members.push({last_message: 0, userId: mem})
+      }
       if (chatName === null) {
         this.error = 'Пользователь не найден'
         alert(this.error)
@@ -161,7 +165,7 @@ export default {
       } else {
         chatInfo.name = chatName
         chatId = await this.generateToken(7)
-        if (this.groupPhoto !== undefined) {
+        if (this.groupPhoto !== undefined && this.groupPhoto !== null) {
           let file = this.groupPhoto
           let fileName = file.name
           const fileReader = new FileReader()
@@ -185,14 +189,14 @@ export default {
       // Добавление в myChats для каждого пользователя
       for (let j = 0; j < chatInfo.members.length; j++) {
         var myChats = []
-        await db.collection('account').doc(chatInfo.members[j]).get().then(doc => {
+        await db.collection('account').doc(members[j]).get().then(doc => {
           var data = doc.data()
           if (data.myChats !== undefined) myChats = data.myChats
           // console.log('Existing data: ', myChats)
         })
         myChats.push(chatId)
         // console.log('Writing new data: ', myChats, 'to ', chatInfo.members[j])
-        await db.collection('account').doc(chatInfo.members[j]).set({
+        await db.collection('account').doc(members[j]).set({
           myChats: myChats
         }, { merge: true })
       }

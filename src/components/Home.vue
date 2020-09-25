@@ -12,33 +12,25 @@
             :opacity = 0)
     section(v-if = "!this.isLoading && !this.error && this.arrayPopular.length !== 0")
       .sidebar
-        <a href="#school" v-smooth-scroll>
+        a(href='#school', v-smooth-scroll='')
           img(src="@/components/images/school1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#examination" v-smooth-scroll>
+        a(href='#examination', v-smooth-scroll='')
           img(src="@/components/images/examination1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#geometry" v-smooth-scroll>
+        a(href='#geometry', v-smooth-scroll='')
           img(src="@/components/images/geometry1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#algebra" v-smooth-scroll>
+        a(href='#algebra', v-smooth-scroll='')
           img(src="@/components/images/algebra1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#komba" v-smooth-scroll>
+        a(href='#komba', v-smooth-scroll='')
           img(src="@/components/images/komba1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#logic" v-smooth-scroll>
+        a(href='#logic', v-smooth-scroll='')
           img(src="@/components/images/logic1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#graphs" v-smooth-scroll>
+        a(href='#graphs', v-smooth-scroll='')
           img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
-        </a>
 
       .joinCustomTitle(@click="joinMenuShow = !joinMenuShow")
-        .button.button--round.button-success.right_button.mdc-fab.mdc-fab--extended.button--round.bottom-button
-          .mdc-fab__ripple
-          span.material-icons.mdc-fab__icon add
-          span.mdc-fab__label Присоединиться
+        .button.right_button.button--round.bottom-button
+          span Присоединиться
+
       .container
         .pesontedan
           input(id='pesontedan-eight',type='checkbox', name='pesontedans')
@@ -381,7 +373,7 @@ export default {
       await this.fetchCustomTopic(id)
       var res = this.getCustomTopic
       if (res !== null) {
-        this.$router.push('/lesson/olympiad=' + id)
+        this.$router.push('/lesson/olympiads=' + id)
       } else {
         this.customTopicId = ''
         this.placeholder = 'Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа'

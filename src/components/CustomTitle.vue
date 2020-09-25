@@ -1,6 +1,7 @@
 <template lang="pug">
   .content-wrapper
     .loading-indicator(v-if = 'myTopicLoading')
+      span aaaaaaaaaaaaa
       loading(
         :active.sync = "myTopicLoading"
         :is-full-page = 'true'
@@ -25,66 +26,72 @@
           //-   md-option(v-for = "theme in themeList" :value = 'theme') {{ theme }}
 
           md-field.classCnt
-            label Введите клас
+            label Введите класс
             md-input(v-model='classCnt' type='number')
 
         .tasksInfo
           .tasksContent
             .task(v-for = 'task in tasks')
               .button.img.delete_button(@click='tasks.splice(tasks.indexOf(task), 1)')
-              .componentName
-                strong(v-if = 'task.type === "theory"') Теория
-                strong(v-if = 'task.type === "task"') Задача
-              //- .taskType
-              //-   label(for='theory') Теория
-              //-     input#theory(type = 'radio', value = 'theory', v-model = "task.type")
-              //-   label(for='task') Задача
-              //-     input#task(type = 'radio', value = 'task', v-model = "task.type")
+              .preMadeBox(v-if = 'task.type === "preMade"')
+                .componentName
+                  strong(v-if = 'task.originData.type === "theory"') Теория из темы "{{ task.topicName }}"
+                  strong(v-else) Задача №{{ task.taskInd }} из темы "{{ task.topicName }}"
+              .componentBox(v-else)
+                .componentName
+                  strong(v-if = 'task.type === "theory"') Теория
+                  strong(v-else) Задача
+                //- .taskType
+                //-   label(for='theory') Теория
+                //-     input#theory(type = 'radio', value = 'theory', v-model = "task.type")
+                //-   label(for='task') Задача
+                //-     input#task(type = 'radio', value = 'task', v-model = "task.type")
 
-              .theoryEditBox
-                .theoryComponent(
-                  v-for = 'component in task.text'
-                )
-                  .button.img.delete_button(@click='task.text.splice(task.text.indexOf(component), 1)')
-                  .theoryTextField(v-if ='component.type === "text"')
-                    vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner")
-                    //- md-field.theoryText
-                    //-   md-textarea(placeholder = 'Введите текст здесь', v-model = "component.inner")
-                  .theoryText(v-if ='component.type === "img"')
-                    label(for='img') Выберите картинку
-                    input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
-                  .theoryTextFile(v-if ='component.type === "file"')
-                    label(for='file') Выберите Файл
-                    input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
+                .theoryEditBox
+                  .theoryComponent(
+                    v-for = 'component in task.statement'
+                  )
+                    .button.img.delete_button(@click='task.statement.splice(task.statement.indexOf(component), 1)')
+                    .theoryTextField(v-if ='component.type === "text"')
+                      vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner")
+                      //- md-field.theoryText
+                      //-   md-textarea(placeholder = 'Введите текст здесь', v-model = "component.inner")
+                    .theoryText(v-if ='component.type === "img"')
+                      label(for='img') Выберите картинку
+                      input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.statement.indexOf(component))")
+                    .theoryTextFile(v-else-if ='component.type === "file"')
+                      label(for='file') Выберите PDF-Файл
+                      input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.statement.indexOf(component))")
 
-                .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
+                  .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
 
-                .button.button--round.button-success(
-                  @click='addContent(tasks.indexOf(task), "img")'
-                  ) Добавить картинку
-                .button.button--round.button-success(
-                  @click='addContent(tasks.indexOf(task), "file")'
-                  ) Загрузить файл
-              .taskEditBox(v-if ="task.type === 'task'")
-                md-field
-                  md-input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
-                br
-                span Выберите сложность
-                br
+                  .button.button--round.button-success(
+                    @click='addContent(tasks.indexOf(task), "img")'
+                    ) Добавить картинку
+                  .button.button--round.button-success(
+                    @click='addContent(tasks.indexOf(task), "file")'
+                    ) Загрузить PDF-файл
+                .taskEditBox(v-if ="task.type === 'task'")
+                  md-field
+                    md-input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
+                  br
+                  span Выберите сложность
+                  br
 
-                select.olympTheme(v-model = "task.difficulty")
-                  option(v-for = 'diff in difficultyList') {{ diff }}
+                  select.olympTheme(v-model = "task.difficulty")
+                    option(v-for = 'diff in difficultyList') {{ diff }}
 
-                //- label(for='difOne') Легкая
-                //-   input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
-                //- label(for='difTwo') Средняя
-                //-   input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
-                //- label(for='difThree') Трудная
-                //-   input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
+                  //- label(for='difOne') Легкая
+                  //-   input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
+                  //- label(for='difTwo') Средняя
+                  //-   input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
+                  //- label(for='difThree') Трудная
+                  //-   input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
 
-                textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
+                  textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
           .button.button--round.button-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
           .button.button--round.button-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
+          .button.button--round.button-primary.buttonAddContent(@click='addTask("material")') Добавить готовый материал
         .button.button--round.button-success.buttonPost(@click='sendTitle()')
           span {{ this.edit ? 'Обновить' : 'Опубликовать' }} тему
     .successMenu(v-if = 'this.success')
@@ -99,8 +106,8 @@
               :is-full-page = "this.falseVar"
               color = "#763dca"
               loader = 'dots'
-              opacity = 0
-              width = 150)
+              :opacity = 0
+              :width = 150)
         .successText(v-else)
           strong.md-title.titleTokenText.md-display-3 Готово!
           br
@@ -113,6 +120,36 @@
           span.md-title Поделитесь ключом со своими учениками, что бы они могли изучать вашу тему!
           .successGoButton
             .button.button--round.successButton.button-primary(@click = 'goToProfile') Понятно!
+    .materialMenu(v-if = 'materialMenuShow')
+      .materialMenuBox
+        .materialMenuText
+          span.md-headline Выберите тему
+        .materialMenuField
+          .md-layout.md-gutter
+            .md-layout-item
+              md-field
+                label(for='theme') Тема
+                md-select#theme(v-model='selectedMaterialTheme', name='theme' @md-selected = 'selectTopic(selectedMaterialTheme)')
+                  md-optgroup(label='Темы MathPlace')
+                    md-option(v-for = 'topic in topicList' :key = 'topic.name' :value='topic.name') {{ topic.name }}
+                  md-optgroup(label='Ваши темы')
+                    md-option(value='apples') Apples
+        .materialMenuTaskBox(v-if = 'materialMenuTaskSectionShow')
+          .emptyTopicMessage(v-if = 'topicList[selectedMaterialThemeIndex].tasks.length === 0')
+            span Тут пока нет задач!
+          .materialMenuCards(v-else)
+              md-card.materialContent(v-for ='(task, taskIndex) in topicList[selectedMaterialThemeIndex].tasks' :key ='taskIndex' md-with-hover='')
+                md-ripple
+                  md-card-header
+                    .md-title(v-if = 'task.type === "theory"') Теория
+                    .md-title(v-else) Задача №{{ task.taskInd }}
+                  md-card-content.materialContentText
+                    span {{ task.textPreview }}
+                  md-card-actions
+                    md-button(@click ='addTask("preMadeMaterial", taskIndex)') Добавить
+        .materialMenuCancel
+          .button.button--round.button-warning(@click ='materialMenuShow = false')  Отмена
+
 </template>
 
 <script>
@@ -161,7 +198,13 @@ export default {
       classCnt: '',
       submitStatus: null,
       myTopicLoading: false,
-      edit: false
+      edit: false,
+      topicList: [],
+      topicListLoading: false,
+      materialMenuShow: false,
+      materialMenuTaskSectionShow: false,
+      selectedMaterialTheme: '',
+      selectedMaterialThemeIndex: 0
     }
   },
   validations: {
@@ -175,11 +218,10 @@ export default {
       between: between(1, 11)
     },
     tasks: {
-      required,
       $each: {
         answer: {
         },
-        text: {
+        statement: {
           minLength: minLength(1),
           $each: {
             inner: {
@@ -191,43 +233,66 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['sendTopic', 'addMyTopicsToList', 'fetchMyTopic']),
+    ...mapActions(['sendTopic', 'addMyTopicsToList', 'fetchMyTopic', 'fetchTopicList']),
     goToProfile () {
       this.$router.push('/profile')
     },
-    addTask (type) {
-      console.log(this.tasks)
-      var answ
-      type === 'theory' ? answ = 'null' : answ = ''
-      var task = {
-        text: [{
-          type: 'text',
-          inner: ''
-        }],
-        type: type,
-        answer: answ,
-        solution: '',
-        difficulty: 'Легкая'
+    selectTopic (task) {
+      if (task === '') {
+        alert('Пожалуйста, выберите тему!')
+        return
       }
-      this.tasks.push(task)
+      var i = this.topicList.map(e => e.name).indexOf(task)
+      this.selectedMaterialThemeIndex = i
+      this.materialMenuTaskSectionShow = true
+    },
+    async addTask (type, ind) {
+      var task
+      if (type === 'material') {
+        this.selectedMaterialThemeIndex = 0
+        this.materialMenuShow = true
+        this.topicListLoading = true
+        await this.fetchTopicList()
+        this.topicList = this.getTopicList
+        this.topicListLoading = false
+      } else if (type === 'preMadeMaterial') {
+        this.materialMenuShow = false
+        task = this.topicList[this.selectedMaterialThemeIndex].tasks[ind]
+        task.type = 'preMade'
+        task.topicName = this.topicList[this.selectedMaterialThemeIndex].name
+        this.tasks.push(task)
+      } else {
+        var answ
+        type === 'theory' ? answ = 'null' : answ = ''
+        task = {
+          statement: [{
+            type: 'text',
+            inner: ''
+          }],
+          type: type,
+          answer: answ,
+          solution: '',
+          difficulty: 'Легкая'
+        }
+        this.tasks.push(task)
+      }
     },
     addContent (id, type) {
-      console.log(this.tasks, id, type)
       var data = {
         type: type,
         inner: ''
       }
-      this.tasks[id].text.push(data)
+      this.tasks[id].statement.push(data)
     },
     nullifyContent (id) {
-      this.tasks[id].text = []
+      this.tasks[id].statement = []
     },
     onFileButtonClicked (taskId, componentId) {
       this.currTaskId = taskId
       this.currComponentId = componentId
     },
     onFileSelected (event) {
-      this.tasks[this.currTaskId].text[this.currComponentId].inner = event.target.files[0]
+      this.tasks[this.currTaskId].statement[this.currComponentId].inner = event.target.files[0]
     },
     async generateToken (length) {
       var a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('')
@@ -273,52 +338,37 @@ export default {
         cnt_task: this.cnt_task,
         items: this.items,
         members: [],
-        class: this.classCnt
+        class: this.classCnt,
+        tasks: []
       }
-
+      // Парсинг задач
       for (let i = 0; i < this.tasks.length; i++) {
-        var task = ['']
-        for (let j = 0; j < this.tasks[i].text.length; j++) {
-          let comma = '\\'.concat('n')
-          if (this.tasks[i].text[j].type === 'text') {
-            task[0] += this.tasks[i].text[j].inner.toString() + ' ' + comma
-          } else if (this.tasks[i].text[j].type === 'img') {
-            let file = this.tasks[i].text[j].inner
+        var task = {}
+        for (let j = 0; j < this.tasks[i].statement.length; j++) {
+          // Обработка картинок и файлов
+          if ((this.tasks[i].statement[j].type === 'img' || this.tasks[i].statement[j].type === 'file') && typeof this.tasks[i].statement[j].inner !== 'string') {
+            // Чтение файла
+            let file = this.tasks[i].statement[j].inner
             let fileName = file.name
             const fileReader = new FileReader()
             fileReader.readAsDataURL(file)
+            // Получение данных для имени файла
             const ext = fileName.slice(fileName.lastIndexOf('.'))
             let currentTime = new Date().getTime()
             let imageUrl
             let imageTimeName = 'uploads/' + currentTime + ext
+            // Загрузка в бд
             await firebase.storage().ref(imageTimeName).put(file)
             await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
-            task[0] += '[' + imageUrl.toString() + '] ' + comma
-          } else {
-            let file = this.tasks[i].text[j].inner
-            let fileName = file.name
-            const fileReader = new FileReader()
-            fileReader.readAsDataURL(file)
-            const ext = fileName.slice(fileName.lastIndexOf('.'))
-            let currentTime = new Date().getTime()
-            let imageUrl
-            let imageTimeName = 'uploads/' + currentTime + ext
-            await firebase.storage().ref(imageTimeName).put(file)
-            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
-            task[0] += '^' + imageUrl.toString() + '^ ' + comma
+            this.tasks[i].statement[j].inner = imageUrl.toString()
           }
         }
-        this.tasks[i].type === 'theory' ? task.push('theory') : task.push(this.tasks[i].answer)
-        if (this.tasks[i].type === 'theory') task.push('null')
-        else {
-          if (this.tasks[i].difficulty === 'Легкая') task.push(1)
-          else if (this.tasks[i].difficulty === 'Средняя') task.push(2)
-          else task.push(3)
-        }
-        console.log(this.tasks)
-        this.tasks[i].type === 'theory' || this.tasks[i].solution === '' ? task.push('null') : task.push(this.tasks[i].solution)
-        console.log(task)
-        data['task'.concat(i.toString())] = task
+        if (this.tasks[i].difficulty === 'Легкая') this.tasks[i].difficulty = 1
+        else if (this.tasks[i].difficulty === 'Средняя') this.tasks[i].difficulty = 2
+        else this.tasks[i].difficulty = 3
+        if (this.tasks[i].type === 'preMade') task = this.tasks[i].originData
+        else task = this.tasks[i]
+        data.tasks.push(task)
       }
       var token
       if (!this.edit) token = await this.generateToken(5)
@@ -328,6 +378,7 @@ export default {
         title: data
       }
       this.token = token
+      console.log(sendInformation)
       try {
         await this.sendTopic(sendInformation)
       } catch (error) {
@@ -339,14 +390,13 @@ export default {
     async isTokenValid (token) {
       const db = firebase.firestore()
       var result
-      await db.collection('olympiad').doc(token)
+      await db.collection('olympiads').doc(token)
         .get().then(
           doc => {
             if (doc.data() !== undefined) {
               result = false
             } else result = true
           })
-      console.log('Result: ', result)
       return result
     }
   },
@@ -354,9 +404,7 @@ export default {
     if (this.$route.params.topicId !== undefined) {
       this.myTopicLoading = true
       await this.fetchMyTopic(this.$route.params.topicId)
-      console.log(this.getMyTopic)
       var myTopic = this.getMyTopic
-      console.log(myTopic.author.length, this.getUser.id.length)
       if (myTopic.author !== this.getUser.id) this.$router.push('/customTitle')
       else {
         this.edit = true
@@ -373,12 +421,57 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getUser', 'getMyTopic'])
+    ...mapGetters(['getUser', 'getMyTopic', 'getTopicList'])
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+  .materialContentText
+    max-height 15vh
+    min-height 15vh
+    overflow hidden
+  .materialContent
+    max-height 30vh
+    margin 5%
+    width 40%
+    float left
+  .materialMenuTaskBox
+    max-height 40vh
+    overflow auto
+  .materialMenuBox
+    background-color #FFFFFF
+    margin-top 5%
+    margin-left 15%
+    margin-right 15%
+    min-width 350px
+    border 2px #000000 solid
+    border-radius 10px
+    padding 5%
+    padding-left 10%
+    padding-right 10%
+    text-align center
+    .button
+      font-size 0.6em
+      margin 2%
+  .materialMenuText
+    font-size 1.3em
+    padding-bottom 1%
+
+  .materialMenuField
+    md-field
+      border-color #000000
+      border-width 1%
+  .materialMenu
+    z-index 5
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-size 2vw
+    background-color rgba(0, 0, 0, .5)
+    width 100%
+    height 100%
+    position fixed
+    top 0
+    left 0
   .content-wrapper
     min-height 0
   textarea
@@ -449,15 +542,11 @@ export default {
   .editBox
     position relative
     margin-top 50px
-    margin-left 25%
-    margin-right 25%
+    margin-left 20%
+    margin-right 20%
     background-color #FCFCFF
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
-    // @media screen and (max-width: 2100px) {
-    //   margin-left 16%
-    //   margin-right 16%
-    // }
 
   .theoryComponent
     position relative

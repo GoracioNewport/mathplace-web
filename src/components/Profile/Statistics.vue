@@ -37,9 +37,9 @@
                 md-table-cell.nameSlot(md-label='Имя', md-sort-by='name') {{ item.name }}
                 md-table-cell.taskSlot(v-for = '(task, taskIndex) in item.solveStats' :key = 'taskIndex'
                 :md-label = '(taskIndex + 1).toString()')
-                  Dots.answerNo.answerLabel(v-if = 'task === 1')
-                  img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'task == 0')
-                  img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'task == 3 || task == 2')
+                  Dots.answerNo.answerLabel(v-if = 'Number(task) === 1')
+                  img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'Number(task) == 0')
+                  img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
                   img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
                 md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
     .solutionMenu(v-if = 'solutionImageShown')

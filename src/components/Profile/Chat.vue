@@ -78,7 +78,8 @@ export default {
       chatMembers: {},
       messageField: null,
       loading: false,
-      settingsMenuShow: false
+      settingsMenuShow: false,
+      lastReadMessage: null
     }
   },
   methods: {
@@ -86,28 +87,18 @@ export default {
       const db = firebase.firestore()
       var moment = require('moment')
       var info = {}
-      // var ind
       var vueInstance = this
       await this.fetchPreLoadInformation(id)
       await db.collection('chat').doc(id)
         .onSnapshot(function (doc) {
           var data = doc.data()
           info['msgCnt'] = data.all_message
-          // info['type'] = data.chat_type
-          // info['name'] = data.name
-          info['members'] = data.members
-          // var memb = data.members // Тут потом я напишу код, обрабатывающий добавление нового юзера
-          // if (data.chat_type === 'group') info['image'] = data.image
-          // else {
-          //   memb[0] === vueInstance.getUser.id ? ind = memb[1] : ind = memb[0]
-          //   info['name'] = ind
-          // }
+          info['members'] = vueInstance.parseMembers(data.members)
           info['msgs'] = {}
           for (let j = 0; j < data.all_message; j++) {
             info['msgs'][j] = data['message' + j.toString()]
             info['msgs'][j].time = moment.unix(info['msgs'][j].time.seconds).format('MMMM Do YYYY, h:mm:ss a')
           }
-          // if (info['type'] === 'personal') db.collection('account').doc(ind).get().then(doc => { info['image'] = doc.data().image })
           vueInstance.chat = Object.assign(vueInstance.chat, info)
           vueInstance.$forceUpdate()
           vueInstance.loading = false
@@ -118,9 +109,13 @@ export default {
       var vueInstance = this
       var memb
       var ind
-      await db.collection('chat').doc(id).get().then(doc => {
+      await db.collection('chat').doc(id).get().then(async doc => {
         var data = doc.data()
-        memb = data.members
+        memb = await vueInstance.parseMembers(data.members)
+        if (memb.findIndex(id => id === vueInstance.getUser.id) === -1) {
+          vueInstance.$router.push('/chat')
+          return
+        }
         vueInstance.chat.type = data.chat_type
         vueInstance.chat.name = data.name
         if (data.chat_type === 'group') vueInstance.chat.image = data.image
@@ -128,6 +123,7 @@ export default {
           memb[0] === vueInstance.getUser.id ? ind = memb[1] : ind = memb[0]
           vueInstance.chat.name = ind
         } vueInstance.chat.msgs = {}
+        console.log(ind)
         if (vueInstance.chat.type === 'personal') db.collection('account').doc(ind).get().then(doc => { vueInstance.chat.image = doc.data().image })
       })
       for (let i = 0; i < memb.length; i++) {
@@ -154,6 +150,14 @@ export default {
         all_message: this.chat.msgCnt
       }, { merge: true })
       this.messageField = null
+    },
+    async parseMembers (membersArray) {
+      var membersArrayReturn = []
+      for (let i = 0; i < membersArray.length; i++) {
+        membersArrayReturn.push(membersArray[i])
+        if (membersArray[i] === this.getUser.id) this.lastReadMessage = membersArray[i].last_message
+      }
+      return membersArrayReturn
     }
   },
   async mounted () {

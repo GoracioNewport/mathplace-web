@@ -1,7 +1,7 @@
 <template lang="pug">
   .content-wrapper
     //- img#imgSmile(src="@/components/images/back.png")
-    .taskbar(v-if="!isLoading")
+    .taskbar(v-if="!isLoading && taskList.length > 0")
       router-link(to='/')
         img#imgBack(src="@/components/images/back.png")
       .container
@@ -27,14 +27,14 @@
                       :class = '{ solvedTask : task.tries === 2, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
                       :src = 'taskImage')
 
-    .loading-indicator
+    .loading-indicator(v-if='isLoading')
         loading(
           :active.sync = "this.isLoading",
           :is-full-page = 'true',
           color = '#763dca')
-    .content(v-if="taskList.length > 0")
+    .content(v-else-if="taskList.length > 0")
       .name
-        span(v-if = 'this.taskList[this.activeTask].type == "theory"') {{ taskInfo.name }}
+        span(v-if = 'this.taskList[this.activeTask].type == "theory"') {{ tasksInfo.name }}
         span(v-else) Задача {{ this.taskList[this.activeTask].taskId }}
 
         img.star(
@@ -44,17 +44,17 @@
           v-for = 'i in getDifficulty')
 
       .condition
-        .text-part(v-for = "part in this.taskList[this.activeTask].text")
+        .text-part(v-for = "part in this.taskList[this.activeTask].statement")
           span(v-if = 'part.type == "text"'
-              v-html = "part.content") {{ part.content }}
+              v-html = "part.inner") {{ part.inner }}
 
           img.condition-image(
             v-else-if = 'part.type == "img"'
-            :src = 'part.content')
+            :src = 'part.inner')
 
           pdf(
             v-else-if = 'part.type == "pdf"'
-            :src = 'part.content')
+            :src = 'part.inner')
       .answ(v-if='this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"')
         input.submit-field(
           v-if ='this.taskList[this.activeTask].type === "task"'
@@ -120,6 +120,15 @@
               span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Отправить
               span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
               span(v-else) Завершить
+    .placeholderScreen(v-else-if = 'tasksInfo.author !== ""')
+      .ownerScreen(v-if = 'userId === tasksInfo.author')
+        strong.md-headline Вы еще не добавили материал в этот урок.
+        br
+        .button.button--round.button-success(@click = '$router.push("/customTitle/" + taskId)') Добавить!
+      .guestScreen(v-else)
+        strong.md-headline Учитель еще не добавил материал в этот урок.
+        br
+        strong.md-headline Возвращайтесь позже!
     .solution(v-if = 'this.solutionShown', @click='solutionShown = !solutionShown')
       .solutionBox(@click='solutionShown = !solutionShown')
         .solutionText
@@ -146,7 +155,7 @@ export default {
       this.collection = to.params.collectionId
       this.$store.dispatch('changeCurrentTopic', this.taskId)
       this.$store.dispatch('changeCollection', this.collection)
-      this.updateUser(['lastTheme', this.getCollection + '|' + this.getCurrentTopic])
+      this.updateUser(['lastTheme', this.getCollection + '_' + this.getCurrentTopic])
     }
   },
   components: {
@@ -154,20 +163,21 @@ export default {
     pdf
   },
   async mounted () {
+    this.isLoading = true
     this.$store.dispatch('changeCurrentTopic', this.taskId)
     this.$store.dispatch('changeCollection', this.collection)
-    this.updateUser(['lastTheme', this.getCollection + '|' + this.getCurrentTopic])
+    this.updateUser(['lastTheme', this.getCollection + '_' + this.getCurrentTopic])
     this.addUserToTopicList()
-    this.isLoading = true
+    this.userId = this.getUser.id
     await this.fetchLikes(this.collection)
     await this.fetchTasks(this.collection)
-    this.taskList = this.$store.getters.getTasks
-    this.taskInfo = this.getTasksInfo
-    console.log(this.taskInfo)
+    this.tasksInfo.name = this.getTasksInfo.name
+    this.tasksInfo.author = this.getTasksInfo.author
+    this.taskList = this.getTasks
     if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
     this.isLoading = false
+    this.$forceUpdate()
     console.log(this.taskList)
-    // this.changeActiveTask(0, this.taskList[0])
   },
   data () {
     return {
@@ -183,11 +193,12 @@ export default {
       answer: '',
       status: 'Idle',
       topicLiked: false,
-      solutionShown: false
+      solutionShown: false,
+      userId: null
     }
   },
   methods: {
-    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList']),
+    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus']),
     changeActiveTask (i, thisTask) {
       console.log('Change Active Task', i)
       this.status = 'Idle'
@@ -231,7 +242,7 @@ export default {
           let newStatus = []
           for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
           newStatus[this.activeTask] = verdict
-          this.updateUser([this.getCurrentTopic, newStatus])
+          this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
           this.taskList[this.activeTask].tries = verdict
           if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') {
             if (this.activeTask === this.taskList.length - 1) this.$router.push('/')
@@ -257,7 +268,9 @@ export default {
   computed: {
     ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo']),
     getDifficulty () {
-      var dif = this.taskList[this.activeTask].difficulty
+      console.log(this.taskList[this.activeTask])
+      var dif
+      this.taskList[this.activeTask].difficulty === undefined ? dif = 0 : dif = this.taskList[this.activeTask].difficulty
       if (dif !== 'null') return parseInt(dif, 10)
       else return 0
     }
@@ -270,8 +283,24 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  span
+    line-height normal
+  .placeholderScreen
+    margin-top 20%
+    text-align center
+    .md-headline
+      font-size 3em
+    .button
+      margin 3%
+      color #FFFFFF
+      font-size 2.5em
+      &:hover
+        color #FFFFFF
+        text-decoration none
   .content-wrapper
     min-height 0
+    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-weight 800
   input
     margin-bottom auto
   .solution
@@ -365,6 +394,7 @@ export default {
   .content
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
   .name
+    min-height 6vh
     background #763DCA
     text-align left
     color #ffffff
@@ -378,10 +408,12 @@ export default {
     margin-left 23%
     margin-right 23%
     @media screen and (max-width: 500px) {
-        width 88%
-        margin-right 6%
-        margin-left 6%
+      width 88%
+      margin-right 6%
+      margin-left 6%
     }
+    span
+      margin 3%
   img
     orientation right
     float right

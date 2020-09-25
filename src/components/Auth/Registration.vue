@@ -160,7 +160,7 @@ export default {
 
       var achivmentCount = 8
       var taskCount = 0
-      var tasksDb = db.collection('task2').doc('ОГЭ Вариант 1')
+      var tasksDb = db.collection('tasks').doc('ОГЭ Вариант 1')
       tasksDb.get()
         .then(doc => {
           taskCount = doc.data().items

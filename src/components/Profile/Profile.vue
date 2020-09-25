@@ -3,7 +3,6 @@
       .test_button
         router-link(to='/customTitle').button.mdc-fab.mdc-fab--extended.button--round.bottom_button
           .mdc-fab__ripple
-          span.material-icons.mdc-fab__icon add
           span.mdc-fab__label Создать свой урок
 
       .content-block

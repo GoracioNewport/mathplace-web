@@ -93,17 +93,17 @@ export default {
             await db.collection('account').doc(this.getters.getUser.id).get().then(doc => { doc.data().myChats !== undefined ? nameList = doc.data().myChats : nameList  = [] })
             var chatList = []
             var ind = this.getters.getUser.id
-            for (let i = 0; i < nameList.length; i++) {
+            for await (let name of nameList) {
                 var info = {}
                 var memb = []
-                await db.collection('chat').doc(nameList[i]).get().then(doc => {
+                await db.collection('chat').doc(name).get().then(doc => {
                     var data = doc.data()
                     info['msgCnt'] = data.all_message
                     info['type'] = data.chat_type
                     info['name'] = data.name
                     info['members'] = {}
                     memb = data.members
-                    info['id'] = nameList[i]
+                    info['id'] = name
                     if (data.chat_type === 'group') info['image'] = data.image
                     else {
                         memb[0] === this.getters.getUser.id ? ind = memb[1] : ind = memb[0]
@@ -115,14 +115,14 @@ export default {
                     }
                 })
                 
-                for (let i = 0; i < memb.length; i++) {
-                    await db.collection('account').doc(memb[i]).get().then(doc => { 
-                        info['members'][memb[i]] = doc.data().name 
+                for await (let mem of memb) {
+                    await db.collection('account').doc(mem).get().then(doc => { 
+                        info['members'][mem] = doc.data().name 
                     })
                 }
                 if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {info['image'] = doc.data().image })
                 chatList.push(info)
-                console.log(nameList[i], '--->', info)
+                console.log(name, '--->', info)
             }
             ctx.commit('updateMyChats', chatList)
         }

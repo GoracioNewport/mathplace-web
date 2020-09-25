@@ -3,6 +3,9 @@ import 'firebase/firestore'
 
 import store from '@/store'
 
+// eslint-disable-next-line
+import { accountDb, tasksDb, olympiadDb, userTasksDb } from './global'
+
 export default {
   actions: {
     async fetchTopics (ctx) {
@@ -20,10 +23,10 @@ export default {
       var innderId = 0
       var mapTopic = new Map()
       const db = firebase.firestore()
-      await db.collection('account').doc(this.getters.getUser.id).get()
-        .then(usr => {
+      await db.collection(accountDb).doc(this.getters.getUser.id).get()
+        .then(async usr => {
           var usrData = usr.data()
-          db.collection('task2').get()
+          await db.collection(tasksDb).get()
             .then((snapshot) => {
               snapshot.forEach((doc) => {
                 var docData = doc.data()
@@ -161,12 +164,12 @@ export default {
     },
     sendTopic (ctx, payload) {
       const db = firebase.firestore()
-      db.collection('olympiad').doc(payload.token).set(payload.title)
+      db.collection(olympiadDb).doc(payload.token).set(payload.title)
     },
     async fetchCustomTopic (ctx, payload) {
       const db = firebase.firestore()
       ctx.commit('updateCustomTopic', '')
-      await db.collection('olympiad').doc(payload).get().then(doc => {
+      await db.collection(olympiadDb).doc(payload).get().then(doc => {
         var data = doc.data()
         if (data === undefined) ctx.commit('updateCustomTopic', null)
         else ctx.commit('updateCustomTopic', data.name)
@@ -175,7 +178,6 @@ export default {
     async addUserToTopicList (ctx) {
       const db = firebase.firestore()
       var users
-      console.log(this.getters.getCollection, this.getters.getCurrentTopic)
       await db.collection(this.getters.getCollection).doc(this.getters.getCurrentTopic).get().then(doc => {
         users = doc.data().members
       })
@@ -188,7 +190,7 @@ export default {
     async fetchMyTopics (ctx) {
       const db = firebase.firestore()
       var topics
-      await db.collection('account').doc(this.getters.getUser.id).get().then(doc => {
+      await db.collection(accountDb).doc(this.getters.getUser.id).get().then(doc => {
         var data = doc.data()
         if (data.myTopics === undefined) topics = undefined
         else topics = data.myTopics
@@ -202,7 +204,7 @@ export default {
       if (topics === undefined) topics = []
       topics.push(payload)
       ctx.commit('updateMyTopics', topics)
-      db.collection('account').doc(this.getters.getUser.id).set({
+      db.collection(accountDb).doc(this.getters.getUser.id).set({
         myTopics: topics
       }, { merge: true })
     },
@@ -213,7 +215,7 @@ export default {
       var topicInfo = {}
       for (let i = 0; i < topicList.length; i++) {
         var topicsData = {}
-        await db.collection('olympiad').doc(topicList[i]).get().then(doc => {
+        await db.collection(olympiadDb).doc(topicList[i]).get().then(doc => {
           var data = doc.data()
           console.log(topicList[i])
           topicsData['token'] = topicList[i]
@@ -233,16 +235,19 @@ export default {
       var sendData = []
       for (let i = 0; i < members.length; i++) {
         var info = {}
-        await db.collection('account').doc(members[i]).get().then(doc => {
+        await db.collection(accountDb).doc(members[i]).get().then(async doc => {
           var data = doc.data()
           info['id'] = members[i]
           info['name'] = data.name
-          info['solveStats'] = data[id]
+          await db.collection(accountDb).doc(members[i]).collection(userTasksDb).doc(id).get().then(statDoc => {
+            var statData = statDoc.data()
+            info['solveStats'] = statData.grades
+          })
           info['solveSum'] = 0
         })
         var cnt = 0
         for (let i = 0; i < info.solveStats.length; i++) {
-          if (info.solveStats[i] === 3 || info.solveStats[i] === 2) cnt++
+          if (Number(info.solveStats[i]) === 3 || Number(info.solveStats[i]) === 2) cnt++
         }
         info.solveSum = cnt
         sendData.push(info)
@@ -256,7 +261,7 @@ export default {
     markDBSolutionAs (ctx, payload) {
       // console.log(payload)
       const db = firebase.firestore()
-      db.collection('account').doc(payload.userId).set({
+      db.collection(accountDb).doc(payload.userId).set({
         [payload.topicName]: payload.newStats
       }, { merge: true })
       // console.log(payload.topicName, payload.newStats)
@@ -264,7 +269,7 @@ export default {
     async fetchMyTopic (ctx, id) {
       const db = firebase.firestore()
       var topic = {}
-      await db.collection('olympiad').doc(id).get().then(doc => {
+      await db.collection(olympiadDb).doc(id).get().then(doc => {
         var rawTopic = doc.data()
         topic['author'] = rawTopic.author
         topic['name'] = rawTopic.name
@@ -273,36 +278,12 @@ export default {
         topic['private'] = !rawTopic.public
         topic['theme'] = rawTopic.theme.charAt(0).toUpperCase() + rawTopic.theme.slice(1)
         topic['class'] = rawTopic.class
-        topic['tasks'] = []
+        topic['tasks'] = rawTopic.tasks
         for (let i = 0; i < rawTopic.items; i++) {
-          var rawTask = rawTopic['task' + String(i)]
-          var task = {}
-          task['answer'] = rawTask[1]
-          if (rawTask[2] === 1) task['difficulty'] = 'Легкая'
-          else if (rawTask[2] === 2) task['difficulty'] = 'Средняя'
-          else task['difficulty'] = 'Сложная'
-          task['solution'] = rawTask[3]
-          let comma = '\\'.concat('n')
-          var rawText = rawTask[0].split(comma)
-          console.log(comma, rawText)
-          var text = []
-          for (let j = 0; j < rawText.length; j++) {
-            var type
-            rawText[j].slice(0, 5) === '[http' ? type = 'img' : type = 'text'
-            text.push({ type: type, inner: rawText[j] })
-          }
-          if (text.length !== 1) text.pop()
-          task['text'] = text
-          if (rawTask[4] !== undefined) task['options'] = rawTask[4]
-          let taskKind = '' // Теория, обычная, на доказательство, с загрузкой, множественный выбор, несколько ответов
-          if (rawTask[1] === 'theory') taskKind = 'theory'
-          else if (rawTask[1] === 'null') taskKind = 'proof'
-          else if (rawTask[1] === 'image') taskKind = 'upload'
-          else if (rawTask.length === 5) taskKind = 'multipleChoice'
-          else if (rawTask[1].indexOf('|') !== -1) taskKind = 'multipleAnswer'
-          else taskKind = 'task'
-          task['type'] = taskKind
-          topic['tasks'].push(task)
+          var rawTask = topic.tasks[i]
+          if (rawTask.difficulty === 1) rawTask.difficulty = 'Легкая'
+          else if (rawTask.difficulty === 2) rawTask.difficulty = 'Средняя'
+          else rawTask.difficulty = 'Сложная'
         }
       })
       console.log(topic)
@@ -311,7 +292,7 @@ export default {
     deleteTopic (ctx, payload) {
       console.log('Deleting ', payload)
       const db = firebase.firestore()
-      var docRef = db.collection('account').doc(this.getters.getUser.id)
+      var docRef = db.collection(accountDb).doc(this.getters.getUser.id)
       db.runTransaction(function (transaction) {
         return transaction.get(docRef).then(function (doc) {
           var list = doc.data().myTopics
@@ -320,12 +301,39 @@ export default {
         })
       })
       console.log(this.getters.getUser.id, payload)
-      db.collection('olympiad').doc(payload).delete()
+      db.collection(olympiadDb).doc(payload).delete()
+    },
+    async fetchTopicList (ctx) {
+      const db = firebase.firestore()
+      var list = []
+      db.collection(tasksDb).get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            var data = JSON.parse(JSON.stringify(doc.data()))
+            var info = {}
+            info.name = doc.id
+            data.tasks !== undefined ? info.tasks = data.tasks : info.tasks = []
+            var taskInd = 0
+            // Парсинг задач
+            for (let i = 0; i < info.tasks.length; i++) {
+              info.tasks[i].originData = JSON.parse(JSON.stringify(data.tasks[i]))
+              if (info.tasks[i].type !== 'theory') taskInd++
+              info.tasks[i].taskInd = taskInd
+              // Парсинг текста
+              var text = ''
+              for (let j = 0; j < info.tasks[i].statement.length; j++) {
+                if (info.tasks[i].statement[j].type === 'text') text += info.tasks[i].statement[j].inner
+              }
+              info.tasks[i].textPreview = text
+            }
+            list.push(info)
+          })
+        })
+      ctx.commit('updateTopicList', list)
     }
   },
   mutations: {
     updateTopics (state, map) {
-      // state.topics = topicsg
       state.mapTopic = map
     },
     updateTopicsLoaded (state, isLoaded) {
@@ -334,7 +342,7 @@ export default {
     updateTopicDetailsDB (state, [key, value]) {
       const db = firebase.firestore()
       this.commit('updateLikes', value)
-      db.collection('task2').doc(this.getters.getCurrentTopic).update({ [key]: value })
+      db.collection(tasksDb).doc(this.getters.getCurrentTopic).update({ [key]: value })
     },
     updateLikes (state, payload) {
       state.likes = payload
@@ -354,6 +362,9 @@ export default {
     },
     updateMyTopic (state, payload) {
       state.myTopic = payload
+    },
+    updateTopicList (state, payload) {
+      state.topicList = payload
     }
   },
   state: {
@@ -362,7 +373,8 @@ export default {
     likes: 0,
     customTopicTitle: '',
     myTopics: [],
-    myTopic: {}
+    myTopic: {},
+    topicList: []
   },
   getters: {
     getTopics (state) {
@@ -378,13 +390,17 @@ export default {
       return state.customTopicTitle
     },
     getMyTopics (state) {
-      return state.myTopics
+      if (state.myTopics === undefined) return []
+      else return state.myTopics
     },
     getMyTopicsDetailedInfo (state) {
       return state.myTopicsDetailedInfo
     },
     getMyTopic (state) {
       return state.myTopic
+    },
+    getTopicList (state) {
+      return state.topicList
     }
   }
 }

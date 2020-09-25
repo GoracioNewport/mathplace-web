@@ -1,6 +1,9 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
+// eslint-disable-next-line
+import { accountDb, tasksDb, olympiadDb, userTasksDb } from './global'
+
 import User from './user_help'
 
 export default {
@@ -51,7 +54,7 @@ export default {
         } console.log('Verified')
         let lastTheme, money, submit, right, like, name
 
-        await db.collection('account').doc(user.user.uid).get().then(doc => {
+        await db.collection(accountDb).doc(user.user.uid).get().then(doc => {
           var data = doc.data()
           name = data.name
           lastTheme = data.lastTheme
@@ -85,7 +88,14 @@ export default {
     updateUser ({commit}, [key, value]) {
       const db = firebase.firestore()
       commit('updateUser', [key, value])
-      db.collection('account').doc(this.getters.getUser.id).update({ [key]: value })
+      db.collection(accountDb).doc(this.getters.getUser.id).update({ [key]: value })
+    },
+    updateUserTopicStatus (ctx, payload) {
+      const db = firebase.firestore()
+      ctx.commit('updateUser', [payload.key, payload.value])
+      db.collection(accountDb).doc(this.getters.getUser.id).collection(userTasksDb).doc(payload.key).update({
+        [payload.field]: payload.value
+      })
     }
   },
   getters: {
