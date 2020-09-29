@@ -88,7 +88,10 @@
                   //- label(for='difThree') Трудная
                   //-   input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
 
-                  textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
+                  md-field
+                    label Решение
+                    md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
+                  md-checkbox.showAnswer(v-model='task.showAnswer') Показывать ответ вместо решения
           .button.button--round.button-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
           .button.button--round.button-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
           .button.button--round.button-primary.buttonAddContent(@click='addTask("material")') Добавить готовый материал
@@ -271,6 +274,7 @@ export default {
           }],
           type: type,
           answer: answ,
+          showAnswer: false,
           solution: '',
           difficulty: 'Легкая'
         }
@@ -363,9 +367,15 @@ export default {
             this.tasks[i].statement[j].inner = imageUrl.toString()
           }
         }
+        // Обработка решения задачи
+        if (this.tasks[i].solution === 'hide') this.tasks[i].solution = '' // Тупой костыль, но без него никак
+        if (this.tasks[i].showAnswer) this.tasks[i].solution = 'hide' // Если стоит чекбокс, то ставим значение hide
+        // hide в этом поле означает, что надо показывать ответ вместо решения
+        // Обработка сложности
         if (this.tasks[i].difficulty === 'Легкая') this.tasks[i].difficulty = 1
         else if (this.tasks[i].difficulty === 'Средняя') this.tasks[i].difficulty = 2
         else this.tasks[i].difficulty = 3
+        // Обработка заготовленных заданий
         if (this.tasks[i].type === 'preMade') task = this.tasks[i].originData
         else task = this.tasks[i]
         data.tasks.push(task)

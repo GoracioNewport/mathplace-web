@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import { accountDb, chatDb } from './global'
 
 /* eslint-disable */
 
@@ -125,6 +126,63 @@ export default {
                 console.log(name, '--->', info)
             }
             ctx.commit('updateMyChats', chatList)
+        }, 
+        async changeProfileSettings (ctx, payload) {
+            const db = firebase.firestore()
+            if (payload.name !== null) {
+                await db.collection(accountDb).doc(this.getters.getUser.id).update({
+                    name: payload.name
+                }) 
+                ctx.commit('updateUser', ['name', payload.name])
+            } if (payload.avatar !== null) {
+                // Чтение файла
+                let file = payload.avatar
+                let fileName = file.name
+                const fileReader = new FileReader()
+                fileReader.readAsDataURL(file)
+                // Получение данных для имени файла
+                const ext = fileName.slice(fileName.lastIndexOf('.'))
+                let currentTime = new Date().getTime()
+                let imageUrl
+                let imageTimeName = 'uploads/' + currentTime + ext
+                // Загрузка в бд
+                await firebase.storage().ref(imageTimeName).put(file)
+                await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
+                imageUrl = imageUrl.toString()
+                // Запись ссылки в бд
+                await db.collection(accountDb).doc(this.getters.getUser.id).update({
+                    image: imageUrl
+                })
+                ctx.commit('updateUser', ['image', imageUrl])
+            }
+            ctx.commit('saveUser')
+        },
+        async changeChatSettings (ctx, payload) {
+            const db = firebase.firestore()
+            if (payload.name !== null) {
+                await db.collection(chatDb).doc(payload.chatId).update({
+                    name: payload.name
+                }) 
+            } if (payload.avatar !== null) {
+                // Чтение файла
+                let file = payload.avatar
+                let fileName = file.name
+                const fileReader = new FileReader()
+                fileReader.readAsDataURL(file)
+                // Получение данных для имени файла
+                const ext = fileName.slice(fileName.lastIndexOf('.'))
+                let currentTime = new Date().getTime()
+                let imageUrl
+                let imageTimeName = 'uploads/' + currentTime + ext
+                // Загрузка в бд
+                await firebase.storage().ref(imageTimeName).put(file)
+                await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
+                imageUrl = imageUrl.toString()
+                // Запись ссылки в бд
+                await db.collection(chatDb).doc(payload.chatId).update({
+                    image: imageUrl
+                })
+            }
         }
     },
     state: {

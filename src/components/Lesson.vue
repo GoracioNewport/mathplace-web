@@ -81,7 +81,7 @@
       .enter
         .send
           a.but(@click='solutionShown = true',
-                v-if = 'this.taskList[this.activeTask].type =="task" && this.taskList[this.activeTask].solution != "null"')
+                v-if = 'this.taskList[this.activeTask].type ==="task" && this.taskList[this.activeTask].solution !=="null" && this.taskList[this.activeTask].solution !=="" ')
             img(src='@/assets/images/lock.png'
             alt='Решения',id="lock")
           //- .but
@@ -132,7 +132,8 @@
     .solution(v-if = 'this.solutionShown', @click='solutionShown = !solutionShown')
       .solutionBox(@click='solutionShown = !solutionShown')
         .solutionText
-          span {{ this.taskList[this.activeTask].solution }}
+          span(v-if ='this.taskList[this.activeTask].solution !== "hide"') {{ this.taskList[this.activeTask].solution }}
+          span(v-else) Ответ: {{ this.taskList[this.activeTask].answer }}
         .solutionButtonClose
           .button.button--round.button-success(
             @click='solutionShown = false') ОК!

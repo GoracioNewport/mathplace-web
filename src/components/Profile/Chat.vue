@@ -17,7 +17,7 @@
             label
               strong(v-if = 'chat.type === "group"') {{ chat.name }}
               strong(v-else) {{ chatMembers[chat.name] }}
-          .chat-modify(v-if = 'chat.members !== undefined && getUser.id === chat.members[0]')
+          .chat-modify(v-if = 'getUser.id === chat.members[0]')
             img.settingIcon(@click ='settingsMenuShow = true' src='@/assets/images/settings.png')
         .message(v-for = '(msg, i) in chat.msgs')
           .message-fragment
@@ -42,25 +42,35 @@
             color = "#763dca"
             :opacity = 0)
     .settingsMenu(v-if = 'settingsMenuShow')
-      .settingsMenuBox
-        .settingsMenuText
-          span.md-headline Введите ключ темы
-        .jsettingsMenuField
-          input(
-                  type="text"
-                  :placeholder="this.placeholder"
-                  v-model="customTopicId"
-          )
-        .settingsMenuCancel
-          .button.button--round.button-success(@click ='joinCourse(customTopicId)') Подключиться
-          .button.button--round.button-warning(@click ='settingsMenuShow = false')  Отмена
+        .settingsMenuBox
+          .settingsMenuText
+            span.md-headline Изменение имени
+          .settingsMenuField
+            md-field(md-inline='')
+              label Введите имя
+              md-input(v-model='newName')
+
+          .settingsMenuText
+            span.md-headline Изменение аватара
+          .settingsMenuField
+            md-field
+              label Выберите картинку
+              md-file(v-model='newAvatarName' @md-change ='onFilePicked')
+          .settingsMenuText
+            span.md-headline Участники
+          .settingsMenuField
+            .memberBox(v-for ='mem in chatMembers' :key = 'mem.name')
+              span {{ mem }}
+          .settingsMenuCancel
+            .button.button--round.button-success(@click ='saveProfile') Сохранить
+            .button.button--round.button-warning(@click ='settingsMenuShow = false')  Отмена
 </template>
 
 <script>
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import Loading from 'vue-loading-overlay'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {
@@ -79,10 +89,14 @@ export default {
       messageField: null,
       loading: false,
       settingsMenuShow: false,
-      lastReadMessage: null
+      lastReadMessage: null,
+      newName: '',
+      newAvatarName: '',
+      newAvatarFile: null
     }
   },
   methods: {
+    ...mapActions(['changeChatSettings']),
     async fetchChatById (id) {
       const db = firebase.firestore()
       var moment = require('moment')
@@ -90,10 +104,10 @@ export default {
       var vueInstance = this
       await this.fetchPreLoadInformation(id)
       await db.collection('chat').doc(id)
-        .onSnapshot(function (doc) {
+        .onSnapshot(async function (doc) {
           var data = doc.data()
           info['msgCnt'] = data.all_message
-          info['members'] = vueInstance.parseMembers(data.members)
+          info['members'] = await vueInstance.parseMembers(data.members)
           info['msgs'] = {}
           for (let j = 0; j < data.all_message; j++) {
             info['msgs'][j] = data['message' + j.toString()]
@@ -102,6 +116,7 @@ export default {
           vueInstance.chat = Object.assign(vueInstance.chat, info)
           vueInstance.$forceUpdate()
           vueInstance.loading = false
+          console.log(info.members)
         })
     },
     async fetchPreLoadInformation (id) {
@@ -111,6 +126,7 @@ export default {
       var ind
       await db.collection('chat').doc(id).get().then(async doc => {
         var data = doc.data()
+        this.newName = data.name
         memb = await vueInstance.parseMembers(data.members)
         if (memb.findIndex(id => id === vueInstance.getUser.id) === -1) {
           vueInstance.$router.push('/chat')
@@ -123,7 +139,6 @@ export default {
           memb[0] === vueInstance.getUser.id ? ind = memb[1] : ind = memb[0]
           vueInstance.chat.name = ind
         } vueInstance.chat.msgs = {}
-        console.log(ind)
         if (vueInstance.chat.type === 'personal') db.collection('account').doc(ind).get().then(doc => { vueInstance.chat.image = doc.data().image })
       })
       for (let i = 0; i < memb.length; i++) {
@@ -158,6 +173,16 @@ export default {
         if (membersArray[i] === this.getUser.id) this.lastReadMessage = membersArray[i].last_message
       }
       return membersArrayReturn
+    },
+    async saveProfile () {
+      this.loading = true
+      this.settingsMenuShow = false
+      if (this.newName === this.chat.name || this.newName === '') this.newName = null
+      await this.changeChatSettings({chatId: this.id, name: this.newName, avatar: this.newAvatarFile})
+      this.$router.go()
+    },
+    onFilePicked (event) {
+      this.newAvatarFile = event[0]
     }
   },
   async mounted () {

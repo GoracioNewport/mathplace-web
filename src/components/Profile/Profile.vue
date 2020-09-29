@@ -1,20 +1,37 @@
 <template lang='pug'>
     .content-wrapper
-      .test_button
-        router-link(to='/customTitle').button.mdc-fab.mdc-fab--extended.button--round.bottom_button
-          .mdc-fab__ripple
-          span.mdc-fab__label Создать свой урок
+      .loading-indicator(v-if = 'isLoading')
+        loading(
+          :active.sync = "this.isLoading"
+          is-full-page = true
+          color = "#763dca"
+          :opacity = 0
+          :width = 150)
 
-      .content-block
+      .content-block(v-else)
 
         .content-main
             .avatar
-                img.avatar(
-                  class = 'avatar',
+                img.avatarImage.avatar(
+                  @mouseover ='avatarHover = true'
+                  @mouseleave ='avatarHover = false'
+                  @click ='settingsMenuShow = true'
+                  v-if = 'getUser.image === undefined'
                     src = '@/assets/images/account_new.png',
                     alt = 'Аватар')
+                img.avatarImage.avatar(
+                  @mouseover ='avatarHover = true'
+                  @mouseleave ='avatarHover = false'
+                  @click ='settingsMenuShow = true'
+                  v-else
+                    :src = 'getUser.image',
+                    alt = 'Аватар')
+                img.avatarChange(
+                  v-if = 'avatarHover'
+                  src = '@/assets/images/camera.png'
+                )
                 .userInf
-                  p.userName {{this.getUser.name}}
+                  p.userName {{ this.getUser.name }}
                   .info
                     p.textInf Посылок {{this.getUser.submit}}
                     p.textInf Решено {{this.getUser.right}}
@@ -82,6 +99,29 @@
                 ) {{ part.condition }}
                 p.achivProgress(
                 ) {{"Прогресс "}} {{ part.progress }}{{" %"}}
+      .settingsMenu(v-if = 'settingsMenuShow')
+        .settingsMenuBox
+          .settingsMenuText
+            span.md-headline Изменение имени
+          .settingsMenuField
+            md-field(md-inline='')
+              label Введите имя
+              md-input(v-model='newName')
+
+          .settingsMenuText
+            span.md-headline Изменение аватара
+          .settingsMenuField
+            md-field
+              label Выберите картинку
+              md-file(v-model='newAvatarName' @md-change ='onFilePicked')
+
+          .settingsMenuCancel
+            .button.button--round.button-success(@click ='saveProfile') Сохранить
+            .button.button--round.button-warning(@click ='settingsMenuShow = false')  Отмена
+      .createTopicButton
+        router-link(to='/customTitle').button.mdc-fab.mdc-fab--extended.button--round.bottom_button
+          .createTopicButtonBox
+          span.createTopicButtonText Создать свой урок
 
 </template>
 
@@ -99,6 +139,7 @@ export default {
     this.isLoading = true
     await this.fetchAchivements()
     this.achivementsFull = this.$store.getters.getAchievements
+    this.newName = this.getUser.name
     this.isLoading = false
   },
   data () {
@@ -110,7 +151,13 @@ export default {
         done: 0,
         difficulty: 'easy'
       }],
-      isLoading: true
+      isLoading: true,
+      avatarHover: false,
+      settingsMenuShow: false,
+      newName: '',
+      newAvatarName: '',
+      newAvatarFile: null,
+      trueVar: true
     }
   },
   // props: {
@@ -139,13 +186,74 @@ export default {
     ...mapGetters(['getAchievements', 'getUser'])
   },
   methods: {
-    ...mapActions(['fetchAchivements', 'updateUser'])
+    ...mapActions(['fetchAchivements', 'updateUser', 'changeProfileSettings']),
+    async saveProfile () {
+      this.isLoading = true
+      this.settingsMenuShow = false
+      if (this.newName === this.getUser.name || this.newName === '') this.newName = null
+      console.log(this.newName, this.newAvatarFile)
+      await this.changeProfileSettings({name: this.newName, avatar: this.newAvatarFile})
+      this.$router.go()
+    },
+    onFilePicked (event) {
+      this.newAvatarFile = event[0]
+    }
   }
 }
 
 </script>
 
 <style scoped lang='stylus'>
+    .createTopicButton
+      z-index 10
+    .settingsMenuBox
+      padding 5%
+      padding-left 10%
+      padding-right 10%
+      .button
+        font-size 0.6em
+        margin 2%
+    .settingsMenuText
+      font-size 1.3em
+      padding-bottom 3%
+
+    .settingsMenuField
+      input
+        border-color #000000
+        border-width 1%
+    .settingsMenu
+      z-index 50000
+      font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+      font-size 2vw
+      background-color rgba(0, 0, 0, .5)
+      width 100%
+      height 100%
+      position fixed
+      top 0
+      left 0
+    .settingsMenuBox
+      text-align center
+      background-color #FFFFFF
+      margin-top 10%
+      margin-left 20%
+      margin-right 20%
+      min-width 350px
+      border 2px #000000 solid
+      border-radius 10px
+    .avatarChange
+      top 44%
+      right 92.6%
+      position absolute
+      height 30px
+      width 30px
+    .avatarImage
+      position absolute
+      height 10%
+      width 10%
+      overflow hidden
+      transition filter 0.5s
+      &:hover
+        filter brightness(0.75)
     .content-wrapper
       min-height 0
 
@@ -238,11 +346,6 @@ export default {
       margin-right 1%
       margin-bottom 2%
       margin-top 2%
-      width 100%
-      img
-        vertical-align middle
-        width 12%
-        height 12%
 
     .achivText
       position relative

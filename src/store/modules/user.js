@@ -17,10 +17,15 @@ export default {
     },
     updateUser (state, [key, value]) {
       state.user[key] = value
+      console.log(state.user)
     },
     setPreId (state, payload) {
       state.userPreId = payload
       console.log(payload)
+    },
+    saveUser (state) {
+      localStorage.setItem('user', JSON.stringify(state.user))
+      console.log('Saving user')
     }
   },
   actions: {
@@ -52,7 +57,7 @@ export default {
           commit('setLoading', false)
           return
         } console.log('Verified')
-        let lastTheme, money, submit, right, like, name
+        let lastTheme, money, submit, right, like, name, image
 
         await db.collection(accountDb).doc(user.user.uid).get().then(doc => {
           var data = doc.data()
@@ -62,8 +67,9 @@ export default {
           submit = data.submit
           right = data.right
           like = data.like
+          image = data.image
         })
-        var usr = new User(name, user.user.uid, lastTheme, money, right, submit, like)
+        var usr = new User(name, user.user.uid, lastTheme, money, right, submit, like, image)
         commit('setUser', usr)
         if (remember) localStorage.setItem('user', JSON.stringify(usr))
         commit('setLoading', false)
