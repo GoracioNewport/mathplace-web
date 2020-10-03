@@ -7,6 +7,10 @@
             is-full-page = false
             color = "#763dca"
             :opacity = 0.5)
+    .backButtonBox(v-if = '!loading' @click ='$router.push("/chat")')
+      span.backButtonText Назад
+      br
+      span.backButtonText <-
     .chat-main(v-if = '!loading && chat.members !== undefined')
       .chat-info(v-if = 'chat !== null')
           .chat-image(v-if = 'chat.image === undefined')
@@ -328,6 +332,22 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .backButtonBox
+    display table-cell
+    text-align center
+    vertical-align middle
+    position fixed
+    height 100%
+    width 10%
+    transition 0.3s
+    padding-top 45vh
+    .backButtonText
+      font-size 2em
+      text-align center
+      font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    &:hover
+      cursor pointer
+      background-color rgba(0, 0, 0, .08)
   .chat-box
     max-height 60vh
     min-height 60vh
