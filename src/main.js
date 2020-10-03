@@ -18,6 +18,7 @@ import 'vue-material-design-icons/styles.css'
 // import { MdButton, MdContent, MdTabs } from 'vue-material/dist/components'
 // import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
+import Clipboard from 'v-clipboard'
 
 // Vue.use(MdButton)
 // Vue.use(MdContent)
@@ -28,6 +29,8 @@ Vue.use(VueMaterial)
 Vue.use(Topic)
 Vue.use(Vuelidate)
 Vue.use(vueSmoothScroll)
+
+Vue.use(Clipboard)
 
 Vue.config.productionTip = false
 

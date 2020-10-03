@@ -178,7 +178,7 @@ export default {
                 let nullArray = []
                 for (let i = 0; i < itemCount; i++) blankArray.push(1)
                 for (let i = 0; i < itemCount; i++) nullArray.push(null)
-                userData.update({
+                userData.set({
                   grades: blankArray,
                   solution: blankArray,
                   lastAnswers: nullArray
@@ -197,7 +197,7 @@ export default {
                   userTopicDetails.lastAnswers.push(null)
                 }
                 console.log('To', userTopicDetails.grades)
-                userData.update({
+                userData.set({
                   grades: userTopicDetails.grades,
                   solution: userTopicDetails.solution,
                   lastAnswers: userTopicDetails.lastAnswers

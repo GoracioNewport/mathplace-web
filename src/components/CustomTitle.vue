@@ -89,9 +89,14 @@
                   //-   input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
 
                   md-field
+                    label(for='solutionType') Тип решения
+                    md-select#solutionType(v-model='task.solutionType' name='solutionTypeText')
+                      md-option(value='hide') Без решения
+                      md-option(value='solution') Показывать решение
+                      md-option(value='answer') Показывать ответ
+                  md-field(v-if ='task.solutionType !== "hide" && task.solutionType !== "answer"')
                     label Решение
                     md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
-                  md-checkbox.showAnswer(v-model='task.showAnswer') Показывать ответ вместо решения
           .button.button--round.button-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
           .button.button--round.button-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
           .button.button--round.button-primary.buttonAddContent(@click='addTask("material")') Добавить готовый материал
@@ -274,7 +279,7 @@ export default {
           }],
           type: type,
           answer: answ,
-          showAnswer: false,
+          solutionType: 'hide',
           solution: '',
           difficulty: 'Легкая'
         }
@@ -368,8 +373,8 @@ export default {
           }
         }
         // Обработка решения задачи
-        if (this.tasks[i].solution === 'hide') this.tasks[i].solution = '' // Тупой костыль, но без него никак
-        if (this.tasks[i].showAnswer) this.tasks[i].solution = 'hide' // Если стоит чекбокс, то ставим значение hide
+        if (this.tasks[i].solutionType === 'hide') this.tasks[i].solution = 'hide' // Тупой костыль, но без него никак
+        else if (this.tasks[i].solutionType === 'answer') this.tasks[i].solution = 'null'
         // hide в этом поле означает, что надо показывать ответ вместо решения
         // Обработка сложности
         if (this.tasks[i].difficulty === 'Легкая') this.tasks[i].difficulty = 1

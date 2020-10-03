@@ -22,8 +22,9 @@
                 strong(v-else) {{ chats['members'][chats.name] }}
             .chat-message(v-if = 'chats.msgCnt > 0')
               label
-                span {{ chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] }}: {{ chats.msgs[chats.msgCnt - 1].text }}
-          .chat-time(v-if = 'chats.msgCnt > 0')
+                span(v-if ='chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] === undefined') {{ chats.msgs[chats.msgCnt - 1].text }}
+                span(v-else) {{ chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] }}: {{ chats.msgs[chats.msgCnt - 1].text }}
+          .chat-time(v-if = 'chats.msgCnt > 0 && chats.msgs[chats.msgCnt - 1] !== null')
             label {{ chats.msgs[chats.msgCnt - 1].time }}
           .chat-border(v-if = 'i < chatList.length - 1')
     .newChatButton
@@ -74,7 +75,7 @@
 
 <script>
 
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import Loading from 'vue-loading-overlay'
@@ -82,6 +83,11 @@ import Loading from 'vue-loading-overlay'
 export default {
   components: {
     Loading
+  },
+  watch: {
+    '$store.state.profile.chatList': function () {
+      this.chatList = this.getMyChats
+    }
   },
   data () {
     return {
@@ -98,6 +104,7 @@ export default {
   },
   methods: {
     ...mapActions(['fetchMyChats']),
+    ...mapMutations(['updatePreChatInfo']),
     goToChat (id) {
       this.$router.push('/pm/' + id)
     },
@@ -138,33 +145,38 @@ export default {
         }
       }
       var members = Array.from(chatMembers)
-      console.log(members)
-      for (let mem in members) {
-        chatInfo.members.push({last_message: 0, userId: mem})
+      for (let i = 0; i < members.length; i++) {
+        chatInfo.members.push({last_message: 0, userId: members[i]})
       }
       if (chatName === null) {
         this.error = 'Пользователь не найден'
+        this.loading = false
         alert(this.error)
         return
       } else if (type === 'group' && chatInfo.members.length < 3) {
         this.groupEmail.length < 3 ? this.error = 'В групповом чате должно быть хотя бы 3 пользователя' : this.error = 'Пользователи не найдены'
+        this.loading = false
         alert(this.error)
         return
       } else if (type === 'personal' && chatInfo.members.length === 1) {
         this.error = 'Нельзя создать диалог с самим собой'
+        this.loading = false
         alert(this.error)
         return
       }
       var exists = false
       if (type === 'personal') {
         chatInfo.members.sort()
-        chatId = chatInfo.members[0] + '_' + chatInfo.members[1]
+        chatId = chatInfo.members[0].userId + '_' + chatInfo.members[1].userId
         await db.collection('chat').doc(chatId).get().then(doc => {
           if (doc.exists) exists = true
         })
       } else {
+        // Имя, владелец и токен
         chatInfo.name = chatName
+        chatInfo.admin = this.getUser.id
         chatId = await this.generateToken(7)
+        // Загрузка аватарки
         if (this.groupPhoto !== undefined && this.groupPhoto !== null) {
           let file = this.groupPhoto
           let fileName = file.name
@@ -182,24 +194,23 @@ export default {
       if (exists) {
         this.error = 'Диалог уже существует'
         this.$router.push('/pm/' + chatId)
+        this.loading = false
         return
       }
-      // console.log(chatId, chatInfo)
-      await db.collection('chat').doc(chatId).set(chatInfo)
-      // Добавление в myChats для каждого пользователя
-      for (let j = 0; j < chatInfo.members.length; j++) {
-        var myChats = []
-        await db.collection('account').doc(members[j]).get().then(doc => {
-          var data = doc.data()
-          if (data.myChats !== undefined) myChats = data.myChats
-          // console.log('Existing data: ', myChats)
-        })
-        myChats.push(chatId)
-        // console.log('Writing new data: ', myChats, 'to ', chatInfo.members[j])
-        await db.collection('account').doc(members[j]).set({
-          myChats: myChats
-        }, { merge: true })
-      }
+      if (type === 'group') {
+        await db.collection('chat').doc(chatId).set(chatInfo)
+        for (let j = 0; j < chatInfo.members.length; j++) {
+          var myChats = []
+          await db.collection('account').doc(members[j]).get().then(doc => {
+            var data = doc.data()
+            if (data.myChats !== undefined) myChats = data.myChats
+          })
+          myChats.push(chatId)
+          await db.collection('account').doc(members[j]).set({
+            myChats: myChats
+          }, { merge: true })
+        }
+      } else this.updatePreChatInfo(chatInfo)
       this.loading = false
       this.$router.push('/pm/' + chatId)
     },
