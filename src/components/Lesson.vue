@@ -66,7 +66,7 @@
           @keyup.enter = 'sendAnswer',
           v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 || this.taskList[this.activeTask].tries == 3 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
         label(for='img' v-else-if ='this.taskList[this.activeTask].type === "upload"') Выберите картинку
-          input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
+          input#img(type='file', name='img', accept='image/*', @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
         .multipleChoiceBox(v-else-if ='this.taskList[this.activeTask].type === "multipleChoice"')
           .choiceBox(v-for = "choice in this.taskList[this.activeTask].options")
             md-checkbox(v-model = 'answer', :value = "choice") {{ choice }}
@@ -75,8 +75,8 @@
             md-field
               label Введите ответ
               //- md-input(v-model = "answer[i]" disabled = '')
-              md-input(v-model = "answer[i]")
-            .button.button-round.button-warning.delete_button(@click='answer.splice(answer.indexOf(answers), 1)') X
+              md-input.answerField(v-model = "answer[i]")
+              .button.button-round.button-warning.deleteButton(@click='answer.splice(answer.indexOf(answers), 1)') X
           .button.button--round.button-success.buttonAdd(@click='answer.push("")') Добавить вариант ответа
       .enter
         .send
