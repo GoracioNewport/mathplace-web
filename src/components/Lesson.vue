@@ -20,11 +20,11 @@
                     :src = "theoryImage")
                   img.img_taskbar(
                       v-else-if = 'task.type == "proof"'
-                      :class = '{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
+                      :class ='{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
                       :src = 'proofImage')
                   img.img_taskbar(
                       v-else
-                      :class = '{ solvedTask : task.tries === 2, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
+                      :class ='{ solvedTask : task.tries === 2, failedTask : task.tries === 0, pendingTask : Number(task.tries) !== 0 && Number(task.tries) !== 1 && Number(task.tries) !== 2 && Number(task.tries) !== 3, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
                       :src = 'taskImage')
 
     .loading-indicator(v-if='isLoading')
@@ -65,10 +65,20 @@
           v-model = 'answer',
           @keyup.enter = 'sendAnswer',
           v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 || this.taskList[this.activeTask].tries == 3 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
-        label(for='img' v-else-if ='this.taskList[this.activeTask].type === "upload"') Выберите картинку
-          input#img(type='file', name='img', accept='image/*', @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
+        label(for='img' v-else-if ='this.taskList[this.activeTask].type === "upload"')
+          .pendingBox(v-if ='this.taskList[this.activeTask].tries !== 0 && this.taskList[this.activeTask].tries !== 1 && this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3')
+            span Преподователь еще не проверил ваш ответ
+          .rightBox(v-else-if ='this.taskList[this.activeTask].tries === 2')
+            span Ваш ответ оказался правильным
+          .else(v-else)
+            span(v-if ='this.taskList[this.activeTask].tries === 0') Ваш ответ оказался неправильным. Вы можете отправить решение заново
+            //- input#img(type='file', name='img', accept='image/*', @click="onFileButtonClicked(this.tasks.indexOf(task), task.text.indexOf(component))")
+            md-field(name='img')
+              label Выберите картинку
+              md-file(v-model = 'answer' @md-change ='onFilePicked')
         .multipleChoiceBox(v-else-if ='this.taskList[this.activeTask].type === "multipleChoice"')
           .choiceBox(v-for = "choice in this.taskList[this.activeTask].options")
+            //- md-checkbox(v-if ='taskList[activeTask].tries')
             md-checkbox(v-model = 'answer', :value = "choice") {{ choice }}
         .multipleAnswerBox(v-else-if ='this.taskList[this.activeTask].type === "multipleAnswer"')
           .answerBox(v-for = "(answers, i) in answer")
@@ -195,11 +205,12 @@ export default {
       status: 'Idle',
       topicLiked: false,
       solutionShown: false,
-      userId: null
+      userId: null,
+      solutionFile: null
     }
   },
   methods: {
-    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus']),
+    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution']),
     changeActiveTask (i, thisTask) {
       console.log('Change Active Task', i)
       this.status = 'Idle'
@@ -212,17 +223,22 @@ export default {
         else this.answer = ''
       }
     },
-    sendAnswer () {
+    async sendAnswer () {
       if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
         if (this.$store.getters.getUser === null) this.$router.push('/login')
         else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/')
         else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) { // Task complition
-          if (Array.isArray(this.answer)) {
+          let verdict = 1
+          if (this.solutionFile !== null) {
+            this.isLoading = true
+            await this.sendImageSolution({ colletion: this.collection, id: this.taskId, i: this.activeTask, image: this.solutionFile })
+            this.isLoading = false
+            verdict = 'image'
+          } if (Array.isArray(this.answer)) {
             for (let i = 0; i < this.answer.length; i++) this.answer[i].replace(',', '.')
             this.answer.sort()
           } else this.answer = this.answer.replace(',', '.')
-          let verdict = 1
           var equals = (Array.isArray(this.answer) && this.answer.length === this.taskList[this.activeTask].answer.length && this.answer.every((value, index) => value === this.taskList[this.activeTask].answer[index]))
           console.log(this.answer, this.taskList[this.activeTask].answer, equals)
           if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof' || equals) {
@@ -233,17 +249,19 @@ export default {
             if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') verdict = 3
             else verdict = 2
             console.log('Correct!')
-          } else {
+          } else if (this.solutionFile === null) {
             this.status = 'Wrong'
             verdict = 0
             console.log('Wrong >:(')
           }
 
+          this.solutionFile = null
+
           if (this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') this.updateUser(['submit', this.getUser.submit + 1])
           let newStatus = []
           for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
           newStatus[this.activeTask] = verdict
-          this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
+          if (verdict !== 'image') this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
           this.taskList[this.activeTask].tries = verdict
           if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') {
             if (this.activeTask === this.taskList.length - 1) this.$router.push('/')
@@ -264,7 +282,8 @@ export default {
         this.like(true)
       }
       this.updateUser(['like', liked])
-    }
+    },
+    onFilePicked (event) { this.solutionFile = event[0] }
   },
   computed: {
     ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo']),
@@ -352,6 +371,8 @@ export default {
     background rgba(0, 255, 0, .5) !important
   .failedTask
     background rgba(255, 0, 0, .5) !important
+  .pendingTask
+    background rgba(255, 255, 0, .5) !important
   .answerCorrect
     background-color rgba(0, 255, 0, .4)
   .answerWrong

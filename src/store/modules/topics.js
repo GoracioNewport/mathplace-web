@@ -261,9 +261,9 @@ export default {
     markDBSolutionAs (ctx, payload) {
       // console.log(payload)
       const db = firebase.firestore()
-      db.collection(accountDb).doc(payload.userId).set({
-        [payload.topicName]: payload.newStats
-      }, { merge: true })
+      db.collection(accountDb).doc(payload.userId).collection(userTasksDb).doc(payload.topicName).update({
+        grades: payload.newStats
+      })
       // console.log(payload.topicName, payload.newStats)
     },
     async fetchMyTopic (ctx, id) {

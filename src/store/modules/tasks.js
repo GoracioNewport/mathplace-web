@@ -237,6 +237,29 @@ export default {
     },
     changeCollection (ctx, name) {
       ctx.commit('updateCollection', name)
+    },
+    async sendImageSolution (ctx, payload) {
+      const db = firebase.firestore()
+      let file = payload.image
+      let fileName = file.name
+      const fileReader = new FileReader()
+      fileReader.readAsDataURL(file)
+      // Получение данных для имени файла
+      const ext = fileName.slice(fileName.lastIndexOf('.'))
+      let currentTime = new Date().getTime()
+      let imageUrl
+      let imageTimeName = 'uploads/' + currentTime + ext
+      // Загрузка в бд
+      await firebase.storage().ref(imageTimeName).put(file)
+      await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
+      imageUrl = imageUrl.toString()
+      // Запись ссылки в бд
+      var grades = []
+      await db.collection(accountDb).doc(this.getters.getUser.id).collection(userTasksDb).doc(payload.id).get().then(doc => { grades = doc.data().grades })
+      grades[payload.i] = imageUrl
+      await db.collection(accountDb).doc(this.getters.getUser.id).collection(userTasksDb).doc(payload.id).update({
+        grades: grades
+      })
     }
   },
   mutations: {
