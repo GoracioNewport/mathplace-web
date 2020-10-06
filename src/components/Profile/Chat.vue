@@ -82,7 +82,7 @@
             .button.button--round.button-success(v-if ='admin' @click ='saveProfile') Сохранить
             .button.button--round.button-warning(@click ='settingsMenuShow = false')  Отмена
             .button.button--round.button-light(@click ='deleteMember(getUser.id, getUser.name)') Выйти из беседы
-            .button.button--round.button-default(@click ='$clipboard("mathplace.ru/pm/" + id)') Скопировать ссылку на беседу
+            .button.button--round.button-default(@click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Fpm%2F" + id)') Скопировать ссылку на беседу
 </template>
 
 <script>

@@ -321,9 +321,10 @@ export default {
   .chatList
     margin-left 25%
     margin-right 25%
-    margin-top 5%
+    margin-top 3%
     width auto
-    height auto
+    max-height 80vh
+    overflow auto
     background-color #FCFCFF
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
