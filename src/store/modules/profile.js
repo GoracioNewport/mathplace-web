@@ -96,6 +96,7 @@ export default {
             // Получаем список чатов
             db.collection('account').doc(this.getters.getUser.id).onSnapshot(async function(doc) { 
                 doc.data().myChats !== undefined ? nameList = doc.data().myChats : nameList = [] 
+                var limit = nameList.length
                 // console.log('Got chatlist update! ', nameList)
                 for (let name of nameList) {
                     var chatList = {}
@@ -119,8 +120,11 @@ export default {
                             info['name'] = ind
                         } info['msgs'] = {}
                         for (let j = 0; j < data.all_message; j++) {
-                        info['msgs'][j] = data['message' + j.toString()]
-                        info['msgs'][j].time !== null ? info['msgs'][j].time = moment.unix(info['msgs'][j].time.seconds).format('MMMM Do YYYY, h:mm:ss a') : info['msgs'][j].time = ''
+                            info['msgs'][j] = data['message' + j.toString()]
+                            if (j === data.all_message - 1) { // Это поле нужно для сортировки чата по времени
+                                info['msgs'][j].time !== null ? info.lastMessageTime = info['msgs'][j].time.seconds : info.lastMessageTime = 0 
+                            }
+                            info['msgs'][j].time !== null ? info['msgs'][j].time = moment.unix(info['msgs'][j].time.seconds).format('MMMM Do YYYY, h:mm:ss a') : info['msgs'][j].time = ''
                         }
                         for await (let mem of memb) {
                             // console.log(globalNameList)
@@ -129,9 +133,8 @@ export default {
                         }
                         if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {info['image'] = doc.data().image })
                         chatList[info.id] = info
-                        // Преобразовываю chatList в массив и комичу
-                        // console.log('Got chats update! ', Object.values(chatList))
-                        ctx.commit('updateMyChats', Object.values(chatList))
+                        console.log('Got Update!', limit, Object.keys(chatList).length)
+                        if (Object.keys(chatList).length >= limit) ctx.commit('updateMyChats', Object.values(chatList))
                     })
                     
                     // for await (let mem of memb) {

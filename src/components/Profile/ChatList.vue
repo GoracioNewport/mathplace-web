@@ -15,6 +15,8 @@
             img.img_round(src="@/components/images/user.png")
           .chat-image(v-else)
             img.image_round(:src = "chats.image")
+          .chat-time(v-if = 'chats.msgCnt > 0 && chats.msgs[chats.msgCnt - 1] !== null')
+            label {{ chats.msgs[chats.msgCnt - 1].time }}
           .chat-info
             .chat-name
               label
@@ -24,8 +26,6 @@
               label
                 span(v-if ='chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] === undefined') {{ chats.msgs[chats.msgCnt - 1].text }}
                 span(v-else) {{ chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] }}: {{ chats.msgs[chats.msgCnt - 1].text }}
-          .chat-time(v-if = 'chats.msgCnt > 0 && chats.msgs[chats.msgCnt - 1] !== null')
-            label {{ chats.msgs[chats.msgCnt - 1].time }}
           .chat-border(v-if = 'i < chatList.length - 1')
     .newChatButton
       md-button.md-fab.md-fab-bottom-right.md-primary(@click = 'createNewChat()')
@@ -86,7 +86,9 @@ export default {
   },
   watch: {
     '$store.state.profile.chatList': function () {
-      this.chatList = this.getMyChats
+      this.chatList = JSON.parse(JSON.stringify(this.getMyChats))
+      console.log(this.chatList)
+      this.chatList.sort(function (a, b) { return b.lastMessageTime - a.lastMessageTime })
     }
   },
   data () {
@@ -338,6 +340,9 @@ export default {
     }
 
   .chat-header
+    display grid
+    grid-template-columns 15% 50% 35%
+    grid-template-rows 48% 48% 1%
     width 100%
     margin-top 20px
     margin-bottom 20px
@@ -345,7 +350,11 @@ export default {
     border-margin-left 20px
 
   .chat-border
-    width auto
+    width 100%
+    grid-column-start 1
+    grid-column-end 3
+    grid-row-start 3
+    grid-row-end 3
     height 2px
     margin-top 20px
     margin-left 230px
@@ -363,6 +372,10 @@ export default {
       cursor pointer
   .chat-image
     display inline-block
+    grid-column-start 1
+    grid-column-end 1
+    grid-row-start 1
+    grid-row-end 2
     width 15%
     min-width 150px
     height auto
@@ -375,6 +388,10 @@ export default {
 
   .chat-info
     display inline-block
+    grid-column-start 2
+    grid-column-end 2
+    grid-row-start 1
+    grid-row-end 2
     margin-left 50px
     vertical-align middle
   .chat-name
@@ -392,11 +409,15 @@ export default {
   .chat-empty
     width 60%
   .chat-time
+    right 15%
     display inline-block
+    grid-column-start 3
+    grid-column-end 3
+    grid-row-start 1
+    grid-row-end 2
     width 300px
     height auto
     float right
-    margin-top 40px
     label
       font-size 1.2em
       color #696174
