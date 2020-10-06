@@ -99,7 +99,7 @@ export default {
                 // console.log('Got chatlist update! ', nameList)
                 for (let name of nameList) {
                     var chatList = {}
-                    // console.log('Reading data from ', name)
+                    console.log('Reading data from ', name)
                     db.collection('chat').doc(name).onSnapshot(async function(chatDoc) {
                         // chatList - это мепчик, если что-то меняется в одном чате, то мы просто это перезаписываем, если добавляется новый или убирается старый, то все читается заново
                         var data = chatDoc.data()

@@ -23,13 +23,13 @@
               strong(v-else) {{ chatMembers[chat.name] }}
           .chat-modify(v-if = 'admin')
             img.settingIcon(v-if ='chat.type === "group"' @click ='settingsMenuShow = true' src='@/assets/images/settings.png')
-      .chat-box
+      .chat-box(ref='scrollAnchor')
         .message(v-for = '(msg, i) in chat.msgs')
           //- Системные сообщения
           .systemMessage(v-if = 'msg.sender === "System"')
             label.systemMessageText.message-message.md-caption {{ msg.text }}
           //- Обычные сообщения
-          .message-fragment(v-else)
+          .message-fragment(v-else :id ='i')
             .message-info
               .message-sender
                 label {{ chatMembers[msg.sender] }}
@@ -151,19 +151,19 @@ export default {
             for (let j = 0; j < data.all_message; j++) {
               info['msgs'][j] = data['message' + j.toString()]
               if (info['msgs'][j].time !== null) info['msgs'][j].time = moment.unix(info['msgs'][j].time.seconds).format('MMMM Do YYYY, h:mm:ss a')
-              if (vueInstance.chatMembers[info.msgs[j].sender] === undefined && info.msgs[j].sender !== 'System') { await db.collection('account').doc(info.msgs[j].sender).get().then(async doc => { vueInstance.chatMembers[info.msgs[j].sender] = doc.data().name }) }
+              if (vueInstance.chatMembers[info.msgs[j].sender] === undefined && info.msgs[j].sender !== 'System') { await db.collection('account').doc(info.msgs[j].sender).get().then(async doc => { doc.exists ? vueInstance.chatMembers[info.msgs[j].sender] = doc.data().name : vueInstance.chatMembers[info.msgs[j].sender] = 'Deleted User' }) }
             }
 
             // Пробегаюсь по всем сообщеням для подгрузки недостающих ников
 
-            vueInstance.chat = Object.assign(vueInstance.chat, info)
+            vueInstance.chat = await Object.assign(vueInstance.chat, info)
+            await vueInstance.$forceUpdate()
             // Если это первая загрузка или мы сами отправили сообщение, скролим в самый низ
             if (first || (Object.keys(vueInstance.chat.msgs).length > 0 && vueInstance.chat.msgs[Object.keys(vueInstance.chat.msgs).length - 1].sender === vueInstance.getUser.id)) {
-              const el = vueInstance.$el.getElementsByClassName('message-fragment')
-              if (el[el.length - 1]) el[el.length - 1].scrollIntoView()
+              const el = await vueInstance.$el.getElementsByClassName('message-fragment')[data.all_message - 1]
+              el.scrollIntoView()
               first = false
             }
-            await vueInstance.$forceUpdate()
             vueInstance.loading = false
           })
       }
@@ -332,6 +332,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .scrollAnchor
+    float left
   .backButtonBox
     display table-cell
     text-align center
@@ -419,6 +421,7 @@ export default {
     min-height 0
 
   .chat-main
+    position relative
     margin-left 25%
     margin-right 25%
     margin-top 2%
