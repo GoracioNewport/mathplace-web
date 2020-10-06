@@ -124,9 +124,6 @@ export default {
         if (this.myTopics[this.imageTopic].stats[i].id === userIndex) this.imageUser = i
       }
       this.solutionImageShown = !this.solutionImageShown
-      console.log(this.myTopics)
-      console.log(this.imageTopic, this.imageUser, this.imageTask)
-      console.log(this.myTopics[this.imageTopic].stats[this.imageUser].solveStats[this.imageTask])
     },
     markSolutionAs (status) {
       status === 'right' ? this.myTopics[this.imageTopic].stats[this.imageUser].solveStats[this.imageTask] = 2 : this.myTopics[this.imageTopic].stats[this.imageUser].solveStats[this.imageTask] = 0
@@ -136,7 +133,6 @@ export default {
     },
     deleteMyTopic (token, i) {
       this.myTopics.splice(i, 1)
-      console.log(token, i)
       this.deleteTopic(token)
     }
   },

@@ -87,7 +87,6 @@ export default {
   watch: {
     '$store.state.profile.chatList': function () {
       this.chatList = JSON.parse(JSON.stringify(this.getMyChats))
-      console.log(this.chatList)
       this.chatList.sort(function (a, b) { return b.lastMessageTime - a.lastMessageTime })
     }
   },
@@ -246,7 +245,6 @@ export default {
               result = false
             } else result = true
           })
-      console.log('Result: ', result)
       return result
     },
     onFileSelected (event) {

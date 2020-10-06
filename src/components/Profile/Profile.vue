@@ -191,7 +191,6 @@ export default {
       this.isLoading = true
       this.settingsMenuShow = false
       if (this.newName === this.getUser.name || this.newName === '') this.newName = null
-      console.log(this.newName, this.newAvatarFile)
       await this.changeProfileSettings({name: this.newName, avatar: this.newAvatarFile})
       this.$router.go()
     },

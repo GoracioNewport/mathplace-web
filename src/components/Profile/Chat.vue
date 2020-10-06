@@ -224,7 +224,6 @@ export default {
       if (this.messageField === '' || this.messageField === null) return
       if (!this.chatCreated) {
         var chatId = this.id
-        console.log(this.getPreChatInfo)
         var chatInfo = {
           all_message: 0,
           members: this.getPreChatInfo.members,
@@ -243,7 +242,6 @@ export default {
       this.chat.msgCnt++
       // var curMsg
       // await db.collection('chat').doc(this.id).get().then(doc => { curMsg = doc.data().all_message })
-      console.log('Sending message№', varName, data)
       db.collection('chat').doc(this.id).set({
         [varName]: data,
         all_message: this.chat.msgCnt
@@ -291,7 +289,6 @@ export default {
       this.loading = false
     },
     async deleteMember (id, name) {
-      console.log(this.chatMembers)
       // delete this.chatMembers[id]
       this.removedUsers[id] = true
       this.$forceUpdate()

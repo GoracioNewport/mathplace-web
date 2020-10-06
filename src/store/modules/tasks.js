@@ -143,7 +143,6 @@ import { accountDb, tasksDb, olympiadDb, userTasksDb } from './global'
 export default {
   actions: {
     async fetchTasks (ctx, taskCollection) {
-      console.log('Fetching tasks from collection', taskCollection, 'and task', this.getters.getCurrentTopic)
       ctx.commit('updateTasksLoadingStatus', true)
       const db = firebase.firestore()
       var tasksDb = db.collection(taskCollection).doc(this.getters.getCurrentTopic)
@@ -170,10 +169,8 @@ export default {
               // Обновление значений юзера в бд
 
               userTopicDetails = usrData
-              console.log(docData.tasks)
               itemCount = docData.tasks.length
               if (userTopicDetails === undefined || userTopicDetails.lastAnswers.length !== itemCount) {
-                console.log('First user`s entry', userTopicDetails, itemCount)
                 let blankArray = []
                 let nullArray = []
                 for (let i = 0; i < itemCount; i++) blankArray.push(1)
@@ -190,13 +187,11 @@ export default {
                 }
               // Что делать, если чел зашел, а препод изменил тему...
               } else if (userTopicDetails.grades.length < itemCount) {
-                console.log('Already a member, overwriting from ', userTopicDetails.grades)
                 for (let i = userTopicDetails.grades.length; i < itemCount; i++) {
                   userTopicDetails.grades.push(1)
                   userTopicDetails.solution.push(1)
                   userTopicDetails.lastAnswers.push('null')
                 }
-                console.log('To', userTopicDetails.grades)
                 userData.set({
                   grades: userTopicDetails.grades,
                   solution: userTopicDetails.solution,

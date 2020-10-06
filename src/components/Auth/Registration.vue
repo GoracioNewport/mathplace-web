@@ -155,7 +155,6 @@ export default {
       }
     },
     registerUserInDatabase (name, user) {
-      console.log('Calling func', name, user)
       const db = firebase.firestore()
 
       var achivmentCount = 8

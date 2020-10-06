@@ -322,8 +322,6 @@ export default {
       this.$v.$touch()
       if (this.$v.$invalid) {
         this.submitStatus = 'error'
-        console.log('Error!')
-        console.log(this.$v)
         alert('Проверьте правильность заполнения полей!')
         return
       }
@@ -388,11 +386,9 @@ export default {
         title: data
       }
       this.token = token
-      console.log(sendInformation)
       try {
         await this.sendTopic(sendInformation)
       } catch (error) {
-        console.log(error)
       }
       this.addMyTopicsToList(token)
       this.loading = false

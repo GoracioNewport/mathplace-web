@@ -217,7 +217,6 @@ export default {
         var topicsData = {}
         await db.collection(olympiadDb).doc(topicList[i]).get().then(doc => {
           var data = doc.data()
-          console.log(topicList[i])
           topicsData['token'] = topicList[i]
           topicsData['name'] = data.name
           topicsData['members'] = data.members
@@ -286,11 +285,9 @@ export default {
           else rawTask.difficulty = 'Сложная'
         }
       })
-      console.log(topic)
       ctx.commit('updateMyTopic', topic)
     },
     deleteTopic (ctx, payload) {
-      console.log('Deleting ', payload)
       const db = firebase.firestore()
       var docRef = db.collection(accountDb).doc(this.getters.getUser.id)
       db.runTransaction(function (transaction) {
@@ -300,7 +297,6 @@ export default {
           transaction.update(docRef, { myTopics: list })
         })
       })
-      console.log(this.getters.getUser.id, payload)
       db.collection(olympiadDb).doc(payload).delete()
     },
     async fetchTopicList (ctx) {
@@ -332,7 +328,6 @@ export default {
           list.push(info)
         })
       }
-      console.log(list)
       // Читаем все задачи из MathPlace
       await db.collection(tasksDb).get()
         .then((snapshot) => {

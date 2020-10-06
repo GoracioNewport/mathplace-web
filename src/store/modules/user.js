@@ -17,15 +17,12 @@ export default {
     },
     updateUser (state, [key, value]) {
       state.user[key] = value
-      console.log(state.user)
     },
     setPreId (state, payload) {
       state.userPreId = payload
-      console.log(payload)
     },
     saveUser (state) {
       localStorage.setItem('user', JSON.stringify(state.user))
-      console.log('Saving user')
     }
   },
   actions: {
@@ -37,7 +34,6 @@ export default {
         firebase.auth().currentUser.sendEmailVerification()
         commit('setLoading', false)
         commit('setPreId', user.user.uid)
-        console.log('User', user)
       } catch (error) {
         commit('setLoading', false)
         commit('setErrors', error.message)
@@ -52,11 +48,10 @@ export default {
       try {
         const user = await firebase.auth().signInWithEmailAndPassword(email, password)
         if (!firebase.auth().currentUser.emailVerified && email !== 'test@user.com') {
-          console.log('Not verified!')
           commit('setErrors', 'Validation Required')
           commit('setLoading', false)
           return
-        } console.log('Verified')
+        }
         let lastTheme, money, submit, right, like, name, image
 
         await db.collection(accountDb).doc(user.user.uid).get().then(doc => {
@@ -82,7 +77,6 @@ export default {
     },
     sendEmailConfirmationMessage (ctx) {
       firebase.auth().currentUser.sendEmailVerification()
-      console.log('Email sent')
     },
     loggedUser ({commit}, payload) {
       commit('setUser', new User(payload.uid))

@@ -100,7 +100,6 @@ export default {
                 // console.log('Got chatlist update! ', nameList)
                 for (let name of nameList) {
                     var chatList = {}
-                    console.log('Reading data from ', name)
                     db.collection('chat').doc(name).onSnapshot(async function(chatDoc) {
                         // chatList - это мепчик, если что-то меняется в одном чате, то мы просто это перезаписываем, если добавляется новый или убирается старый, то все читается заново
                         var data = chatDoc.data()
@@ -133,7 +132,6 @@ export default {
                         }
                         if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {info['image'] = doc.data().image })
                         chatList[info.id] = info
-                        console.log('Got Update!', limit, Object.keys(chatList).length)
                         if (Object.keys(chatList).length >= limit) ctx.commit('updateMyChats', Object.values(chatList))
                     })
                     
@@ -234,7 +232,6 @@ export default {
                 }) 
                 if (memb.indexOf(userId) !== -1) {
                     ctx.commit('updateAddedMemberStatus', 'AlreadyAMember') 
-                    console.log('Already a member!')
                 } else {
                     // console.log('Adding ', userId)
                     // console.log('Initial: ', rawMemb)

@@ -349,9 +349,7 @@ export default {
   async mounted () {
     if (this.getUser === null) this.$router.push('/login')
     try {
-      console.log('Fetching...')
       await this.fetchTopics()
-      console.log('Topics fetched')
       this.arrayPopular = await this.$store.getters.getTopics.get('популярные')
       this.arraySchool = await this.$store.getters.getTopics.get('школа')
       this.arrayOGE = await this.$store.getters.getTopics.get('огэ')
@@ -360,7 +358,6 @@ export default {
       this.arrayKomba = await this.$store.getters.getTopics.get('комбинаторика')
       this.arrayLogics = await this.$store.getters.getTopics.get('логика')
       this.arrayGraphs = await this.$store.getters.getTopics.get('графы')
-      console.log('Topics loaded', this.arrayGraphs)
     } catch (error) {
       this.error = true
       throw error

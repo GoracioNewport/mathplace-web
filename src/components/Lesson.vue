@@ -188,7 +188,6 @@ export default {
     if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
     this.isLoading = false
     this.$forceUpdate()
-    console.log(this.taskList)
   },
   data () {
     return {
@@ -212,7 +211,6 @@ export default {
   methods: {
     ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution']),
     changeActiveTask (i, thisTask) {
-      console.log('Change Active Task', i)
       this.status = 'Idle'
       this.activeTask = i
       thisTask.activeTask = i
@@ -240,7 +238,6 @@ export default {
             this.answer.sort()
           } else this.answer = this.answer.replace(',', '.')
           var equals = (Array.isArray(this.answer) && this.answer.length === this.taskList[this.activeTask].answer.length && this.answer.every((value, index) => value === this.taskList[this.activeTask].answer[index]))
-          console.log(this.answer, this.taskList[this.activeTask].answer, equals)
           if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof' || equals) {
             if (this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') {
               this.updateUser(['money', this.getUser.money + 3])
@@ -248,11 +245,9 @@ export default {
             } this.status = 'Correct'
             if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') verdict = 3
             else verdict = 2
-            console.log('Correct!')
           } else if (this.solutionFile === null) {
             this.status = 'Wrong'
             verdict = 0
-            console.log('Wrong >:(')
           }
 
           this.solutionFile = null
@@ -295,7 +290,6 @@ export default {
   computed: {
     ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo']),
     getDifficulty () {
-      console.log(this.taskList[this.activeTask])
       var dif
       this.taskList[this.activeTask].difficulty === undefined ? dif = 0 : dif = this.taskList[this.activeTask].difficulty
       if (dif !== 'null') return parseInt(dif, 10)
