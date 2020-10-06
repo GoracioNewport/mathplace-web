@@ -90,13 +90,13 @@
           .button.button--round.button-success.buttonAdd(@click='answer.push("")') Добавить вариант ответа
       .enter
         .send
-          a.but(@click='solutionShown = true',
+          a.solutionButton.but(@click='solutionShown = true',
                 v-if = 'this.taskList[this.activeTask].type ==="task" && this.taskList[this.activeTask].solution !=="hide" ')
             img(src='@/assets/images/lock.png'
             alt='Решения',id="lock")
           //- .but
           //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
-          .but
+          .likeButton.but
             input#checkbox.checkbox(type='checkbox' v-model = 'topicLiked')
             label(for='checkbox' @click = 'likeButton')
               svg#heart-svg(viewBox='467 392 58 57', xmlns='http://www.w3.org/2000/svg')
@@ -124,7 +124,7 @@
                   g#grp1(opacity='0', transform='translate(24)')
                     circle#oval1(fill='#9FC7FA', cx='2.5', cy='3', r='2')
                     circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
-          button.sub.submit-button(
+          button.submit-button.sub(
             type = 'submit',
             @click = 'sendAnswer')
               span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Отправить
@@ -223,7 +223,7 @@ export default {
         else this.answer = ''
       }
     },
-    async sendAnswer () {
+    async sendAnswer () { // Боже, как тут много говна... хуй вообще разберешь какой пиздец тут творится
       if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
         if (this.$store.getters.getUser === null) this.$router.push('/login')
@@ -234,7 +234,7 @@ export default {
             this.isLoading = true
             await this.sendImageSolution({ colletion: this.collection, id: this.taskId, i: this.activeTask, image: this.solutionFile })
             this.isLoading = false
-            verdict = 'image'
+            verdict = '4'
           } if (Array.isArray(this.answer)) {
             for (let i = 0; i < this.answer.length; i++) this.answer[i].replace(',', '.')
             this.answer.sort()
@@ -258,11 +258,18 @@ export default {
           this.solutionFile = null
 
           if (this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') this.updateUser(['submit', this.getUser.submit + 1])
+          // Обновляем значения оценок
           let newStatus = []
           for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
           newStatus[this.activeTask] = verdict
-          if (verdict !== 'image') this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
+          this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
           this.taskList[this.activeTask].tries = verdict
+          // Обновляем значения последних ответов
+          for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].userAnswer
+          newStatus[this.activeTask] = this.answer
+          this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'lastAnswers'})
+          this.taskList[this.activeTask].userAnswer = this.answer
+          // Проверка для теории и задачи на доказательство, что бы можно было листать задачи по нажатии на кнопку
           if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') {
             if (this.activeTask === this.taskList.length - 1) this.$router.push('/')
             else this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
@@ -303,6 +310,22 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .solutionButton
+    grid-column 3
+    grid-row 1
+    margin-top 20% !important
+  .likeButton
+    grid-column 1
+    grid-row 1
+  .submit-button
+    margin-top 3% !important
+    grid-column 2
+    grid-row 1
+    width 100% !important
+    height 60% !important
+    text-align center
+    &:hover
+      cursor pointer
   span
     line-height normal
   .placeholderScreen
@@ -377,10 +400,6 @@ export default {
     background-color rgba(0, 255, 0, .4)
   .answerWrong
     background-color rgba(255, 0, 0, .4)
-  .submit-button
-    text-align center
-    &:hover
-      cursor pointer
   .thisButton
     height 42px
     width 42px
@@ -441,7 +460,9 @@ export default {
     float right
     margin-right 5px
   .condition
-    min-height 350px
+    min-height 45vh
+    max-height 60vh
+    overflow auto
     background #ffffff
     color #000000
     color:#525252
@@ -494,6 +515,8 @@ export default {
     }
 
   .send
+    display grid
+    grid-template-columns 10% 80% 10%
     positine relative
     height auto
     width 100%
@@ -523,11 +546,11 @@ export default {
         background #5E2DA6
   .but
     position relative
-    width 10%
-    height 100%
     display inline-block
     vertical-align middle
     text-align center
+    img
+      width 70%
     // margin auto
   .ans
     postion relative
@@ -535,7 +558,7 @@ export default {
     width 100%
     border-radius 10px
     margin-bottom 0px
-    color:#525252
+    color #525252
     font-family: 'Roboto', sans-serif
     font-size: 25px
     font-weight: bold

@@ -9,10 +9,11 @@
     .topicsBox(v-if = 'myTopics.length !== 0')
       .topicItem(v-for = '(topic, topicIndex) in myTopics'
       :key = 'topic.token')
-        .button.button--round.button-primary.showStatsButton.editButton(@click ='$router.push("/customTitle/" + topic.token)') Редактировать
-        .button.button--round.button-primary.showStatsButton.editButton(@click ='deleteMyTopic(topic.token, topicIndex)') Удалить
+        img.imageButton(src ='@/assets/images/share_24px.png' @click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + topic.token)')
+        img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
+        img.imageButton(src ='@/assets/images/bin2.png' @click ='deleteMyTopic(topic.token, topicIndex)')
         .button.button--round.button-primary.showStatsButton.editButton(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть подробную статистику
-        .button.button--round.button-primary.showStatsButton(v-else @click ='toggleStats(topic.token)') Показать подробную статистику
+        .button.button--round.button-primary.showStatsButton.editButton(v-else @click ='toggleStats(topic.token)') Показать подробную статистику
         span.md-title.topicName {{ topic.name }}
         span.md-body-1.topicToken Ключ: {{ topic.token }}
         .statsBox(v-if = 'topic.showStats')
@@ -149,6 +150,13 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .imageButton
+    width 3%
+    float right
+    margin 1%
+    margin-top 0
+    &:hover
+      cursor pointer
   .vld-parent
     min-height 15vh
   .content-wrapper

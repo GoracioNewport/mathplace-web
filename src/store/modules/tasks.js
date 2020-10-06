@@ -172,12 +172,12 @@ export default {
               userTopicDetails = usrData
               console.log(docData.tasks)
               itemCount = docData.tasks.length
-              if (userTopicDetails === undefined || userTopicDetails.grades.length > itemCount) {
+              if (userTopicDetails === undefined || userTopicDetails.lastAnswers.length !== itemCount) {
                 console.log('First user`s entry', userTopicDetails, itemCount)
                 let blankArray = []
                 let nullArray = []
                 for (let i = 0; i < itemCount; i++) blankArray.push(1)
-                for (let i = 0; i < itemCount; i++) nullArray.push(null)
+                for (let i = 0; i < itemCount; i++) nullArray.push('null')
                 userData.set({
                   grades: blankArray,
                   solution: blankArray,
@@ -194,7 +194,7 @@ export default {
                 for (let i = userTopicDetails.grades.length; i < itemCount; i++) {
                   userTopicDetails.grades.push(1)
                   userTopicDetails.solution.push(1)
-                  userTopicDetails.lastAnswers.push(null)
+                  userTopicDetails.lastAnswers.push('null')
                 }
                 console.log('To', userTopicDetails.grades)
                 userData.set({
@@ -216,7 +216,7 @@ export default {
                 task.id = i
                 task.taskId = taskCount
                 task.tries = userTopicDetails.grades[i]
-                console.log(task)
+                task.userAnswer = userTopicDetails.lastAnswers[i]
                 tasksList.push(task)
               }
 
