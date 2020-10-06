@@ -161,7 +161,7 @@ export default {
             // Если это первая загрузка или мы сами отправили сообщение, скролим в самый низ
             if (first || (Object.keys(vueInstance.chat.msgs).length > 0 && vueInstance.chat.msgs[Object.keys(vueInstance.chat.msgs).length - 1].sender === vueInstance.getUser.id)) {
               const el = await vueInstance.$el.getElementsByClassName('message-fragment')[data.all_message - 1]
-              el.scrollIntoView()
+              if (el !== undefined) el.scrollIntoView()
               first = false
             }
             vueInstance.loading = false
