@@ -215,7 +215,7 @@ export default {
       })
       for (let i = 0; i < memb.length; i++) {
         await db.collection('account').doc(memb[i]).get().then(async doc => {
-          vueInstance.chatMembers[memb[i]] = doc.data().name
+          doc.exists ? vueInstance.chatMembers[memb[i]] = doc.data().name : vueInstance.chatMembers[memb[i]] = 'Deleted User'
         })
       }
     },
