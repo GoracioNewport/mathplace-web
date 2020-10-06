@@ -138,10 +138,10 @@
               md-field
                 label(for='theme') Тема
                 md-select#theme(v-model='selectedMaterialTheme', name='theme' @md-selected = 'selectTopic(selectedMaterialTheme)')
-                  md-optgroup(label='Темы MathPlace')
-                    md-option(v-for = 'topic in topicList' :key = 'topic.name' :value='topic.name') {{ topic.name }}
                   md-optgroup(label='Ваши темы')
-                    md-option(value='apples') Apples
+                    md-option(v-for = '(topic, i) in topicList' v-if = 'topic.collection === "user"' :key = 'topic.name' :value='topic.name') {{ topic.name }}
+                  md-optgroup(label='Темы MathPlace')
+                    md-option(v-for = '(topic, i) in topicList' v-if = 'topic.collection === "mathplace"' :key = 'topic.name' :value='topic.name') {{ topic.name }}
         .materialMenuTaskBox(v-if = 'materialMenuTaskSectionShow')
           .emptyTopicMessage(v-if = 'topicList[selectedMaterialThemeIndex].tasks.length === 0')
             span Тут пока нет задач!
@@ -230,12 +230,7 @@ export default {
         answer: {
         },
         statement: {
-          minLength: minLength(1),
-          $each: {
-            inner: {
-              required
-            }
-          }
+          minLength: minLength(1)
         }
       }
     }

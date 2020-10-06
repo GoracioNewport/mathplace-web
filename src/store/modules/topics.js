@@ -306,11 +306,40 @@ export default {
     async fetchTopicList (ctx) {
       const db = firebase.firestore()
       var list = []
-      db.collection(tasksDb).get()
+      // Читаем все личные задачи
+      var myTopics
+      await db.collection(accountDb).doc(this.getters.getUser.id).get().then(doc => { doc.data().myTopics !== undefined ? myTopics = doc.data().myTopics : myTopics = [] })
+      for await (var topic of myTopics) {
+        db.collection(olympiadDb).doc(topic).get().then(doc => {
+          var data = JSON.parse(JSON.stringify(doc.data()))
+          var info = {}
+          info.collection = 'user'
+          info.name = data.name
+          data.tasks !== undefined ? info.tasks = data.tasks : info.tasks = []
+          var taskInd = 0
+          // Парсинг задач
+          for (let i = 0; i < info.tasks.length; i++) {
+            info.tasks[i].originData = JSON.parse(JSON.stringify(data.tasks[i]))
+            if (info.tasks[i].type !== 'theory') taskInd++
+            info.tasks[i].taskInd = taskInd
+            // Парсинг текста
+            var text = ''
+            for (let j = 0; j < info.tasks[i].statement.length; j++) {
+              if (info.tasks[i].statement[j].type === 'text') text += info.tasks[i].statement[j].inner
+            }
+            info.tasks[i].textPreview = text
+          }
+          list.push(info)
+        })
+      }
+      console.log(list)
+      // Читаем все задачи из MathPlace
+      await db.collection(tasksDb).get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             var data = JSON.parse(JSON.stringify(doc.data()))
             var info = {}
+            info.collection = 'mathplace'
             info.name = doc.id
             data.tasks !== undefined ? info.tasks = data.tasks : info.tasks = []
             var taskInd = 0
