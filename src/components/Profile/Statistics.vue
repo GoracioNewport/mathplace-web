@@ -7,7 +7,7 @@
         color = "#763dca"
         :opacity = 0.5)
     .topicsBox(v-if = 'myTopics.length !== 0')
-      .topicItem(v-for = '(topic, topicIndex) in myTopics'
+      .topicItem(v-for = '(topic, topicIndex) in myTopics.slice().reverse()'
       :key = 'topic.token')
         img.imageButton(src ='@/assets/images/share_24px.png' @click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + topic.token)')
         img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')

@@ -75,7 +75,7 @@
             //- input#img(type='file', name='img', accept='image/*', @click="onFileButtonClicked(this.tasks.indexOf(task), task.text.indexOf(component))")
             md-field(name='img')
               label Выберите картинку
-              md-file(v-model = 'answer' @md-change ='onFilePicked')
+              md-file(v-model = 'answer' @md-change ='onFilePicked' accept="image/*")
         .multipleChoiceBox(v-else-if ='this.taskList[this.activeTask].type === "multipleChoice"')
           .choiceBox(v-for = "choice in this.taskList[this.activeTask].options")
             //- md-checkbox(v-if ='taskList[activeTask].tries')

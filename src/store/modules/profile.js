@@ -130,7 +130,7 @@ export default {
                             if (globalNameList[mem] === undefined) await db.collection('account').doc(mem).get().then(doc => { doc.exists ? globalNameList[mem] = doc.data().name : globalNameList[mem] = 'Deleted User' })
                             info.members[mem] = globalNameList[mem]
                         }
-                        if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {info['image'] = doc.data().image })
+                        if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {doc.data() !== undefined ? info['image'] = doc.data().image : info['image'] = undefined })
                         chatList[info.id] = info
                         if (Object.keys(chatList).length >= limit) ctx.commit('updateMyChats', Object.values(chatList))
                     })

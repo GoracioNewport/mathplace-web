@@ -170,7 +170,7 @@ export default {
 
               userTopicDetails = usrData
               itemCount = docData.tasks.length
-              if (userTopicDetails === undefined || userTopicDetails.lastAnswers.length !== itemCount) {
+              if (userTopicDetails === undefined || userTopicDetails.lastAnswers === undefined || userTopicDetails.solution === undefined || userTopicDetails.grades === undefined || userTopicDetails.lastAnswers.length > itemCount || userTopicDetails.solution.length > itemCount || userTopicDetails.grades.length > itemCount) {
                 let blankArray = []
                 let nullArray = []
                 for (let i = 0; i < itemCount; i++) blankArray.push(1)

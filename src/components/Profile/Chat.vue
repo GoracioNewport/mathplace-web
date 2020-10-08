@@ -66,7 +66,7 @@
             .settingsMenuField
               md-field
                 label Выберите картинку
-                md-file(v-model='newAvatarName' @md-change ='onFilePicked')
+                md-file(v-model='newAvatarName' @md-change ='onFilePicked' accept="image/*")
           .settingsMenuText
             span.md-headline Участники
           .settingsMenuField

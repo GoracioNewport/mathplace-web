@@ -28,7 +28,7 @@
           md-field.classCnt
             label Введите класс
             md-input(v-model='classCnt' type='number')
-
+            span.md-helper-text Число от 1 до 11
         .tasksInfo
           .tasksContent
             .task(v-for = 'task in tasks')

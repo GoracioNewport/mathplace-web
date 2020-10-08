@@ -184,6 +184,7 @@ export default {
       if (users === undefined) users = []
       if (!users.includes(this.getters.getUser.id)) {
         users.push(this.getters.getUser.id)
+        users = [...new Set(users)] // Из-за какого-то бага иногда пользователь может встречаться несколько раз, по этому удаляем все дупликаты...
         db.collection(this.getters.getCollection).doc(this.getters.getCurrentTopic).update({ 'members': users })
       }
     },

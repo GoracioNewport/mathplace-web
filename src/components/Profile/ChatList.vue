@@ -43,7 +43,7 @@
         .joinMenuCancel
           .button.button--round.button-success(@click ='createChat("personal")') Готово
           .button.button--round.button-success(@click ='groupChat = true') Создать групповой чат
-          .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
+          .button.button--round.button-warning(@click ='joinMenuShow = false; groupChat = false')  Отмена
 
       // Сверху персональное меню, снизу - групповое
 
@@ -70,7 +70,7 @@
         .joinMenuCancel
           .button.button--round.button-success(@click ='createChat("group")') Готово
           .button.button--round.button-success(@click ='groupChat = false') Создать персональный чат
-          .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
+          .button.button--round.button-warning(@click ='joinMenuShow = false; groupChat = false')  Отмена
 </template>
 
 <script>
