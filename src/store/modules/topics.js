@@ -154,6 +154,11 @@ export default {
       if (liked) n = 1
       else n = -1
       let likes = this.getters.getTopicLikes
+      let userLikes = this.getters.getUser.like
+      console.log(userLikes.length)
+      userLikes.push(this.getters.getCurrentTopic)
+      ctx.commit('updateUser', ['like', userLikes])
+      console.log(userLikes.length)
       ctx.commit('updateTopicDetailsDB', ['like', likes + n])
     },
     async fetchLikes (ctx, taskCollection) {
@@ -181,7 +186,7 @@ export default {
       await db.collection(this.getters.getCollection).doc(this.getters.getCurrentTopic).get().then(doc => {
         users = doc.data().members
       })
-      if (users === undefined) users = []
+      if (users === undefined || users === null) users = []
       if (!users.includes(this.getters.getUser.id)) {
         users.push(this.getters.getUser.id)
         users = [...new Set(users)] // Из-за какого-то бага иногда пользователь может встречаться несколько раз, по этому удаляем все дупликаты...

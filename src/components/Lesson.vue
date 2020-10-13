@@ -182,6 +182,7 @@ export default {
     this.userId = this.getUser.id
     await this.fetchLikes(this.collection)
     await this.fetchTasks(this.collection)
+    console.log(this.getUser.like)
     this.tasksInfo.name = this.getTasksInfo.name
     this.tasksInfo.author = this.getTasksInfo.author
     this.taskList = this.getTasks
@@ -278,12 +279,13 @@ export default {
       let liked = this.getUser.like
       if (this.getUser.like.find(t => t === this.getCurrentTopic)) {
         liked.splice(liked.indexOf(this.getCurrentTopic), 1)
+        this.updateUser(['like', liked])
         this.like(false)
       } else {
         liked.push(this.getCurrentTopic)
+        this.updateUser(['like', liked])
         this.like(true)
       }
-      this.updateUser(['like', liked])
     },
     onFilePicked (event) { this.solutionFile = event[0] }
   },

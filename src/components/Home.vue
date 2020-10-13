@@ -229,39 +229,39 @@
                   v-bind:theme='topic.theme'
                   v-bind:like='topic.like'
                 )
-        //- .pesontedan
-        //-   input(id='pesontedan-seven',type='checkbox', name='pesontedans')
-        //-   label#logic(for='pesontedan-seven')
-        //-     a.title_topic2(name='logic')
-        //-       strong Логика
-        //-     //- p(:name='gggg').title_topic {{ array[0] }}
-        //-   .topic-list
-        //-     .topic-item-wrapper(
-        //-       v-for = "(topic, index) in this.arrayLogics",
-        //-       v-if='index<4',
-        //-       :key = "topic.id"
-        //-     )
-        //-       Topic(
-        //-         v-bind:id='topic.id',
-        //-         v-bind:title='topic.title'
-        //-         v-bind:percentage='topic.completed'
-        //-         v-bind:theme='topic.theme'
-        //-         v-bind:like='topic.like'
-        //-       )
-        //-   .pesontedan-content
-        //-     .topic-list
-        //-       .topic-item-wrapper(
-        //-         v-for = "(topic, index) in this.arrayLogics"
-        //-         v-if='index>=4',
-        //-         :key = "topic.id"
-        //-       )
-        //-         Topic(
-        //-           v-bind:id='topic.id',
-        //-           v-bind:title='topic.title'
-        //-           v-bind:percentage='topic.completed'
-        //-           v-bind:theme='topic.theme'
-        //-           v-bind:like='topic.like'
-        //-         )
+        .pesontedan
+          input(id='pesontedan-seven',type='checkbox', name='pesontedans')
+          label#logic(for='pesontedan-seven')
+            a.title_topic2(name='logic')
+              strong Логика
+            //- p(:name='gggg').title_topic {{ array[0] }}
+          .topic-list
+            .topic-item-wrapper(
+              v-for = "(topic, index) in this.arrayLogics",
+              v-if='index<4',
+              :key = "topic.id"
+            )
+              Topic(
+                v-bind:id='topic.id',
+                v-bind:title='topic.title'
+                v-bind:percentage='topic.completed'
+                v-bind:theme='topic.theme'
+                v-bind:like='topic.like'
+              )
+          .pesontedan-content
+            .topic-list
+              .topic-item-wrapper(
+                v-for = "(topic, index) in this.arrayLogics"
+                v-if='index>=4',
+                :key = "topic.id"
+              )
+                Topic(
+                  v-bind:id='topic.id',
+                  v-bind:title='topic.title'
+                  v-bind:percentage='topic.completed'
+                  v-bind:theme='topic.theme'
+                  v-bind:like='topic.like'
+                )
         .pesontedan
           input(id='pesontedan-nine',type='checkbox', name='pesontedans')
           label#graphs(for='pesontedan-nine')
