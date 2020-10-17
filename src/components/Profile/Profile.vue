@@ -205,9 +205,10 @@ export default {
 
 <style scoped lang='stylus'>
   .md-avatar
-    width 10%
-    height 10%
+    width 10vh
+    height 10vh
     border-radius 60%
+    vertical-align top
   .createTopicButton
     z-index 10
   .settingsMenuBox

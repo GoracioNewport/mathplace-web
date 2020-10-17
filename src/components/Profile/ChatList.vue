@@ -369,13 +369,14 @@ export default {
     &:hover
       cursor pointer
   .chat-image
-    display inline-block
+    // display inline-block
     grid-column-start 1
     grid-column-end 1
     grid-row-start 1
     grid-row-end 2
     width 15%
     min-width 150px
+    min-height 150px
     height auto
     overflow hidden
     border-radius 50%
