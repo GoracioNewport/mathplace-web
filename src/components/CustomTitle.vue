@@ -17,7 +17,15 @@
 
           //- label(for = 'isPrivate') Приватная тема
             //- input#isPrivate(type = 'checkbox', v-model = "private")
-          md-checkbox.olympPrivate(v-model='private') Приватная тема
+          .checkboxBox
+            md-checkbox.olympPrivate(v-model='private') Приватная тема
+          .checkboxBox
+            md-checkbox.olympPrivate(v-model='timeStartOn') Ограничить время начала
+            datetime(v-if ='timeStartOn' type='datetime' v-model='timeStart')
+          .checkboxBox
+            md-checkbox.olympPrivate(v-model='timeFinishOn') Ограничить время конца
+            datetime(v-if ='timeFinishOn' type='datetime' v-model='timeFinish')
+          //- span {{ timeStart }} {{ timeFinish }}
 
           select.olympTheme(v-model = "theme")
             option(v-for = 'theme in themeList') {{ theme }}
@@ -188,13 +196,17 @@ import { mapGetters, mapActions } from 'vuex'
 import { required, minLength, maxLength, between } from 'vuelidate/lib/validators'
 import firebase from 'firebase/app'
 import Loading from 'vue-loading-overlay'
+import { Datetime } from 'vue-datetime'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import 'firebase/storage'
 import { VueEditor } from 'vue2-editor'
+import { Settings } from 'luxon'
+
 export default {
   components: {
     Loading,
-    VueEditor
+    VueEditor,
+    Datetime
   },
   data () {
     return {
@@ -236,7 +248,11 @@ export default {
       materialMenuTaskSectionShow: false,
       selectedMaterialTheme: '',
       selectedMaterialThemeIndex: 0,
-      newCheckboxAnswer: ''
+      newCheckboxAnswer: '',
+      timeStartOn: false,
+      timeFinishOn: false,
+      timeStart: '',
+      timeFinish: ''
     }
   },
   validations: {
@@ -374,8 +390,13 @@ export default {
         items: this.items,
         members: [],
         class: this.classCnt,
-        tasks: []
+        tasks: [],
+        created: firebase.firestore.Timestamp.now()
       }
+      // Время начала и конца
+      if (this.timeStartOn) data.time_start = firebase.firestore.Timestamp.fromDate(new Date(this.timeStart))
+      if (this.timeFinishOn) data.time_end = firebase.firestore.Timestamp.fromDate(new Date(this.timeFinish))
+      console.log(data.time_start, data.time_end)
       // Парсинг задач
       for (let i = 0; i < this.tasks.length; i++) {
         var task = {}
@@ -424,6 +445,7 @@ export default {
       try {
         await this.sendTopic(sendInformation)
       } catch (error) {
+        console.log(error)
       }
       this.addMyTopicsToList(token)
       this.loading = false
@@ -442,6 +464,7 @@ export default {
     }
   },
   async mounted () {
+    Settings.defaultLocale = 'ru'
     if (this.$route.params.topicId !== undefined) {
       this.myTopicLoading = true
       await this.fetchMyTopic(this.$route.params.topicId)
@@ -455,6 +478,13 @@ export default {
         this.items = myTopic.cnt_items
         this.private = myTopic.private
         this.theme = myTopic.theme
+        if (myTopic.time_start !== undefined) {
+          this.timeStartOn = true
+          this.timeStart = myTopic.time_start.toDate().toISOString()
+        } if (myTopic.time_end !== undefined) {
+          this.timeFinishOn = true
+          this.timeFinish = myTopic.time_end.toDate().toISOString()
+        }
         // Парсинг задач
         for (let i = 0; i < myTopic.tasks.length; i++) {
           this.tasks.push(myTopic.tasks[i])
@@ -475,6 +505,11 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .vdatetime
+    width 20vw
+    float right
+    input
+      border-color #000000
   .removeButton
     margin-left 3%
     min-width 0

@@ -284,6 +284,8 @@ export default {
         topic['theme'] = rawTopic.theme.charAt(0).toUpperCase() + rawTopic.theme.slice(1)
         topic['class'] = rawTopic.class
         topic['tasks'] = rawTopic.tasks
+        topic['time_start'] = rawTopic.time_start
+        topic['time_end'] = rawTopic.time_end
         for (let i = 0; i < rawTopic.items; i++) {
           var rawTask = topic.tasks[i]
           if (rawTask.difficulty === 1) rawTask.difficulty = 'Легкая'

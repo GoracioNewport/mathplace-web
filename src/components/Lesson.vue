@@ -1,7 +1,7 @@
 <template lang="pug">
   .content-wrapper
     //- img#imgSmile(src="@/components/images/back.png")
-    .taskbar(v-if="!isLoading && taskList.length > 0")
+    .taskbar(v-if = "error === 'none'")
       router-link(to='/')
         img#imgBack(src="@/components/images/back.png")
       .container
@@ -32,7 +32,7 @@
           :active.sync = "this.isLoading",
           :is-full-page = 'true',
           color = '#763dca')
-    .content(v-else-if="taskList.length > 0")
+    .content(v-else-if="error === 'none'")
       .name
         span(v-if = 'this.taskList[this.activeTask].type == "theory"') {{ tasksInfo.name }}
         span(v-else) Задача {{ this.taskList[this.activeTask].taskId }}
@@ -130,7 +130,7 @@
               span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Отправить
               span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
               span(v-else) Завершить
-    .placeholderScreen(v-else-if = 'tasksInfo.author !== ""')
+    .placeholderScreen(v-else-if ='error === "no_material_author" || error === "no_material_member"')
       .ownerScreen(v-if = 'userId === tasksInfo.author')
         strong.md-headline Вы еще не добавили материал в этот урок.
         br
@@ -139,6 +139,23 @@
         strong.md-headline Учитель еще не добавил материал в этот урок.
         br
         strong.md-headline Возвращайтесь позже!
+    .placeholderScreen(v-else-if ='error === "too_early" || error === "too_late"')
+      .tooEarlyScreen(v-if ='error === "too_early"')
+        strong.md-headline Ой-ой...
+        br
+        strong.md-headline Кажется, этот урок еще не начался.
+        br
+        strong.md-headline Он начнется в
+        span.md-headline {{ this.tasksInfo.timeStart.toLocaleString() }}
+        br
+        strong.md-headline Возвращайтесь позже!
+      .tooLateScreen(v-else-if ='error === "too_late"')
+        strong.md-headline Ой-ой...
+        br
+        strong.md-headline Кажется, этот урок уже закончился в
+        span.md-headling {{ this.tasksInfo.timeEnd.toLocaleString() }}
+        br
+        strong.md-headline Нам очень жаль!
     .solution(v-if = 'this.solutionShown', @click='solutionShown = !solutionShown')
       .solutionBox(@click='solutionShown = !solutionShown')
         .solutionText
@@ -182,10 +199,16 @@ export default {
     this.userId = this.getUser.id
     await this.fetchLikes(this.collection)
     await this.fetchTasks(this.collection)
-    console.log(this.getUser.like)
     this.tasksInfo.name = this.getTasksInfo.name
     this.tasksInfo.author = this.getTasksInfo.author
+    this.tasksInfo.timeStart = this.getTasksInfo.time_start
+    this.tasksInfo.timeEnd = this.getTasksInfo.time_end
     this.taskList = this.getTasks
+    if (this.taskList.length === 0 && this.tasksInfo.author === this.getUser.id) this.error = 'no_material_author'
+    else if (this.taskList.length === 0 && this.tasksInfo.author !== this.getUser.id) this.error = 'no_material_member'
+    else if (this.tasksInfo.timeStart !== null && this.tasksInfo.timeStart.getTime() > new Date().getTime()) this.error = 'too_early'
+    else if (this.tasksInfo.timeEnd !== null && this.tasksInfo.timeEnd.getTime() < new Date().getTime()) this.error = 'too_late'
+    else this.error = 'none'
     if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
     this.isLoading = false
     this.$forceUpdate()
@@ -206,7 +229,8 @@ export default {
       topicLiked: false,
       solutionShown: false,
       userId: null,
-      solutionFile: null
+      solutionFile: null,
+      error: 'pending'
     }
   },
   methods: {
