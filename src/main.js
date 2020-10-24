@@ -14,17 +14,20 @@ import vueSmoothScroll from 'vue2-smooth-scroll'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material-design-icons/styles.css'
+import 'vue-datetime/dist/vue-datetime.css'
 
 // import { MdButton, MdContent, MdTabs } from 'vue-material/dist/components'
 // import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import Clipboard from 'v-clipboard'
+import { Datetime } from 'vue-datetime'
 
 // Vue.use(MdButton)
 // Vue.use(MdContent)
 // Vue.use(MdTabs)
 
 Vue.use(VueMaterial)
+Vue.use(Datetime)
 
 Vue.use(Topic)
 Vue.use(Vuelidate)

@@ -1,7 +1,6 @@
 <template lang="pug">
   .content-wrapper
     .loading-indicator(v-if = 'myTopicLoading')
-      span aaaaaaaaaaaaa
       loading(
         :active.sync = "myTopicLoading"
         :is-full-page = 'true'
@@ -31,7 +30,7 @@
             span.md-helper-text Число от 1 до 11
         .tasksInfo
           .tasksContent
-            .task(v-for = 'task in tasks')
+            .task(v-for = '(task, taskId) in tasks')
               .button.img.delete_button(@click='tasks.splice(tasks.indexOf(task), 1)')
               .preMadeBox(v-if = 'task.type === "preMade"')
                 .componentName
@@ -65,15 +64,39 @@
 
                   .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
 
-                  .button.button--round.button-success(
+                  .button.button--round.button-success.buttonAdd(
                     @click='addContent(tasks.indexOf(task), "img")'
                     ) Добавить картинку
                   .button.button--round.button-success(
                     @click='addContent(tasks.indexOf(task), "file")'
                     ) Загрузить PDF-файл
                 .taskEditBox(v-if ="task.type === 'task'")
-                  md-field
-                    md-input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
+                  .taskAnswerBox
+                    md-field.taskTypeSelect
+                      label(for='taskType') Тип задачи
+                      md-select#taskType(v-model='task.taskType' name='taskTypeText' @md-selected='changeAnswerType(task.taskType, taskId)')
+                        md-option(value='task') Единственный ответ
+                        md-option(value='multipleAnswer') Множество ответов
+                        md-option(value='multipleChoice') Множественный выбор
+                        md-option(value='upload') Загрузка решения
+                        md-option(value='proof') Дополнительная задача
+                    md-field(v-if='task.taskType == "task"')
+                      md-input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
+                    span.md-body-2(v-else-if='task.taskType == "upload"') Вы сможете проверить ответ ученика в личном кабинете в разделе 'Мои темы'.
+                    span.md-body-2(v-else-if='task.taskType == "proof"') Дополнительная задача не подразумевает проверку ответа. Пожалуйста, напишите развернутый ответ в секции 'Решение', что бы ученики могли проверить себя самостоятельно.
+                    md-chips(v-else-if='task.taskType == "multipleAnswer"' v-model='task.answer' md-placeholder='Введите ответ и нажмите Enter...')
+                    .checkboxesBox(v-else-if='task.taskType == "multipleChoice"')
+                      md-field
+                        label Введите вариант ответа
+                        md-input(v-model='newCheckboxAnswer' placeholder='Добавить вариант ответа')
+                        md-button.addMemeberButton(@click ='addCheckBoxAnswer(newCheckboxAnswer, taskId)') Добавить
+                      span.md-body-2(v-if='task.options.length > 0') Отметьте правильные ответы
+                      br
+                      .checkboxesBoxCheckboxes(v-for ='(op, opI) in task.options' :key="opI" )
+                        md-checkbox(v-model='task.answer' :value='op') {{ op }}
+                        md-button.removeButton.md-accent.md-raised(@click ='task.options.splice(opI, 1); if (task.answer.findIndex(f => f === op) !== -1) task.answer.splice(task.answer.findIndex(f => f === op), 1);') X
+                      //- span {{ task.answer }}
+
                   br
                   span Выберите сложность
                   br
@@ -93,7 +116,7 @@
                     md-select#solutionType(v-model='task.solutionType' name='solutionTypeText')
                       md-option(value='hide') Без решения
                       md-option(value='solution') Показывать решение
-                      md-option(value='answer') Показывать ответ
+                      md-option(v-if ='task.taskType != "proof" && task.taskType != "upload"' value='answer') Показывать ответ
                   md-field(v-if ='task.solutionType !== "hide" && task.solutionType !== "answer"')
                     label Решение
                     md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
@@ -212,7 +235,8 @@ export default {
       materialMenuShow: false,
       materialMenuTaskSectionShow: false,
       selectedMaterialTheme: '',
-      selectedMaterialThemeIndex: 0
+      selectedMaterialThemeIndex: 0,
+      newCheckboxAnswer: ''
     }
   },
   validations: {
@@ -237,6 +261,14 @@ export default {
   },
   methods: {
     ...mapActions(['sendTopic', 'addMyTopicsToList', 'fetchMyTopic', 'fetchTopicList']),
+    addCheckBoxAnswer (ans, i) {
+      this.newCheckboxAnswer = ''
+      if (this.tasks[i].options.findIndex(f => f === ans) === -1) this.tasks[i].options.push(ans)
+    },
+    changeAnswerType (type, i) {
+      if (type === 'multipleChoice' || type === 'multipleAnswer') this.tasks[i].answer = []
+      else if (type === 'task') this.tasks[i].answer = ''
+    },
     goToProfile () {
       this.$router.push('/profile')
     },
@@ -265,18 +297,18 @@ export default {
         task.topicName = this.topicList[this.selectedMaterialThemeIndex].name
         this.tasks.push(task)
       } else {
-        var answ
-        type === 'theory' ? answ = 'null' : answ = ''
         task = {
           statement: [{
             type: 'text',
             inner: ''
           }],
           type: type,
-          answer: answ,
+          answer: '',
           solutionType: 'hide',
           solution: '',
-          difficulty: 'Легкая'
+          difficulty: 'Легкая',
+          taskType: 'task',
+          options: []
         }
         this.tasks.push(task)
       }
@@ -325,6 +357,7 @@ export default {
         alert('Проверьте правильность заполнения полей!')
         return
       }
+
       this.success = true
       this.loading = true
       this.theme = this.theme.toLowerCase()
@@ -373,6 +406,8 @@ export default {
         if (this.tasks[i].difficulty === 'Легкая') this.tasks[i].difficulty = 1
         else if (this.tasks[i].difficulty === 'Средняя') this.tasks[i].difficulty = 2
         else this.tasks[i].difficulty = 3
+        // Обработка типов задач
+        if (this.tasks[i].type === 'task') this.tasks[i].type = this.tasks[i].taskType
         // Обработка заготовленных заданий
         if (this.tasks[i].type === 'preMade') task = this.tasks[i].originData
         else task = this.tasks[i]
@@ -420,7 +455,14 @@ export default {
         this.items = myTopic.cnt_items
         this.private = myTopic.private
         this.theme = myTopic.theme
-        this.tasks = myTopic.tasks
+        // Парсинг задач
+        for (let i = 0; i < myTopic.tasks.length; i++) {
+          this.tasks.push(myTopic.tasks[i])
+          if (myTopic.tasks[i].type !== 'theory') {
+            this.tasks[i].taskType = myTopic.tasks[i].type
+            this.tasks[i].type = 'task'
+          }
+        }
         this.token = this.$route.params.topicId
       }
       this.myTopicLoading = false
@@ -433,6 +475,17 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .removeButton
+    margin-left 3%
+    min-width 0
+    width 30px
+    height 30px
+  .taskAnswerBox
+    margin-bottom 3%
+  .taskTypeSelect
+    margin-top 5%
+  #taskType
+    max-width 330px
   .materialContentText
     max-height 15vh
     min-height 15vh
@@ -494,7 +547,6 @@ export default {
   .taskAnswer
     border-radius 10px
     padding 1%
-    margin 3%
     margin-left 0%
   .classCnt
     position relative

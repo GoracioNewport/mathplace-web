@@ -90,6 +90,7 @@ export default {
         async fetchMyChats (ctx) {
             const db = firebase.firestore()
             var moment = require('moment')
+            moment.locale('ru')
             var nameList = []
             var globalNameList = {}
             var userId = this.getters.getUser.id
@@ -123,7 +124,7 @@ export default {
                             if (j === data.all_message - 1) { // Это поле нужно для сортировки чата по времени
                                 info['msgs'][j].time !== null ? info.lastMessageTime = info['msgs'][j].time.seconds : info.lastMessageTime = 0 
                             }
-                            info['msgs'][j].time !== null ? info['msgs'][j].time = moment.unix(info['msgs'][j].time.seconds).format('MMMM Do YYYY, h:mm:ss a') : info['msgs'][j].time = ''
+                            info['msgs'][j].time !== null ? info['msgs'][j].time = moment.unix(info['msgs'][j].time.seconds).format('LLL') : info['msgs'][j].time = ''
                         }
                         for await (let mem of memb) {
                             // console.log(globalNameList)
