@@ -394,8 +394,8 @@ export default {
         created: firebase.firestore.Timestamp.now()
       }
       // Время начала и конца
-      if (this.timeStartOn) data.time_start = firebase.firestore.Timestamp.fromDate(new Date(this.timeStart))
-      if (this.timeFinishOn) data.time_end = firebase.firestore.Timestamp.fromDate(new Date(this.timeFinish))
+      if (this.timeStartOn && this.timeStart !== '') data.time_start = firebase.firestore.Timestamp.fromDate(new Date(this.timeStart))
+      if (this.timeFinishOn && this.timeFinish !== '') data.time_end = firebase.firestore.Timestamp.fromDate(new Date(this.timeFinish))
       console.log(data.time_start, data.time_end)
       // Парсинг задач
       for (let i = 0; i < this.tasks.length; i++) {
