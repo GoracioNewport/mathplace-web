@@ -153,14 +153,14 @@
         strong.md-headline Ой-ой...
         br
         strong.md-headline Кажется, этот урок уже закончился в
-        span.md-headling {{ this.tasksInfo.timeEnd.toLocaleString() }}
+        span.md-headline {{ this.tasksInfo.timeEnd.toLocaleString() }}
         br
         strong.md-headline Нам очень жаль!
     .solution(v-if = 'this.solutionShown', @click='solutionShown = !solutionShown')
       .solutionBox(@click='solutionShown = !solutionShown')
         .solutionText
-          span(v-if ='this.taskList[this.activeTask].solution !== "null"') {{ this.taskList[this.activeTask].solution }}
-          span(v-else) Ответ: {{ this.taskList[this.activeTask].answer }}
+          strong.md-headline(v-if ='this.taskList[this.activeTask].solution !== "null"') {{ this.taskList[this.activeTask].solution }}
+          strong.md-hedline(v-else) Ответ: {{ this.taskList[this.activeTask].answer }}
         .solutionButtonClose
           .button.button--round.button-success(
             @click='solutionShown = false') ОК!
@@ -330,6 +330,12 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .container
+    max-height 64px
+    overflow auto
+    overflow-y hidden
+    white-space nowrap
+    margin-left 12%
   .solutionButton
     grid-column 3
     grid-row 1
@@ -352,7 +358,7 @@ export default {
     margin-top 20%
     text-align center
     .md-headline
-      font-size 3em
+      font-size 24pt
     .button
       margin 3%
       color #FFFFFF
@@ -384,11 +390,15 @@ export default {
     min-width 350px
     border 2px #000000 solid
     border-radius 10px
+    @media screen and (max-width: 600px)
+      margin 1%
+      margin-top 20%
   .solutionText
     padding 5%
     height 90%
-    overflow: auto;
-    max-height: 50vh;
+    overflow: auto
+    max-height: 50vh
+    font-size 24pt
   .solutionButtonClose
     margin 3%
   #imgSmile
@@ -397,6 +407,7 @@ export default {
     width 90%
   .taskbar-content
     position relative
+    max-height 64px
   #imgBack
     position absolute
     float left
@@ -448,11 +459,12 @@ export default {
     width auto
     vertical-align middle
   .taskbar-list
+    max-height 64px
     margin 0 auto
     display table
   .taskbar-item
+    display inline-block
     padding 13px 9px 9px 20px
-    float left
   .content
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
   .name

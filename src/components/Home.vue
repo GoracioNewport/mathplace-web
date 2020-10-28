@@ -392,7 +392,7 @@ export default {
   label
     background-color #fafafa !important
   .md-headline
-    font-size 1em
+    font-size 24pt
   strong
     color #000000
   .joinMenuBox
@@ -400,7 +400,6 @@ export default {
     padding-left 10%
     padding-right 10%
     .button
-      font-size 0.6em
       margin 2%
   .joinMenuText
     font-size 1.3em
@@ -457,6 +456,9 @@ export default {
     min-width 350px
     border 2px #000000 solid
     border-radius 10px
+    @media screen and (max-width: 600px)
+      margin 1%
+      margin-top 20%
 
   .ui-title-1
     font-size 4em

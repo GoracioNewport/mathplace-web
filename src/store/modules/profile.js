@@ -103,6 +103,8 @@ export default {
                     var chatList = {}
                     db.collection('chat').doc(name).onSnapshot(async function(chatDoc) {
                         // chatList - это мепчик, если что-то меняется в одном чате, то мы просто это перезаписываем, если добавляется новый или убирается старый, то все читается заново
+                        console.log('Reading Chat Data from ', name)
+                        // if (!chatDoc.exists) return
                         var data = chatDoc.data()
                         var ind = userId
                         var info = {}
@@ -120,7 +122,8 @@ export default {
                             info['name'] = ind
                         } info['msgs'] = {}
                         for (let j = 0; j < data.all_message; j++) {
-                            info['msgs'][j] = data['message' + j.toString()]
+                            info['msgs'][j] = data['messages'][j]
+                            if (info['msgs'][j] === undefined) continue
                             if (j === data.all_message - 1) { // Это поле нужно для сортировки чата по времени
                                 info['msgs'][j].time !== null ? info.lastMessageTime = info['msgs'][j].time.seconds : info.lastMessageTime = 0 
                             }

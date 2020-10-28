@@ -144,6 +144,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+div
+    line-height normal !important
 .content-wrapper
     min-height 0
 
@@ -260,12 +262,10 @@ export default {
     }
 
 #imgMain
-    position relative
-    display inline-block
-    height 98%
-    width 40%
-    left 10%
-    top 0px
+    position absolute
+    width 50%
+    left 40%
+    top 00%
     @media screen and (max-width: 1000px) {
         display none
     }

@@ -274,7 +274,7 @@ export default {
     width 50px
     height 50px
   .emailField
-    width 90%
+    width 80%
   .removeButton
     min-width 0
     width 30px
@@ -284,7 +284,7 @@ export default {
     font-size 1.0em
     padding-bottom 40px
     span
-      font-size 1.1em
+      font-size 24pt
       font-weight 600
       color #763dca
   .joinMenuField
@@ -315,8 +315,11 @@ export default {
     border 2px #000000 solid
     border-radius 10px
     .button
-      font-size 0.6em
+      font-size 14pt
       margin 2%
+    @media screen and (max-width: 600px)
+      margin 1%
+      margin-top 20%
   .content-wrapper
     min-height 0
   .chatList

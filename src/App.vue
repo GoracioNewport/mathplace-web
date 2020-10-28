@@ -68,6 +68,14 @@ export default {
     border-bottom-width 0px
     border-bottom-color #000000
     box-shadow 0 0 10px
+  .navbar-item
+    padding 0
+    padding-left 20px
+    padding-right 20px
+    padding-top 7%
+    padding-bottom 7%
+  .navbar-link
+    padding 0
   .mathplace-logo
     color #FFFFFF !important
     font-size 1.5em

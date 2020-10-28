@@ -216,7 +216,7 @@ export default {
     padding-left 10%
     padding-right 10%
     .button
-      font-size 0.6em
+      font-size 20pt
       margin 2%
   .settingsMenuText
     font-size 1.3em
@@ -245,6 +245,9 @@ export default {
     min-width 350px
     border 2px #000000 solid
     border-radius 10px
+    @media screen and (max-width: 600px)
+      margin 1%
+      margin-top 20%
   .avatarChange
     top 55%
     right 93.8%
