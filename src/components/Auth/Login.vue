@@ -201,6 +201,8 @@ export default {
   width 4%
 
 .form-item
+  input
+    font-size 1em
   .error
     display none
     margin-bottom 2%

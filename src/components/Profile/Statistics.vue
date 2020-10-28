@@ -1,14 +1,31 @@
 <template lang='pug'>
   .content-wrapper
+    .loading-indicator(v-if = 'myTopicsLoading')
+      loading(
+        :active.sync = "this.myTopicsLoading"
+        :is-full-page = 'true'
+        color = "#763dca"
+        :opacity = 0.5)
     .topicsBox(v-if = 'myTopics.length !== 0')
-      .topicItem(v-for = '(topic, topicIndex) in myTopics'
+      .topicItem(v-for = '(topic, topicIndex) in myTopics.slice().reverse()'
       :key = 'topic.token')
+        img.imageButton(src ='@/assets/images/share_24px.png' @click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + topic.token)')
+        img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
+        img.imageButton(src ='@/assets/images/bin2.png' @click ='deleteMyTopic(topic.token, topicIndex)')
         .button.button--round.button-primary.showStatsButton.editButton(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть подробную статистику
-        .button.button--round.button-primary.showStatsButton(v-else @click ='toggleStats(topic.token)') Показать подробную статистику
+        .button.button--round.button-primary.showStatsButton.editButton(v-else @click ='toggleStats(topic.token)') Показать подробную статистику
         span.md-title.topicName {{ topic.name }}
         span.md-body-1.topicToken Ключ: {{ topic.token }}
         .statsBox(v-if = 'topic.showStats')
-          span.loadingBox(v-if = 'Object.keys(topic.stats).length == 0') Загрузка...
+          .loadingBox(v-if = 'Object.keys(topic.stats).length == 0')
+            .vld-parent
+              loading(
+                :active.sync = "Object.keys(topic.stats).length == 0"
+                :is-full-page = 'false'
+                loader = 'dots'
+                color = "#763dca"
+                :opacity = 0.5)
+          //- .errorBox(v-else-if = 'topic.')
           .loadedBox(v-else)
             md-table.statsTable(v-model='myTopics[myTopics.indexOf(topic)].stats', md-sort='name', md-sort-order='asc', md-fixed-header='')
               md-table-toolbar
@@ -21,9 +38,9 @@
                 md-table-cell.nameSlot(md-label='Имя', md-sort-by='name') {{ item.name }}
                 md-table-cell.taskSlot(v-for = '(task, taskIndex) in item.solveStats' :key = 'taskIndex'
                 :md-label = '(taskIndex + 1).toString()')
-                  Dots.answerNo.answerLabel(v-if = 'task === 1')
-                  img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'task == 0')
-                  img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'task == 3 || task == 2')
+                  Dots.answerNo.answerLabel(v-if = 'Number(task) === 1')
+                  img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'Number(task) == 0')
+                  img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
                   img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
                 md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
     .solutionMenu(v-if = 'solutionImageShown')
@@ -39,6 +56,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import Loading from 'vue-loading-overlay'
 import Right from 'vue-material-design-icons/CheckboxMarkedCircleOutline.vue'
 import Dots from 'vue-material-design-icons/DotsHorizontal.vue'
 import Wrong from 'vue-material-design-icons/Close.vue'
@@ -59,11 +77,14 @@ export default {
   components: {
     Right,
     Dots,
-    Wrong
+    Wrong,
+    Loading
   },
   async mounted () {
+    this.myTopicsLoading = true
     await this.fetchMyTopicsDetailedInfo()
     this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
+    this.myTopicsLoading = false
   },
   data () {
     return {
@@ -74,7 +95,8 @@ export default {
       imageTopic: 0,
       imageTask: 0,
       imageUser: 0,
-      imageUserId: ''
+      imageUserId: '',
+      myTopicsLoading: false
     }
   },
   methods: {
@@ -102,9 +124,6 @@ export default {
         if (this.myTopics[this.imageTopic].stats[i].id === userIndex) this.imageUser = i
       }
       this.solutionImageShown = !this.solutionImageShown
-      console.log(this.myTopics)
-      console.log(this.imageTopic, this.imageUser, this.imageTask)
-      console.log(this.myTopics[this.imageTopic].stats[this.imageUser].solveStats[this.imageTask])
     },
     markSolutionAs (status) {
       status === 'right' ? this.myTopics[this.imageTopic].stats[this.imageUser].solveStats[this.imageTask] = 2 : this.myTopics[this.imageTopic].stats[this.imageUser].solveStats[this.imageTask] = 0
@@ -114,7 +133,6 @@ export default {
     },
     deleteMyTopic (token, i) {
       this.myTopics.splice(i, 1)
-      console.log(token, i)
       this.deleteTopic(token)
     }
   },
@@ -128,6 +146,15 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .imageButton
+    width 3%
+    float right
+    margin 1%
+    margin-top 0
+    &:hover
+      cursor pointer
+  .vld-parent
+    min-height 15vh
   .content-wrapper
     min-height 0
   .solutionImage

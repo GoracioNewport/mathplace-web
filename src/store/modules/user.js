@@ -1,6 +1,9 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
+// eslint-disable-next-line
+import { accountDb, tasksDb, olympiadDb, userTasksDb } from './global'
+
 import User from './user_help'
 
 export default {
@@ -17,7 +20,9 @@ export default {
     },
     setPreId (state, payload) {
       state.userPreId = payload
-      console.log(payload)
+    },
+    saveUser (state) {
+      localStorage.setItem('user', JSON.stringify(state.user))
     }
   },
   actions: {
@@ -29,7 +34,6 @@ export default {
         firebase.auth().currentUser.sendEmailVerification()
         commit('setLoading', false)
         commit('setPreId', user.user.uid)
-        console.log('User', user)
       } catch (error) {
         commit('setLoading', false)
         commit('setErrors', error.message)
@@ -44,14 +48,13 @@ export default {
       try {
         const user = await firebase.auth().signInWithEmailAndPassword(email, password)
         if (!firebase.auth().currentUser.emailVerified && email !== 'test@user.com') {
-          console.log('Not verified!')
           commit('setErrors', 'Validation Required')
           commit('setLoading', false)
           return
-        } console.log('Verified')
-        let lastTheme, money, submit, right, like, name
+        }
+        let lastTheme, money, submit, right, like, name, image
 
-        await db.collection('account').doc(user.user.uid).get().then(doc => {
+        await db.collection(accountDb).doc(user.user.uid).get().then(doc => {
           var data = doc.data()
           name = data.name
           lastTheme = data.lastTheme
@@ -59,8 +62,9 @@ export default {
           submit = data.submit
           right = data.right
           like = data.like
+          image = data.image
         })
-        var usr = new User(name, user.user.uid, lastTheme, money, right, submit, like)
+        var usr = new User(name, user.user.uid, lastTheme, money, right, submit, like, image)
         commit('setUser', usr)
         if (remember) localStorage.setItem('user', JSON.stringify(usr))
         commit('setLoading', false)
@@ -73,7 +77,6 @@ export default {
     },
     sendEmailConfirmationMessage (ctx) {
       firebase.auth().currentUser.sendEmailVerification()
-      console.log('Email sent')
     },
     loggedUser ({commit}, payload) {
       commit('setUser', new User(payload.uid))
@@ -85,7 +88,14 @@ export default {
     updateUser ({commit}, [key, value]) {
       const db = firebase.firestore()
       commit('updateUser', [key, value])
-      db.collection('account').doc(this.getters.getUser.id).update({ [key]: value })
+      db.collection(accountDb).doc(this.getters.getUser.id).update({ [key]: value })
+    },
+    updateUserTopicStatus (ctx, payload) {
+      const db = firebase.firestore()
+      ctx.commit('updateUser', [payload.key, payload.value])
+      db.collection(accountDb).doc(this.getters.getUser.id).collection(userTasksDb).doc(payload.key).update({
+        [payload.field]: payload.value
+      })
     }
   },
   getters: {

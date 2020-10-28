@@ -52,6 +52,7 @@ export default new Router({
       component: Logout,
       beforeEnter (to, from, next) {
         Store.dispatch('logoutUser')
+        // Очищаем все данные сайта
         window.localStorage.clear()
         next('/login')
       }

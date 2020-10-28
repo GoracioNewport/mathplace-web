@@ -164,12 +164,11 @@ export default {
       }
     },
     registerUserInDatabase (name, user) {
-      console.log('Calling func', name, user)
       const db = firebase.firestore()
 
       var achivmentCount = 8
       var taskCount = 0
-      var tasksDb = db.collection('task2').doc('ОГЭ Вариант 1')
+      var tasksDb = db.collection('tasks').doc('ОГЭ Вариант 1')
       tasksDb.get()
         .then(doc => {
           taskCount = doc.data().items
@@ -265,6 +264,8 @@ export default {
     width 4%
 
   .form-item
+    input
+      font-size 1em
     .error
       display none
       margin-bottom 2%

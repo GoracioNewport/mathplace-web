@@ -12,20 +12,22 @@
       )
         .chat-header
           .chat-image(v-if = 'chats.image === undefined')
-            img.img_round(src="@/components/images/user.png")
+            img(src="@/components/images/user.png")
           .chat-image(v-else)
             img.image_round(:src = "chats.image")
           .chat-info
-            .chat-name
-              label
-                strong(v-if = 'chats.type === "group"') {{ chats.name }}
-                strong(v-else) {{ chats['members'][chats.name] }}
+            div.chat-top
+              .chat-time(v-if = 'chats.msgCnt > 0 && chats.msgs[chats.msgCnt - 1] !== null')
+                label {{ chats.msgs[chats.msgCnt - 1].time }}
+              .chat-name
+                label
+                  strong(v-if = 'chats.type === "group"') {{ chats.name }}
+                  strong(v-else) {{ chats['members'][chats.name] }}
             .chat-message(v-if = 'chats.msgCnt > 0')
               label
-                span {{ chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] }}: {{ chats.msgs[chats.msgCnt - 1].text }}
-          .chat-time(v-if = 'chats.msgCnt > 0')
-            label {{ chats.msgs[chats.msgCnt - 1].time }}
-          .chat-border(v-if = 'i < chatList.length - 1')
+                span(v-if ='chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] === undefined') {{ chats.msgs[chats.msgCnt - 1].text }}
+                span(v-else) {{ chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] }}: {{ chats.msgs[chats.msgCnt - 1].text }}
+        .chat-border(v-if = 'i < chatList.length - 1')
     .newChatButton
       md-button.md-fab.md-fab-bottom-right.md-primary(@click = 'createNewChat()')
         md-icon add
@@ -42,7 +44,7 @@
         .joinMenuCancel
           .button.button--round.button-success(@click ='createChat("personal")') Готово
           .button.button--round.button-success(@click ='groupChat = true') Создать групповой чат
-          .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
+          .button.button--round.button-warning(@click ='joinMenuShow = false; groupChat = false')  Отмена
 
       // Сверху персональное меню, снизу - групповое
 
@@ -69,12 +71,12 @@
         .joinMenuCancel
           .button.button--round.button-success(@click ='createChat("group")') Готово
           .button.button--round.button-success(@click ='groupChat = false') Создать персональный чат
-          .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
+          .button.button--round.button-warning(@click ='joinMenuShow = false; groupChat = false')  Отмена
 </template>
 
 <script>
 
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import Loading from 'vue-loading-overlay'
@@ -82,6 +84,12 @@ import Loading from 'vue-loading-overlay'
 export default {
   components: {
     Loading
+  },
+  watch: {
+    '$store.state.profile.chatList': function () {
+      this.chatList = JSON.parse(JSON.stringify(this.getMyChats))
+      this.chatList.sort(function (a, b) { return b.lastMessageTime - a.lastMessageTime })
+    }
   },
   data () {
     return {
@@ -98,6 +106,7 @@ export default {
   },
   methods: {
     ...mapActions(['fetchMyChats']),
+    ...mapMutations(['updatePreChatInfo']),
     goToChat (id) {
       this.$router.push('/pm/' + id)
     },
@@ -137,28 +146,40 @@ export default {
             })
         }
       }
-      chatInfo.members = Array.from(chatMembers)
-      console.log(chatInfo.members)
+      var members = Array.from(chatMembers)
+      for (let i = 0; i < members.length; i++) {
+        chatInfo.members.push({last_message: 0, userId: members[i]})
+      }
       if (chatName === null) {
         this.error = 'Пользователь не найден'
-        console.log(this.error)
+        this.loading = false
+        alert(this.error)
         return
       } else if (type === 'group' && chatInfo.members.length < 3) {
         this.groupEmail.length < 3 ? this.error = 'В групповом чате должно быть хотя бы 3 пользователя' : this.error = 'Пользователи не найдены'
-        console.log(this.error)
+        this.loading = false
+        alert(this.error)
         return
       } else if (type === 'personal' && chatInfo.members.length === 1) {
         this.error = 'Нельзя создать диалог с самим собой'
-        console.log(this.error)
+        this.loading = false
+        alert(this.error)
         return
       }
+      var exists = false
       if (type === 'personal') {
         chatInfo.members.sort()
-        chatId = chatInfo.members[0] + '_' + chatInfo.members[1]
+        chatId = chatInfo.members[0].userId + '_' + chatInfo.members[1].userId
+        await db.collection('chat').doc(chatId).get().then(doc => {
+          if (doc.exists) exists = true
+        })
       } else {
+        // Имя, владелец и токен
         chatInfo.name = chatName
+        chatInfo.admin = this.getUser.id
         chatId = await this.generateToken(7)
-        if (this.groupPhoto !== undefined) {
+        // Загрузка аватарки
+        if (this.groupPhoto !== undefined && this.groupPhoto !== null) {
           let file = this.groupPhoto
           let fileName = file.name
           const fileReader = new FileReader()
@@ -172,15 +193,26 @@ export default {
           chatInfo.image = imageUrl
         }
       }
-      // console.log(chatId, chatInfo)
-      await db.collection('chat').doc(chatId).set(chatInfo)
-      var myChats = []
-      // Пробегаю по массивчику, что бы получить все чаты и добавить новый в их список
-      for (let i = 0; i < this.chatList.length; i++) { myChats.push(this.chatList[i].id) }
-      myChats.push(chatId)
-      await db.collection('account').doc(this.getUser.id).set({
-        myChats: myChats
-      }, { merge: true })
+      if (exists) {
+        this.error = 'Диалог уже существует'
+        this.$router.push('/pm/' + chatId)
+        this.loading = false
+        return
+      }
+      if (type === 'group') {
+        await db.collection('chat').doc(chatId).set(chatInfo)
+        for (let j = 0; j < chatInfo.members.length; j++) {
+          var myChats = []
+          await db.collection('account').doc(members[j]).get().then(doc => {
+            var data = doc.data()
+            if (data.myChats !== undefined) myChats = data.myChats
+          })
+          myChats.push(chatId)
+          await db.collection('account').doc(members[j]).set({
+            myChats: myChats
+          }, { merge: true })
+        }
+      } else this.updatePreChatInfo(chatInfo)
       this.loading = false
       this.$router.push('/pm/' + chatId)
     },
@@ -214,7 +246,6 @@ export default {
               result = false
             } else result = true
           })
-      console.log('Result: ', result)
       return result
     },
     onFileSelected (event) {
@@ -291,22 +322,25 @@ export default {
   .chatList
     margin-left 25%
     margin-right 25%
-    margin-top 5%
+    margin-top 3%
     width auto
-    height auto
+    max-height 80vh
     background-color #FCFCFF
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
-    @media screen and (max-width: 2600px) {
-      margin-left 16%
-      margin-right 16%
+    @media screen and (max-width: 1200px) {
+      margin-left 15%
+      margin-right 15%
     }
-    @media screen and (max-width: 2100px) {
-      margin-left 16%
-      margin-right 16%
-    }
+  .chat-top
+    position relative
+    width 100%
 
   .chat-header
+    position position
+    display grid
+    grid-template-columns 15% 70% 15%
+    grid-template-rows 48% 48% 1%
     width 100%
     margin-top 20px
     margin-bottom 20px
@@ -315,9 +349,11 @@ export default {
 
   .chat-border
     width auto
-    height 2px
+    height 1.2px
     margin-top 20px
-    margin-left 230px
+    margin-left 175px
+    margin-right 50px
+    right 0px
     background-color #aaaaaa
 
   .chatFrame
@@ -327,45 +363,87 @@ export default {
 
   .chat-fragment
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-    display flex
+    display block
+    &:hover
+      cursor pointer
   .chat-image
-    display inline-block
-    width 15%
-    min-width 150px
-    height auto
-    overflow hidden
-    border-radius 50%
-    vertical-align middle
-    @media screen and (max-width: 1000px) {
-      width 10px
+    border-radius: 50%;
+    overflow: hidden;
+    width 120px
+    height 120px
+    img
+      display: block;
+      min-width: 100%;
+      min-height: 100%;
+    @media screen and (max-width: 1500px) {
+      width 100px
+      height 100px
+    }
+    @media screen and (max-width: 1200px) {
+      width 90px
+      height 90px
+    }
+    @media screen and (max-width: 1100px) {
+      width 70px
+      height 70px
+    }
+    @media screen and (max-width: 700px) {
+      width 70px
+      height 70px
     }
 
   .chat-info
+    position relative
     display inline-block
-    margin-left 50px
+    width 100%
+    right 0px
+    margin-right 0px
+    margin-left 30px
     vertical-align middle
   .chat-name
     margin-top 10px
+    position relative
+    width auto
+    height auto
     label
-      font-size 2.6em
+      font-size 2.3em
       color #763DCA
   .chat-message
-    margin-top 10%
-    margin-bottom 2%
+    position relative
+    width 100%
+    margin-top 6%
+    margin-bottom 0%
     label
+      white-space: nowrap
+      overflow: hidden
+      padding: 5px
+      text-overflow: ellipsis
       font-size 1.5em
       color #666174
       text-align bottom
+    label:hover {
+      background #f0f0f0
+      white-space normal
+    }
   .chat-empty
     width 60%
   .chat-time
+    position relative
+    right 15%
     display inline-block
-    width 300px
+    grid-column-start 3
+    grid-column-end 3
+    grid-row-start 1
+    grid-row-end 2
+    width auto
     height auto
     float right
-    margin-top 40px
+    vertical-align middle
     label
       font-size 1.2em
       color #696174
       text-align center
+    @media screen and (max-width: 900px)
+      visibility hidden
+
 </style>
