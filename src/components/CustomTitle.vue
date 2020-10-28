@@ -75,7 +75,7 @@
                   .button.button--round.button-success.buttonAdd(
                     @click='addContent(tasks.indexOf(task), "img")'
                     ) Добавить картинку
-                  .button.button--round.button-success(
+                  .button.button--round.button-success.buttonAdd(
                     @click='addContent(tasks.indexOf(task), "file")'
                     ) Загрузить PDF-файл
                 .taskEditBox(v-if ="task.type === 'task'")
@@ -546,8 +546,11 @@ export default {
     padding-right 10%
     text-align center
     .button
-      font-size 0.6em
+      font-size 20pt
       margin 2%
+    @media screen and (max-width: 600px)
+      margin 1%
+      margin-top 20%
   .materialMenuText
     font-size 1.3em
     padding-bottom 1%
@@ -640,6 +643,9 @@ export default {
     background-color #FCFCFF
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
+    @media screen and (max-width: 600px)
+      margin 1%
+      margin-top 3%
 
   .theoryComponent
     position relative
@@ -712,7 +718,7 @@ export default {
 
   .buttonAdd
     position relative
-    margin-right 20px
+    margin 10px
   .taskType
     position relative
     display inline-block

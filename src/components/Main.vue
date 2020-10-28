@@ -148,6 +148,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+div
+    line-height normal !important
 .content-wrapper
     min-height 0
 
@@ -263,7 +265,6 @@ export default {
 
 #imgMain
     position absolute
-    height 98%
     width 50%
     left 40%
     top 00%

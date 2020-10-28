@@ -149,7 +149,7 @@ export default {
             info['members'] = newMemb
             info['msgs'] = {}
             for (let j = 0; j < data.all_message; j++) {
-              info['msgs'][j] = data['message' + j.toString()]
+              info['msgs'][j] = data['messages'][j]
               if (info['msgs'][j].time !== null) info['msgs'][j].time = moment.unix(info['msgs'][j].time.seconds).format('MMMM Do YYYY, h:mm:ss a')
               if (vueInstance.chatMembers[info.msgs[j].sender] === undefined && info.msgs[j].sender !== 'System') { await db.collection('account').doc(info.msgs[j].sender).get().then(async doc => { doc.exists ? vueInstance.chatMembers[info.msgs[j].sender] = doc.data().name : vueInstance.chatMembers[info.msgs[j].sender] = 'Deleted User' }) }
             }
@@ -344,6 +344,8 @@ export default {
       font-size 2em
       text-align center
       font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    @media screen and (max-width: 600px)
+      display none
     &:hover
       cursor pointer
       background-color rgba(0, 0, 0, .08)
@@ -364,9 +366,12 @@ export default {
     display flex
     justify-content space-between
     .memberText
-      font-size 0.7em
+      font-size 12
     .memberCross
-      width 4%
+      width 2vh
+      height 2vh
+      margin 2%
+      margin-top 0
       &:hover
         cursor pointer
   .md-input
@@ -378,7 +383,7 @@ export default {
     overflow auto
     max-height 70vh
     .button
-      font-size 0.6em
+      font-size 12pt
       margin 2%
   .settingsMenuText
     font-size 1.3em
@@ -407,6 +412,9 @@ export default {
     min-width 350px
     border 2px #000000 solid
     border-radius 10px
+    @media screen and (max-width: 600px)
+      margin 1%
+      margin-top 20%
   .chat-modify
     position relative
   .settingIcon

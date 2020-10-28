@@ -15,14 +15,14 @@
             img.img_round(src="@/components/images/user.png")
           .chat-image(v-else)
             img.image_round(:src = "chats.image")
-          .chat-time(v-if = 'chats.msgCnt > 0 && chats.msgs[chats.msgCnt - 1] !== null')
+          .chat-time(v-if = 'chats.msgCnt > 0 && chats.msgs[chats.msgCnt - 1] !== null && chats.msgs[chats.msgCnt - 1] !== undefined')
             label {{ chats.msgs[chats.msgCnt - 1].time }}
           .chat-info
             .chat-name
               label
                 strong(v-if = 'chats.type === "group"') {{ chats.name }}
                 strong(v-else) {{ chats['members'][chats.name] }}
-            .chat-message(v-if = 'chats.msgCnt > 0')
+            .chat-message(v-if = 'chats.msgCnt > 0 && chats.msgs[chats.msgCnt - 1] !== undefined')
               label
                 span(v-if ='chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] === undefined') {{ chats.msgs[chats.msgCnt - 1].text }}
                 span(v-else) {{ chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] }}: {{ chats.msgs[chats.msgCnt - 1].text }}
@@ -273,7 +273,7 @@ export default {
     width 50px
     height 50px
   .emailField
-    width 90%
+    width 80%
   .removeButton
     min-width 0
     width 30px
@@ -283,7 +283,7 @@ export default {
     font-size 1.0em
     padding-bottom 40px
     span
-      font-size 1.1em
+      font-size 24pt
       font-weight 600
       color #763dca
   .joinMenuField
@@ -314,8 +314,11 @@ export default {
     border 2px #000000 solid
     border-radius 10px
     .button
-      font-size 0.6em
+      font-size 14pt
       margin 2%
+    @media screen and (max-width: 600px)
+      margin 1%
+      margin-top 20%
   .content-wrapper
     min-height 0
   .chatList
