@@ -5,14 +5,23 @@
         .auth
           .auth-title
             span.ui-title-2
-              strong Наше приложение
+              strong Android приложение
             //img(class="picture", src='@/assets/saluting.png', alt='Пикча')
             //img(class="picture", src='@/assets/gestures.png', alt='Пикча')
             //img(class="picture", src='@/assets/birthday-and-party.png', alt='Пикча')
             //img(class="picture", src='@/assets/miscellaneous.png', alt='Пикча')
             a(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
               //img(class="picture", src='@/assets/google_play.svg', alt='Пикча')
-              img(class="picture", src='@/assets/googleplay.png', alt='Пикча')
+              img(class="picture", src='@/assets/googleplay.png', alt='Наше приложение')
+            span.ui-title-2.textTop
+              strong Для учеников
+            a.openIns(class=".openIns" href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+              p Скачать инструкцию для учеников
+            span.ui-title-2.textTop
+              strong.textTop Для учителей
+            a.openIns(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+              p.openIns Скачать инструкцию для учителей
+
           .auth-space
           .auth-form
             span.ui-title-2

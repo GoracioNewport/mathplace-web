@@ -34,8 +34,8 @@
           color = '#763dca')
     .content(v-if="taskList.length > 0")
       .name
-        span(v-if = 'this.taskList[this.activeTask].type == "theory"') {{ taskInfo.name }}
-        span(v-else) Задача {{ this.taskList[this.activeTask].taskId }}
+        span.nameTask(v-if = 'this.taskList[this.activeTask].type == "theory"') {{ taskInfo.name }}
+        span.nameTask(v-else) Задача {{ this.taskList[this.activeTask].taskId }}
 
         img.star(
           class = "star1",
@@ -353,9 +353,10 @@ export default {
     margin-left auto
     margin-right auto
   .star
+    positine relative
     height 40px
-    max-height 100px
     width auto
+    vertical-align middle
   .taskbar-list
     margin 0 auto
     display table
@@ -366,12 +367,12 @@ export default {
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
   .name
     background #763DCA
-    text-align left
-    color #ffffff
-    padding 10px
-    font-family: 'Roboto', sans-serif
-    font-size: 30px
-    font-weight: bold
+    height auto
+    display block
+    padding-left 10px
+    font-family 'Roboto', sans-serif
+    font-size 30px
+    font-weight bold
     box-shadow 0 0 10px rgba(0,0,0,0.5)
     border-radius 10px 10px 0 0
     margin-top 50px
@@ -382,6 +383,13 @@ export default {
         margin-right 6%
         margin-left 6%
     }
+
+  .nameTask
+    positine relative
+    height 60px
+    vertical-align middle
+    text-align center
+    color #ffffff
   img
     orientation right
     float right

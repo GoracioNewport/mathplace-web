@@ -7,20 +7,16 @@
             <div id="leftMain">
 
                 <div id="leftText">
-                    <p class="textMargin" style="color:#000000; font-family: 'Roboto', sans-serif; font-size: 1.1em; font-weight: bold;">платформа</p>
-                    <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 3.8em; font-weight: bold;">MathPlace</p>
-                    <h3 class="textMargin" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень в математике</h3>
-                    <div id="DownloadButton" class="gradient2">
-                        <a href="#Download" v-smooth-scroll>
-                            <div id="DownloadButtonText">
-                                <p>Начать</p>
-                            </div>
-                        </a>
-                    </div>
+                    <p class="textMargin" style="color:#000000; font-family: 'Roboto', sans-serif; font-size: 1.5em; font-weight: bold;">платформа</p>
+                    <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 4.8em; font-weight: bold;">MathPlace</p>
+                    <h3 class="textMargin" style="font-family: 'Roboto', sans-serif; font-size: 1.4em;" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень в математике</h3>
+                    <a id="DownloadButtonText" href="#Download" v-smooth-scroll>
+                        <div class="gradient2">
+                            <p  id="DownloadButton">Начать</p>
+                        </div>
+                    </a>
                 </div>
-                <div>
-                    <img id="imgMain" src="./images/woman_arm2.png" alt="Второй текст"/>
-                </div>
+                <img id="imgMain" src="./images/woman_arm2.png" alt="Второй текст"/>
             </div>
         </div>
         <div id="MenuBlock" class="gradient">
@@ -184,7 +180,7 @@ export default {
 #Main
     // position absolute
     // float left
-    height 90vh
+    height 1000px
     width 100%
     background-color #ffffff
     @media screen and (max-width: 450px) {
@@ -223,12 +219,13 @@ export default {
     background-size 100%
 
 .textMargin
-    margin 10px
+    position relative
+    margin 30px
 
 #leftMain
-    position absolute
+    position relative
     height 90%
-    width 80%
+    width auto
     left 20%
     top 10%
     @media screen and (max-width: 450px) {
@@ -243,11 +240,12 @@ export default {
     }
 
 #leftText
-    position absolute
-    height 100%
-    width 100%
+    position relative
+    display inline-block
+    height auto
+    width 20%
     left 0%
-    top 10%
+    top 0%
 
 #leftTextDiscrib
     width 28%
@@ -262,11 +260,12 @@ export default {
     }
 
 #imgMain
-    position absolute
+    position relative
+    display inline-block
     height 98%
-    width 50%
-    left 40%
-    top 00%
+    width 40%
+    left 10%
+    top 0px
     @media screen and (max-width: 1000px) {
         display none
     }
@@ -295,27 +294,26 @@ export default {
     box-shadow rgba(0, 0, 0, 0.5) 7px 7px
 
 #DownloadButton
-    // position absolute
-    // left 0%
-    // top 25%
+    position relative
     margin 10px
-    height auto
+    height 50px
     width 200px
+    text-align center
+    vertical-align middle
     border-radius 50px 50px
     box-shadow rgba(145, 145, 145, 1) 5px 5px
 
 #DownloadButtonText
+    position relative
     height 100%
     width 100%
+    padding-top 2%
     text-align center
     vertical-align middle
-    color:#FFFFFF
+    color #FFFFFF
     font-size 2em
-    font-family: 'Roboto', sans-serif
-    font-weight: bold
-    // background-image url(images/Download.png)
-    // background-repeat no-repeat
-    // background-size 100%
+    font-family 'Roboto', sans-serif
+    font-weight bold
 
 #TextBlock
     width 100%

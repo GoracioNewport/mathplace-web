@@ -5,7 +5,7 @@
         .auth
           .auth-title
             span.ui-title-2
-              strong Наше приложение
+              strong Android приложение
             //img(class="picture", src='@/assets/saluting.png', alt='Пикча')
             //img(class="picture", src='@/assets/gestures.png', alt='Пикча')
             //img(class="picture", src='@/assets/birthday-and-party.png', alt='Пикча')
@@ -13,6 +13,15 @@
             a(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
               //img(class="picture", src='@/assets/google_play.svg', alt='Пикча')
               img(class="picture", src='@/assets/googleplay.png', alt='Наше приложение')
+            span.ui-title-2.textTop
+              strong Для учеников
+            a.openIns(class=".openIns" href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+              p Скачать инструкцию для учеников
+            span.ui-title-2.textTop
+              strong.textTop Для учителей
+            a.openIns(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+              p.openIns Скачать инструкцию для учителей
+
           .auth-form
             span.ui-title-2 Вход
             form(@submit.prevent="onSubmit")
@@ -169,6 +178,9 @@ export default {
   border-radius 10px
   padding 10px
 
+.openIns
+  text-size 3em
+
 .auth-title
   margin-right 50px
   width 40%
@@ -177,8 +189,13 @@ export default {
   padding 10px
   text-align center
 
+.textTop
+  position relative
+  margin-top 10px
 .picture
-  width 80%
+  position relative
+  margin-top 15px
+  width 60%
 
 .auth-space
   width 4%

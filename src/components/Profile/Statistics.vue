@@ -3,8 +3,6 @@
     .topicsBox(v-if = 'myTopics.length !== 0')
       .topicItem(v-for = '(topic, topicIndex) in myTopics'
       :key = 'topic.token')
-        .button.button--round.button-primary.showStatsButton.editButton(@click ='$router.push("/customTitle/" + topic.token)') Редактировать
-        .button.button--round.button-primary.showStatsButton.editButton(@click ='deleteMyTopic(topic.token, topicIndex)') Удалить
         .button.button--round.button-primary.showStatsButton.editButton(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть подробную статистику
         .button.button--round.button-primary.showStatsButton(v-else @click ='toggleStats(topic.token)') Показать подробную статистику
         span.md-title.topicName {{ topic.name }}
@@ -209,7 +207,7 @@ export default {
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
     margin 3%
-    margin-left 17%
-    margin-right 17%
+    margin-left 5%
+    margin-right 15%
     padding 2%
 </style>
