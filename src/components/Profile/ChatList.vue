@@ -414,7 +414,7 @@ export default {
     width auto
     height auto
     label
-      font-size 2.3em
+      font-size 2.0em
       color #763DCA
   .chat-message
     position relative
@@ -437,7 +437,7 @@ export default {
     width 60%
   .chat-time
     position relative
-    right 15%
+    right 5%
     display inline-block
     grid-column-start 3
     grid-column-end 3
