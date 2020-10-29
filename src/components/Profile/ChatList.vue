@@ -336,6 +336,10 @@ export default {
       margin-left 15%
       margin-right 15%
     }
+    @media screen and (max-width: 500px) {
+      margin-left 5fix%
+      margin-right 5%
+    }
   .chat-top
     position relative
     width 100%
