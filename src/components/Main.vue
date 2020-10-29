@@ -1,4 +1,4 @@
-<template lang="html">
+<template lang="pug">
 <div class='content-wrapper'>
     <div id="Contest">
         <a href="#MenuBlock"> <div id="BackToMenuButton"> </div> </a>
@@ -10,11 +10,7 @@
                     <p class="textMargin" style="color:#000000; font-family: 'Roboto', sans-serif; font-size: 1.5em; font-weight: bold;">платформа</p>
                     <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 4.8em; font-weight: bold;">MathPlace</p>
                     <h3 class="textMargin" style="font-family: 'Roboto', sans-serif; font-size: 1.4em;" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень в математике</h3>
-                    <a id="DownloadButtonText" href="#Download" v-smooth-scroll>
-                        <div class="gradient2">
-                            <p  id="DownloadButton">Начать</p>
-                        </div>
-                    </a>
+                    .button.button--round.button-success.goButton(v-smooth-scroll href='#Download') Начать!
                 </div>
                 <img id="imgMain" src="./images/woman_arm2.png" alt="Второй текст"/>
             </div>
@@ -69,7 +65,7 @@
         <div id="Task">
             <div id="design4" class="gradient"></div>
             <div id="TaskText">
-                <p id="TextTask2">В три коробки поровну разложили 90 чашек. В результате в каждой коробке оказалось 30 чашек. Записать выражение, которое описывает, что 90 чашек разложено в 3 коробки. Далее выполнить действие в этом выражении.</p>
+                <p id="TextTask2">Для экзамена подготовили билеты с номерами от 1 до 50. Какова вероятность того, что наугад взятый учеником билет имеет однозначный номер?</p>
             </div>
             <div id="rightTask">
                 <input type="text" id="TaskIn" v-model="answer" :class = "{ answerCorrect : this.state === 1, answerWrong : this.state === 2 }">
@@ -144,8 +140,14 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
+.goButton
+    margin 10%
+    font-size 24pt
+
 div
     line-height normal !important
+    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif !important
 .content-wrapper
     min-height 0
 
@@ -227,8 +229,8 @@ div
 #leftMain
     position relative
     height 90%
-    width auto
     left 20%
+    max-width 80%
     top 10%
     @media screen and (max-width: 450px) {
         // display inline-block
@@ -263,7 +265,7 @@ div
 
 #imgMain
     position absolute
-    width 50%
+    width 40%
     left 40%
     top 00%
     @media screen and (max-width: 1000px) {
@@ -463,6 +465,7 @@ div
     padding 1%
     border-style groove
     border-radius 50px
+    border-width 3px
     font-size 30pt
     text-align center
     @media screen and (max-width: 1000px) {
@@ -506,6 +509,7 @@ div
     }
 
 #TextTask2
+    font-weight 800
     position relative
     width 70%
     padding-top 5%
@@ -516,7 +520,7 @@ div
     color #525252
     font-family 'Roboto', sans-serif
     text-align center
-    font-size 25px
+    font-size 20pt
     @media screen and (max-width: 1100px) {
         width 90%
         padding-top 20px

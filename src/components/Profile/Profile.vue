@@ -372,7 +372,7 @@ export default {
   .achivText
     position relative
     display inline-block
-    margin-left 20px
+    margin-left 10pt
     vertical-align middle
 
   .achivName
@@ -414,6 +414,8 @@ export default {
       width 19%
       height auto
       margin-left 10%
+      @media screen and (max-width: 600px)
+        margin-left 0
       margin-bottom 3%
       margin-top 3%
 </style>
