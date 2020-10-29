@@ -394,6 +394,10 @@ export default {
       width 70px
       height 70px
     }
+    @media screen and (max-width: 700px) {
+      width 50px
+      height 50px
+    }
 
   .chat-info
     position relative

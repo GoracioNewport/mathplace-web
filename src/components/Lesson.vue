@@ -344,12 +344,19 @@ export default {
     grid-column 1
     grid-row 1
   .submit-button
+    position relative
+    height auto
+    width auto
     margin-top 3% !important
     grid-column 2
     grid-row 1
     width 100% !important
-    height 60% !important
+    height 30% !important
     text-align center
+    vertical-align middle
+    @media screen and (max-width: 800px)
+      height 50% !important
+      margin-top 7% !important
     &:hover
       cursor pointer
   span
@@ -367,7 +374,7 @@ export default {
         color #FFFFFF
         text-decoration none
   .content-wrapper
-    min-height 0
+    height 100%
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-weight 800
   input
@@ -468,6 +475,7 @@ export default {
   .content
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
   .name
+    position relative
     min-height 6vh
     background #763DCA
     height auto
@@ -487,7 +495,22 @@ export default {
       margin-left 6%
     }
     span
-      margin 3%
+      position relative
+      height auto
+      width auto
+      color #FFFFFF
+      margin-left 3%
+      margin-top 10px
+      vertical-align middle
+    strong
+      position relative
+      height auto
+      width auto
+      color #FFFFFF
+      margin-left 3%
+      text-align center
+      vertical-align middle
+      margin-bottom 0px
   img
     orientation right
     float right
@@ -556,16 +579,19 @@ export default {
     margin-left 0%
     margin-right 0%
     margin-top 8px
-    // dispaly flex
+    @media screen and (max-width: 750px) {
+      grid-template-columns 18% 64% 18%
+    }
     float right
   .sub
     position relative
     width 90%
     height auto
-    // margin-top 6%
+    margin-top 20%
+    margin-bottom 20%
     display inline-block
     color #ffffff
-    padding 9px
+    padding 0%
     font-family: 'Roboto', sans-serif
     font-size: 25px
     font-weight: bold
@@ -574,6 +600,7 @@ export default {
     border-radius 10px
     outline none
     border none
+    text-align center
     vertical-align middle
     &:hover
         background #5E2DA6
@@ -662,7 +689,7 @@ export default {
     align-items center
     diaply flex
   .wrapper
-    width 100vw
+    width 100%
     max-width: 100%
 
   .taskbar-link

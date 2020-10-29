@@ -207,7 +207,7 @@ export default {
   .md-avatar
     width 10vh
     height 10vh
-    border-radius 60%
+    border-radius 50%
     vertical-align top
   .createTopicButton
     z-index 10
@@ -255,11 +255,20 @@ export default {
     height 30px
     width 30px
   .avatarImage
-    position absolute
-    height 100%
-    width 100%
+    position relative
+    display inline-block
     overflow hidden
     transition filter 0.5s
+    border-radius: 50%;
+    margin-bottom 10px
+    overflow: hidden;
+    width 120px
+    height 120px
+    img
+      display: block;
+      min-width: 100%;
+      min-height: 100%;
+
     &:hover
       filter brightness(0.8)
   .content-wrapper
@@ -269,6 +278,7 @@ export default {
     color #FFFFFF !important
 
   .button-primary
+    margin-top 12px
     margin-right 10px
 
   .test_button
@@ -289,6 +299,8 @@ export default {
     box-shadow 0px 0px 10px rgba(0,0,0,0.5)
   .userInf
     width 70%
+    margin-top 20px
+    margin-left 30px
     display inline-block
   .textInf
     font-weight 600
@@ -307,6 +319,7 @@ export default {
     margin-left 25%
     margin-right 25%
     margin-top 5%
+    margin-bottom 10%
     background-color #FCFCFF
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
@@ -337,7 +350,7 @@ export default {
     @media screen and (max-width: 1000px) {
       width 100%
       margin-left 15px
-      margin-right 15px
+      margin-right 0px
       margin-top 50px
     }
 
@@ -350,9 +363,10 @@ export default {
 
   .avatar
     position relative
-    margin-left 1%
+    height 100%
+    margin-left 5%
     margin-right 1%
-    margin-bottom 2%
+    margin-bottom 0%
     margin-top 2%
 
   .achivText
@@ -376,12 +390,15 @@ export default {
     font-size 1em
 
   .info
-      margin-right 2%
-      margin-bottom 5%
-      margin-top 10px
-      font-size 1.2em
-      strong
-        margin 9%
+    position relative
+    height auto
+    width auto
+    margin-right 0%
+    margin-bottom 5%
+    margin-top 10px
+    font-size 1.2em
+    strong
+      margin 0%
   .logout
     background-color #763DCA
     color #ffffff
