@@ -142,7 +142,7 @@ export default {
 <style lang="stylus" scoped>
 
 .goButton
-    margin 10%
+    margin-left 20px
     font-size 24pt
 
 div
@@ -232,9 +232,10 @@ div
     left 20%
     max-width 80%
     top 10%
-    @media screen and (max-width: 450px) {
+    @media screen and (max-width: 600px) {
         // display inline-block
         height 100%
+        left 0
         top 10px
         // margin 0 auto
     }
@@ -258,17 +259,15 @@ div
     font-family 'Roboto', sans-serif
     margin-top 15px
     font-size 1.22em
-    @media screen and (max-width: 480px) {
-        width 80%
-        min-width 100px
-    }
+    @media screen and (max-width: 600px)
+        width auto
 
 #imgMain
     position absolute
-    width 40%
+    width 35vw
     left 40%
     top 00%
-    @media screen and (max-width: 1000px) {
+    @media screen and (max-width: 1200px) {
         display none
     }
 
