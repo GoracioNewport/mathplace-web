@@ -326,8 +326,9 @@ export default {
     margin-left 25%
     margin-right 25%
     margin-top 3%
+    margin-bottom 3%
     width auto
-    max-height 80vh
+    height auto
     background-color #FCFCFF
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
