@@ -37,8 +37,9 @@
                     p.textInf Посылок {{this.getUser.submit}}
                     p.textInf Решено {{this.getUser.right}}
                     p.textInf Тугриков {{this.getUser.money}}
+                .userButton
                   router-link.button.button--round.button.button-primary(to='/statistics') Мои уроки
-                  .button.button--round.button.button-primary(@click ='settingsMenuShow = true') Редактировать
+                  router-link.button.button--round.button.button-primary(@click ='settingsMenuShow = true') Редактировать
                   router-link.button.button--round.button.button-primary(to='/logout') Выйти
 
         .content-achieve
@@ -298,10 +299,16 @@ export default {
     right 20px
     box-shadow 0px 0px 10px rgba(0,0,0,0.5)
   .userInf
-    width 70%
+    width 60%
     margin-top 20px
     margin-left 30px
     display inline-block
+  .userButton
+    position relative
+    height auto
+    width auto
+    margin-left 30px
+    display block
   .textInf
     font-weight 600
     margin-right 40px
