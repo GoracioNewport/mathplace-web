@@ -9,7 +9,7 @@
     .editBox(v-else)
       .marginBox
         .titleInfo
-          p.olympTitle Создать урок
+          span.olympTitle {{ this.edit ? 'Обновить' : 'Создать' }} урок
           //- input.olympName(type = 'text', placeholder = 'Введите название вашей темы', v-model = "name")
           md-field.olympName
             label Введите название темы
@@ -632,7 +632,7 @@ export default {
     top 0
     left 0
   .successButton
-    width 20%
+    width auto
     height 20%
   .md-avatar
     margin: 36px;
@@ -646,6 +646,10 @@ export default {
     min-width 350px
     border 2px #000000 solid
     border-radius 10px
+    @media screen and (max-width: 600px)
+      margin 1%
+      margin-top 20%
+      font-size 12pt
 
   .editBox
     position relative
