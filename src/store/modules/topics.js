@@ -194,6 +194,7 @@ export default {
       }
     },
     async fetchMyTopics (ctx) {
+      ctx.commit('updateMyTopics', [])
       const db = firebase.firestore()
       var topics
       await db.collection(accountDb).doc(this.getters.getUser.id).get().then(doc => {
@@ -215,6 +216,7 @@ export default {
       }, { merge: true })
     },
     async fetchMyTopicsDetailedInfo (ctx) {
+      ctx.commit('updateMyTopicsDetailedInfo', {})
       const db = firebase.firestore()
       await store.dispatch('fetchMyTopics')
       var topicList = this.getters.getMyTopics
