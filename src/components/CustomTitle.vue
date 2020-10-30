@@ -19,18 +19,25 @@
             //- input#isPrivate(type = 'checkbox', v-model = "private")
           .checkboxBox
             md-checkbox.olympPrivate(v-model='private') Приватная тема
+            md-tooltip(md-direction='left') Приватная тема показывается только вашим ученикам
           .checkboxBox
             md-checkbox.olympPrivate(v-model='timeStartOn') Ограничить время начала
             datetime(v-if ='timeStartOn' type='datetime' v-model='timeStart')
+            md-tooltip(md-direction='left') В установленное время начнется урок
           .checkboxBox
             md-checkbox.olympPrivate(v-model='timeFinishOn') Ограничить время конца
             datetime(v-if ='timeFinishOn' type='datetime' v-model='timeFinish')
+            md-tooltip(md-direction='left') В установленное время закончиться урок
           //- span {{ timeStart }} {{ timeFinish }}
 
-          select.olympTheme(v-model = "theme")
-            option(v-for = 'theme in themeList') {{ theme }}
-          //- md-select(v-model="theme", name='Выберите тему')
-          //-   md-option(v-for = "theme in themeList" :value = 'theme') {{ theme }}
+          //- select.olympTheme(v-model = "theme")
+          //-   option(v-for = 'theme in themeList') {{ theme }}
+          .md-layout-item.olympTheme2
+            md-field
+              md-select.olympTheme2(v-model = "theme" placeholder='Выберите тему урока')
+                md-option(v-for = 'theme in themeList') {{ theme }}
+          //- md-select.olympTheme(v-model = "theme" name='country' placeholder='Country')
+          //-   md-option(v-for = 'theme in themeList') {{ theme }}
 
           md-field.classCnt
             label Введите класс
@@ -81,13 +88,13 @@
                 .taskEditBox(v-if ="task.type === 'task'")
                   .taskAnswerBox
                     md-field.taskTypeSelect
-                      label(for='taskType') Тип задачи
+                      label(for='taskType') Тип ответа
                       md-select#taskType(v-model='task.taskType' name='taskTypeText' @md-selected='changeAnswerType(task.taskType, taskId)')
                         md-option(value='task') Единственный ответ
-                        md-option(value='multipleAnswer') Множество ответов
+                        md-option(value='multipleAnswer') Несколько ответов
                         md-option(value='multipleChoice') Множественный выбор
-                        md-option(value='upload') Загрузка решения
-                        md-option(value='proof') Дополнительная задача
+                        md-option(value='upload') Загрузка развернутого решения
+                        md-option(value='proof') Без ответа
                     md-field(v-if='task.taskType == "task"')
                       md-input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
                     span.md-body-2(v-else-if='task.taskType == "upload"') Вы сможете проверить ответ ученика в личном кабинете в разделе 'Мои темы'.
@@ -106,11 +113,14 @@
                       //- span {{ task.answer }}
 
                   br
-                  span Выберите сложность
+                  //- span Выберите сложность
                   br
 
-                  select.olympTheme(v-model = "task.difficulty")
-                    option(v-for = 'diff in difficultyList') {{ diff }}
+                  .md-layout-item.olympTheme2
+                    md-field
+                      md-select.olympTheme2(v-model = "task.difficulty" placeholder="Выберите сложность")
+                        md-option(v-for = 'diff in difficultyList') {{ diff }}
+                      md-tooltip(md-direction='left') Укажите, чтобы ученикам было проще ориентироваться
 
                   //- label(for='difOne') Легкая
                   //-   input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
@@ -125,6 +135,7 @@
                       md-option(value='hide') Без решения
                       md-option(value='solution') Показывать решение
                       md-option(v-if ='task.taskType != "proof" && task.taskType != "upload"' value='answer') Показывать ответ
+                    md-tooltip(md-direction='left') Решение показывается всем ученикам
                   md-field(v-if ='task.solutionType !== "hide" && task.solutionType !== "answer"')
                     label Решение
                     md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
@@ -505,6 +516,11 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .checkboxBox
+    position relative
+    width 300px
+    height auto
+    display block
   .vdatetime
     width 20vw
     float right
@@ -591,12 +607,6 @@ export default {
     width 300px
   .buttonAddContent
     margin 1%
-  .olympTheme
-    option
-      font-size 0.8em
-      margin 1%
-    font-size 1em
-    padding 0
   #isPrivate
     border-width 3px
   .vld-parent
@@ -624,6 +634,8 @@ export default {
   .successButton
     width 20%
     height 20%
+  .md-avatar
+    margin: 36px;
 
   .successMenuBox
     text-align center
@@ -638,8 +650,9 @@ export default {
   .editBox
     position relative
     margin-top 50px
-    margin-left 20%
-    margin-right 20%
+    margin-left 25%
+    margin-right 25%
+    margin-bottom 10%
     background-color #FCFCFF
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
@@ -662,7 +675,7 @@ export default {
 
   .marginBox
     position relative
-    margin 20px
+    margin 30px
 
   .olympName
     position relative
@@ -686,22 +699,34 @@ export default {
       position relative
       font-size 19px
       float right
+      padding 13px
       background #763dcb
       font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
-      width auto
       font-weight 500
-      height auto
       margin-right 0px
+      margin-top 25px
       margin-bottom 20px
 
   .olympTheme
-    width 300px
     position relative
+    height auto
+    width 100px
+    max-width: 300px;
     display block
     font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     font-size 1.1em
     text-align center
     vertical-align middle
+    option
+      font-size 0.8em
+      margin 1%
+    font-size 1em
+    padding 0
+
+  .olympTheme2
+    position relative
+    max-width: 300px;
+    color red;
 
   .delete_button
       position relative
@@ -726,9 +751,10 @@ export default {
   label
     justify-items left
   .task
+    position relative
     border 1px solid #999
     border-radius 10px
-    margin 1%
+    margin-top 50px
     padding 3%
   .taskName
     margin 1%

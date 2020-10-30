@@ -91,10 +91,10 @@
       .enter
         .send
           a.solutionButton.but(@click='solutionShown = true',
-                v-if = 'this.taskList[this.activeTask].type ==="task" && this.taskList[this.activeTask].solution !=="hide" ')
-            img(src='@/assets/images/lock.png'
-            alt='Решения',id="lock")
-          //- .but
+            v-if = 'this.taskList[this.activeTask].type ==="task" && this.taskList[this.activeTask].solution !=="hide" ')
+            md-tooltip(md-direction='right') Посмотреть решение
+            img(src='@/assets/images/lock.png' alt='Решения',id="lock")
+                    //- .but
           //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
           .likeButton.but
             input#checkbox.checkbox(type='checkbox' v-model = 'topicLiked')
@@ -124,6 +124,7 @@
                   g#grp1(opacity='0', transform='translate(24)')
                     circle#oval1(fill='#9FC7FA', cx='2.5', cy='3', r='2')
                     circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
+              md-tooltip(md-direction='left') Поставить лайк уроку
           button.submit-button.sub(
             type = 'submit',
             @click = 'sendAnswer')
@@ -607,10 +608,9 @@ export default {
   .but
     position relative
     display inline-block
-    vertical-align middle
-    text-align center
     img
       width 70%
+      height auto
     // margin auto
   .ans
     postion relative

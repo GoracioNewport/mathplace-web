@@ -1,5 +1,8 @@
 <template lang='pug'>
-  .content-wrapper
+  .content-wrapper(novalidate='' @submit.stop.prevent='showSnackbar = true')
+    md-snackbar(:md-position='position' :md-duration='isInfinity ? Infinity : duration' :md-active.sync='showSnackbar' md-persistent='')
+      span Connection timeout. Showing limited messages!
+      md-button.md-primary(@click='showSnackbar = false') Retry
     .loading-indicator(v-if = 'myTopicsLoading')
       loading(
         :active.sync = "this.myTopicsLoading"
@@ -12,6 +15,7 @@
         img.imageButton(src ='@/assets/images/share_24px.png' @click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + topic.token)')
         img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
         img.imageButton(src ='@/assets/images/bin2.png' @click ='deleteMyTopic(topic.token, topicIndex)')
+        md-button.md-primary.md-raised(type='submit') Open Snackbar
         .button.button--round.button-primary.showStatsButton.editButton(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть подробную статистику
         .button.button--round.button-primary.showStatsButton.editButton(v-else @click ='toggleStats(topic.token)') Показать подробную статистику
         span.md-title.topicName {{ topic.name }}
@@ -74,6 +78,8 @@ const searchByName = (items, term) => {
 }
 
 export default {
+  name: 'SnackbarExample',
+
   components: {
     Right,
     Dots,
@@ -88,6 +94,10 @@ export default {
   },
   data () {
     return {
+      showSnackbar: false,
+      position: 'center',
+      duration: 4000,
+      isInfinity: false,
       myTopics: [],
       search: null,
       searched: {},
@@ -201,7 +211,7 @@ export default {
     margin-left 5%
   .topicName
     display block
-    font-size 2.5em
+    font-size 23pt
   .topicToken
     position relative
     margin-top 20px
@@ -234,7 +244,7 @@ export default {
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
     margin 3%
-    margin-left 5%
-    margin-right 15%
+    margin-left 25%
+    margin-right 25%
     padding 2%
 </style>

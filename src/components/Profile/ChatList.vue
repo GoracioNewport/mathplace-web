@@ -29,8 +29,9 @@
                 span(v-else) {{ chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] }}: {{ chats.msgs[chats.msgCnt - 1].text }}
         .chat-border(v-if = 'i < chatList.length - 1')
     .newChatButton
-      md-button.md-fab.md-fab-bottom-right.md-primary(@click = 'createNewChat()')
+      md-button.md-fab.mdc-fab--extended.md-fab-bottom-right.md-primary(@click = 'createNewChat()')
         md-icon add
+        
     .joinMenu(v-if = 'this.joinMenuShow')
       .joinMenuBox(v-if = '!groupChat')
         .joinMenuText
@@ -359,10 +360,12 @@ export default {
     width auto
     height 1.2px
     margin-top 20px
-    margin-left 175px
-    margin-right 50px
+    margin-left 20%
+    margin-right 5%
     right 0px
     background-color #aaaaaa
+    @media screen and (max-width: 1500px) {
+    }
 
   .chatFrame
     width 100%
@@ -396,10 +399,6 @@ export default {
       height 70px
     }
     @media screen and (max-width: 700px) {
-      width 70px
-      height 70px
-    }
-    @media screen and (max-width: 700px) {
       width 50px
       height 50px
     }
@@ -413,7 +412,7 @@ export default {
     margin-left 30px
     vertical-align middle
   .chat-name
-    margin-top 10px
+    margin-top 1px
     position relative
     width auto
     height auto
@@ -457,5 +456,6 @@ export default {
       text-align center
     @media screen and (max-width: 900px)
       visibility hidden
+      display none
 
 </style>
