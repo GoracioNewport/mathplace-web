@@ -300,7 +300,7 @@ div
     width 19%
     min-width 250px
     height 100%
-    z-index 2000000
+    z-index 4
 
     @media screen and (max-width: 450px) {
         display inline-block
@@ -1042,7 +1042,7 @@ body
     height 10%
     z-index 4
     top 90%
-    z-index 20000
+    z-index 4
     border-top-right-radius 100%
     border-top-left-radius 90%
 
