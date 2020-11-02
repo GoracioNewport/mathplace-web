@@ -29,6 +29,7 @@
                     :to = " `${link.url}`"
                   ) <strong class="router-link-title">{{ link.title }}</strong>
             .header-logo-right
+              button.button--round.designButtonLesson.router-link(to='/customTitle') Присоединиться
               button.button--round.designButtonLesson.router-link(to='/customTitle') Создать урок
     .margin_bottom
     router-view
@@ -107,11 +108,15 @@ export default {
     border: 2px solid #763DCA;
     border-radius 50px
     font-weight 550
+    margin-left 20px
     color #763DCA
     background-color #FFFFFF
     opacity 0.5
+    transition: 0.6s;
     text-align center
     vertical-align middle
+    @media screen and (max-width: 480px)
+      display none
     @media screen and (max-width: 480px)
       display none
   .designButtonLesson:hover

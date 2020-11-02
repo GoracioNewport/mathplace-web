@@ -148,7 +148,7 @@ export default {
     padding 7%
 
   .topic-item
-    box-shadow 5px 5px 5px #aaaaaa
+    box-shadow 0px 0px 10px 2px #aaaaaa
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-size 1.2em
     color #FFFFFF

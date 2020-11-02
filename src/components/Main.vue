@@ -41,9 +41,70 @@
         <div id="Feature">
             <div class="Main2">
                 <div id="design6" class="gradient"></div>
-                <p id="FeatureText"><strong>MathPlace</strong> это платформа, где вы можете изучать математику, не убирая телефон из рук. Удобное и бесплатное. Благодаря понятной теории и интересным задачам для усвоения каждой теории, платформа подходит для тех кто хочет повысить свой скилл. Даже самые продвинутые найдут задачи себе по вкусу. <strong>Просто и Легко</strong></p>
-                <div id="design5" class="gradient"></div>
+                p.boldText Что такое MathPlace?
+                <p id="FeatureText"> Многофункциональная и гибкая платформа для изучения и размещения образовательных уроков по математике.  <strong>Просто, быстро, удобно</strong></p>
+                //- <div id="design5" class="gradient"></div>
+                div.AllAdvantages
+                    div.Advantage
+                        .Advantages
+                            img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                            strong Большая аудитория
+                            p Больше 2000 пользователей используют MathPlace для обучения
+                    div.Advantage
+                        .Advantages
+                            img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                            strong Мобильное приложение
+                            p Ученики уроков могут учиться в удобном приложение MathPlace для Android
+                    div.Advantage
+                        .Advantages
+                            img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                            strong Удобный конструктор
+                            p Разработали удобный конструктор для организации дистанционного образования
+
             </div>
+        </div>
+        <div id="Feature">
+            p.halfboldText Занимайтесь математикой <br>в любых форматах🔥
+            div.AllVerticalLines
+                div.verticalBlock
+                    img.LeftBigImage(src="./images/first_step.png")
+                    div.RightVerticalText
+                        strong.halfboldTextVertical Изучайте математику <br>в привычном формате
+                        p.halfRegularTextVertical Смотрите теорию, а затем решайте несколько задач для закрепления пройденного материала
+                div.verticalBlock
+                    img.RightBigImage(src="./images/first_step.png")
+                    div.LeftVerticalText
+                        strong.halfboldTextVertical Изучайте математику <br>в привычном формате
+                        p.halfRegularTextVertical Смотрите теорию, а затем решайте несколько задач для закрепления пройденного материала
+                div.verticalBlock
+                    img.LeftBigImage(src="./images/first_step.png")
+                    div.RightVerticalText
+                        strong.halfboldTextVertical Изучайте математику <br>в привычном формате
+                        p.halfRegularTextVertical Смотрите теорию, а затем решайте несколько задач для закрепления пройденного материала
+        </div>
+
+        <div id="Feature">
+            <div class="Main2">
+                <p id="FeatureText"><strong>Станьте автором</strong> открытого урока или проводите обучение в закрытых группах. MathPlace — удобный сервис для дистанционного преподавания</p>
+            </div>
+            div.AllAdvantages
+                div.Advantage
+                    .Advantages
+                        img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                        strong Классы
+                        p Доступ к результатм и полной статистике своих учеников в своих курсах
+
+                div.Advantage
+                    .Advantages
+                        img(src="./images/messenger.png")
+                        strong Общение
+                        p Общайтесь при помощи чата и создавайте группы класса
+                div.Advantage
+                    .Advantages
+                        img(src="https://static.tildacdn.com/tild3734-6437-4536-b834-653137303264/A17.svg")
+                        strong Приватные курсы
+                        p Закрытые курсы, доступ к которым предоставляет только их автор
+                button.goButton.alignCenter Стать автором
         </div>
         <div id="Topics" class="gradient">
             <div class="TopicBox">
@@ -75,30 +136,18 @@
                     </div>
                 </a>
             </div>
-            <div id="design3" class="gradient"></div>
         </div>
-        <div id="Download" class="gradient">
-            <div id="GooglePlayBox">
-                <a class="abutton" href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace&hl=ru">
-                    <div id="GooglePlay_DownloadButton">
-                        <p class="DownloadText">Скачать</p>
-                    </div>
-                </a>
-            </div>
-            <div id="DownloadAPKBox">
-                <a class="abutton" href="/">
-                    <div id="DownloadAPK_DownloadButton">
-                        <p style="color: #ffffff" class="DownloadText">Начать</p>
-                    </div>
-                </a>
-            </div>
+        <div id="Download" >
+            //- img.imgFull(src="https://static.tildacdn.com/tild3436-6361-4632-b263-323966316338/A10.svg")
+            p.textPlatMarket Попробуйте наше обновленное <br>мобильное приложение
+            img.imgPlayMarket(src="https://static.tildacdn.com/tild3533-6437-4834-b338-643133363864/googleplaybadge_en.png")
         </div>
         <div id="AboutDevelopers">
-            <div id="design6" class="gradient"></div>
-            <img id="finishImg" src="./images/two_phone.png" />
+            <img id="finishImg" src="./images/mockup1.jpg" />
             <div id="finish">
                 <h1 id="finishTitle">Начинай</h1>
                 <p id="finishText">Не бойтесь начать уже сегодня. У нас есть теория и задачи для всех от начинающих до профи.</p>
+                .goButton2.button.button--round.button-success.goButton2.goButton.goButton2(v-smooth-scroll href='#Download') Начать!
             </div>
             <div id="design8" class="gradient"></div>
         </div>
@@ -141,7 +190,57 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.AllVerticalLines
 
+    width 70%
+    margin-top 100px
+    margin-left 15%
+.verticalBlock
+    height auto
+    margin-bottom 100px
+.LeftBigImage
+    position relative
+    height 350px
+    width auto
+    display inline-block
+.RightBigImage
+    position relative
+    height 350px
+    width auto
+    float right
+    margin: 0 0 5px 5px
+    clear both
+.RightVerticalText
+    position relative
+    float right
+    display inline-block
+    margin-top 50px
+    max-width 400px
+    margin-bottom 0px
+.LeftVerticalText
+    position relative
+    display inline-block
+    margin-top 50px
+    max-width 400px
+    margin-bottom 0px
+    float left
+.halfboldTextVertical
+    position relative
+    width auto
+    height auto
+    text-align left
+    font-family 'Roboto'
+    font-size 27pt
+    font-weight 400
+.halfRegularTextVertical
+    position relative
+    width auto
+    height auto
+    text-align left
+    font-family 'Roboto'
+    font-size 15pt
+    margin-top 20px
+    font-weight 300
 .goButton
     position relative
     height auto
@@ -151,8 +250,19 @@ export default {
     color #763DCA
     background-color #EEE0FB
     opacity 0.9
+    transition: 0.6s;
     text-align center
     vertical-align middle
+.goButton2
+    margin-top 30px
+    font-size 14pt
+.alignCenter
+    position relative
+    width auto
+    left 30%
+    vertical-align middle
+    text-align center
+    margin 50px 0px
 .goButton:hover
     transition: 0.6s;
     color #FFFFFF
@@ -190,6 +300,7 @@ div
     width 19%
     min-width 250px
     height 100%
+    z-index 2000000
 
     @media screen and (max-width: 450px) {
         display inline-block
@@ -198,6 +309,24 @@ div
         // margin 0 auto
     }
 
+.halfboldText
+    width 100%
+    height auto
+    margin-top 10%
+    margin-bottom 0px
+    text-align center
+    font-family 'Gilroy',Arial,sans-serif
+    font-size 44px
+    font-weight 500
+.boldText
+    width 100%
+    height auto
+    margin-top 10%
+    margin-bottom 0px
+    text-align center
+    font-family  'Roboto'
+    font-size 50px
+    font-weight 500
 #Main
     // position absolute
     // float left
@@ -212,14 +341,7 @@ div
     // float left
     height auto
     width 100%
-    background-color: #eee0fb;
-    opacity: 1;
-    background-image:  radial-gradient(#763dca 2px, transparent 2px), radial-gradient(#763dca 2px, #eee0fb 2px);
-    background-size: 80px 80px;
-    background-position: 0 0,40px 40px;
-
-    background-color #ffffff
-
+Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
 #MenuBlock
     position relative
     // overflow hidden
@@ -344,6 +466,7 @@ div
     font-family 'Roboto', sans-serif
     font-size 3.5em
     font-weight bold
+    z-index 10000000
 
 @import url(http://fonts.googleapis.com/css?family=Roboto:700,400&subset=latin,cyrillic);
 #Feature
@@ -354,15 +477,15 @@ div
 #FeatureText
     position relative
     height auto
-    width 50%
+    width 42%
     min-width 450px
-    margin-top 10%
-    margin-bottom 10%
     text-align center
     margin 10% auto
+    margin-bottom 150px
+    margin-top 50px
     color #525252
-    font-weight 400
-    font-family  'Roboto', sans-serif
+    font-weight 300
+    font-family  'Roboto'
     font-size  2em
     @media screen and (max-width: 450px) {
         // display inline-block
@@ -370,6 +493,43 @@ div
         min-width 100px
         // margin 0 auto
     }
+.AllAdvantages
+    position relative
+    margin-left 20%
+    margin-right 10%
+    @media screen and (max-width: 1500px) {
+        width 100%
+        margin-left 0%
+        margin-right 0%
+    }
+.Advantage
+    position relative
+    width 30%
+    margin-bottom 30px
+    margin-left 30px
+    display inline-block
+    @media screen and (max-width: 700px) {
+        width 100%
+    }
+.Advantages
+    position relative
+    width 80%
+    margin-bottom 30px
+    display inline-block
+    img
+        height 80px
+        width auto
+        margin-bottom 30px
+    strong
+        width 100%
+        display block
+        font-family 'Roboto',Arial,sans-serif
+        font-weight 600
+        font-size 22px
+    p
+        margin-top 20px
+        font-family 'Roboto',Arial,sans-serif
+        font-size 18px
 
 #Topics
     z-index 1
@@ -452,13 +612,8 @@ div
 
 #Task
     position relative
-    height auto
+    height 100%
     width 100%
-    background-color: #eee0fb;
-    opacity: 1;
-    background-image:  radial-gradient(#763dca 2px, transparent 2px), radial-gradient(#763dca 2px, #eee0fb 2px);
-    background-size: 80px 80px;
-    background-position: 0 0,40px 40px;
 
 #TaskButton
     position relative
@@ -580,11 +735,38 @@ div
 
 #Download
     position relative
+    height 200px
+    line-height: 200px;
+    width auto
+    background: rgb(230,200,250);
+    background: linear-gradient(90deg, rgba(230,200,250,1) 0%, rgba(232,130,225,1) 57%, rgba(159,158,231,1) 100%);
+    border-radius 20px
+    box-shadow rgba(0, 0, 0, 0.5) 0px 0px 15px
+    margin-top 20px
+    margin-bottom 20px
+    margin-left 20%
+    margin-right 20%
+.imgFull
+    position absolute
     height auto
-    width 100%
-    // display table
-    // margin 10%
-
+    width auto
+    float left
+    background-size 100% 100%
+    background-repeat no-repeat
+.imgPlayMarket
+    position: relative;
+    height 100px
+    width auto
+    float right
+    margin 50px 0
+    margin-right 30px
+.textPlatMarket
+    margin: 0;
+    transform: translate(-50%, -50%);
+    position: absolute
+    top: 50%
+    left: 30%
+    font-size 28px
 .DownloadText
     height 100%
     width 100%
@@ -696,18 +878,13 @@ div
     position relative
     height auto
     width 100%
-    background-color: #eee0fb;
-    opacity: 1;
-    background-image:  radial-gradient(#763dca 2px, transparent 2px), radial-gradient(#763dca 2px, #eee0fb 2px);
-    background-size: 80px 80px;
-    background-position: 0 0,40px 40px;
 
 #finishImg
     position relative
-    width 35%
+    width auto
     min-width 400px
     height 700px
-    margin-left 9%
+    margin-left 19%
     margin-top 120px
     display inline-block
     @media screen and (max-width: 1010px) {
@@ -865,6 +1042,7 @@ body
     height 10%
     z-index 4
     top 90%
+    z-index 20000
     border-top-right-radius 100%
     border-top-left-radius 90%
 
