@@ -8,8 +8,8 @@
 
                 <div id="leftText">
                     <p class="textMargin" style="color:#000000; font-family: 'Roboto', sans-serif; font-size: 1.5em; font-weight: bold;">платформа</p>
-                    <p class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 4.8em; font-weight: bold;">MathPlace</p>
-                    <h3 class="textMargin" style="font-family: 'Roboto', sans-serif; font-size: 1.4em;" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень в математике</h3>
+                    <p class="textMargin" style="color:#763DCA; font-family: 'Roboto', sans-serif; font-size: 4.8em; font-weight: bold;">MathPlace</p>
+                    <h3 class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 1.4em;" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень в математике</h3>
                     .button.button--round.button-success.goButton(v-smooth-scroll href='#Download') Начать!
                 </div>
                 <img id="imgMain" src="./images/woman_arm2.png" alt="Второй текст"/>
@@ -120,6 +120,7 @@
 
 </template>
 
+<script data-who="💎 Made with naker.io 💎" src="https://d23jutsnau9x47.cloudfront.net/back/v1.0.9/viewer.js" data-option="{|environment|:{|gradient|:|horizontal|,|sensitivity|:0.8,|colorStart|:[50,22,103,1],|colorEnd|:[20,86,205,1]},|particle|:{|life|:5,|power|:0.01,|texture|:|https://res.cloudinary.com/naker-io/image/upload/v1566560053/circle_05.png|,|number|:20,|colorStart|:[116,129,92,0.13],|colorEnd|:[198,188,107,0.52],|sizeStart|:1.57,|sizeEnd|:3.14,|direction1|:{|x|:0,|y|:100,|z|:100},|direction2|:{|x|:0,|y|:0,|z|:0}},|waterMark|:false}" ></script>
 <script>
 
 export default {
@@ -141,6 +142,21 @@ export default {
 
 <style lang="stylus" scoped>
 
+.goButton
+    position relative
+    height auto
+    border: 2px solid #763DCA;
+    border-radius 50px
+    font-weight 550
+    color #763DCA
+    background-color #EEE0FB
+    opacity 0.9
+    text-align center
+    vertical-align middle
+.goButton:hover
+    transition: 0.6s;
+    color #FFFFFF
+    background-color #763DCA
 .goButton
     margin-left 20px
     font-size 24pt
@@ -174,6 +190,7 @@ div
     width 19%
     min-width 250px
     height 100%
+
     @media screen and (max-width: 450px) {
         display inline-block
         width 49.3%
@@ -186,10 +203,6 @@ div
     // float left
     height 1000px
     width 100%
-    background-color #ffffff
-    @media screen and (max-width: 450px) {
-        height 500px
-    }
     @media screen and (max-width: 800px) {
         height 500px
     }
@@ -199,6 +212,12 @@ div
     // float left
     height auto
     width 100%
+    background-color: #eee0fb;
+    opacity: 1;
+    background-image:  radial-gradient(#763dca 2px, transparent 2px), radial-gradient(#763dca 2px, #eee0fb 2px);
+    background-size: 80px 80px;
+    background-position: 0 0,40px 40px;
+
     background-color #ffffff
 
 #MenuBlock
@@ -285,9 +304,10 @@ div
 .MenuButton
     position relative
     height auto
-    width 60%
-    margin-left 20%
-    margin-right 20%
+    width 50%
+    text-align center
+    margin-left 25%
+    margin-right 25%
     margin-top 20%
     background-repeat no-repeat
     background-size 60%
@@ -434,6 +454,11 @@ div
     position relative
     height auto
     width 100%
+    background-color: #eee0fb;
+    opacity: 1;
+    background-image:  radial-gradient(#763dca 2px, transparent 2px), radial-gradient(#763dca 2px, #eee0fb 2px);
+    background-size: 80px 80px;
+    background-position: 0 0,40px 40px;
 
 #TaskButton
     position relative
@@ -671,6 +696,11 @@ div
     position relative
     height auto
     width 100%
+    background-color: #eee0fb;
+    opacity: 1;
+    background-image:  radial-gradient(#763dca 2px, transparent 2px), radial-gradient(#763dca 2px, #eee0fb 2px);
+    background-size: 80px 80px;
+    background-position: 0 0,40px 40px;
 
 #finishImg
     position relative
@@ -833,6 +863,7 @@ body
     position relative
     width 100%
     height 10%
+    z-index 200000
     top 90%
     border-top-right-radius 100%
     border-top-left-radius 90%

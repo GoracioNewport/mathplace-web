@@ -14,11 +14,9 @@
               //img(class="picture", src='@/assets/google_play.svg', alt='Пикча')
               img(class="picture", src='@/assets/googleplay.png', alt='Наше приложение')
             span.ui-title-2.textTop
-              strong Для учеников
+              strong Интсрукции
             a.openIns(class=".openIns" href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
               p Скачать инструкцию для учеников
-            span.ui-title-2.textTop
-              strong.textTop Для учителей
             a.openIns(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
               p.openIns Скачать инструкцию для учителей
 
@@ -245,21 +243,33 @@ export default {
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     display flex
 
-  // .auth-title,
+  .openIns
+    position relative
+    margin 8px
   .auth-form
-    width 56%
+    position relative
+    width 47%
+    height auto
+    min-width 220px
+    display inline-block
     box-shadow 0 0 10px rgba(0,0,0,0.5)
     border-radius 10px
-    padding 10px
+    padding-left 20px
+    padding-right 20px
 
   .auth-title
-    width 40%
+    position relative
+    margin-right 6%
+    margin-bottom 20px
+    width 47%
+    min-width 200px
+    display inline-block
     box-shadow 0 0 10px rgba(0,0,0,0.5)
     border-radius 10px
-    padding 10px
     text-align center
+
   .picture
-    width 80%
+    width 40%
   .auth-space
     width 4%
 
@@ -310,8 +320,10 @@ button
 
   .ui-title-2
     color #763DCA
-    font-family 'Roboto', sans-serif
-    font-size 2.4em
+    font-family sans-serif, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    // font-family 'Roboto', sans-serif
+    font-size 23pt
+    margin-top 20px
     font-weight bold
 
   @media screen and (max-width:500px)

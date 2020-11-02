@@ -700,16 +700,25 @@ export default {
     font-weight 700
 
   .buttonPost
-      position relative
-      font-size 19px
-      float right
-      padding 13px
-      background #763dcb
-      font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
-      font-weight 500
-      margin-right 0px
-      margin-top 25px
-      margin-bottom 20px
+    position relative
+    height 50px
+    border: 2px solid #763DCA;
+    border-radius 50px
+    font-weight 550
+    color #763DCA
+    background-color #FFFFFF
+    opacity 0.4
+    margin-right 0px
+    margin-top 25px
+    margin-bottom 20px
+    text-align center
+    float right
+    padding 13px
+    vertical-align middle
+  .buttonPost:hover
+    transition: 0.6s;
+    color #FFFFFF
+    background-color #763DCA
 
   .olympTheme
     position relative

@@ -12,14 +12,19 @@
     .topicsBox(v-if = 'myTopics.length !== 0')
       .topicItem(v-for = '(topic, topicIndex) in myTopics.slice().reverse()'
       :key = 'topic.token')
-        img.imageButton(src ='@/assets/images/share_24px.png' @click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + topic.token)')
-        img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
-        img.imageButton(src ='@/assets/images/bin2.png' @click ='deleteMyTopic(topic.token, topicIndex)')
-        md-button.md-primary.md-raised(type='submit') Open Snackbar
-        .button.button--round.button-primary.showStatsButton.editButton(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть подробную статистику
-        .button.button--round.button-primary.showStatsButton.editButton(v-else @click ='toggleStats(topic.token)') Показать подробную статистику
+        .img-tooltip
+          img.imageButton(src ='@/assets/images/bin2.png' @click ='deleteMyTopic(topic.token, topicIndex)')
+          md-tooltip(md-direction='right') Удалить урок
+        .img-tooltip
+          img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
+          md-tooltip(md-direction='right') Редактировать урок
+        .img-tooltip
+          img.imageButton(src ='@/assets/images/share_24px.png' @click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + topic.token)')
+          md-tooltip(md-direction='right') Скопировать ссылку на урок
         span.md-title.topicName {{ topic.name }}
         span.md-body-1.topicToken Ключ: {{ topic.token }}
+        button.showStatsButton.button--round.button-primary(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть статистику
+        button.showStatsButton.button--round.button-primary(v-else @click ='toggleStats(topic.token)') Показать статистику
         .statsBox(v-if = 'topic.showStats')
           .loadingBox(v-if = 'Object.keys(topic.stats).length == 0')
             .vld-parent
@@ -156,11 +161,17 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .sdnds
+    position relative
+    height auto
+  .img-tooltip
+    position relative
+    height auto
+    width auto
   .imageButton
-    width 3%
+    width 25px
     float right
-    margin 1%
-    margin-top 0
+    margin 8px
     &:hover
       cursor pointer
   .vld-parent
@@ -181,8 +192,18 @@ export default {
     padding-bottom 10%
   .topicsBox
     position relative
-    width 100%
+    width auto
+    margin-left 25%
+    margin-right 25%
+    @media screen and (max-width: 1300px)
+      margin-left 18%
+      margin-right 18%
+    @media screen and (max-width: 700px)
+      margin-left 2%
+      margin-right 2%
   .editButton
+    position relative
+    height auto
     margin-left 10px
   .solutionMenuField
     input
@@ -214,10 +235,10 @@ export default {
     font-size 23pt
   .topicToken
     position relative
-    margin-top 20px
-    margin-left 10px
+    margin-top 10px
+    margin-left 0px
     display block
-    font-size 1.3em
+    font-size 12pt
   .loadedBox
    margin-top 3%
   .taskSlot
@@ -234,17 +255,23 @@ export default {
     margin auto
     width 100%
   .showStatsButton
+    position relative
+    height auto
     background-color #763dca
-    float right
+    margin-bottom 10px
+    margin-top 10px
   .answerRight
     height 2em !important
     width 2em
   .topicItem
+    position relative
+    height auto
     background-color #ffffff
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
     margin 3%
-    margin-left 25%
-    margin-right 25%
-    padding 2%
+    padding-left 15px
+    padding-right 2%
+    padding-top 15px
+    padding-bottom 20px
 </style>

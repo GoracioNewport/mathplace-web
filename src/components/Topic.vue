@@ -32,7 +32,7 @@
           strong.md-title {{title}}
       a
         .topic-item-solve(@click="openTopic()")
-          .button.button--round.button-success Решать
+          .button.button--round.designButton Решать
       .LikeBox
         img#LikeImg(src="./images/like.png")
         a#LikeText  {{like}}
@@ -111,6 +111,25 @@ export default {
     letter-spacing -0.7px
     vertical-align middle
     font-family: 'Roboto', sans-serif
+
+  .designButton
+    position relative
+    height auto
+    transition: 0.6s;
+    border: 0px solid #26de81
+    border-radius 50px
+    font-weight 550
+    font-weight 450
+    color #FFFFFF
+    background-color #26de81
+    opacity 0.9
+    text-align center
+    vertical-align middle
+  .designButton:hover
+    transition: 0.6s;
+    color #26de81
+    opacity 0.9
+    background-color #FFFFFF
 
   .content-wrapper
     max-height 400px

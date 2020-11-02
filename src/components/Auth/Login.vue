@@ -14,11 +14,9 @@
               //img(class="picture", src='@/assets/google_play.svg', alt='Пикча')
               img(class="picture", src='@/assets/googleplay.png', alt='Наше приложение')
             span.ui-title-2.textTop
-              strong Для учеников
+              strong Инструкция
             a.openIns(class=".openIns" href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
               p Скачать инструкцию для учеников
-            span.ui-title-2.textTop
-              strong.textTop Для учителей
             a.openIns(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
               p.openIns Скачать инструкцию для учителей
 
@@ -137,7 +135,8 @@ export default {
     min-height 0
 .stayInCheckbox
   float left
-  margin 1%
+  margin 10px
+  font-size 22pt
 .successText
     padding 10%
     text-color #000000 !important
@@ -169,24 +168,35 @@ export default {
     border-radius 10px
 
 .auth
+  position relative
+  width 100%
   font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-  display flex
+  display block
+  margin-left 0px
 
 .auth-form
-  width 56%
+  position relative
+  width 47%
+  min-width 200px
+  display inline-block
   box-shadow 0 0 10px rgba(0,0,0,0.5)
   border-radius 10px
-  padding 10px
+  padding-left 20px
+  padding-right 20px
 
 .openIns
-  text-size 3em
+  font-size 12pt
+  margin 8px
 
 .auth-title
-  margin-right 50px
-  width 40%
+  position relative
+  margin-right 6%
+  margin-bottom 20px
+  width 47%
+  min-width 200px
+  display inline-block
   box-shadow 0 0 10px rgba(0,0,0,0.5)
   border-radius 10px
-  padding 10px
   text-align center
 
 .textTop
@@ -194,8 +204,8 @@ export default {
   margin-top 10px
 .picture
   position relative
-  margin-top 15px
-  width 60%
+  margin-top 10px
+  width 40%
 
 .auth-space
   width 4%
@@ -239,16 +249,19 @@ button
 
 .ui-title-2
   color #763DCA
-  font-family 'Roboto', sans-serif
-  font-size 2.4em
+  font-family sans-serif, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  // font-family 'Roboto', sans-serif
+  font-size 23pt
+  margin-top 20px
   font-weight bold
 
 .buttons-list-reference
   text-decoration none
   color #525252
+  margin-bottom 10px
   text-align center
 
-@media screen and (max-width:500px)
+@media screen and (max-width:200px)
   .auth-title
       display none
   .auth-form

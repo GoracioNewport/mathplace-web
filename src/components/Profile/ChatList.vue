@@ -31,7 +31,7 @@
     .newChatButton
       md-button.md-fab.mdc-fab--extended.md-fab-bottom-right.md-primary(@click = 'createNewChat()')
         md-icon add
-        
+
     .joinMenu(v-if = 'this.joinMenuShow')
       .joinMenuBox(v-if = '!groupChat')
         .joinMenuText
