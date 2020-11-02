@@ -15,6 +15,7 @@ import CustomTitle from '@/components/CustomTitle'
 import Statistics from '@/components/Profile/Statistics'
 import ChatList from '@/components/Profile/ChatList'
 import Chat from '@/components/Profile/Chat'
+import TeacherLanding from '@/components/TeacherLanding'
 
 Vue.use(Router)
 Vue.use(VueFirestore)
@@ -101,6 +102,11 @@ export default new Router({
       beforeEnter (to, from, next) {
         Store.getters.checkUser ? next() : next('/login')
       }
+    },
+    {
+      path: '/teacher',
+      name: 'teacher',
+      component: TeacherLanding
     }
   ]
 })

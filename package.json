@@ -33,6 +33,7 @@
     "v-clipboard": "^2.2.3",
     "v-tooltip": "^2.0.3",
     "vue": "^2.5.2",
+    "vue-carousel": "^0.18.0",
     "vue-datetime": "^1.0.0-beta.14",
     "vue-firebase": "^1.0.8",
     "vue-firestore": "^0.3.30",

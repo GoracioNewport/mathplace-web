@@ -227,10 +227,10 @@ div
     // float left
     // margin-top 0%
     height auto
-    z-index 50
+    z-index 4
 
 #BackToMenuButton
-    z-index 10
+    z-index 4
     position fixed
     left 95%
     top 90%
@@ -372,7 +372,7 @@ div
     }
 
 #Topics
-    z-index 3
+    z-index 1
     position relative
     height auto
     width 100%
@@ -557,7 +557,7 @@ div
     }
 
 #TaskResultSucsessful
-    z-index 6
+    z-index 2
     position absolute
     display none
     left 32.5%
@@ -568,7 +568,7 @@ div
     background-size 100%
 
 #TaskResultnotSucsessful
-    z-index 6
+    z-index 2
     position absolute
     display none
     left 32.5%
@@ -822,11 +822,11 @@ div
     }
 
 .gradient
-    z-index 100
+    z-index 3
     background linear-gradient(to left, #763DCA, #763DCA)
 
 .gradient2
-    z-index 100
+    z-index 3
     background linear-gradient(to left, #26de81, #26de81)
 
 body
@@ -863,7 +863,7 @@ body
     position relative
     width 100%
     height 10%
-    z-index 200000
+    z-index 4
     top 90%
     border-top-right-radius 100%
     border-top-left-radius 90%
