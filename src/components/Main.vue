@@ -207,9 +207,7 @@ export default {
     position relative
     height 350px
     width auto
-    float right
-    margin: 0 0 5px 5px
-    clear both
+    text-align right
 .RightVerticalText
     position relative
     float right
