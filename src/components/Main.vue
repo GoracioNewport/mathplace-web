@@ -67,10 +67,10 @@
             p.halfboldText Занимайтесь математикой <br>в любых форматах🔥
             div.AllVerticalLines
                 div.verticalBlock
-                    img.LeftBigImage(src="./images/first_step.png")
+                    img.LeftBigImage(src="./images/second_step.png")
                     div.RightVerticalText
-                        strong.halfboldTextVertical Изучайте математику <br>в привычном формате
-                        p.halfRegularTextVertical Смотрите теорию, а затем решайте несколько задач для закрепления пройденного материала
+                        strong.halfboldTextVertical Смотрите <br>нужные уроки
+                        p.halfRegularTextVertical Полезные уроки от школьной математики до экзаменов и олимпиад. <br>Найдется то, что вам нужно
                 div.verticalBlock
                     img.RightBigImage(src="./images/first_step.png")
                     div.LeftVerticalText
@@ -79,7 +79,7 @@
                 div.verticalBlock
                     img.LeftBigImage(src="./images/first_step.png")
                     div.RightVerticalText
-                        strong.halfboldTextVertical Изучайте математику <br>в привычном формате
+                        strong.halfboldTextVertical Отслеживайте статистику <br>и двигайтесь дальше
                         p.halfRegularTextVertical Смотрите теорию, а затем решайте несколько задач для закрепления пройденного материала
         </div>
 
@@ -197,31 +197,40 @@ export default {
     margin-left 15%
 .verticalBlock
     height auto
-    margin-bottom 100px
+    display: block;
+    margin-bottom 150px
+.verticalBlock:after
+    content: "";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
 .LeftBigImage
-    position relative
     height 350px
     width auto
     display inline-block
 .RightBigImage
-    position relative
     height 350px
     width auto
+    align right
+    float right
     text-align right
 .RightVerticalText
-    position relative
+    height auto
     float right
     display inline-block
     margin-top 50px
-    max-width 400px
+    max-width 450px
     margin-bottom 0px
 .LeftVerticalText
-    position relative
+    height auto
     display inline-block
     margin-top 50px
     max-width 400px
     margin-bottom 0px
-    float left
 .halfboldTextVertical
     position relative
     width auto
