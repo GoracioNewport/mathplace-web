@@ -29,8 +29,8 @@
                     :to = " `${link.url}`"
                   ) <strong class="router-link-title">{{ link.title }}</strong>
             .header-logo-right
-              button.button--round.designButtonLesson.router-link(to='/customTitle') Присоединиться
-              button.button--round.designButtonLesson.router-link(to='/customTitle') Создать урок
+              router-link.button.button--round.designButtonLesson(to='/') Присоединиться
+              router-link.button.button--round.designButtonLesson(to='/customTitle') Создать урок
     .margin_bottom
     router-view
 </template>
@@ -64,6 +64,8 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+  a
+    text-decoration none !important
   header
     position relative
     height 80px
@@ -103,13 +105,14 @@ export default {
     :hover
       color #763DCA /* Цвет текста активного пункта */
   .designButtonLesson
+    padding-top 12.5px
     position relative
     height 50px
     border: 2px solid #763DCA;
     border-radius 50px
     font-weight 550
     margin-left 20px
-    color #763DCA
+    color #763DCA !important
     background-color #FFFFFF
     opacity 0.5
     transition: 0.6s;
@@ -117,11 +120,9 @@ export default {
     vertical-align middle
     @media screen and (max-width: 480px)
       display none
-    @media screen and (max-width: 480px)
-      display none
   .designButtonLesson:hover
     transition: 0.6s;
-    color #FFFFFF
+    color #FFFFFF !important
     background-color #763DCA
   .navbar-link
     padding 0
