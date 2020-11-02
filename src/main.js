@@ -5,6 +5,7 @@ import Vuelidate from 'vuelidate'
 import App from './App'
 import router from './router'
 import store from './store'
+import VueCarousel from 'vue-carousel'
 
 import firebase from 'firebase/app'
 
@@ -28,6 +29,7 @@ import { Datetime } from 'vue-datetime'
 
 Vue.use(VueMaterial)
 Vue.use(Datetime)
+Vue.use(VueCarousel)
 
 Vue.use(Topic)
 Vue.use(Vuelidate)

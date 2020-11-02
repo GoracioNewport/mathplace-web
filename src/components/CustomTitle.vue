@@ -35,7 +35,7 @@
           .md-layout-item.olympTheme2
             md-field
               md-select.olympTheme2(v-model = "theme" placeholder='Выберите тему урока')
-                md-option(v-for = 'theme in themeList') {{ theme }}
+                md-option(v-for = '(theme, i) in themeList' :key="i" :value="theme") {{ theme }}
           //- md-select.olympTheme(v-model = "theme" name='country' placeholder='Country')
           //-   md-option(v-for = 'theme in themeList') {{ theme }}
 
@@ -119,7 +119,7 @@
                   .md-layout-item.olympTheme2
                     md-field
                       md-select.olympTheme2(v-model = "task.difficulty" placeholder="Выберите сложность")
-                        md-option(v-for = 'diff in difficultyList') {{ diff }}
+                        md-option(v-for = '(diff, i) in difficultyList' :key="i" :value="diff") {{ diff }}
                       md-tooltip(md-direction='left') Укажите, чтобы ученикам было проще ориентироваться
 
                   //- label(for='difOne') Легкая

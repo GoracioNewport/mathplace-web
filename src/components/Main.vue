@@ -347,10 +347,10 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     // float left
     // margin-top 0%
     height auto
-    z-index 50
+    z-index 4
 
 #BackToMenuButton
-    z-index 10
+    z-index 4
     position fixed
     left 95%
     top 90%
@@ -514,11 +514,11 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     width 80%
     margin-bottom 30px
     display inline-block
-    img 
+    img
         height 80px
         width auto
         margin-bottom 30px
-    strong 
+    strong
         width 100%
         display block
         font-family 'Roboto',Arial,sans-serif
@@ -530,7 +530,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
         font-size 18px
 
 #Topics
-    z-index 3
+    z-index 1
     position relative
     height auto
     width 100%
@@ -710,7 +710,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     }
 
 #TaskResultSucsessful
-    z-index 6
+    z-index 2
     position absolute
     display none
     left 32.5%
@@ -721,7 +721,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     background-size 100%
 
 #TaskResultnotSucsessful
-    z-index 6
+    z-index 2
     position absolute
     display none
     left 32.5%
@@ -761,8 +761,8 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
 .textPlatMarket
     margin: 0;
     transform: translate(-50%, -50%);
-    position: absolute; 
-    top: 50%; 
+    position: absolute
+    top: 50%
     left: 30%
     font-size 28px
 .DownloadText
@@ -997,11 +997,11 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     }
 
 .gradient
-    z-index 100
+    z-index 3
     background linear-gradient(to left, #763DCA, #763DCA)
 
 .gradient2
-    z-index 100
+    z-index 3
     background linear-gradient(to left, #26de81, #26de81)
 
 body
@@ -1038,6 +1038,7 @@ body
     position relative
     width 100%
     height 10%
+    z-index 4
     top 90%
     z-index 20000
     border-top-right-radius 100%
