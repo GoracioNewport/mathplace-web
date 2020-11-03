@@ -29,8 +29,8 @@
                     :to = " `${link.url}`"
                   ) <strong class="router-link-title">{{ link.title }}</strong>
             .header-logo-right
-              router-link.button.button--round.designButtonLesson(to='/') Присоединиться
-              router-link.button.button--round.designButtonLesson(to='/customTitle') Создать урок
+              //- button.button--round.designButtonLesson.router-link(to='/customTitle') Присоединиться
+              button.button--round.designButtonLesson.router-link(to='/customTitle') Создать урок
     .margin_bottom
     router-view
 </template>
@@ -77,7 +77,7 @@ export default {
   .navbar
     position fixed
     width 100%
-    z-index 5
+    z-index 100000000
     opacity 0.85
     height 80px
     background-color #FFFFFF
