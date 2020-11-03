@@ -77,7 +77,7 @@ export default {
   .navbar
     position fixed
     width 100%
-    z-index 100000000
+    z-index 5
     opacity 0.85
     height 80px
     background-color #FFFFFF
