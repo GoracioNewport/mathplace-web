@@ -66,6 +66,8 @@ export default {
 <style scoped lang="stylus">
   a
     text-decoration none !important
+    transition 0.2s
+
   header
     position relative
     height 80px
@@ -101,6 +103,7 @@ export default {
       padding-right 20px
       padding-top 15px
       padding-bottom 15px
+      transition 0.3s
       color #000000
     :hover
       color #763DCA /* Цвет текста активного пункта */
