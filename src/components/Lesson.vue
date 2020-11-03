@@ -487,7 +487,7 @@ export default {
     margin-top 50px
     margin-left 23%
     margin-right 23%
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 800px) {
       width 88%
       margin-right 6%
       margin-left 6%
@@ -529,7 +529,7 @@ export default {
     padding 10px
     margin-left 23%
     margin-right 23%
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 800px) {
         width 88%
         margin-right 6%
         margin-left 6%
@@ -540,7 +540,7 @@ export default {
     margin-top 20px
     margin-left 23%
     margin-right 23%
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 800px) {
         width 88%
         margin-right 0%
         margin-left 0%
@@ -551,7 +551,7 @@ export default {
     height 100%
     margin-left 23%
     margin-right 23%
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 800px) {
         width 88%
         margin-right 6%
         margin-left 6%
@@ -563,7 +563,7 @@ export default {
     margin-left 0%
     margin-right 0%
     display inline-block
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 800px) {
         width 88%
         margin-right 6%
         margin-left 6%
@@ -578,7 +578,7 @@ export default {
     margin-left 0%
     margin-right 0%
     margin-top 8px
-    @media screen and (max-width: 750px) {
+    @media screen and (max-width: 800px) {
       grid-template-columns 18% 64% 18%
     }
     float right
