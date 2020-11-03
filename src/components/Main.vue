@@ -9,7 +9,8 @@
                     <p class="textMargin" style="color:#000000; font-family: 'Roboto', sans-serif; font-size: 1.5em; font-weight: bold;">платформа</p>
                     <p class="textMargin" style="color:#763DCA; font-family: 'Roboto', sans-serif; font-size: 4.8em; font-weight: bold;">MathPlace</p>
                     <h3 class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 1.4em;" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень по математике</h3>
-                    .button.button--round.button-success.goButton(v-smooth-scroll href='#Download') Начать!
+                    a(href="https://mathplace.ru/login")
+                        button.button--round.button-success.goButton Начать!
                 </div>
                 <img id="imgMain" src="./images/mainPhones.png" alt="Второй текст"/>
             </div>
@@ -53,7 +54,7 @@
                 .MenuBlockTopic
                     p.AlignCenter
                         img.MenuButton(src="./images/brain.png")
-                    p <br>Олимпиады<br>                            
+                    p <br>Олимпиады<br>
         </div>
         p.MainScreen
             img(src="./images/mainLabtop.png")
@@ -80,9 +81,9 @@
                         strong Приватные курсы
                         p Закрытые курсы, доступ к которым предоставляет только их автор
         </div>
-        .AlignCenterButton
-            button.goButton
-                .AlignCenterButton Стать автором
+        a(href="https://mathplace.ru/login")
+            .AlignCenterButton
+                button.goButton.button Стать автором
 
         <div id="Task">
             //- <div id="design4" class="gradient"></div>
@@ -101,13 +102,16 @@
         </div>
         div#DownloadPlayMarket
             p.textPlayMarket Попробуйте наше обновленное мобильное приложение
-            img.imgPlayMarket(src="https://static.tildacdn.com/tild3533-6437-4834-b338-643133363864/googleplaybadge_en.png")
+            a(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+                img.imgPlayMarket(src="https://static.tildacdn.com/tild3533-6437-4834-b338-643133363864/googleplaybadge_en.png")
         <div id="AboutDevelopers">
             <img id="finishImg" src="./images/final_screen.png" />
             <div id="finish">
                 <h1 id="finishTitle">Посмотрите на <br>платформу в деле</h1>
                 <p id="finishText">У нас есть уроки для всех от начинающих до профи.</p>
-                .goButton2.button.button--round.button-success.goButton2.goButton.goButton2(v-smooth-scroll href='#Download') Начать!
+                a(href="https://mathplace.ru/login")
+                    button.button--round.button-success.goButton.goButton2 Начать!
+                    //- button.goButton2.button.button--round.button-success.goButton2.goButton.goButton2 Начать!
             </div>
         </div>
         <div id="AboutUs">
@@ -147,6 +151,12 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.button
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
 .AllVerticalLines
 
     width 70%
@@ -340,13 +350,15 @@ div
     position relative
     width 80%
     min-width 250px
-    height 100%
+    height auto
     margin-top 80px
     margin-left 10%
     margin-right 10%
+    padding-bottom 5px
+    margin-bottom 10px
     box-shadow 0px 0px 5px 0px #aaaaaa
     border-radius 20px
-    
+
     @media screen and (max-width: 900px) {
         margin-top 20px
     }
@@ -365,13 +377,11 @@ div
         color #000000
         margin-left 10px
         margin-right 10px
-        margin-bottom 30px
+        margin-bottom 20px
 
 .MenuBlockTopic:hover
     box-shadow 0px 0px 12px 3px #aaaaaa
-
 .halfboldText
-    width 100%
     height auto
     margin-top 10%
     margin-bottom 0px
@@ -397,6 +407,7 @@ div
     margin-bottom 400px
     @media screen and (max-width: 800px) {
         height auto
+        margin-bottom 0px
     }
 
 .Main2
@@ -430,7 +441,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
 .textMargin
     position relative
     width auto
-    margin 30px 
+    margin 30px
 
 #leftMain
     position relative
@@ -841,7 +852,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
         width 90%
         height auto
         margin-right 5%
-        margin-left 5%  
+        margin-left 5%
     }
 
 .imgFull
@@ -881,7 +892,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     @media screen and (max-width: 1500px) {
         width 40%
         margin-left 20px
-        padding-top 30px    
+        padding-top 30px
     }
     @media screen and (max-width: 700px) {
         width 80%
