@@ -10,9 +10,12 @@
             //img(class="picture", src='@/assets/gestures.png', alt='Пикча')
             //img(class="picture", src='@/assets/birthday-and-party.png', alt='Пикча')
             //img(class="picture", src='@/assets/miscellaneous.png', alt='Пикча')
-            a(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
-              //img(class="picture", src='@/assets/google_play.svg', alt='Пикча')
-              img(class="picture", src='@/assets/googleplay.png', alt='Пикча')
+            .play-market
+              a(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+                //img(class="picture", src='@/assets/google_play.svg', alt='Пикча')
+                img(class="picture", src='@/assets/googleplay.png', alt='Пикча')
+            .broshure
+              a(href='https://firebasestorage.googleapis.com/v0/b/mathplace-842f7.appspot.com/o/BroshureFinal.pdf?alt=media&token=ead10aac-7ae9-4da7-93fe-2b8bfb164ba9', download) Брошура пользования
           .auth-form
             span.ui-title-2 Вход
             form(@submit.prevent="onSubmit")
@@ -229,5 +232,8 @@ button
     width 0%
 .error
   color #fc5c65
+
+.broshure
+  position relative
 
 </style>

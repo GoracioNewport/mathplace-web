@@ -55,7 +55,7 @@
                     input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
                   .theoryTextFile(v-if ='component.type === "file"')
                     label(for='file') Выберите Файл
-                    input#img(type='file', name='file', accept='application/pdf, application/msword, .docx', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
+                    input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
 
                 .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
 

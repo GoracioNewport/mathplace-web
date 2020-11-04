@@ -5,6 +5,7 @@ import Uimini from 'uimini/dist/css/uimini.css'
 import Store from '../store'
 
 import Home from '@/components/Home'
+import PrivacyPolicy from '@/components/PrivacyPolicy'
 import Main from '@/components/Main'
 import Lesson from '@/components/Lesson'
 import Registration from '@/components/Auth/Registration'
@@ -32,6 +33,11 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: PrivacyPolicy
     },
     {
       path: '/lesson/:collectionId=:taskId',
