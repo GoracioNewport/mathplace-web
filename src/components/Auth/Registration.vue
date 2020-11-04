@@ -5,14 +5,21 @@
         .auth
           .auth-title
             span.ui-title-2
-              strong Наше приложение
+              strong Android приложение
             //img(class="picture", src='@/assets/saluting.png', alt='Пикча')
             //img(class="picture", src='@/assets/gestures.png', alt='Пикча')
             //img(class="picture", src='@/assets/birthday-and-party.png', alt='Пикча')
             //img(class="picture", src='@/assets/miscellaneous.png', alt='Пикча')
             a(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
               //img(class="picture", src='@/assets/google_play.svg', alt='Пикча')
-              img(class="picture", src='@/assets/googleplay.png', alt='Пикча')
+              img(class="picture", src='@/assets/googleplay.png', alt='Наше приложение')
+            span.ui-title-2.textTop
+              strong Интсрукции
+            a.openIns(class=".openIns" href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+              p Скачать инструкцию для учеников
+            a.openIns(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+              p.openIns Скачать инструкцию для учителей
+
           .auth-space
           .auth-form
             span.ui-title-2
@@ -155,12 +162,11 @@ export default {
       }
     },
     registerUserInDatabase (name, user) {
-      console.log('Calling func', name, user)
       const db = firebase.firestore()
 
       var achivmentCount = 8
       var taskCount = 0
-      var tasksDb = db.collection('task2').doc('ОГЭ Вариант 1')
+      var tasksDb = db.collection('tasks').doc('ОГЭ Вариант 1')
       tasksDb.get()
         .then(doc => {
           taskCount = doc.data().items
@@ -199,6 +205,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .content-wrapper
+    min-height 0
   .successText
     padding 10%
     text-color #000000 !important
@@ -235,25 +243,39 @@ export default {
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     display flex
 
-  // .auth-title,
+  .openIns
+    position relative
+    margin 8px
   .auth-form
-    width 56%
+    position relative
+    width 47%
+    height auto
+    min-width 220px
+    display inline-block
     box-shadow 0 0 10px rgba(0,0,0,0.5)
     border-radius 10px
-    padding 10px
+    padding-left 20px
+    padding-right 20px
 
   .auth-title
-    width 40%
+    position relative
+    margin-right 6%
+    margin-bottom 20px
+    width 47%
+    min-width 200px
+    display inline-block
     box-shadow 0 0 10px rgba(0,0,0,0.5)
     border-radius 10px
-    padding 10px
     text-align center
+
   .picture
-    width 80%
+    width 40%
   .auth-space
     width 4%
 
   .form-item
+    input
+      font-size 1em
     .error
       display none
       margin-bottom 2%
@@ -298,8 +320,10 @@ button
 
   .ui-title-2
     color #763DCA
-    font-family 'Roboto', sans-serif
-    font-size 2.4em
+    font-family sans-serif, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    // font-family 'Roboto', sans-serif
+    font-size 23pt
+    margin-top 20px
     font-weight bold
 
   @media screen and (max-width:500px)

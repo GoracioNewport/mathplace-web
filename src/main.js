@@ -5,6 +5,7 @@ import Vuelidate from 'vuelidate'
 import App from './App'
 import router from './router'
 import store from './store'
+import VueCarousel from 'vue-carousel'
 
 import firebase from 'firebase/app'
 
@@ -14,48 +15,51 @@ import vueSmoothScroll from 'vue2-smooth-scroll'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material-design-icons/styles.css'
+import 'vue-datetime/dist/vue-datetime.css'
 
 // import { MdButton, MdContent, MdTabs } from 'vue-material/dist/components'
 // import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
-import pdf from 'vue-pdf'
-import { VueEditor } from 'vue2-editor'
-// import MathLive from "./mathlive.js"
-// import Mathfield from "./vue-mathlive.mjs"
+import Clipboard from 'v-clipboard'
+import { Datetime } from 'vue-datetime'
 
 // Vue.use(MdButton)
 // Vue.use(MdContent)
 // Vue.use(MdTabs)
 
 Vue.use(VueMaterial)
+Vue.use(Datetime)
+Vue.use(VueCarousel)
 
 Vue.use(Topic)
 Vue.use(Vuelidate)
 Vue.use(vueSmoothScroll)
-// Vue.use(Mathfield, MathLive)
-Vue.use(VueEditor)
-Vue.use(pdf)
+
+Vue.use(Clipboard)
 
 Vue.config.productionTip = false
-/* eslint-disable no-new */
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyAwxefCuoxvrMYCWbgQcJVUgTvL6CPEErA',
+  authDomain: 'mathplace-842f7.firebaseapp.com',
+  databaseURL: 'https://mathplace-842f7.firebaseio.com',
+  projectId: 'mathplace-842f7',
+  storageBucket: 'gs://mathplace-842f7.appspot.com',
+  messagingSenderId: '832330186047',
+  appId: '1:832330186047:web:d9cbd636e61d42a459678a',
+  measurementId: 'G-7P4W9J6CKS'
+}
+
+firebase.initializeApp(firebaseConfig)
+firebase.firestore().enablePersistence()
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE)
+
+// eslint-disable-next-line
 new Vue({
   el: '#app',
   router,
   store,
   components: { App, Topic },
   template: '<App/>',
-  created () {
-    var firebaseConfig = {
-      apiKey: 'AIzaSyAwxefCuoxvrMYCWbgQcJVUgTvL6CPEErA',
-      authDomain: 'mathplace-842f7.firebaseapp.com',
-      databaseURL: 'https://mathplace-842f7.firebaseio.com',
-      projectId: 'mathplace-842f7',
-      storageBucket: 'gs://mathplace-842f7.appspot.com',
-      messagingSenderId: '832330186047',
-      appId: '1:832330186047:web:d9cbd636e61d42a459678a',
-      measurementId: 'G-7P4W9J6CKS'
-    }
-
-    firebase.initializeApp(firebaseConfig)
-  }
+  beforeCreate () { this.$store.commit('initialiseStore') }
 })

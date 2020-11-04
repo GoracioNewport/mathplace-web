@@ -1,24 +1,45 @@
 <template lang='pug'>
     .content-wrapper
-      .test_button
-        router-link.button--round.button.button-primary.bottom_button(to='/customTitle') Создать свою тему
+      .loading-indicator(v-if = 'isLoading')
+        loading(
+          :active.sync = "this.isLoading"
+          is-full-page = true
+          color = "#763dca"
+          :opacity = 0
+          :width = 150)
 
-      .content-block
+      .content-block(v-else)
 
         .content-main
             .avatar
-                img.avatar(
-                  class = 'avatar',
-                    src = '@/assets/images/account_new.png',
-                    alt = 'Аватар')
+                md-avatar
+                  img.avatarImage.avatar(
+                    @mouseover ='avatarHover = true'
+                    @mouseleave ='avatarHover = false'
+                    @click ='settingsMenuShow = true'
+                    v-if = 'getUser.image === undefined'
+                      src = '@/assets/images/account_new.png',
+                      alt = 'Аватар')
+                  img.avatarImage.avatar(
+                    @mouseover ='avatarHover = true'
+                    @mouseleave ='avatarHover = false'
+                    @click ='settingsMenuShow = true'
+                    v-else
+                      :src = 'getUser.image',
+                      alt = 'Аватар')
+                img.avatarChange(
+                  v-if = 'avatarHover'
+                  src = '@/assets/images/camera.png'
+                )
                 .userInf
-                  p.userName {{this.getUser.name}}
+                  p.userName {{ this.getUser.name }}
                   .info
                     p.textInf Посылок {{this.getUser.submit}}
                     p.textInf Решено {{this.getUser.right}}
                     p.textInf Тугриков {{this.getUser.money}}
+                .userButton
                   router-link.button.button--round.button.button-primary(to='/statistics') Мои уроки
-                  router-link.button.button--round.button.button-primary(to='/editProfile') Редактировать
+                  router-link.button.button--round.button.button-primary(@click ='settingsMenuShow = true') Редактировать
                   router-link.button.button--round.button.button-primary(to='/logout') Выйти
 
         .content-achieve
@@ -80,6 +101,29 @@
                 ) {{ part.condition }}
                 p.achivProgress(
                 ) {{"Прогресс "}} {{ part.progress }}{{" %"}}
+      .settingsMenu(v-if = 'settingsMenuShow')
+        .settingsMenuBox
+          .settingsMenuText
+            span.md-headline Изменение имени
+          .settingsMenuField
+            md-field(md-inline='')
+              label Введите имя
+              md-input(v-model='newName')
+
+          .settingsMenuText
+            span.md-headline Изменение аватара
+          .settingsMenuField
+            md-field
+              label Выберите картинку
+              md-file(v-model='newAvatarName' @md-change ='onFilePicked' accept ="image/*")
+
+          .settingsMenuCancel
+            .button.button--round.button-success(@click ='saveProfile') Сохранить
+            .button.button--round.button-warning(@click ='settingsMenuShow = false')  Отмена
+      .createTopicButton
+        router-link(to='/customTitle').button.mdc-fab.mdc-fab--extended.button--round.bottom_button
+          .createTopicButtonBox
+          span.createTopicButtonText Создать свой урок
 
 </template>
 
@@ -97,6 +141,7 @@ export default {
     this.isLoading = true
     await this.fetchAchivements()
     this.achivementsFull = this.$store.getters.getAchievements
+    this.newName = this.getUser.name
     this.isLoading = false
   },
   data () {
@@ -108,7 +153,13 @@ export default {
         done: 0,
         difficulty: 'easy'
       }],
-      isLoading: true
+      isLoading: true,
+      avatarHover: false,
+      settingsMenuShow: false,
+      newName: '',
+      newAvatarName: '',
+      newAvatarFile: null,
+      trueVar: true
     }
   },
   // props: {
@@ -137,141 +188,241 @@ export default {
     ...mapGetters(['getAchievements', 'getUser'])
   },
   methods: {
-    ...mapActions(['fetchAchivements', 'updateUser'])
+    ...mapActions(['fetchAchivements', 'updateUser', 'changeProfileSettings']),
+    async saveProfile () {
+      this.isLoading = true
+      this.settingsMenuShow = false
+      if (this.newName === this.getUser.name || this.newName === '') this.newName = null
+      await this.changeProfileSettings({name: this.newName, avatar: this.newAvatarFile})
+      this.$router.go()
+    },
+    onFilePicked (event) {
+      this.newAvatarFile = event[0]
+    }
   }
 }
 
 </script>
 
 <style scoped lang='stylus'>
-
+  .md-avatar
+    width 10vh
+    height 10vh
+    border-radius 50%
+    vertical-align top
+  .createTopicButton
+    z-index 10
+  .settingsMenuBox
+    padding 5%
+    padding-left 10%
+    padding-right 10%
     .button
-      color #FFFFFF !important
+      font-size 20pt
+      margin 2%
+  .settingsMenuText
+    font-size 1.3em
+    padding-bottom 3%
 
-    .button-primary
-      margin-right 10px
+  .settingsMenuField
+    input
+      border-color #000000
+      border-width 1%
+  .settingsMenu
+    z-index 50000
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-size 2vw
+    background-color rgba(0, 0, 0, .5)
+    width 100%
+    height 100%
+    position fixed
+    top 0
+    left 0
+  .settingsMenuBox
+    text-align center
+    background-color #FFFFFF
+    margin-top 10%
+    margin-left 20%
+    margin-right 20%
+    min-width 350px
+    border 2px #000000 solid
+    border-radius 10px
+    @media screen and (max-width: 600px)
+      margin 1%
+      margin-top 20%
+  .avatarChange
+    top 55%
+    right 93.8%
+    position absolute
+    height 30px
+    width 30px
+  .avatarImage
+    position relative
+    display inline-block
+    overflow hidden
+    transition filter 0.5s
+    border-radius: 50%;
+    margin-bottom 10px
+    overflow: hidden;
+    width 120px
+    height 120px
+    img
+      display: block;
+      min-width: 100%;
+      min-height: 100%;
 
-    .test_button
-      position absolute
-      height 100%
+    &:hover
+      filter brightness(0.8)
+  .content-wrapper
+    min-height 0
+
+  .button
+    color #FFFFFF !important
+
+  .button-primary
+    margin-top 12px
+    margin-right 10px
+
+  .test_button
+    position absolute
+    height 100%
+    width 100%
+
+  .bottom_button
+    position fixed
+    bottom 20px
+    font-size 22px
+    background #763dca
+    font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    width auto
+    font-weight 500
+    height auto
+    right 20px
+    box-shadow 0px 0px 10px rgba(0,0,0,0.5)
+  .userInf
+    width 60%
+    margin-top 20px
+    margin-left 30px
+    display inline-block
+  .userButton
+    position relative
+    height auto
+    width auto
+    margin-left 30px
+    display block
+  .textInf
+    font-weight 600
+    margin-right 40px
+    margin-left 0px
+    align left
+    display inline-block
+
+  .userName
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-weight 700
+    font-size 2.1em
+    margin-bottom 20px
+
+  .content-block
+    margin-left 25%
+    margin-right 25%
+    margin-top 5%
+    margin-bottom 10%
+    background-color #FCFCFF
+    box-shadow 0 0 5px rgba(0,0,0,0.5)
+    border-radius 20px 20px 20px 20px
+    @media screen and (max-width: 2100px) {
+      margin-left 16%
+      margin-right 16%
+    }
+
+    @media screen and (max-width: 1800px) {
+      margin-left 50px
+      margin-right 50px
+    }
+
+    @media screen and (max-width: 600px) {
+      margin-left 15px
+      margin-right 15px
+      margin-top 50px
+    }
+
+  .content-main
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+
+  .text-part
+    position relative
+    display inline-block
+    width 50%
+    height auto
+    @media screen and (max-width: 1000px) {
       width 100%
+      margin-left 15px
+      margin-right 0px
+      margin-top 50px
+    }
 
-    .bottom_button
-      position fixed
-      bottom 20px
-      font-size 22px
-      background #763dca
-      font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
-      width auto
-      font-weight 500
+  .content-achieve
+    position relative
+    width 100%
+    height auto
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    margin-bottom 5%
+
+  .avatar
+    position relative
+    height 100%
+    margin-left 5%
+    margin-right 1%
+    margin-bottom 0%
+    margin-top 2%
+
+  .achivText
+    position relative
+    display inline-block
+    margin-left 10pt
+    vertical-align middle
+
+  .achivName
+    font-size 2em
+    font-weight 700
+    text-color #763dca
+    color #763dca
+
+  .achivCondition
+    font-size 1.3em
+    color #5B6175
+    margin-top 10px
+    margin-bottom 10px
+  .achivProgress
+    font-size 1em
+
+  .info
+    position relative
+    height auto
+    width auto
+    margin-right 0%
+    margin-bottom 5%
+    margin-top 10px
+    font-size 1.2em
+    strong
+      margin 0%
+  .logout
+    background-color #763DCA
+    color #ffffff
+    padding 0.7%
+    box-shadow 0 0 10px rgba(0,0,0,0.5)
+    border-radius 20px 20px 20px 20px
+
+  .icon
+    position relative
+    display inline-block
+    min-width 250px
+    img
+      width 19%
       height auto
-      right 20px
-
-    .userInf
-      width 40%
-      display inline-block
-    .textInf
-      font-weight 600
-      margin-right 40px
-      margin-left 0px
-      align left
-      display inline-block
-
-    .userName
-      font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-      font-weight 700
-      font-size 2.1em
-
-    .content-block
-      margin-left 25%
-      margin-right 25%
-      margin-top 5%
-      background-color #FCFCFF
-      box-shadow 0 0 5px rgba(0,0,0,0.5)
-      border-radius 20px 20px 20px 20px
-      @media screen and (max-width: 2100px) {
-        margin-left 16%
-        margin-right 16%
-      }
-
-      @media screen and (max-width: 1800px) {
-        margin-left 50px
-        margin-right 50px
-      }
-
-      @media screen and (max-width: 600px) {
-        margin-left 15px
-        margin-right 15px
-        margin-top 50px
-      }
-
-    .content-main
-      font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-
-    .text-part
-      position relative
-      display inline-block
-      width 50%
-      height auto
-
-    .content-achieve
-      position relative
-      width 100%
-      height auto
-      font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-      margin-bottom 5%
-
-    .avatar
-      position relative
-      margin-left 1%
-      margin-right 1%
-      margin-bottom 2%
-      margin-top 2%
-      width 100%
-      img
-        vertical-align middle
-        width 12%
-        height 12%
-
-    .achivText
-      display inline-block
-      margin-left 20px
-      vertical-align middle
-
-    .achivName
-      font-size 2em
-      font-weight 700
-      text-color #763dca
-      color #763dca
-
-    .achivCondition
-      font-size 1.3em
-      color #5B6175
-
-    .achivProgress
-      font-size 1em
-
-    .info
-        margin-right 2%
-        margin-bottom 5%
-        margin-top 10px
-        strong
-          margin 9%
-    .logout
-      background-color #763DCA
-      color #ffffff
-      padding 0.7%
-      box-shadow 0 0 10px rgba(0,0,0,0.5)
-      border-radius 20px 20px 20px 20px
-
-    .icon
-      position relative
-      display inline-block
-      min-width 250px
-      height 100%
-      img
-        width 19%
-        margin-left 10%
-        margin-bottom 3%
-        margin-top 3%
+      margin-left 10%
+      @media screen and (max-width: 600px)
+        margin-left 0
+      margin-bottom 3%
+      margin-top 3%
 </style>

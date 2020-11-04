@@ -9,33 +9,28 @@
             :active.sync = "this.trueVar"
             :is-full-page = 'false'
             color = "#763dca"
-            opacity = 0)
+            :opacity = 0)
     section(v-if = "!this.isLoading && !this.error && this.arrayPopular.length !== 0")
       .sidebar
-        <a href="#school" v-smooth-scroll>
+        a(href='#school', v-smooth-scroll='')
           img(src="@/components/images/school1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#examination" v-smooth-scroll>
+        a(href='#examination', v-smooth-scroll='')
           img(src="@/components/images/examination1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#geometry" v-smooth-scroll>
+        a(href='#geometry', v-smooth-scroll='')
           img(src="@/components/images/geometry1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#algebra" v-smooth-scroll>
+        a(href='#algebra', v-smooth-scroll='')
           img(src="@/components/images/algebra1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#komba" v-smooth-scroll>
+        a(href='#komba', v-smooth-scroll='')
           img(src="@/components/images/komba1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#logic" v-smooth-scroll>
+        a(href='#logic', v-smooth-scroll='')
           img(src="@/components/images/logic1.png", width= "50px", height = "50px")
-        </a>
-        <a href="#graphs" v-smooth-scroll>
+        a(href='#graphs', v-smooth-scroll='')
           img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
-        </a>
 
       .joinCustomTitle(@click="joinMenuShow = !joinMenuShow")
-        .button.button--round.button-success.right_button Присоединиться
+        .button.right_button.button--round.bottom-button
+          span Присоединиться
+
       .container
         .pesontedan
           input(id='pesontedan-eight',type='checkbox', name='pesontedans')
@@ -234,39 +229,39 @@
                   v-bind:theme='topic.theme'
                   v-bind:like='topic.like'
                 )
-        //- .pesontedan
-        //-   input(id='pesontedan-seven',type='checkbox', name='pesontedans')
-        //-   label#logic(for='pesontedan-seven')
-        //-     a.title_topic2(name='logic')
-        //-       strong Логика
-        //-     //- p(:name='gggg').title_topic {{ array[0] }}
-        //-   .topic-list
-        //-     .topic-item-wrapper(
-        //-       v-for = "(topic, index) in this.arrayLogics",
-        //-       v-if='index<4',
-        //-       :key = "topic.id"
-        //-     )
-        //-       Topic(
-        //-         v-bind:id='topic.id',
-        //-         v-bind:title='topic.title'
-        //-         v-bind:percentage='topic.completed'
-        //-         v-bind:theme='topic.theme'
-        //-         v-bind:like='topic.like'
-        //-       )
-        //-   .pesontedan-content
-        //-     .topic-list
-        //-       .topic-item-wrapper(
-        //-         v-for = "(topic, index) in this.arrayLogics"
-        //-         v-if='index>=4',
-        //-         :key = "topic.id"
-        //-       )
-        //-         Topic(
-        //-           v-bind:id='topic.id',
-        //-           v-bind:title='topic.title'
-        //-           v-bind:percentage='topic.completed'
-        //-           v-bind:theme='topic.theme'
-        //-           v-bind:like='topic.like'
-        //-         )
+        .pesontedan
+          input(id='pesontedan-seven',type='checkbox', name='pesontedans')
+          label#logic(for='pesontedan-seven')
+            a.title_topic2(name='logic')
+              strong Логика
+            //- p(:name='gggg').title_topic {{ array[0] }}
+          .topic-list
+            .topic-item-wrapper(
+              v-for = "(topic, index) in this.arrayLogics",
+              v-if='index<4',
+              :key = "topic.id"
+            )
+              Topic(
+                v-bind:id='topic.id',
+                v-bind:title='topic.title'
+                v-bind:percentage='topic.completed'
+                v-bind:theme='topic.theme'
+                v-bind:like='topic.like'
+              )
+          .pesontedan-content
+            .topic-list
+              .topic-item-wrapper(
+                v-for = "(topic, index) in this.arrayLogics"
+                v-if='index>=4',
+                :key = "topic.id"
+              )
+                Topic(
+                  v-bind:id='topic.id',
+                  v-bind:title='topic.title'
+                  v-bind:percentage='topic.completed'
+                  v-bind:theme='topic.theme'
+                  v-bind:like='topic.like'
+                )
         .pesontedan
           input(id='pesontedan-nine',type='checkbox', name='pesontedans')
           label#graphs(for='pesontedan-nine')
@@ -354,9 +349,7 @@ export default {
   async mounted () {
     if (this.getUser === null) this.$router.push('/login')
     try {
-      console.log('Fetching...')
       await this.fetchTopics()
-      console.log('Topics fetched')
       this.arrayPopular = await this.$store.getters.getTopics.get('популярные')
       this.arraySchool = await this.$store.getters.getTopics.get('школа')
       this.arrayOGE = await this.$store.getters.getTopics.get('огэ')
@@ -365,7 +358,6 @@ export default {
       this.arrayKomba = await this.$store.getters.getTopics.get('комбинаторика')
       this.arrayLogics = await this.$store.getters.getTopics.get('логика')
       this.arrayGraphs = await this.$store.getters.getTopics.get('графы')
-      console.log('Topics loaded', this.arrayGraphs)
     } catch (error) {
       this.error = true
       throw error
@@ -378,7 +370,7 @@ export default {
       await this.fetchCustomTopic(id)
       var res = this.getCustomTopic
       if (res !== null) {
-        this.$router.push('/lesson/olympiad=' + id)
+        this.$router.push('/lesson/olympiads=' + id)
       } else {
         this.customTopicId = ''
         this.placeholder = 'Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа'
@@ -390,6 +382,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .content-wrapper
+    min-height 0
   .marginText
     position relative
     margin 20px
@@ -398,7 +392,7 @@ export default {
   label
     background-color #fafafa !important
   .md-headline
-    font-size 1em
+    font-size 24pt
   strong
     color #000000
   .joinMenuBox
@@ -406,7 +400,6 @@ export default {
     padding-left 10%
     padding-right 10%
     .button
-      font-size 0.6em
       margin 2%
   .joinMenuText
     font-size 1.3em
@@ -430,6 +423,8 @@ export default {
     position fixed
     bottom 100px
     right 100px
+  .bottom-button
+    box-shadow 0px 0px 10px rgba(0,0,0,2)
 
   .right_button
     position fixed
@@ -461,6 +456,9 @@ export default {
     min-width 350px
     border 2px #000000 solid
     border-radius 10px
+    @media screen and (max-width: 600px)
+      margin 1%
+      margin-top 20%
 
   .ui-title-1
     font-size 4em

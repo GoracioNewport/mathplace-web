@@ -1,8 +1,8 @@
 <template lang="pug">
   .content-wrapper
     //- img#imgSmile(src="@/components/images/back.png")
-    .taskbar(v-if="!isLoading")
-      a(href="/")
+    .taskbar(v-if = "error === 'none'")
+      router-link(to='/')
         img#imgBack(src="@/components/images/back.png")
       .container
         .taskbar-content
@@ -20,22 +20,22 @@
                     :src = "theoryImage")
                   img.img_taskbar(
                       v-else-if = 'task.type == "proof"'
-                      :class = '{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
+                      :class ='{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
                       :src = 'proofImage')
                   img.img_taskbar(
                       v-else
-                      :class = '{ solvedTask : task.tries === 2, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
+                      :class ='{ solvedTask : task.tries === 2, failedTask : task.tries === 0, pendingTask : Number(task.tries) !== 0 && Number(task.tries) !== 1 && Number(task.tries) !== 2 && Number(task.tries) !== 3, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
                       :src = 'taskImage')
 
-    .loading-indicator
+    .loading-indicator(v-if='isLoading')
         loading(
           :active.sync = "this.isLoading",
           :is-full-page = 'true',
           color = '#763dca')
-    .content(v-if="taskList.length > 1")
+    .content(v-else-if="error === 'none'")
       .name
-        span(v-if = 'this.taskList[this.activeTask].type == "theory"') {{ getCurrentTopic }}
-        span(v-else) Задача {{ this.taskList[this.activeTask].taskId }}
+        span.name-span(v-if = 'this.taskList[this.activeTask].type == "theory"') {{ tasksInfo.name }}
+        span.name-span(v-else) Задача {{ this.taskList[this.activeTask].taskId }}
 
         img.star(
           class = "star1",
@@ -43,25 +43,18 @@
           alt = 'Звезда',
           v-for = 'i in getDifficulty')
 
-      .condition(id='condition')
-        .text-part(v-for = "part in this.taskList[this.activeTask].text")
+      .condition
+        .text-part(v-for = "part in this.taskList[this.activeTask].statement")
           span(v-if = 'part.type == "text"'
-              v-html = "part.content") {{ part.content }}
+              v-html = "part.inner") {{ part.inner }}
 
           img.condition-image(
             v-else-if = 'part.type == "img"'
-            :src = 'part.content')
+            :src = 'part.inner')
 
           pdf(
             v-else-if = 'part.type == "pdf"'
-            :src = 'part.content')
-
-          iframe(v-else-if = 'part.type == "youtube"'
-            :src = 'part.content'
-            frameborder='0'
-            allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
-            allowfullscreen='')
-
+            :src = 'part.inner')
       .answ(v-if='this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"')
         input.submit-field(
           v-if ='this.taskList[this.activeTask].type === "task"'
@@ -72,31 +65,38 @@
           v-model = 'answer',
           @keyup.enter = 'sendAnswer',
           v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 || this.taskList[this.activeTask].tries == 3 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
-        label(for='img' v-else-if ='this.taskList[this.activeTask].type === "upload"') Выберите картинку
-          input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.text.indexOf(component))")
+        label(for='img' v-else-if ='this.taskList[this.activeTask].type === "upload"')
+          .pendingBox(v-if ='this.taskList[this.activeTask].tries !== 0 && this.taskList[this.activeTask].tries !== 1 && this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3')
+            span Преподователь еще не проверил ваш ответ
+          .rightBox(v-else-if ='this.taskList[this.activeTask].tries === 2')
+            span Ваш ответ оказался правильным
+          .else(v-else)
+            span(v-if ='this.taskList[this.activeTask].tries === 0') Ваш ответ оказался неправильным. Вы можете отправить решение заново
+            //- input#img(type='file', name='img', accept='image/*', @click="onFileButtonClicked(this.tasks.indexOf(task), task.text.indexOf(component))")
+            md-field(name='img')
+              label Выберите картинку
+              md-file(v-model = 'answer' @md-change ='onFilePicked' accept="image/*")
         .multipleChoiceBox(v-else-if ='this.taskList[this.activeTask].type === "multipleChoice"')
           .choiceBox(v-for = "choice in this.taskList[this.activeTask].options")
+            //- md-checkbox(v-if ='taskList[activeTask].tries')
             md-checkbox(v-model = 'answer', :value = "choice") {{ choice }}
         .multipleAnswerBox(v-else-if ='this.taskList[this.activeTask].type === "multipleAnswer"')
           .answerBox(v-for = "(answers, i) in answer")
             md-field
               label Введите ответ
               //- md-input(v-model = "answer[i]" disabled = '')
-              md-input(v-model = "answer[i]")
-            .button.button-round.button-warning.delete_button(@click='answer.splice(answer.indexOf(answers), 1)') X
+              md-input.answerField(v-model = "answer[i]")
+              .button.button-round.button-warning.deleteButton(@click='answer.splice(answer.indexOf(answers), 1)') X
           .button.button--round.button-success.buttonAdd(@click='answer.push("")') Добавить вариант ответа
       .enter
         .send
-          a.but(@click='generateReport()')
-            img(src='@/assets/images/dowload.png'
-              alt='Скачать',id="lock")
-          a.but(@click='solutionShown = true',
-                v-if = 'this.taskList[this.activeTask].type =="task" && this.taskList[this.activeTask].solution != "null"')
-            img(src='@/assets/images/lock.png'
-            alt='Решения',id="lock")
-          //- .but
+          a.solutionButton.but(@click='solutionShown = true',
+            v-if = 'this.taskList[this.activeTask].type ==="task" && this.taskList[this.activeTask].solution !=="hide" ')
+            md-tooltip(md-direction='right') Посмотреть решение
+            img(src='@/assets/images/lock.png' alt='Решения',id="lock")
+                    //- .but
           //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
-          .but
+          .likeButton.but
             input#checkbox.checkbox(type='checkbox' v-model = 'topicLiked')
             label(for='checkbox' @click = 'likeButton')
               svg#heart-svg(viewBox='467 392 58 57', xmlns='http://www.w3.org/2000/svg')
@@ -124,41 +124,47 @@
                   g#grp1(opacity='0', transform='translate(24)')
                     circle#oval1(fill='#9FC7FA', cx='2.5', cy='3', r='2')
                     circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
-          button.sub.submit-button(
+              md-tooltip(md-direction='left') Поставить лайк уроку
+          button.submit-button.sub(
             type = 'submit',
             @click = 'sendAnswer')
               span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Отправить
               span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
               span(v-else) Завершить
+    .placeholderScreen(v-else-if ='error === "no_material_author" || error === "no_material_member"')
+      .ownerScreen(v-if = 'userId === tasksInfo.author')
+        strong.md-headline Вы еще не добавили материал в этот урок.
+        br
+        .button.button--round.button-success(@click = '$router.push("/customTitle/" + taskId)') Добавить!
+      .guestScreen(v-else)
+        strong.md-headline Учитель еще не добавил материал в этот урок.
+        br
+        strong.md-headline Возвращайтесь позже!
+    .placeholderScreen(v-else-if ='error === "too_early" || error === "too_late"')
+      .tooEarlyScreen(v-if ='error === "too_early"')
+        strong.md-headline Ой-ой...
+        br
+        strong.md-headline Кажется, этот урок еще не начался.
+        br
+        strong.md-headline Он начнется в
+        span.md-headline {{ this.tasksInfo.timeStart.toLocaleString() }}
+        br
+        strong.md-headline Возвращайтесь позже!
+      .tooLateScreen(v-else-if ='error === "too_late"')
+        strong.md-headline Ой-ой...
+        br
+        strong.md-headline Кажется, этот урок уже закончился в
+        span.md-headline {{ this.tasksInfo.timeEnd.toLocaleString() }}
+        br
+        strong.md-headline Нам очень жаль!
     .solution(v-if = 'this.solutionShown', @click='solutionShown = !solutionShown')
       .solutionBox(@click='solutionShown = !solutionShown')
         .solutionText
-          span {{ this.taskList[this.activeTask].solution }}
+          strong.md-headline(v-if ='this.taskList[this.activeTask].solution !== "null"') {{ this.taskList[this.activeTask].solution }}
+          strong.md-hedline(v-else) Ответ: {{ this.taskList[this.activeTask].answer }}
         .solutionButtonClose
           .button.button--round.button-success(
             @click='solutionShown = false') ОК!
-
-    .pdf
-      vue-html2pdf(:show-layout='false', :enable-download='true', :preview-modal='false', :paginate-elements-by-height='2000', filename='hee hee', :pdf-quality='2', :manual-pagination='false', pdf-format='a4', pdf-orientation='landscape', pdf-content-width='800px', @progress='onProgress($event)', @hasstartedgeneration='hasStartedGeneration()', @hasgenerated='hasGenerated($event)', ref='html2Pdf')
-        section(slot='pdf-content', id='pdfd')
-          .text-part(v-for = "part in this.taskList[this.activeTask].text")
-            span(v-if = 'part.type == "text"'
-                v-html = "part.content") {{ part.content }}
-
-            img.condition-image(
-              v-else-if = 'part.type == "img"'
-              :src = 'part.content')
-
-            pdf(
-              v-else-if = 'part.type == "pdf"'
-              :src = 'part.content')
-
-            iframe(v-else-if = 'part.type == "youtube"'
-              :src = 'part.content'
-              frameborder='0'
-              allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
-              allowfullscreen='')
-          
 </template>
 
 <script>
@@ -169,7 +175,6 @@ import proofImage from '@/assets/images/star_evidence.png'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions, mapGetters } from 'vuex'
 import pdf from 'vue-pdf'
-import VueHtml2pdf from 'vue-html2pdf'
 // import { beforeRouteLeave } from 'vue-router'
 
 export default {
@@ -179,26 +184,35 @@ export default {
       this.collection = to.params.collectionId
       this.$store.dispatch('changeCurrentTopic', this.taskId)
       this.$store.dispatch('changeCollection', this.collection)
+      this.updateUser(['lastTheme', this.getCollection + '_' + this.getCurrentTopic])
     }
   },
   components: {
     Loading,
-    pdf,
-    VueHtml2pdf
+    pdf
   },
   async mounted () {
+    this.isLoading = true
     this.$store.dispatch('changeCurrentTopic', this.taskId)
     this.$store.dispatch('changeCollection', this.collection)
-    this.updateUser(['lastTheme', this.getCurrentTopic])
+    this.updateUser(['lastTheme', this.getCollection + '_' + this.getCurrentTopic])
     this.addUserToTopicList()
-    this.isLoading = true
+    this.userId = this.getUser.id
     await this.fetchLikes(this.collection)
     await this.fetchTasks(this.collection)
-    this.taskList = this.$store.getters.getTasks
+    this.tasksInfo.name = this.getTasksInfo.name
+    this.tasksInfo.author = this.getTasksInfo.author
+    this.tasksInfo.timeStart = this.getTasksInfo.time_start
+    this.tasksInfo.timeEnd = this.getTasksInfo.time_end
+    this.taskList = this.getTasks
+    if (this.taskList.length === 0 && this.tasksInfo.author === this.getUser.id) this.error = 'no_material_author'
+    else if (this.taskList.length === 0 && this.tasksInfo.author !== this.getUser.id) this.error = 'no_material_member'
+    else if (this.tasksInfo.timeStart !== null && this.tasksInfo.timeStart.getTime() > new Date().getTime()) this.error = 'too_early'
+    else if (this.tasksInfo.timeEnd !== null && this.tasksInfo.timeEnd.getTime() < new Date().getTime()) this.error = 'too_late'
+    else this.error = 'none'
     if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
     this.isLoading = false
-    console.log(this.taskList)
-    // this.changeActiveTask(0, this.taskList[0])
+    this.$forceUpdate()
   },
   data () {
     return {
@@ -208,54 +222,21 @@ export default {
       taskImage,
       proofImage,
       activeTask: 0,
-      taskList: [{
-        id: 0,
-        taskId: 0,
-        text: '',
-        type: 'task',
-        answer: 0,
-        difficulty: 0,
-        solution: 0,
-        tries: 1,
-        options: []
-      }],
+      taskList: [],
+      tasksInfo: {},
       isLoading: true,
       answer: '',
       status: 'Idle',
       topicLiked: false,
       solutionShown: false,
-      htmlToPdfOptions: {
-    margin: 0,
-
-    filename: `hehehe.pdf`,
-
-    image: {
-        type: 'jpeg', 
-        quality: 0.98
-    },
-
-    enableLinks: false,
-
-    html2canvas: {
-        scale: 1,
-        useCORS: true
-    },
-
-    jsPDF: {
-        unit: 'in',
-        format: 'a4',
-        orientation: 'portrait'
-    }
-}
+      userId: null,
+      solutionFile: null,
+      error: 'pending'
     }
   },
   methods: {
-    generateReport () {
-      this.$refs.html2Pdf.generatePdf()
-    },
-    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList']),
+    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution']),
     changeActiveTask (i, thisTask) {
-      console.log('Change Active Task', i)
       this.status = 'Idle'
       this.activeTask = i
       thisTask.activeTask = i
@@ -266,19 +247,23 @@ export default {
         else this.answer = ''
       }
     },
-    sendAnswer () {
+    async sendAnswer () { // Боже, как тут много говна... хуй вообще разберешь какой пиздец тут творится
       if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
         if (this.$store.getters.getUser === null) this.$router.push('/login')
         else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/')
         else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) { // Task complition
-          if (Array.isArray(this.answer)) {
+          let verdict = 1
+          if (this.solutionFile !== null) {
+            this.isLoading = true
+            await this.sendImageSolution({ colletion: this.collection, id: this.taskId, i: this.activeTask, image: this.solutionFile })
+            this.isLoading = false
+            verdict = '4'
+          } if (Array.isArray(this.answer)) {
             for (let i = 0; i < this.answer.length; i++) this.answer[i].replace(',', '.')
             this.answer.sort()
           } else this.answer = this.answer.replace(',', '.')
-          let verdict = 1
           var equals = (Array.isArray(this.answer) && this.answer.length === this.taskList[this.activeTask].answer.length && this.answer.every((value, index) => value === this.taskList[this.activeTask].answer[index]))
-          console.log(this.answer, this.taskList[this.activeTask].answer, equals)
           if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof' || equals) {
             if (this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') {
               this.updateUser(['money', this.getUser.money + 3])
@@ -286,20 +271,30 @@ export default {
             } this.status = 'Correct'
             if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') verdict = 3
             else verdict = 2
-            console.log('Correct!')
-          } else {
+          } else if (this.solutionFile === null) {
             this.status = 'Wrong'
             verdict = 0
-            console.log('Wrong >:(')
           }
 
+          this.solutionFile = null
+
           if (this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') this.updateUser(['submit', this.getUser.submit + 1])
+          // Обновляем значения оценок
           let newStatus = []
           for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
           newStatus[this.activeTask] = verdict
-          this.updateUser([this.getCurrentTopic, newStatus])
+          this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
           this.taskList[this.activeTask].tries = verdict
-          if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
+          // Обновляем значения последних ответов
+          for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].userAnswer
+          newStatus[this.activeTask] = this.answer
+          this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'lastAnswers'})
+          this.taskList[this.activeTask].userAnswer = this.answer
+          // Проверка для теории и задачи на доказательство, что бы можно было листать задачи по нажатии на кнопку
+          if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') {
+            if (this.activeTask === this.taskList.length - 1) this.$router.push('/')
+            else this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
+          }
         } else {
           this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
         }
@@ -309,18 +304,21 @@ export default {
       let liked = this.getUser.like
       if (this.getUser.like.find(t => t === this.getCurrentTopic)) {
         liked.splice(liked.indexOf(this.getCurrentTopic), 1)
+        this.updateUser(['like', liked])
         this.like(false)
       } else {
         liked.push(this.getCurrentTopic)
+        this.updateUser(['like', liked])
         this.like(true)
       }
-      this.updateUser(['like', liked])
-    }
+    },
+    onFilePicked (event) { this.solutionFile = event[0] }
   },
   computed: {
-    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection']),
+    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo']),
     getDifficulty () {
-      var dif = this.taskList[this.activeTask].difficulty
+      var dif
+      this.taskList[this.activeTask].difficulty === undefined ? dif = 0 : dif = this.taskList[this.activeTask].difficulty
       if (dif !== 'null') return parseInt(dif, 10)
       else return 0
     }
@@ -333,6 +331,53 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .container
+    max-height 64px
+    overflow auto
+    overflow-y hidden
+    white-space nowrap
+    margin-left 12%
+  .solutionButton
+    grid-column 3
+    grid-row 1
+    margin-top 20% !important
+  .likeButton
+    grid-column 1
+    grid-row 1
+  .submit-button
+    position relative
+    height auto
+    width auto
+    margin-top 3% !important
+    grid-column 2
+    grid-row 1
+    width 100% !important
+    height 30% !important
+    text-align center
+    vertical-align middle
+    @media screen and (max-width: 800px)
+      height 50% !important
+      margin-top 7% !important
+    &:hover
+      cursor pointer
+  span
+    line-height normal
+  .placeholderScreen
+    margin-top 20%
+    text-align center
+    .md-headline
+      font-size 24pt
+    .button
+      margin 3%
+      color #FFFFFF
+      font-size 2.5em
+      &:hover
+        color #FFFFFF
+        text-decoration none
+  .content-wrapper
+    height 100%
+    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    font-weight 800
   input
     margin-bottom auto
   .solution
@@ -353,11 +398,15 @@ export default {
     min-width 350px
     border 2px #000000 solid
     border-radius 10px
+    @media screen and (max-width: 600px)
+      margin 1%
+      margin-top 20%
   .solutionText
     padding 5%
     height 90%
-    overflow: auto;
-    max-height: 50vh;
+    overflow: auto
+    max-height: 50vh
+    font-size 24pt
   .solutionButtonClose
     margin 3%
   #imgSmile
@@ -366,6 +415,7 @@ export default {
     width 90%
   .taskbar-content
     position relative
+    max-height 64px
   #imgBack
     position absolute
     float left
@@ -383,14 +433,12 @@ export default {
     background rgba(0, 255, 0, .5) !important
   .failedTask
     background rgba(255, 0, 0, .5) !important
+  .pendingTask
+    background rgba(255, 255, 0, .5) !important
   .answerCorrect
     background-color rgba(0, 255, 0, .4)
   .answerWrong
     background-color rgba(255, 0, 0, .4)
-  .submit-button
-    text-align center
-    &:hover
-      cursor pointer
   .thisButton
     height 42px
     width 42px
@@ -414,41 +462,62 @@ export default {
     margin-left auto
     margin-right auto
   .star
+    positine relative
     height 40px
-    max-height 100px
     width auto
+    vertical-align middle
   .taskbar-list
+    max-height 64px
     margin 0 auto
     display table
   .taskbar-item
+    display inline-block
     padding 13px 9px 9px 20px
-    float left
   .content
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
   .name
+    position relative
+    height 60px
     background #763DCA
-    text-align left
-    color #ffffff
-    padding 10px
-    font-family: 'Roboto', sans-serif
-    font-size: 30px
-    font-weight: bold
-    box-shadow 0 0 10px rgba(0,0,0,0.5)
+    font-family 'Roboto', sans-serif
+    font-size 30px
+    font-weight bold
+    box-shadow 0 0 0px rgba(0,0,0,0.5)
     border-radius 10px 10px 0 0
     margin-top 50px
     margin-left 23%
     margin-right 23%
-    @media screen and (max-width: 500px) {
-        width 88%
-        margin-right 6%
-        margin-left 6%
+    @media screen and (max-width: 800px) {
+      width 88%
+      margin-right 6%
+      margin-left 6%
     }
+  .name-span
+    position relative
+    height 60px
+    width 50%
+    vertical-align middle
+    text-align center
+    color #FFFFFF
+    margin-top 300px
+    margin-left 20px
+  .name.strong
+    position relative
+    height auto
+    width auto
+    color #FFFFFF
+    margin-left 3%
+    text-align center
+    vertical-align middle
+    margin-bottom 0px
   img
     orientation right
     float right
     margin-right 5px
   .condition
-    min-height 350px
+    min-height 45vh
+    max-height 60vh
+    overflow auto
     background #ffffff
     color #000000
     color:#525252
@@ -460,7 +529,7 @@ export default {
     padding 10px
     margin-left 23%
     margin-right 23%
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 800px) {
         width 88%
         margin-right 6%
         margin-left 6%
@@ -471,7 +540,7 @@ export default {
     margin-top 20px
     margin-left 23%
     margin-right 23%
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 800px) {
         width 88%
         margin-right 0%
         margin-left 0%
@@ -482,7 +551,7 @@ export default {
     height 100%
     margin-left 23%
     margin-right 23%
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 800px) {
         width 88%
         margin-right 6%
         margin-left 6%
@@ -494,29 +563,34 @@ export default {
     margin-left 0%
     margin-right 0%
     display inline-block
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 800px) {
         width 88%
         margin-right 6%
         margin-left 6%
     }
 
   .send
+    display grid
+    grid-template-columns 10% 80% 10%
     positine relative
     height auto
     width 100%
     margin-left 0%
     margin-right 0%
     margin-top 8px
-    // dispaly flex
+    @media screen and (max-width: 800px) {
+      grid-template-columns 18% 64% 18%
+    }
     float right
   .sub
     position relative
     width 90%
     height auto
-    // margin-top 6%
+    margin-top 20%
+    margin-bottom 20%
     display inline-block
     color #ffffff
-    padding 9px
+    padding 0%
     font-family: 'Roboto', sans-serif
     font-size: 25px
     font-weight: bold
@@ -525,16 +599,16 @@ export default {
     border-radius 10px
     outline none
     border none
+    text-align center
     vertical-align middle
     &:hover
         background #5E2DA6
   .but
     position relative
-    width 10%
-    height 100%
     display inline-block
-    vertical-align middle
-    text-align center
+    img
+      width 70%
+      height auto
     // margin auto
   .ans
     postion relative
@@ -542,7 +616,7 @@ export default {
     width 100%
     border-radius 10px
     margin-bottom 0px
-    color:#525252
+    color #525252
     font-family: 'Roboto', sans-serif
     font-size: 25px
     font-weight: bold
@@ -613,7 +687,7 @@ export default {
     align-items center
     diaply flex
   .wrapper
-    width 100vw
+    width 100%
     max-width: 100%
 
   .taskbar-link

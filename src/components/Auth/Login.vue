@@ -5,17 +5,21 @@
         .auth
           .auth-title
             span.ui-title-2
-              strong Наше приложение
+              strong Android приложение
             //img(class="picture", src='@/assets/saluting.png', alt='Пикча')
             //img(class="picture", src='@/assets/gestures.png', alt='Пикча')
             //img(class="picture", src='@/assets/birthday-and-party.png', alt='Пикча')
             //img(class="picture", src='@/assets/miscellaneous.png', alt='Пикча')
-            .play-market
-              a(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
-                //img(class="picture", src='@/assets/google_play.svg', alt='Пикча')
-                img(class="picture", src='@/assets/googleplay.png', alt='Пикча')
-            .broshure
-              a(href='https://firebasestorage.googleapis.com/v0/b/mathplace-842f7.appspot.com/o/BroshureFinal.pdf?alt=media&token=ead10aac-7ae9-4da7-93fe-2b8bfb164ba9', download) Брошура пользования
+            a(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+              //img(class="picture", src='@/assets/google_play.svg', alt='Пикча')
+              img(class="picture", src='@/assets/googleplay.png', alt='Наше приложение')
+            span.ui-title-2.textTop
+              strong Инструкция
+            a.openIns(class=".openIns" href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+              p Скачать инструкцию для учеников
+            a.openIns(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+              p.openIns Скачать инструкцию для учителей
+
           .auth-form
             span.ui-title-2 Вход
             form(@submit.prevent="onSubmit")
@@ -40,6 +44,8 @@
                 )
                 .error(v-if="!$v.password.required") Это поле обязательно
                 .error(v-if="!$v.password.minLength") Минимальная длина пароля - {{ $v.password.$params.minLength.min }} символов
+              .form-item.stayInCheckbox
+                md-checkbox(v-model = 'staySigned') Запомнить меня
               .buttons-list
                 button.button.button-primary(
                   type="submit"
@@ -79,6 +85,7 @@ export default {
       email: '',
       password: '',
       repeatPassword: '',
+      staySigned: false,
       submitStatus: null
     }
   },
@@ -106,7 +113,8 @@ export default {
       } else {
         const user = {
           email: this.email,
-          password: this.password
+          password: this.password,
+          remember: this.staySigned
         }
         this.$store.dispatch('loginUser', user)
           .then(() => {
@@ -123,6 +131,12 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.content-wrapper
+    min-height 0
+.stayInCheckbox
+  float left
+  margin 10px
+  font-size 22pt
 .successText
     padding 10%
     text-color #000000 !important
@@ -154,30 +168,51 @@ export default {
     border-radius 10px
 
 .auth
+  position relative
+  width 100%
   font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-  display flex
+  display block
+  margin-left 0px
 
 .auth-form
-  width 56%
+  position relative
+  width 47%
+  min-width 200px
+  display inline-block
   box-shadow 0 0 10px rgba(0,0,0,0.5)
   border-radius 10px
-  padding 10px
+  padding-left 20px
+  padding-right 20px
+
+.openIns
+  font-size 12pt
+  margin 8px
 
 .auth-title
-  margin-right 50px
-  width 40%
+  position relative
+  margin-right 6%
+  margin-bottom 20px
+  width 47%
+  min-width 200px
+  display inline-block
   box-shadow 0 0 10px rgba(0,0,0,0.5)
   border-radius 10px
-  padding 10px
   text-align center
 
+.textTop
+  position relative
+  margin-top 10px
 .picture
-  width 80%
+  position relative
+  margin-top 10px
+  width 40%
 
 .auth-space
   width 4%
 
 .form-item
+  input
+    font-size 1em
   .error
     display none
     margin-bottom 2%
@@ -214,16 +249,19 @@ button
 
 .ui-title-2
   color #763DCA
-  font-family 'Roboto', sans-serif
-  font-size 2.4em
+  font-family sans-serif, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  // font-family 'Roboto', sans-serif
+  font-size 23pt
+  margin-top 20px
   font-weight bold
 
 .buttons-list-reference
   text-decoration none
   color #525252
+  margin-bottom 10px
   text-align center
 
-@media screen and (max-width:500px)
+@media screen and (max-width:200px)
   .auth-title
       display none
   .auth-form
@@ -232,8 +270,5 @@ button
     width 0%
 .error
   color #fc5c65
-
-.broshure
-  position relative
 
 </style>

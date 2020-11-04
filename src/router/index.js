@@ -5,7 +5,6 @@ import Uimini from 'uimini/dist/css/uimini.css'
 import Store from '../store'
 
 import Home from '@/components/Home'
-import PrivacyPolicy from '@/components/PrivacyPolicy'
 import Main from '@/components/Main'
 import Lesson from '@/components/Lesson'
 import Registration from '@/components/Auth/Registration'
@@ -16,6 +15,7 @@ import CustomTitle from '@/components/CustomTitle'
 import Statistics from '@/components/Profile/Statistics'
 import ChatList from '@/components/Profile/ChatList'
 import Chat from '@/components/Profile/Chat'
+import TeacherLanding from '@/components/TeacherLanding'
 
 Vue.use(Router)
 Vue.use(VueFirestore)
@@ -33,11 +33,6 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
-    },
-    {
-      path: '/privacy',
-      name: 'privacy',
-      component: PrivacyPolicy
     },
     {
       path: '/lesson/:collectionId=:taskId',
@@ -58,6 +53,7 @@ export default new Router({
       component: Logout,
       beforeEnter (to, from, next) {
         Store.dispatch('logoutUser')
+        // Очищаем все данные сайта
         window.localStorage.clear()
         next('/login')
       }
@@ -106,6 +102,11 @@ export default new Router({
       beforeEnter (to, from, next) {
         Store.getters.checkUser ? next() : next('/login')
       }
+    },
+    {
+      path: '/teacher',
+      name: 'teacher',
+      component: TeacherLanding
     }
   ]
 })

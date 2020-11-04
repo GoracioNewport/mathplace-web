@@ -12,6 +12,25 @@ import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  state: {
+    agreedToPrivacy: true
+  },
+  mutations: {
+    agreePrivacyPolicy (state) {
+      localStorage.setItem('agreedToPrivacy', true)
+      state.agreedToPrivacy = true
+    },
+    initialiseStore (state) {
+      console.log('[MathPlace] Store Initiated')
+      if (localStorage.getItem('agreedToPrivacy')) {
+        state.agreedToPrivacy = true
+      }
+
+      if (localStorage.getItem('user')) {
+        state.user.user = JSON.parse(localStorage.getItem('user'))
+      }
+    }
+  },
   modules: {
     common,
     topics,

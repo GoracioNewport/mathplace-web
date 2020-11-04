@@ -32,7 +32,7 @@
           strong.md-title {{title}}
       a
         .topic-item-solve(@click="openTopic()")
-          .button.button--round.button-success Решать
+          .button.button--round.designButton Решать
       .LikeBox
         img#LikeImg(src="./images/like.png")
         a#LikeText  {{like}}
@@ -71,8 +71,8 @@ export default {
   methods: {
     openTopic (event) {
       this.$store.dispatch('changeCurrentTopic', this.title)
-      this.$store.dispatch('changeCollection', 'task2')
-      this.$router.push('/lesson/task2=' + this.title)
+      this.$store.dispatch('changeCollection', 'tasks')
+      this.$router.push('/lesson/tasks=' + this.title)
     }
   }
 }
@@ -112,6 +112,25 @@ export default {
     vertical-align middle
     font-family: 'Roboto', sans-serif
 
+  .designButton
+    position relative
+    height auto
+    transition: 0.6s;
+    border: 0px solid #26de81
+    border-radius 50px
+    font-weight 550
+    font-weight 450
+    color #FFFFFF
+    background-color #26de81
+    opacity 0.9
+    text-align center
+    vertical-align middle
+  .designButton:hover
+    transition: 0.6s;
+    color #26de81
+    opacity 0.9
+    background-color #FFFFFF
+
   .content-wrapper
     max-height 400px
 
@@ -129,7 +148,7 @@ export default {
     padding 7%
 
   .topic-item
-    box-shadow 5px 5px 5px #aaaaaa
+    box-shadow 0px 0px 10px 2px #aaaaaa
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-size 1.2em
     color #FFFFFF

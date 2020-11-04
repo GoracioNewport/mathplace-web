@@ -1,16 +1,40 @@
 <template lang='pug'>
-  .content-wrapper
+  .content-wrapper(novalidate='' @submit.stop.prevent='showSnackbar = true')
+    md-snackbar(:md-position='position' :md-duration='isInfinity ? Infinity : duration' :md-active.sync='showSnackbar' md-persistent='')
+      span Connection timeout. Showing limited messages!
+      md-button.md-primary(@click='showSnackbar = false') Retry
+    .loading-indicator(v-if = 'myTopicsLoading')
+      loading(
+        :active.sync = "this.myTopicsLoading"
+        :is-full-page = 'true'
+        color = "#763dca"
+        :opacity = 0.5)
     .topicsBox(v-if = 'myTopics.length !== 0')
-      .topicItem(v-for = '(topic, topicIndex) in myTopics'
+      .topicItem(v-for = '(topic, topicIndex) in myTopics.slice().reverse()'
       :key = 'topic.token')
-        .button.button--round.button-primary.showStatsButton.editButton(@click ='$router.push("/customTitle/" + topic.token)') Редактировать
-        .button.button--round.button-primary.showStatsButton.editButton(@click ='deleteMyTopic(topic.token, topicIndex)') Удалить
-        .button.button--round.button-primary.showStatsButton.editButton(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть подробную статистику
-        .button.button--round.button-primary.showStatsButton(v-else @click ='toggleStats(topic.token)') Показать подробную статистику
+        .img-tooltip
+          img.imageButton(src ='@/assets/images/bin2.png' @click ='deleteMyTopic(topic.token, topicIndex)')
+          md-tooltip(md-direction='right') Удалить урок
+        .img-tooltip
+          img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
+          md-tooltip(md-direction='right') Редактировать урок
+        .img-tooltip
+          img.imageButton(src ='@/assets/images/share_24px.png' @click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + topic.token)')
+          md-tooltip(md-direction='right') Скопировать ссылку на урок
         span.md-title.topicName {{ topic.name }}
         span.md-body-1.topicToken Ключ: {{ topic.token }}
+        button.showStatsButton.button--round.button-primary(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть статистику
+        button.showStatsButton.button--round.button-primary(v-else @click ='toggleStats(topic.token)') Показать статистику
         .statsBox(v-if = 'topic.showStats')
-          span.loadingBox(v-if = 'Object.keys(topic.stats).length == 0') Загрузка...
+          .loadingBox(v-if = 'Object.keys(topic.stats).length == 0')
+            .vld-parent
+              loading(
+                :active.sync = "Object.keys(topic.stats).length == 0"
+                :is-full-page = 'false'
+                loader = 'dots'
+                color = "#763dca"
+                :opacity = 0.5)
+          //- .errorBox(v-else-if = 'topic.')
           .loadedBox(v-else)
             md-table.statsTable(v-model='myTopics[myTopics.indexOf(topic)].stats', md-sort='name', md-sort-order='asc', md-fixed-header='')
               md-table-toolbar
@@ -23,9 +47,9 @@
                 md-table-cell.nameSlot(md-label='Имя', md-sort-by='name') {{ item.name }}
                 md-table-cell.taskSlot(v-for = '(task, taskIndex) in item.solveStats' :key = 'taskIndex'
                 :md-label = '(taskIndex + 1).toString()')
-                  Dots.answerNo.answerLabel(v-if = 'task === 1')
-                  img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'task == 0')
-                  img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'task == 3 || task == 2')
+                  Dots.answerNo.answerLabel(v-if = 'Number(task) === 1')
+                  img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'Number(task) == 0')
+                  img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
                   img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
                 md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
     .solutionMenu(v-if = 'solutionImageShown')
@@ -41,6 +65,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import Loading from 'vue-loading-overlay'
 import Right from 'vue-material-design-icons/CheckboxMarkedCircleOutline.vue'
 import Dots from 'vue-material-design-icons/DotsHorizontal.vue'
 import Wrong from 'vue-material-design-icons/Close.vue'
@@ -58,17 +83,26 @@ const searchByName = (items, term) => {
 }
 
 export default {
+  name: 'SnackbarExample',
+
   components: {
     Right,
     Dots,
-    Wrong
+    Wrong,
+    Loading
   },
   async mounted () {
+    this.myTopicsLoading = true
     await this.fetchMyTopicsDetailedInfo()
     this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
+    this.myTopicsLoading = false
   },
   data () {
     return {
+      showSnackbar: false,
+      position: 'center',
+      duration: 4000,
+      isInfinity: false,
       myTopics: [],
       search: null,
       searched: {},
@@ -76,7 +110,8 @@ export default {
       imageTopic: 0,
       imageTask: 0,
       imageUser: 0,
-      imageUserId: ''
+      imageUserId: '',
+      myTopicsLoading: false
     }
   },
   methods: {
@@ -104,9 +139,6 @@ export default {
         if (this.myTopics[this.imageTopic].stats[i].id === userIndex) this.imageUser = i
       }
       this.solutionImageShown = !this.solutionImageShown
-      console.log(this.myTopics)
-      console.log(this.imageTopic, this.imageUser, this.imageTask)
-      console.log(this.myTopics[this.imageTopic].stats[this.imageUser].solveStats[this.imageTask])
     },
     markSolutionAs (status) {
       status === 'right' ? this.myTopics[this.imageTopic].stats[this.imageUser].solveStats[this.imageTask] = 2 : this.myTopics[this.imageTopic].stats[this.imageUser].solveStats[this.imageTask] = 0
@@ -116,7 +148,6 @@ export default {
     },
     deleteMyTopic (token, i) {
       this.myTopics.splice(i, 1)
-      console.log(token, i)
       this.deleteTopic(token)
     }
   },
@@ -130,6 +161,23 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .sdnds
+    position relative
+    height auto
+  .img-tooltip
+    position relative
+    height auto
+    width auto
+  .imageButton
+    width 25px
+    float right
+    margin 8px
+    &:hover
+      cursor pointer
+  .vld-parent
+    min-height 15vh
+  .content-wrapper
+    min-height 0
   .solutionImage
     height 50vh
   .solutionMenuBox
@@ -144,8 +192,18 @@ export default {
     padding-bottom 10%
   .topicsBox
     position relative
-    width 100%
+    width auto
+    margin-left 25%
+    margin-right 25%
+    @media screen and (max-width: 1300px)
+      margin-left 18%
+      margin-right 18%
+    @media screen and (max-width: 700px)
+      margin-left 2%
+      margin-right 2%
   .editButton
+    position relative
+    height auto
     margin-left 10px
   .solutionMenuField
     input
@@ -174,13 +232,13 @@ export default {
     margin-left 5%
   .topicName
     display block
-    font-size 2.5em
+    font-size 23pt
   .topicToken
     position relative
-    margin-top 20px
-    margin-left 10px
+    margin-top 10px
+    margin-left 0px
     display block
-    font-size 1.3em
+    font-size 12pt
   .loadedBox
    margin-top 3%
   .taskSlot
@@ -197,17 +255,23 @@ export default {
     margin auto
     width 100%
   .showStatsButton
+    position relative
+    height auto
     background-color #763dca
-    float right
+    margin-bottom 10px
+    margin-top 10px
   .answerRight
     height 2em !important
     width 2em
   .topicItem
+    position relative
+    height auto
     background-color #ffffff
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
     margin 3%
-    margin-left 17%
-    margin-right 17%
-    padding 2%
+    padding-left 15px
+    padding-right 2%
+    padding-top 15px
+    padding-bottom 20px
 </style>
