@@ -9,10 +9,33 @@
                     <p class="textMargin" style="color:#000000; font-family: 'Roboto', sans-serif; font-size: 1.5em; font-weight: bold;">платформа</p>
                     <p class="textMargin" style="color:#763DCA; font-family: 'Roboto', sans-serif; font-size: 4.8em; font-weight: bold;">MathPlace</p>
                     <h3 class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 1.4em;" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень по математике</h3>
-                    a(href="https://mathplace.ru/login")
-                        button.button--round.button-success.goButton Начать!
+                    .button.button--round.button-success.goButton(v-smooth-scroll href='#Download') Начать!
                 </div>
                 <img id="imgMain" src="./images/mainPhones.png" alt="Второй текст"/>
+            </div>
+        </div>
+        <div id="Feature">
+            <div class="Main2">
+                p.boldText Что такое MathPlace? 🤔
+                <p id="FeatureText"> Многофункциональная и гибкая платформа для изучения и размещения образовательных уроков по математике.  <strong>Просто, быстро, удобно</strong></p>
+                //- <div id="design5" class="gradient"></div>
+                div.AllAdvantages
+                    div.Advantage
+                        .Advantages
+                            img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                            strong Большая аудитория
+                            p Больше 2000 пользователей используют MathPlace для обучения
+                    div.Advantage
+                        .Advantages
+                            img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                            strong Мобильное приложение
+                            p Ученики уроков могут учиться в удобном приложение MathPlace для Android
+                    div.Advantage
+                        .Advantages
+                            img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                            strong Удобный конструктор
+                            p Разработали удобный конструктор для организации дистанционного образования
+
             </div>
         </div>
         p.MainScreen
@@ -81,9 +104,8 @@
                         strong Приватные курсы
                         p Закрытые курсы, доступ к которым предоставляет только их автор
         </div>
-        a(href="https://mathplace.ru/login")
-            .AlignCenterButton
-                button.goButton.button Стать автором
+        .AlignCenterButton(to='/login')
+            button.goButton.router-link(to='/login') Стать автором
 
         <div id="Task">
             //- <div id="design4" class="gradient"></div>
@@ -100,22 +122,22 @@
                     </a>
                 </div>
         </div>
-        div#DownloadPlayMarket
+        <div id="DownloadPlayMarket" >
+            //- img.imgFull(src="https://static.tildacdn.com/tild3436-6361-4632-b263-323966316338/A10.svg")
             p.textPlayMarket Попробуйте наше обновленное мобильное приложение
-            a(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
-                img.imgPlayMarket(src="https://static.tildacdn.com/tild3533-6437-4834-b338-643133363864/googleplaybadge_en.png")
+            img.imgPlayMarket(src="https://static.tildacdn.com/tild3533-6437-4834-b338-643133363864/googleplaybadge_en.png")
+        </div>
         <div id="AboutDevelopers">
             <img id="finishImg" src="./images/final_screen.png" />
             <div id="finish">
                 <h1 id="finishTitle">Посмотрите на <br>платформу в деле</h1>
                 <p id="finishText">У нас есть уроки для всех от начинающих до профи.</p>
-                a(href="https://mathplace.ru/login")
-                    button.button--round.button-success.goButton.goButton2 Начать!
-                    //- button.goButton2.button.button--round.button-success.goButton2.goButton.goButton2 Начать!
+                .AlignCenterButton2
+                    button.goButton Начать!
             </div>
         </div>
         <div id="AboutUs">
-            p.halfboldText Следите за новостями 👇🏻
+            p.halfboldText Следите за нашими новостями 👇🏻
             <div id="Media">
                 <a href="https://vk.com/mathplace">
                     img#social(src="./images/vk_site.png")
@@ -129,6 +151,9 @@
 </div>
 
 </template>
+
+<script data-who="💎 Made with naker.io 💎" src="https://d23jutsnau9x47.cloudfront.net/back/v1.0.9/viewer.js" data-option="{|environment|:{|gradient|:|horizontal|,|sensitivity|:0.8,|colorStart|:[50,22,103,1],|colorEnd|:[20,86,205,1]},|particle|:{|life|:5,|power|:0.01,|texture|:|https://res.cloudinary.com/naker-io/image/upload/v1566560053/circle_05.png|,|number|:20,|colorStart|:[116,129,92,0.13],|colorEnd|:[198,188,107,0.52],|sizeStart|:1.57,|sizeEnd|:3.14,|direction1|:{|x|:0,|y|:100,|z|:100},|direction2|:{|x|:0,|y|:0,|z|:0}},|waterMark|:false}" ></script>
+<script>
 
 export default {
   data () {
@@ -148,12 +173,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.button
-    border: none;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    cursor: pointer;
 .AllVerticalLines
 
     width 70%
@@ -177,25 +196,21 @@ export default {
     height: 0;
     margin: 0;
     padding: 0;
-#DownloadPlayMarket:after
-    content: "";
-    display: block;
-    clear: both;
-    visibility: hidden;
-    line-height: 0;
-    height: 0;
-    margin: 0;
-    padding: 0;
 .AlignCenter
-    position relative
-    height auto
-    width auto
-    margin-top 20px
+    text-align center
 .AlignCenterButton
     position relative
-    width auto
-    margin-left 0px
+    margin-top 30px
     text-align center
+.AlignCenterButton2
+    position relative
+    margin-top 30px
+    margin-left 0px
+    @media screen and (max-width: 1030px) {
+        position relative
+        margin-top 30px
+        text-align center
+    }
 .MainScreen
     text-align center
     img
@@ -285,12 +300,16 @@ export default {
     vertical-align middle
 .goButton2
     position relative
-    margin-top 30px
+    height auto
+    border: 2px solid #763DCA;
+    border-radius 50px
+    font-weight 550
+    color #763DCA
+    background-color #EEE0FB
+    opacity 0.9
     font-size 14pt
-    @media screen and (max-width: 450px) {
-        margin-left 30px
-    }
-
+    transition: 0.6s;
+    text-align center
 .alignCenter
     position relative
     width auto
@@ -305,9 +324,6 @@ export default {
 .goButton
     margin-left 20px
     font-size 24pt
-    @media screen and (max-width: 450px) {
-        margin-left 50px
-    }
 
 div
     line-height normal !important
@@ -339,29 +355,22 @@ div
     height auto
     margin-left 10px
     margin-right 10px
-    @media screen and (max-width: 450px) {
-        width 80%
-        margin-left 0%
-    }
 .MenuBlockTopic
     position relative
+    display inline-block
     width 80%
     min-width 250px
     height auto
     margin-top 80px
     margin-left 10%
     margin-right 10%
-    padding-bottom 5px
-    margin-bottom 10px
     box-shadow 0px 0px 5px 0px #aaaaaa
     border-radius 20px
 
-    @media screen and (max-width: 900px) {
-        margin-top 20px
-    }
     @media screen and (max-width: 450px) {
-        width 100%
         display inline-block
+        width 100%
+        min-width 100px
     }
 
     p
@@ -374,11 +383,13 @@ div
         color #000000
         margin-left 10px
         margin-right 10px
-        margin-bottom 20px
+        margin-bottom 30px
 
 .MenuBlockTopic:hover
     box-shadow 0px 0px 12px 3px #aaaaaa
+
 .halfboldText
+    width 100%
     height auto
     margin-top 10%
     margin-bottom 0px
@@ -404,7 +415,7 @@ div
     margin-bottom 400px
     @media screen and (max-width: 800px) {
         height auto
-        margin-bottom 0px
+        margin-bottom 100px
     }
 
 .Main2
@@ -471,7 +482,6 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     top 200px
     @media screen and (max-width: 850px) {
         width 100%
-        top 100px
     }
 
 #leftTextDiscrib
@@ -511,7 +521,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     height auto
     width 100px
     text-align center
-    margin-top 30px
+    margin-top 0px
     background-repeat no-repeat
     background-size 60%
     border-radius 100%
@@ -767,7 +777,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
         width 90%
         left 5%
         margin-bottom 50px
-        margin-right 0px
+        display block
     }
 
 #rightTask
@@ -783,8 +793,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
         float none
         width 70%
         margin-top 20px
-        margin-left 15%
-        margin-right 0px
+        margin-left 100px
     }
 
 #TextTask2
@@ -835,7 +844,6 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     position relative
     height 200px
     width auto
-    display: block;
     background: rgb(238,228,245);
     background: linear-gradient(90deg, rgba(238,228,245,1) 0%, rgba(238,186,235,1) 70%, rgba(159,158,231,1) 100%);
     border-radius 20px
@@ -845,9 +853,8 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     margin-left 20%
     margin-right 20%
     @media screen and (max-width: 1100px) {
-        position relative
         width 90%
-        height auto
+        height 400px
         margin-right 5%
         margin-left 5%
     }
@@ -866,36 +873,35 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     float right
     margin 50px 0
     margin-right 30px
-    @media screen and (max-width: 750px) {
+    @media screen and (max-width: 1500px) {
         height 60px
         margin-right 10px
     }
     @media screen and (max-width: 700px) {
-        text-align center
         width 80%
         height auto
         margin-left 10%
         float none
-        display block
     }
 .textPlayMarket
     position relative
-    width 50%
-    padding-top 60px
-    height auto
+    width 60%
+    height 200px
     float left
+    padding-top 60px
     margin-left 50px
     font-size 28px
     @media screen and (max-width: 1500px) {
         width 40%
         margin-left 20px
-        padding-top 30px
     }
     @media screen and (max-width: 700px) {
         width 80%
         margin-left 10%
-        margin-top 20px
-        margin-bottom 20px
+        padding-top 20px
+        height auto
+        float none
+        display block
     }
 .DownloadText
     height 100%
@@ -1068,9 +1074,9 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
         text-align center
     }
     @media screen and (max-width: 480px) {
-        width 70%
-        margin-left 15%
-        margin-right 15%
+        width 100%
+        margin-left 0%
+        margin-right 0%
         text-align center
     }
 

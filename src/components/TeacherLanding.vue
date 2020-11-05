@@ -5,49 +5,78 @@
         #online
           .Main
             #design6.gradient
-            p.md-display-4#FeatureTitle Создавайте онлайн-уроки в конструкторе
-            p#FeatureText
+            p.md-display-4#FeatureTitle Создавайте любые онлайн-уроки<br> в конструкторе MathPlace
+            p#DistirbText
               | Делитесь знаниями на нашей образовательной платформе
             #design5.gradient
           .tryButton
             router-link.button.button--round.designButtonLesson(to='/customTitle') Попробовать
 
-        img.photo(src="@/assets/images/Web_View.png")
+        img.photo(src="./images/second_step.png")
 
-        #whatis
-          .Main
-            #design6.gradient
-            p#FeatureTitle
-              | Что такое MathPlace?
-            p#FeatureText
-              | Многофункциональная и гибкая платформа для занятий математикой
-            #design5.gradient
+      .Main3
+        p.boldText Что такое MathPlace? 🤔
+        p#FeatureText Многофункциональная и гибкая платформа для изучения и размещения образовательных уроков по математике.  <strong>Просто, быстро, удобно</strong></p>
+        //- <div id="design5" class="gradient"></div>
+        div.AllAdvantages
+            div.Advantage
+                .Advantages
+                    img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                    strong Большая аудитория
+                    p Больше 2000 пользователей используют MathPlace для обучения
+            div.Advantage
+                .Advantages
+                    img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                    strong Мобильное приложение
+                    p Ученики уроков могут учиться в удобном приложение MathPlace для Android
+            div.Advantage
+                .Advantages
+                    img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                    strong Удобный конструктор
+                    p Разработали удобный конструктор для организации дистанционного образования
 
-        #Properties
-            .Main2
-                #design6.gradient
-                p#FeatureTitle2
-                strong Достижения
-                p#FeatureText2
-                | Вы можете выполнять достижения и соревноваться с друзьями
-                #design5.gradient
-            .Main2
-                #design6.gradient
-                p#FeatureTitle2
-                strong Мобильное приложение
-                p#FeatureText2
-                | Ученики могут заниматься в удобном приложение MathPlace для Android
-                #design5.gradient
-            .Main2
-                #design6.gradient
-                p#FeatureTitle2
-                strong Простота
-                p#FeatureText2
-                | Для вашего удобства темы структурированы по классам, разделам и темам. Вы обязательно найдете то что вам нужно
-                #design5.gradient
+      .Instruction.verticalBlock
+        .leftMain
+          p.boldText(style="text-align: left;") Создайте свой<br> урок за 10 минут
+          p#DistirbText2(style="text-align: left;") Сфокусируйтесь на контенте, остальное за нами
+          button.designButtonLesson(style="text-align: left;") начать бесплатно
+        .rightMain.verticalBlock
+          .Step
+            p.boldText2(style="text-align: left;") Соберите всё нужное учащимся в одном месте
+            p#DistirbText3(style="text-align: left;") Создайте свой курс и соберите всю нужную для учебы информацию в одном месте: запись или трансляцию урока, задания к нему, домашние задания, ссылки на дополнительные источники. Отслеживайте прогресс учащихся в табеле успеваемости.
+            img.sizeImg(src="./images/first_step.png")
+          .Step
+            p.boldText2(style="text-align: left;") Настройте автоматическую проверку
+            p#DistirbText3(style="text-align: left;") MathPlace умеет автоматически проверять задания учащихся: тест, числовой ответ, задача на программирование, сопоставление – всего больше 20 видов заданий.
+            img.sizeImg(src="./images/second_step.png")
+          .Step
+            p.boldText2(style="text-align: left;") Общайтесь со своими студентами
+            p#DistirbText3(style="text-align: left;") Вы можете общаться с учащимися в курсе непосредственно под заданиями и видео-уроками, а значит, отслеживать какой отклик вызывает тот или иной материал. А если вам нужно сообщить что-то всем учащимся одновременно — просто сделайте рассылку новостей.
+            img.sizeImg(src="./images/main_screen.png")
+          .Step
+            p.boldText2(style="text-align: left;") Анализируйте эффективность обучения
+            p#DistirbText3(style="text-align: left;") Работайте с отчетами и статистикой по курсу, следите за успеваемостью студентов. Используйте автоматическую аналитику качества курса. Улучшайте ваш курс на основе данных отчетов, чтобы привлечь еще больше учащихся.
+            img.sizeImg(src="./images/first_step.png")
+      p.halfboldText Занимайтесь математикой <br>в удобных форматах 😎
+      div.AllVerticalLines
+          div.verticalBlock
+              img.LeftBigImage(src="./images/second_step.png")
+              div.RightVerticalText
+                  strong.halfboldTextVertical Создавайте <br>открытые уроки
+                  p.halfRegularTextVertical Обучайте тому, в чем отлично разбираетесь. В каталоге собраны курсы по темам от ЕГЭ до всероссийской олимпиады школьников. Добавьте бесплатный курс по своей теме для любознательной аудитории MathPlace.
+          div.verticalBlock
+              img.RightBigImage(src="./images/first_step.png")
+              div.LeftVerticalText
+                  strong.halfboldTextVertical Проводите обучение <br>для собственного класса
+                  p.halfRegularTextVertical Используйте платформу, как конструктор курсов по любой теме и обучайте тех, кого пригласите. Вам будет доступна вся функциональность платформы, при этом курс останется непубличным.
+          div.verticalBlock
+              img.LeftBigImage(src="./images/first_step.png")
+              div.RightVerticalText
+                  strong.halfboldTextVertical Пользуйтесь открытой <br>базой задач MathPlace
+                  p.halfRegularTextVertical Добавляйте в свои уроки уже готовые задачи и теорию из базы MathPlace. Материалы составлялись квалифицированными преподавателями из университетов, школ и олимпиадных кружков
       .functionalityBox
         .functionalityHeader.topicHeader
-          span.md-display-4 Функционал
+          span.md-display-4.boldText Функциональность платформы <br>— наше главное преимущество 🔥
         .functionalityCards
           md-card.functionalityCard(md-with-hover v-for = '(func, i) in funionalityList' :key='id')
             md-ripple
@@ -57,12 +86,14 @@
                 md-button(@click ='showTip(i)') Подробнее
       .reviewBox
         .reviewHeader.topicHeader
-          span.md-display-4 Отзывы
+          span.md-display-4.boldText Отзывы
         .reviewCarousel
-          carousel(:per-page="1" pagination-color='#bababa' pagination-active-color='#763DCA').carouselBox
+          carousel(:per-page="1" pagination-color='#bababa' pagination-active-color='#763DCA' adjustable-height='true').carouselBox
             slide(v-for = 'slide in slides' :key='id')
               p.md-body-2.reviewText {{ slide.text }}
-              p.md-body-1.reviewAuthor {{ slide.author }}
+              strong.md-body-1.reviewAuthor {{ slide.author }}
+              img(:src="slide.image")
+              span.md-body-2.reviewText {{ slide.job }}
     .dialogWindow
       md-dialog(:md-active.sync='showDialog')
         md-dialog-title {{ funionalityList[activeTip].title }}
@@ -71,6 +102,13 @@
         md-dialog-actions
           md-button.md-raised.md-primary(to ='/customTitle') Создать свой урок
           md-button.md-primary(@click='showDialog = false') Закрыть
+    div#AboutDevelopers
+      img#finishImg(src="./images/final_screen.png")
+      div#finish
+          h1#finishTitle Посмотрите на <br>платформу в деле
+          p#finishText Посмотрите на платформу в деле, создав свой первый курс с полной функциональностью
+          .AlignCenterButton2
+              button.designButtonLesson Начать!
 
 </template>
 
@@ -120,22 +158,30 @@ export default {
       slides: [
         {
           id: 1,
-          text: 'Mathplace говно просто какое-то пиздец просто а не приложение пойду посру лушче на телефон чем скачиывать это буду',
-          author: 'Синебот Валера'
+          text: 'Stepik предлагает все необходимые инструменты для создания современных онлайн-курсов, в особенности по программированию. И еще – это замечательная профессиональная команда, при поддержке которой эксперты Samsung создали одни из самых популярных открытых курсов по применению нейронных сетей в задачах компьютерного зрения и обработки текстов. Эти курсы теперь изучают десятки тысяч пользователей и студенты образовательного проекта «IT Академия Samsung» в вузах России и Казахстана.',
+          job: 'Руководитель образовательных программ, Исследовательский центр Samsung',
+          image: 'https://static.tildacdn.com/tild3533-6437-4834-b338-643133363864/googleplaybadge_en.png',
+          author: 'Еблан Ебланович'
         },
         {
           id: 2,
-          text: 'Mathplace говно говно говно говно говно говно говно говно говно говно говно говно говно',
+          text: 'Пандемия коронавируса ускорила внедрение децентрализованного образования в университетах: образование частично переносится в сферу online. В этой связи факультет Международных экономических отношений обратил внимание на платформу Stepik. Мы ценим быструю техническую поддержку сотрудников, которые откликаются на наши потребности в создании языковых курсов и курсов по специальным дисциплинам. Особенно для нас интересна возможность создания закрытых курсов, когда преподаватель самостоятельно определяет аудиторию, используя онлайн-модули в качестве дополнения к очным занятиям.',
+          job: 'Команда факультета Международных экономических отношений МГИМО МИД России',
+          image: 'https://static.tildacdn.com/tild3533-6437-4834-b338-643133363864/googleplaybadge_en.png',
           author: 'Винебот Салера'
         },
         {
           id: 3,
-          text: 'Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace Mathplace ',
+          text: 'Для многих наших слушателей онлайн-обучение является единственно доступным способом повысить свою квалификацию, при этом иногда жизненно необходимым для их организаций. Важно, чтобы сам процесс обучения был максимально прост и понятен для них. Очень большое значение в этом имеет удобство платформы – как с точки зрения визуального оформления, так и с точки зрения технических решений. Мы очень рады, что нашли такую платформу в лице Stepik.',
+          job: 'Председатель Правления Центра РНО',
+          image: 'https://static.tildacdn.com/tild3533-6437-4834-b338-643133363864/googleplaybadge_en.png',
           author: 'Гордей Завьялов'
         },
         {
           id: 4,
-          text: 'Мне стыдно жить в стране, где водка стоит в 20 раз дороже гантель',
+          text: 'Платформа Stepik — отличное место для курсов по IT-тематике. И аудитория, и сама платформа учитывает специфику таких курсов. Онлайн-курсы от преподавателей факультета компьютерных наук НИУ ВШЭ помогают представлять факультет будущим абитуриентами, а также рассказывать о нём на широкую аудиторию. И в целом, очень ценно, что команде Stepik удается привлекать в качестве слушателей нашу целевую аудиторию, заинтересованную в компьютерных науках.',
+          job: 'Руководитель проекта Data Culture, координатор онлайн-курсов ФКН НИУ ВШЭ',
+          image: 'https://static.tildacdn.com/tild3533-6437-4834-b338-643133363864/googleplaybadge_en.png',
           author: 'Джейсон Стетхем'
         }
       ]
@@ -151,26 +197,207 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import url(http://fonts.googleapis.com/css?family=Roboto:700,400&subset=latin,cyrillic);
+.verticalBlock
+    height auto
+    display: block;
+    margin-top 150px
+.verticalBlock:after
+    content: "";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+.Instruction
+  position relative
+  height auto
+  width 100%
+.Step
+  position relative
+  width 100%
+  display block
+  margin-bottom 200px
+.leftMain
+  position: sticky;
+  width auto
+  top: 200px;
+  bottom 100px
+  margin-bottom 100px
+  margin-top 150px
+  line-height 1
+  display inline-block
+  margin-left 15%
+.rightMain
+  position: sticky;
+  margin-top: 70px;
+  line-height 1
+  width 42%
+  float right
+  display inline-block
+  margin-right 20px
+.boldText
+  width 100%
+  height auto
+  margin-top 10%
+  margin-bottom 0px
+  text-align center
+  line-height 1.3
+  font-family  'Roboto'
+  font-size 50px
+  font-weight 500
+.boldText2
+  width 50%
+  height auto
+  margin-top 10%
+  margin-bottom 0px
+  text-align center
+  line-height 1.3
+  font-family  'Roboto'
+  font-size 28px
+  font-weight 500
+.sizeImg
+  position relative
+  height 200px
+  width auto
+#DistirbText
+    position relative
+    height auto
+    width 50%
+    min-width 450px
+    text-align center
+    margin 10% auto
+    margin-top 50px
+    margin-bottom 90px
+    color #525252
+    line-height 1.2
+    font-weight 300
+    font-family 'Gilroy',Arial,sans-serif
+    font-size  2em
+    @media screen and (max-width: 450px) {
+        width 80%
+        min-width 100px
+    }
+#DistirbText2
+    position relative
+    height auto
+    width 70%
+    text-align center
+    margin-top 50px
+    margin-bottom 50px
+    color #525252
+    line-height 1.3
+    font-weight 300
+    font-family 'Gilroy',Arial,sans-serif
+    font-size  2em
+    @media screen and (max-width: 450px) {
+        width 80%
+        min-width 100px
+    }
+#DistirbText3
+    position relative
+    height auto
+    width 70%
+    text-align center
+    margin-top 50px
+    margin-bottom 50px
+    color #525252
+    line-height 1.3
+    font-weight 400
+    font-family 'Gilroy',Arial,sans-serif
+    font-size  20px
+    @media screen and (max-width: 450px) {
+        width 80%
+        min-width 100px
+    }
+#FeatureText
+    position relative
+    height auto
+    width 50%
+    min-width 450px
+    text-align center
+    margin 10% auto
+    margin-top 50px
+    margin-bottom 90px
+    color #525252
+    line-height 1.2
+    font-weight 300
+    font-family 'Roboto'
+    font-size  2em
+    @media screen and (max-width: 450px) {
+        width 80%
+        min-width 100px
+    }
+.Main
+  height auto
+  width 100%
+  margin-top 100px
+
+.AllAdvantages
+  position relative
+  margin-left 20%
+  margin-right 10%
+  margin-bottom 100px
+  @media screen and (max-width: 1500px) {
+      width 100%
+      margin-left 0%
+      margin-right 0%
+  }
+.Advantage
+  position relative
+  width 30%
+  margin-bottom 30px
+  margin-left 30px
+  display inline-block
+  @media screen and (max-width: 700px) {
+      width 90%
+      margin-left 10%
+  }
+.Advantages
+  position relative
+  width 80%
+  margin-bottom 30px
+  display inline-block
+  img
+    height 80px
+    width auto
+    margin-bottom 30px
+  strong
+    width 100%
+    display block
+    font-family 'Roboto',Arial,sans-serif
+    font-weight 600
+    font-size 22px
+  p
+    margin-top 20px
+    font-family 'Roboto',Arial,sans-serif
+    font-size 18px
 
 .tryButton
-  padding-bottom 10%
+  position relative
+  height auto
+  width auto
+  margin-bottom 10%
   display flex
   justify-content center
 
 .designButtonLesson
-  padding-top 12.5px
   position relative
-  height 50px
+  height auto
+  width auto
   border: 2px solid #763DCA;
   border-radius 50px
   font-weight 550
-  font-size 20pt
+  font-size 25pt
   color #763DCA !important
   background-color #FFFFFF
   opacity 0.5
   transition: 0.6s;
+  padding 22px
+  margin-bottom 0px
   text-align center
-  vertical-align middle
   &:hover
     transition: 0.6s;
     color #FFFFFF !important
@@ -198,7 +425,6 @@ export default {
   margin-left 1%
   margin-right 1%
   font-size 20pt
-  line-height 1
   color #000000
   font-weight 400
   font-family  'Roboto', sans-serif
@@ -229,37 +455,15 @@ export default {
 #FeatureTitle
   position relative
   height auto
-  min-height 30px
-  z-index 2
-  width 50%
+  width auto
   min-width 450px
   text-align center
-  margin 7% auto
+  margin-top 100px
   color #000000
   font-weight 500
-  font-family  'Roboto', sans-serif
+  line-height 1.2
+  font-family 'Gilroy',Arial,sans-serif
   font-size 30pt
-  line-height 1
-  @media screen and (max-width: 450px) {
-    width 80%
-    min-width 100px
-  }
-
-#FeatureText
-  position relative
-  height auto
-  min-height 100px
-  z-index 2
-  width 50%
-  min-width 450px
-  text-align center
-  margin 7% auto
-  margin-bottom 30px
-  color #000000
-  font-weight 400
-  font-family  'Roboto', sans-serif
-  font-size 18pt
-  line-height 1
   @media screen and (max-width: 450px) {
     width 80%
     min-width 100px
@@ -278,7 +482,6 @@ export default {
   font-weight 500
   font-family  'Roboto', sans-serif
   font-size 30pt
-  line-height 1
   @media screen and (max-width: 450px) {
     width 80%
     min-width 100px
@@ -295,7 +498,6 @@ export default {
   font-weight 400
   font-family  'Roboto', sans-serif
   font-size  25pt
-  line-height 1
   @media screen and (max-width: 450px) {
     width 80%
     min-width 100px
@@ -326,14 +528,37 @@ export default {
     margin auto
 
 .carouselBox
-  max-width max(600px, 100vw)
+  width 800px
+  // max-width max(900px, 100px)
+  text-align center
   p
+    font-size 22px
+    font-family "Girloy"
+    font-weight 500
+    height auto
+    line-height 1.5
+    text-align center
+    padding 50px
+    padding-top 0
+  strong
     min-height 90%
-    font-size 24pt
-    line-height auto
+    font-size 18pt
+    font-family "Roboto"
+    font-weight 500
+    margin-top 30px
+    height auto
     text-align center
     padding 20px
-    padding-top 0
+    padding-top 20px
+  span
+    font-size 16px
+    font-family "Girloy"
+    font-weight 500
+    height auto
+    display block
+    line-height 1.5
+    text-align center
+    margin-top 20px
 
 .topicHeader
   margin 3%
@@ -369,4 +594,172 @@ export default {
     .md-button
       margin 10px
 
+.LeftBigImage
+    height auto
+    width 50%
+    display inline-block
+    @media screen and (max-width: 1400px) {
+        margin-top 60px
+        width 40%
+    }
+    @media screen and (max-width: 850px) {
+        margin-top 60px
+        width 80%
+        margin-left 10%
+    }
+.RightBigImage
+    height auto
+    width 50%
+    align right
+    float right
+    text-align right
+    @media screen and (max-width: 1400px) {
+        width 40%
+    }
+    @media screen and (max-width: 850px) {
+        margin-top 60px
+        width 80%
+        margin-left 10%
+        float left
+    }
+
+.RightVerticalText
+    height auto
+    width 100%
+    float right
+    display inline-block
+    margin-top 50px
+    max-width 450px
+    margin-bottom 0px
+    @media screen and (max-width: 850px) {
+        max-width 4500px
+        width 80%
+        margin-left 10%
+    }
+.LeftVerticalText
+    height auto
+    width auto
+    display inline-block
+    margin-top 50px
+    max-width 400px
+    margin-bottom 0px
+    @media screen and (max-width: 850px) {
+        max-width 4500px
+        width 80%
+        margin-left 10%
+    }
+
+.AllVerticalLines
+
+    width 70%
+    margin-top 100px
+    margin-left 15%
+    @media screen and (max-width: 1200px) {
+        margin-left 5%
+        width 90%
+    }
+
+.halfboldTextVertical
+    position relative
+    width auto
+    height auto
+    line-height 1.2
+    text-align left
+    font-family 'Roboto'
+    font-size 27pt
+    font-weight 400
+
+.halfRegularTextVertical
+    position relative
+    width 500px
+    height auto
+    text-align left
+    line-height 1.5
+    font-family 'Roboto'
+    font-size 15pt
+    margin-top 40px
+    font-weight 300
+.halfboldText
+    width 100%
+    height auto
+    margin-top 10%
+    margin-bottom 0px
+    text-align center
+    line-height 1.4
+    font-family 'Gilroy',Arial,sans-serif
+    font-size 44px
+    font-weight 530
+
+#finish
+    position relative
+    width 30%
+    height auto
+    display inline-block
+    margin-top 300px
+    float right
+    margin-bottom 300px
+    margin-left 50px
+    @media screen and (max-width: 1110px) {
+        width 30%
+        margin-top 200px
+        margin-left 10%
+        margin-right 10%
+        margin-bottom 100px
+    }
+    @media screen and (max-width: 1010px) {
+        width 80%
+        margin-top 0px
+        margin-left 10%
+        margin-right 10%
+        margin-bottom 100px
+    }
+
+#finishTitle
+    height auto
+    width auto
+    color #763DCA
+    line-height 1.2
+    font-weight 500
+    font-family 'Roboto', sans-serif
+    font-size 28pt
+    @media screen and (max-width: 1010px) {
+        width 100%
+        text-align center
+    }
+
+#finishText
+    height auto
+    width 70%
+    margin-top 15px
+    color #919191
+    line-height 1.5
+    font-weight 400
+    margin-bottom 30px
+    font-family 'Roboto', sans-serif
+    font-size 17pt
+    @media screen and (max-width: 1020px) {
+        width 100%
+        text-align center
+    }
+    @media screen and (max-width: 480px) {
+        width 100%
+        margin-left 0%
+        margin-right 0%
+        text-align center
+    }
+#AboutDevelopers
+    position relative
+    height auto
+    width 100%
+    margin-bottom 100px
+#finishImg
+    position relative
+    width auto
+    width 40%
+    margin-left 10%
+    margin-top 120px
+    display inline-block
+    @media screen and (max-width: 1010px) {
+        display none
+    }
 </style>
