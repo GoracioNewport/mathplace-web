@@ -88,7 +88,7 @@
         .reviewHeader.topicHeader
           span.md-display-4.boldText Отзывы
         .reviewCarousel
-          carousel(:per-page="1" pagination-color='#bababa' pagination-active-color='#763DCA' adjustable-height='true').carouselBox
+          carousel(:per-page="1" pagination-color='#bababa' pagination-active-color='#763DCA').carouselBox
             slide(v-for = 'slide in slides' :key='slide.id')
               p.md-body-2.reviewText {{ slide.text }}
               strong.md-body-1.reviewAuthor {{ slide.author }}
