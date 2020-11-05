@@ -97,7 +97,9 @@
     .dialogWindow
       md-dialog(:md-active.sync='showDialog')
         md-dialog-title {{ funionalityList[activeTip].title }}
-          span {{ funionalityList[activeTip].description }}
+        md-dialog-content
+          ul(style='padding-left 20px !important')
+            li(v-for="s in funionalityList[activeTip].description" style='list-style-type:disc !important') {{ s }}
         md-dialog-actions
           md-button.md-raised.md-primary(to ='/customTitle') Создать свой урок
           md-button.md-primary(@click='showDialog = false') Закрыть
@@ -119,7 +121,7 @@ export default {
         {
           id: 1,
           title: 'Контроль за учениками',
-          description: 'Test'
+          description: ['aadfaafadjk', 'fdakfajkadj', 'aaaakfirqeuir']
         },
         {
           id: 2,
