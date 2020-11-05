@@ -88,7 +88,7 @@
         .reviewHeader.topicHeader
           span.md-display-4.boldText Отзывы
         .reviewCarousel
-          carousel(:per-page="1" pagination-color='#bababa' pagination-active-color='#763DCA' adjustable-height='true').carouselBox
+          carousel(:per-page="1" pagination-color='#bababa' pagination-active-color='#763DCA').carouselBox
             slide(v-for = 'slide in slides' :key='slide.id')
               p.md-body-2.reviewText {{ slide.text }}
               strong.md-body-1.reviewAuthor {{ slide.author }}
@@ -129,12 +129,12 @@ export default {
         {
           id: 3,
           title: 'Автоматическая или ручная проверка',
-          description: ['Автоматическая проверка тестовых или иных заданий','Возможность загрузки подробного решения задачи']
+          description: ['Автоматическая проверка тестовых или иных заданий', 'Возможность загрузки подробного решения задачи']
         },
         {
           id: 4,
           title: 'Различные виды задач',
-          description: ['Задачи с одним или несколькими правильными ответами','Тестовые задачи с множественным выбором или выбором правильного ответа из нескольких','Загрузка подробного решения','Задания не требующие решения']
+          description: ['Задачи с одним или несколькими правильными ответами', 'Тестовые задачи с множественным выбором или выбором правильного ответа из нескольких', 'Загрузка подробного решения', 'Задания не требующие решения']
         },
         {
           id: 5,
