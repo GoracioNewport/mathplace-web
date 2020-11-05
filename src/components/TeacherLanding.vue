@@ -97,9 +97,11 @@
     .dialogWindow
       md-dialog(:md-active.sync='showDialog')
         md-dialog-title {{ funionalityList[activeTip].title }}
-          span {{ funionalityList[activeTip].description }}
+        md-dialog-content
+          ul(style='padding-left 20px !important')
+            li(v-for="s in funionalityList[activeTip].description" style='list-style-type:disc !important') {{ s }}
         md-dialog-actions
-          md-button.md-raised.md-primary(to ='/customTitle') Создать свой урок
+          md-button.md-raised.md-primary.leftButton(style="position:relative; float:left;" to ='/customTitle') Создать свой урок
           md-button.md-primary(@click='showDialog = false') Закрыть
     div#AboutDevelopers
       img#finishImg(src="./images/final_screen.png")
@@ -124,7 +126,7 @@ export default {
         {
           id: 2,
           title: 'Статистика по уроку',
-          description: 'Просмотр общей статистики по курсу (регистрации на курс, отзывы и сертификаты, просмотры уроков) Просмотр решений пользователей к заданиям из курса'
+          description: ['Просмотр общей статистики по курсу (регистрации на курс, отзывы и сертификаты, просмотры уроков) Просмотр решений пользователей к заданиям из курса']
         },
         {
           id: 3,
@@ -143,7 +145,7 @@ export default {
         },
         {
           id: 6,
-          title: 'Режим контрольной',
+          title: 'Режим контрольной работы',
           description: ['Ограничения по времени прохождения экзамена', 'Ограничения по числу попыток', 'Возможность сделать разные варианты контрольной']
         },
         {
@@ -155,6 +157,16 @@ export default {
           id: 8,
           title: 'Редактор уроков',
           description: ['Работа с курсом с любого устройства в онлайн-режиме', 'Возможность редактировать текст прямо в уроке', 'Загрузка видео в урок', 'Редактирование материала уроков']
+        },
+        {
+          id: 9,
+          title: 'Управление доступом в уроках',
+          description: ['Возможность создания урока в приватном режиме', 'Добавление, удаление учеников вручную и по приглашению в урок', 'Загрузка видео в урок', 'Редактирование материала уроков']
+        },
+        {
+          id: 10,
+          title: 'Загрузка файлов',
+          description: ['Добавление файлов в уроки', 'Использование файлов в решениях задач со свободным ответом и текстовой задаче']
         }
       ],
       showDialog: false,
@@ -202,6 +214,12 @@ export default {
 
 <style lang="stylus" scoped>
 @import url(http://fonts.googleapis.com/css?family=Roboto:700,400&subset=latin,cyrillic);
+.leftButton
+  position relative
+  float left
+  text-align left
+  margin-left 0px
+  left 0px
 .verticalBlock
     height auto
     display: block;
