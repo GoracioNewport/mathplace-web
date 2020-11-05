@@ -39,7 +39,7 @@
                     p.textInf Тугриков {{this.getUser.money}}
                 .userButton
                   router-link.button.button--round.button.button-primary(to='/statistics') Мои уроки
-                  router-link.button.button--round.button.button-primary(@click ='settingsMenuShow = true') Редактировать
+                  .button.button--round.button.button-primary(@click ='settingsMenuShow = true') Редактировать
                   router-link.button.button--round.button.button-primary(to='/logout') Выйти
 
         .content-achieve

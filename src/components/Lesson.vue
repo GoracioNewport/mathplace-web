@@ -331,6 +331,32 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  ::-webkit-scrollbar-button
+    background-image:url('');
+    background-repeat:no-repeat;
+    width:5px;
+    height:0px
+
+  ::-webkit-scrollbar-track
+    background-color:#ecedee
+
+  ::-webkit-scrollbar-thumb
+    -webkit-border-radius: 0px;
+    border-radius: 20px;
+    background-color #763DCA
+
+  ::-webkit-scrollbar-thumb:hover
+    background-color:#56999f;
+
+  ::-webkit-resizer
+    background-image:url('');
+    background-repeat:no-repeat;
+    width:4px;
+    height:0px
+
+  ::-webkit-scrollbar
+    width: 4px;
+
   .container
     max-height 64px
     overflow auto
@@ -521,9 +547,10 @@ export default {
     background #ffffff
     color #000000
     color:#525252
-    font-family: 'Roboto', sans-serif
-    font-size: 20px
-    font-weight: 450
+    line-height 1.6
+    font-family: 'Roboto'
+    font-size: 19px
+    font-weight: 400
     border-radius 0 0 10px 10px
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     padding 10px
@@ -545,6 +572,7 @@ export default {
         margin-right 0%
         margin-left 0%
     }
+
   .enter
     position relative
     width 54%
@@ -598,11 +626,16 @@ export default {
     box-shadow 0 0 10px rgba(0,0,0,0.5)
     border-radius 10px
     outline none
+    transition: 0.6s;
     border none
     text-align center
     vertical-align middle
     &:hover
-        background #5E2DA6
+      transition: 0.6s;
+      background-color #ffffff
+      color #763DCA
+      border: 2px solid #763DCA;
+
   .but
     position relative
     display inline-block
@@ -612,15 +645,15 @@ export default {
     // margin auto
   .ans
     postion relative
-    height 50px
+    height 55px
     width 100%
     border-radius 10px
     margin-bottom 0px
     color #525252
-    font-family: 'Roboto', sans-serif
-    font-size: 25px
-    font-weight: bold
-    box-shadow 0 0 10px rgba(0,0,0,0.5)
+    font-family: 'Roboto'
+    font-size: 22px
+    font-weight: 450
+    box-shadow 0 0 5px 0px rgba(0,0,0,0.5)
     padding 11px
     outline none
     border none
