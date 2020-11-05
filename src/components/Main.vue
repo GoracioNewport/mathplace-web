@@ -9,7 +9,7 @@
                     <p class="textMargin" style="color:#000000; font-family: 'Roboto', sans-serif; font-size: 1.5em; font-weight: bold;">платформа</p>
                     <p class="textMargin" style="color:#763DCA; font-family: 'Roboto', sans-serif; font-size: 4.8em; font-weight: bold;">MathPlace</p>
                     <h3 class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 1.4em;" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень по математике</h3>
-                    .button.button--round.button-success.goButton(v-smooth-scroll href='#Download') Начать!
+                    router-link.button.designButtonLesson.goButton(to='/') Начать!
                 </div>
                 <img id="imgMain" src="./images/mainPhones.png" alt="Второй текст"/>
             </div>
@@ -104,8 +104,8 @@
                         strong Приватные курсы
                         p Закрытые курсы, доступ к которым предоставляет только их автор
         </div>
-        .AlignCenterButton(to='/login')
-            button.goButton.router-link(to='/login') Стать автором
+        .AlignCenterButton
+            router-link.button.designButtonLesson.goButton(to='/teacher') Стать автором
 
         <div id="Task">
             //- <div id="design4" class="gradient"></div>
@@ -133,7 +133,7 @@
                 <h1 id="finishTitle">Посмотрите на <br>платформу в деле</h1>
                 <p id="finishText">У нас есть уроки для всех от начинающих до профи.</p>
                 .AlignCenterButton2
-                    button.goButton Начать!
+                    router-link.button.designButtonLesson.goButton(to='/') Начать!
             </div>
         </div>
         <div id="AboutUs">
@@ -171,6 +171,29 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
+.designButtonLesson
+  text-decoration none !important
+  padding-top 12.5px
+  position relative
+  height 50px
+  border: 2px solid #763DCA;
+  border-radius 50px
+  font-weight 550
+  margin-left 20px
+  color #763DCA !important
+  background-color #FFFFFF
+  opacity 0.5
+  transition: 0.6s;
+  text-align center
+  vertical-align middle
+  @media screen and (max-width: 480px)
+      display none
+.designButtonLesson:hover
+  transition: 0.6s;
+  color #FFFFFF !important
+  background-color #763DCA
+
 .AllVerticalLines
 
     width 70%
@@ -287,7 +310,7 @@ export default {
 .goButton
     position relative
     height auto
-    border: 2px solid #763DCA;
+    border: 2px solid #763DCA !important
     border-radius 50px
     font-weight 550
     color #763DCA
@@ -318,7 +341,7 @@ export default {
 .goButton:hover
     transition: 0.6s;
     color #FFFFFF
-    background-color #763DCA
+    background-color #763DCA !important
 .goButton
     margin-left 20px
     font-size 24pt
@@ -362,6 +385,7 @@ div
     margin-right 10%
     box-shadow 0px 0px 5px 0px #aaaaaa
     border-radius 20px
+    transition 0.2s
 
     @media screen and (max-width: 450px) {
         display inline-block
@@ -382,7 +406,7 @@ div
         margin-bottom 30px
 
 .MenuBlockTopic:hover
-    box-shadow 0px 0px 12px 3px #aaaaaa
+    box-shadow 0px 0px 12px 3px #bbbbbb
 
 .halfboldText
     width 100%
