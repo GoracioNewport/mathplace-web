@@ -49,7 +49,7 @@
         .functionalityHeader.topicHeader
           span.md-display-4 Функционал
         .functionalityCards
-          md-card.functionalityCard(md-with-hover v-for = '(func, i) in funionalityList' :key='id')
+          md-card.functionalityCard(md-with-hover v-for = '(func, i) in funionalityList' :key='func.id')
             md-ripple
               md-card-content
                 .md-title {{ func.title }}
@@ -60,14 +60,13 @@
           span.md-display-4 Отзывы
         .reviewCarousel
           carousel(:per-page="1" pagination-color='#bababa' pagination-active-color='#763DCA').carouselBox
-            slide(v-for = 'slide in slides' :key='id')
+            slide(v-for = 'slide in slides' :key='slide.id')
               p.md-body-2.reviewText {{ slide.text }}
               p.md-body-1.reviewAuthor {{ slide.author }}
     .dialogWindow
       md-dialog(:md-active.sync='showDialog')
         md-dialog-title {{ funionalityList[activeTip].title }}
-          md-tab
-            span {{ funionalityList[activeTip].description }}
+          span {{ funionalityList[activeTip].description }}
         md-dialog-actions
           md-button.md-raised.md-primary(to ='/customTitle') Создать свой урок
           md-button.md-primary(@click='showDialog = false') Закрыть
@@ -81,32 +80,32 @@ export default {
       funionalityList: [
         {
           id: 1,
-          title: 'Статистика',
+          title: 'Контроль за учениками',
           description: 'Test'
         },
         {
           id: 2,
-          title: 'Ограничения по времени',
+          title: 'Статистика',
           description: 'Test'
         },
         {
           id: 3,
-          title: 'Автоматическая и ручная проверка',
+          title: 'Автоматическая или ручная проверка',
           description: 'Test'
         },
         {
           id: 4,
-          title: 'Test',
+          title: 'Различные виды задач',
           description: 'Test'
         },
         {
           id: 5,
-          title: 'Test',
+          title: 'Возможность загрузки файлов',
           description: 'Test'
         },
         {
           id: 6,
-          title: 'Test',
+          title: 'Режим контрольной',
           description: 'Test'
         },
         {
