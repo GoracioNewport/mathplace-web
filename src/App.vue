@@ -30,7 +30,7 @@
                   ) <strong class="router-link-title">{{ link.title }}</strong>
             .header-logo-right
               //- button.button--round.designButtonLesson.router-link(to='/customTitle') Присоединиться
-              button.button--round.designButtonLesson.router-link(to='/customTitle') Создать урок
+              router-link.button.button--round.designButtonLesson(to='/customTitle') Создать урок
     .margin_bottom
     router-view
 </template>

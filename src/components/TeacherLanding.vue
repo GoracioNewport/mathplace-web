@@ -39,7 +39,7 @@
         .leftMain
           p.boldText(style="text-align: left;") Создайте свой<br> урок за 10 минут
           p#DistirbText2(style="text-align: left;") Сфокусируйтесь на контенте, остальное за нами
-          button.designButtonLesson(style="text-align: left;") начать бесплатно
+          router-link.button.button--round.designButtonLesson(style="text-align: left;" to='/') Начать бесплатно
         .rightMain.verticalBlock
           .Step
             p.boldText2(style="text-align: left;") Соберите всё нужное учащимся в одном месте
@@ -88,7 +88,7 @@
         .reviewHeader.topicHeader
           span.md-display-4.boldText Отзывы
         .reviewCarousel
-          carousel(:per-page="1" pagination-color='#bababa' pagination-active-color='#763DCA' adjustable-height='true').carouselBox
+          carousel(:per-page="1" pagination-color='#bababa' pagination-active-color='#763DCA').carouselBox
             slide(v-for = 'slide in slides' :key='slide.id')
               p.md-body-2.reviewText {{ slide.text }}
               strong.md-body-1.reviewAuthor {{ slide.author }}
@@ -107,7 +107,7 @@
           h1#finishTitle Посмотрите на <br>платформу в деле
           p#finishText Посмотрите на платформу в деле, создав свой первый курс с полной функциональностью
           .AlignCenterButton2
-              button.designButtonLesson Начать!
+              router-link.button.button--round.designButtonLesson(to='/customTitle') Начать!
 
 </template>
 
