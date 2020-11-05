@@ -39,7 +39,7 @@
         .leftMain
           p.boldText(style="text-align: left;") Создайте свой<br> урок за 10 минут
           p#DistirbText2(style="text-align: left;") Сфокусируйтесь на контенте, остальное за нами
-          router-link.button.button--round.designButtonLesson(style="text-align: left;" to='/') Начать бесплатно
+          button.designButtonLesson(style="text-align: left;") начать бесплатно
         .rightMain.verticalBlock
           .Step
             p.boldText2(style="text-align: left;") Соберите всё нужное учащимся в одном месте
@@ -88,7 +88,7 @@
         .reviewHeader.topicHeader
           span.md-display-4.boldText Отзывы
         .reviewCarousel
-          carousel(:per-page="1" pagination-color='#bababa' pagination-active-color='#763DCA').carouselBox
+          carousel(:per-page="1" pagination-color='#bababa' pagination-active-color='#763DCA' adjustable-height='true').carouselBox
             slide(v-for = 'slide in slides' :key='slide.id')
               p.md-body-2.reviewText {{ slide.text }}
               strong.md-body-1.reviewAuthor {{ slide.author }}
@@ -97,9 +97,7 @@
     .dialogWindow
       md-dialog(:md-active.sync='showDialog')
         md-dialog-title {{ funionalityList[activeTip].title }}
-        md-dialog-content
-          ul(style='padding-left 20px !important')
-            li(v-for="s in funionalityList[activeTip].description" style='list-style-type:disc !important') {{ s }}
+          span {{ funionalityList[activeTip].description }}
         md-dialog-actions
           md-button.md-raised.md-primary(to ='/customTitle') Создать свой урок
           md-button.md-primary(@click='showDialog = false') Закрыть
@@ -109,7 +107,7 @@
           h1#finishTitle Посмотрите на <br>платформу в деле
           p#finishText Посмотрите на платформу в деле, создав свой первый курс с полной функциональностью
           .AlignCenterButton2
-              router-link.button.button--round.designButtonLesson(to='/customTitle') Начать!
+              button.designButtonLesson Начать!
 
 </template>
 
@@ -121,32 +119,32 @@ export default {
         {
           id: 1,
           title: 'Контроль за учениками',
-          description: ['aadfaafadjk', 'fdakfajkadj', 'aaaakfirqeuir']
+          description: ['Ограничение доступа входа в урок по времени']
         },
         {
           id: 2,
           title: 'Статистика',
-          description: 'Test'
+          description: ['Test']
         },
         {
           id: 3,
           title: 'Автоматическая или ручная проверка',
-          description: 'Test'
+          description: ['Автоматическая проверка тестовых или иных заданий','Возможность загрузки подробного решения задачи']
         },
         {
           id: 4,
           title: 'Различные виды задач',
-          description: 'Test'
+          description: ['Задачи с одним или несколькими правильными ответами','Тестовые задачи с множественным выбором или выбором правильного ответа из нескольких','Загрузка подробного решения','Задания не требующие решения']
         },
         {
           id: 5,
           title: 'Возможность загрузки файлов',
-          description: 'Test'
+          description: ['Test']
         },
         {
           id: 6,
           title: 'Режим контрольной',
-          description: 'Test'
+          description: ['Test']
         },
         {
           id: 7,
