@@ -10,13 +10,13 @@
     background-image: url(images/Down.png);
     background-size: 100%;
 }
-                  /* Главный блок */
+                  /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ */
 #Main{
     height: 100%;
     width: 100%;
     background-color: #ffffff;
 }
-/* Кнопка */
+/* пїЅпїЅпїЅпїЅпїЅпїЅ */
 #DownloadButton {
     position: absolute;
     left: 60%;
@@ -33,14 +33,14 @@
     background-repeat: no-repeat;
     background-size: 100%;
 }
-                    /* Меню */
+                    /* пїЅпїЅпїЅпїЅ */
 #MenuBlock {
     position: absolute;
     height: 30%;
     width: 100%;
     top: 100%;
 }
-/* Кнопка перехода на главный блок*/
+/* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ*/
 #MainMenuButton {
     position: absolute;
     left: 3%;
@@ -52,7 +52,7 @@
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.5) 10px 10px;
 }
-/* Кнопка перехода на блок фитч*/
+/* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ*/
 #FeatureMenuButton {
     position: absolute;
     left: 17%;
@@ -64,7 +64,7 @@
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.5) 10px 10px;
 }
-/* Кнопка перехода на блок тем*/
+/* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ*/
 #TopicsMenuButton {
     position: absolute;
     left: 31%;
@@ -76,7 +76,7 @@
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.5) 10px 10px;
 }
-/* Кнопка перехода на блок с задачей*/
+/* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/
 #TaskMenuButton {
     position: absolute;
     left: 45%;
@@ -87,7 +87,7 @@
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.5) 10px 10px;
 }
-/* Кнопка перехода на блок с кнопками для скачки*/
+/* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ*/
 #DownloadMenuButton {
     position: absolute;
     left: 59%;
@@ -99,7 +99,7 @@
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.5) 10px 10px;
 }
-/* Кнопка перехода на блок о том кто авторы */
+/* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ */
 #AboutDevelopersMenuButton {
     position: absolute;
     left: 73%;
@@ -110,7 +110,7 @@
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.5) 10px 10px;
 }
-/* Кнопка перехода на блок с нашими контактами*/
+/* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/
 #AboutUsMenuButton {
     position: absolute;
     left: 87%;
@@ -123,14 +123,14 @@
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.5) 10px 10px;
 }
-             /* Отличительные характеристики */
+             /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 #Feature {
     position: absolute;
     height: 100%;
     width: 100%;
     top: 130%;
 }
-                 /* Боксы для тем */
+                 /* пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ */
 #Topics {
     z-index: 3;
     position: absolute;
@@ -138,7 +138,7 @@
     width: 100%;
     top: 230%;
 }
-/* 1 Бокс для тем */
+/* 1 пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ */
 #FirstTopic {
     z-index: 2;
     position: absolute;
@@ -150,7 +150,7 @@
     background-color: #ffffff;
     box-shadow: rgba(0, 0, 0, 0.8) 10px 10px;
 }
-/* 2 Бокс для тем */
+/* 2 пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ */
 #SecondTopic {
     position: absolute;
     left: 40%;
@@ -161,7 +161,7 @@
     background-color: #ffffff;
     box-shadow: rgba(0, 0, 0, 0.8) 10px 10px;
 }
-/* 3 Бокс для тем */
+/* 3 пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ */
 #ThirdTopic {
     position: absolute;
     left: 70%;
@@ -172,7 +172,7 @@
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.8) 10px 10px;
 }
-/* 4 Бокс для тем */
+/* 4 пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ */
 #FourthTopic {
     position: absolute;
     left: 100%;
@@ -183,7 +183,7 @@
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.8) 10px 10px;
 }
-/* Следующие темы */
+/* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ */
 #NextTopics {
     z-index: 9;
     position: absolute;
@@ -196,7 +196,7 @@
     background-image: url(images/Button_right.png);
     background-size: 100%;
 }
-/* Предыдущие темы */
+/* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ */
 #PreviousTopics {
     z-index: 9;
     position: absolute;
@@ -209,14 +209,14 @@
     background-image: url(images/Button_left.png);
     background-size: 100%;
 }
-                    /* Задача */
+                    /* пїЅпїЅпїЅпїЅпїЅпїЅ */
 #Task {
     position: absolute;
     height: 100%;
     width: 100%;
     top: 330%;
 }
-/* Кнопка отправить ответ */
+/* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ */
 #TaskButton{
     position: absolute;
     top: 75%;
@@ -226,7 +226,7 @@
     border-radius: 50px 50px;
     box-shadow: rgba(0, 0, 0, 0.75) 5px 5px;
 }
-/* Текст на кнопке отправить ответ */
+/* пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ */
 #TaskButtonText{
     width: 90%;
     height: 90%;
@@ -234,7 +234,7 @@
     background-size: 100%;
     margin: 2.5% 5%;
 }
-/* Место для ввода ответа */
+/* пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ */
 #TaskIn {
     position: absolute;
     top: 65%;
@@ -247,7 +247,7 @@
     font-size: 30pt;
     text-align: center;
 }
-/* Текст задачи */
+/* пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ */
 #TaskText {
     position: absolute;
     top: 15%;
@@ -256,7 +256,7 @@
     height: 70%;
     background-color: #00ff00;
 }
-/* Результат */
+/* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 #TaskResultSucsessful{
     z-index: 6;
     position: absolute;
@@ -279,14 +279,14 @@
     background-image: url(images/notsucsessful.png);
     background-size: 100%;
 }
-                /* Скачиваний блок */
+                /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ */
 #Download {
     position: absolute;
     top: 430%;
     height: 100%;
     width: 100%;
 }
-/* Скачать в GooglePlay */
+/* пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ GooglePlay */
 #GooglePlayBox {
     position: absolute;
     left: 10%;
@@ -312,7 +312,7 @@
     box-shadow: rgba(0, 0, 0, 0.5) 5px 5px;
     color: #64D597;
 }
-/* Скачать в AppStore */
+/* пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ AppStore */
 #AppStoreBox {
     position: absolute;
     left: 40%;
@@ -338,7 +338,7 @@
     box-shadow: rgba(0, 0, 0, 0.5) 5px 5px;
     color: #00AAF0;
 }
-/* Скачать .apk */
+/* пїЅпїЅпїЅпїЅпїЅпїЅпїЅ .apk */
 #DownloadAPKBox {
     position: absolute;
     left: 70%;
@@ -365,7 +365,7 @@
     box-shadow: rgba(0, 0, 0, 0.5) 5px 5px;
     color: #00AAF0;
 }
-                     /* Об Авторах */
+                     /* пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 #AboutDevelopers {
     position: absolute;
     top: 530%;
@@ -533,14 +533,14 @@
     width: 15%;
     background-color: rgba(0, 0, 0, 0.8);
 }
-                     /* О нас */
+                     /* пїЅ пїЅпїЅпїЅ */
 #AboutUs {
     position: absolute;
     top: 630%;
     height: 40%;
     width: 100%;
 }
-/* Заголовок блока О нас */
+/* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ */
 #headerAboutUs{
     position: absolute;
     left: 30%;
@@ -550,7 +550,7 @@
     background-repeat: no-repeat;
     background-size: 100%;
 }
-/* Кнопка Вконтакте */
+/* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 #vkontakte{
     position: absolute;
     top: 30%;
@@ -562,7 +562,7 @@
     background-size: 100%;
     box-shadow: rgba(0, 0, 0, 0.5) 10px 10px;
 }
-/* Кнопка Инстаграм */
+/* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 #instagram {
     position: absolute;
     top: 30%;
@@ -575,7 +575,7 @@
     background-color: #ffffff;
     box-shadow: rgba(0, 0, 0, 0.5) 10px 10px;
 }
-/* Кнопка Фэйсбука */
+/* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 #facebook {
     position: absolute;
     top: 30%;
@@ -588,7 +588,7 @@
     background-color: #ffffff;
     box-shadow: rgba(0, 0, 0, 0.5) 10px 10px;
 }
-/* Кнопка Телеграм */
+/* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 #telegram {
     position: absolute;
     top: 30%;
@@ -601,7 +601,7 @@
     background-color: #ffffff;
     box-shadow: rgba(0, 0, 0, 0.5) 10px 10px;
 }
-        /* Градиент в "Коропоративных цветах" */
+        /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ" */
 .gradient {
     background: linear-gradient(to left, #b837fd, #14B4DC);
 }
@@ -610,7 +610,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Дизайн */
+/* пїЅпїЅпїЅпїЅпїЅпїЅ */
 #design1{
     position:absolute;
     left: 80%;
