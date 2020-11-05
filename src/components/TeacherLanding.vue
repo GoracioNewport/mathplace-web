@@ -39,7 +39,7 @@
         .leftMain
           p.boldText(style="text-align: left;") Создайте свой<br> урок за 10 минут
           p#DistirbText2(style="text-align: left;") Сфокусируйтесь на контенте, остальное за нами
-          button.designButtonLesson(style="text-align: left;") начать бесплатно
+          router-link.button.designButtonLesson.goButton(style="text-align: left;" to='/customTitle') Начать бесплатно
         .rightMain.verticalBlock
           .Step
             p.boldText2(style="text-align: left;") Соберите всё нужное учащимся в одном месте
@@ -109,7 +109,7 @@
           h1#finishTitle Посмотрите на <br>платформу в деле
           p#finishText Посмотрите на платформу в деле, создав свой первый курс с полной функциональностью
           .AlignCenterButton2
-              button.designButtonLesson Начать!
+              router-link.button.designButtonLesson.goButton(to='/') Начать!
 
 </template>
 
