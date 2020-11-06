@@ -5,7 +5,8 @@
         #online
           .Main
             #design6.gradient
-            p.md-display-4#FeatureTitle Создавайте любые онлайн-уроки<br> в конструкторе MathPlace
+            p.md-display-4
+              #FeatureTitle Создавайте любые онлайн-уроки<br> в конструкторе MathPlace
             p#DistirbText
               | Делитесь знаниями на нашей образовательной платформе
             #design5.gradient
@@ -15,7 +16,7 @@
         img.photo(src="./images/second_step.png")
 
       .Main3
-        p.boldText Что такое MathPlace? 🤔
+        p#FeatureTitle Что такое MathPlace? 🤔
         p#FeatureText Многофункциональная и гибкая платформа для изучения и размещения образовательных уроков по математике.  <strong>Просто, быстро, удобно</strong></p>
         //- <div id="design5" class="gradient"></div>
         div.AllAdvantages
@@ -39,7 +40,7 @@
         .leftMain
           p.boldText(style="text-align: left;") Создайте свой<br> урок за 10 минут
           p#DistirbText2(style="text-align: left;") Сфокусируйтесь на контенте, остальное за нами
-          router-link.button.designButtonLesson.goButton(style="text-align: left;" to='/customTitle') Начать бесплатно
+          router-link.button.designButtonLesson.goButton(style="text-align: left;" to='/customTitle') Начать
         .rightMain.verticalBlock
           .Step
             p.boldText2(style="text-align: left;") Соберите всё нужное учащимся в одном месте
@@ -57,7 +58,7 @@
             p.boldText2(style="text-align: left;") Анализируйте эффективность обучения
             p#DistirbText3(style="text-align: left;") Работайте с результатами и статистикой по уроку, следите за успеваемостью учеников. Используйте автоматическую проверку заданий, чтобы не тратить время. Улучшайте ваш курс на основе данной статистики, чтобы урок был более эффективным.
             img.sizeImg(src="./images/first_step.png")
-      p.halfboldText Занимайтесь математикой <br>в удобных форматах 😎
+      p#FeatureTitle Занимайтесь математикой <br>в удобных форматах 😎
       div.AllVerticalLines
           div.verticalBlock
               img.LeftBigImage(src="./images/second_step.png")
@@ -76,7 +77,7 @@
                   p.halfRegularTextVertical Добавляйте в свои уроки уже готовые задачи и теорию из базы MathPlace. Материалы составлялись квалифицированными преподавателями из университетов, школ и олимпиадных кружков
       .functionalityBox
         .functionalityHeader.topicHeader
-          span.md-display-4.boldText Функциональность платформы <br>— наше главное преимущество 🔥
+          p.md-display-4#FeatureTitle Функциональность платформы <br>— наше главное преимущество 🔥
         .functionalityCards
           md-card.functionalityCard(md-with-hover v-for = '(func, i) in funionalityList' :key='func.id')
             md-ripple
@@ -217,6 +218,9 @@ export default {
     height auto
     display: block;
     margin-top 150px
+    @media screen and (max-width: 500px) {
+      margin-top 50px
+    }
 .verticalBlock:after
     content: "";
     display: block;
@@ -233,11 +237,14 @@ export default {
 .Step
   position relative
   width 100%
+  height auto
   display block
   margin-bottom 200px
+
 .leftMain
   position: sticky;
   width auto
+  height auto
   top: 200px;
   bottom 100px
   margin-bottom 100px
@@ -245,24 +252,46 @@ export default {
   line-height 1
   display inline-block
   margin-left 15%
+  @media screen and (max-width: 1000px) {
+    position relative
+    display block
+  }
+  @media screen and (max-width: 500px) {
+    margin-top 0px
+  }
 .rightMain
-  position: sticky;
+  position: relative;
   margin-top: 70px;
   line-height 1
   width 42%
   float right
   display inline-block
   margin-right 20px
+  @media screen and (max-width: 1000px) {
+    position relative
+    width 80%
+    margin-top: 200px;
+    margin-left 10%
+    margin-right 0px
+  }
+  @media screen and (max-width: 500px) {
+    width 90%
+    margin-top: 200px;
+    margin-left 0%
+  }
 .boldText
-  width 100%
+  width auto
   height auto
   margin-top 10%
   margin-bottom 0px
   text-align center
   line-height 1.3
   font-family  'Roboto'
-  font-size 50px
+  font-size 40px
   font-weight 500
+  @media screen and (max-width: 400px) {
+    font-size 30px
+  }
 .boldText2
   width 50%
   height auto
@@ -273,6 +302,10 @@ export default {
   font-family  'Roboto'
   font-size 28px
   font-weight 500
+  @media screen and (max-width: 1000px) {
+    width 70%
+  }
+
 .sizeImg
   position relative
   height 200px
@@ -342,7 +375,7 @@ export default {
     font-family 'Roboto'
     font-size  2em
     @media screen and (max-width: 450px) {
-        width 80%
+        width 100%
         min-width 100px
     }
 .Main
@@ -450,6 +483,8 @@ export default {
   display inline
   margin-right 10%
   margin-left 10%
+  margin-bottom 50px
+  margin-top 50px
 
 @import url(http://fonts.googleapis.com/css?family=Roboto:700,400&subset=latin,cyrillic);
 #Feature
@@ -477,10 +512,12 @@ export default {
   color #000000
   font-weight 500
   line-height 1.2
-  font-family 'Gilroy',Arial,sans-serif
+  font-family "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
   font-size 30pt
   @media screen and (max-width: 450px) {
-    width 80%
+    width 90%
+    margin-left 5%
+    margin-top 10px
     min-width 100px
   }
 
@@ -544,7 +581,7 @@ export default {
 
 .carouselBox
   width 800px
-  max-width 100vw
+  max-width 100%
   text-align center
   p
     font-size 22px
@@ -555,6 +592,7 @@ export default {
     text-align center
     padding 50px
     padding-top 0
+
   strong
     min-height 90%
     font-size 18pt
@@ -651,6 +689,10 @@ export default {
         width 80%
         margin-left 10%
     }
+    @media screen and (max-width: 450px) {
+        width 95%
+        margin-left 0px
+    }
 .LeftVerticalText
     height auto
     width auto
@@ -687,6 +729,7 @@ export default {
 .halfRegularTextVertical
     position relative
     width 500px
+    max-width 80%
     height auto
     text-align left
     line-height 1.5
@@ -694,6 +737,10 @@ export default {
     font-size 15pt
     margin-top 40px
     font-weight 300
+    @media screen and (max-width: 450px) {
+      max-width 100%
+    }
+
 .halfboldText
     width 100%
     height auto
@@ -714,6 +761,9 @@ export default {
     float right
     margin-bottom 300px
     margin-left 50px
+    @media screen and (max-width: 1500px) {
+        margin-top 170px
+    }
     @media screen and (max-width: 1110px) {
         width 30%
         margin-top 200px
@@ -727,6 +777,9 @@ export default {
         margin-left 10%
         margin-right 10%
         margin-bottom 100px
+    }
+    @media screen and (max-width: 500px) {
+        margin-top 100px
     }
 
 #finishTitle
@@ -777,4 +830,21 @@ export default {
     @media screen and (max-width: 1010px) {
         display none
     }
+.AlignCenterButton2
+    position relative
+    margin-top 30px
+    margin-left 0px
+    @media screen and (max-width: 1030px) {
+        position relative
+        margin-top 30px
+        text-align center
+    }
+
+.functionalityBox
+  position relative
+  margin-top 100px
+
+.reviewBox
+  position relative
+  margin-top 100px
 </style>

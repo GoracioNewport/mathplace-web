@@ -6,8 +6,8 @@
             <div id="leftMain">
 
                 <div id="leftText">
-                    <p class="textMargin" style="color:#000000; font-family: 'Roboto', sans-serif; font-size: 1.5em; font-weight: bold;">платформа</p>
-                    <p class="textMargin" style="color:#763DCA; font-family: 'Roboto', sans-serif; font-size: 4.8em; font-weight: bold;">MathPlace</p>
+                    p.textMargin#TitlePlatform платформа
+                    p.textMargin#TitleMathPlace MathPlace
                     <h3 class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 1.4em;" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень по математике</h3>
                     router-link.button.designButtonLesson.goButton(to='/') Начать!
                 </div>
@@ -172,6 +172,19 @@ export default {
 
 <style lang="stylus" scoped>
 
+#TitlePlatform
+    position relative
+    color:#000000;
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
+    font-size: 1.5em;
+    font-weight: bold;
+
+#TitleMathPlace
+    position relative
+    color #763DCA; 
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
+    font-size: 4.8em;
+    font-weight: bold;
 p
   letter-spacing auto !important
 
@@ -417,16 +430,16 @@ div
     margin-top 10%
     margin-bottom 0px
     text-align center
-    font-family 'Gilroy',Arial,sans-serif
+    font-family "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size 44px
-    font-weight 530
+    font-weight 400
 .boldText
     width 100%
     height auto
     margin-top 10%
     margin-bottom 0px
     text-align center
-    font-family  'Roboto'
+    font-family "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size 50px
     font-weight 500
 #Main
