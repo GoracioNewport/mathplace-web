@@ -183,7 +183,7 @@ export default {
     position relative
     color #763DCA
     font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
-    font-size: 4.8em;
+    font-size: 4em;
     font-weight: bold;
 p
   letter-spacing auto !important
@@ -203,8 +203,6 @@ p
   transition: 0.6s;
   text-align center
   vertical-align middle
-  @media screen and (max-width: 480px)
-      display none
 .designButtonLesson:hover
   transition: 0.6s;
   color #FFFFFF !important
