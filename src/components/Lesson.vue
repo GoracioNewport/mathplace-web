@@ -502,7 +502,8 @@ export default {
     positine relative
     height 40px
     width auto
-    vertical-align middle
+    float right
+    margin 10px
   .taskbar-list
     max-height 64px
     margin 0 auto
@@ -531,11 +532,11 @@ export default {
       margin-left 6%
     }
   .name-span
-    height 60px
-    width 50%
-    text-align center
+    height auto
+    width auto
     color #FFFFFF
-    padding-top 40%
+    float left
+    margin 10px
   .name.strong
     position relative
     height auto
@@ -628,11 +629,11 @@ export default {
     display inline-block
     color #ffffff
     padding 0%
-    font-family: 'Roboto', sans-serif
-    font-size: 25px
-    font-weight: bold
+    font-family "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
+    font-size: 30px
+    font-weight: 400
     background-color #763DCA
-    box-shadow 0 0 10px rgba(0,0,0,0.5)
+    box-shadow 0 0 3px 0px rgba(0,0,0,0.5)
     border-radius 10px
     outline none
     transition: 0.6s;
