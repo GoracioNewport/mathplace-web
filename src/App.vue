@@ -30,7 +30,7 @@
                   ) <strong class="router-link-title">{{ link.title }}</strong>
             .header-logo-right
               //- button.button--round.designButtonLesson.router-link(to='/customTitle') Присоединиться
-              router-link.button.button--round.designButtonLesson(to='/customTitle') Создать урок
+              router-link.button.button--round.designButtonLesson(to='/customTitle') Стать автором
     .margin_bottom
     router-view
 </template>
@@ -64,6 +64,11 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+  .button-burger
+    position relative
+    margin-rigth 0px
+    float right
+    margin-left 150px
   a
     text-decoration none !important
     transition 0.2s
@@ -135,8 +140,8 @@ export default {
     font-weight 500
   .mathplace-img-logo
     position relative
-    height 60px
-    width auto
+    height auto
+    width 100px
     color #763DCA !important
     font-size 1.5em
 

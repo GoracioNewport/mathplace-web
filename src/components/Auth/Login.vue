@@ -61,8 +61,8 @@
                 p.errorMsg.error(v-else-if="submitStatus === 'ERROR'") Пожалуйста, проверьте правильность заполнения полей
                 p.errorMsg.error(v-else) {{submitStatus}}
               .buttons-list-reference
-                span Нет аккаунта?
-                  router-link(style="color: #763DCA" to='/registration')  Создайте его!
+                p Нет аккаунта?
+                  router-link(style="color: #763DCA" to='/registration')    Создайте его!
     .successMenu(v-if = 'submitStatus === "Validation Required"')
       .successMenuBox
         .successText
@@ -176,28 +176,39 @@ export default {
 
 .auth-form
   position relative
-  width 47%
-  min-width 200px
+  width 45%
+  min-width 300px
   display inline-block
-  box-shadow 0 0 10px rgba(0,0,0,0.5)
+  box-shadow 0 0 5px 0px rgba(0,0,0,0.5)
   border-radius 10px
   padding-left 20px
+  margin-top 0px
   padding-right 20px
+  @media screen and (max-width:775px)
+    width 90%
+    margin-left 5%
+
 
 .openIns
   font-size 12pt
   margin 8px
+  @media screen and (max-width:400px)
+    margin 2px
 
 .auth-title
   position relative
   margin-right 6%
-  margin-bottom 20px
-  width 47%
-  min-width 200px
+  width 45%
+  min-width 300px
   display inline-block
-  box-shadow 0 0 10px rgba(0,0,0,0.5)
+  box-shadow 0 0 5px 0px rgba(0,0,0,0.5)
   border-radius 10px
+  margin-bottom 30px
+  margin-top 0px
   text-align center
+  @media screen and (max-width:775px)
+    width 90%
+    margin-left 5%
 
 .textTop
   position relative
@@ -256,10 +267,15 @@ button
   font-weight bold
 
 .buttons-list-reference
-  text-decoration none
   color #525252
+  width 100%
   margin-bottom 10px
   text-align center
+  p
+    position relative
+    width 100%
+  @media screen and (max-width:400px)
+    font-size 5pt
 
 @media screen and (max-width:200px)
   .auth-title

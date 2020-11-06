@@ -890,7 +890,13 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     margin-right 20%
     @media screen and (max-width: 1100px) {
         width 90%
-        height 400px
+        height 250px
+        margin-right 5%
+        margin-left 5%
+    }
+    @media screen and (max-width: 800px) {
+        width 90%
+        height 300px
         margin-right 5%
         margin-left 5%
     }
