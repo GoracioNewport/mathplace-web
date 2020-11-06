@@ -1,6 +1,6 @@
 <template lang="pug">
   .wrapper
-    header
+    header(v-if='!(this.$route.path.length > 7 && this.$route.path.substr(0, 7) === "/lesson")')
       .navbar.navbar--fixed
         .container
           .navbar-content
@@ -9,7 +9,7 @@
                 img.mathplace-img-logo.md-display-3(src="@/components/images/logo_purple.png")
               //- router-link(to = '/main').mathplace-logo.md-display-3 MathPlace
             .button-burger(
-              @click = "menuShow = !menuShow"
+              @click ="menuShow = !menuShow"
               :class="{ active: menuShow}"
             )
               span.line.line-1
@@ -21,9 +21,9 @@
             )
               ul.navbar-list
                 li.navbar-item(
-                  v-for = "link in linkMenu"
-                  :key = "link.title"
-                  @click = "menuShow = false"
+                  v-for="link in linkMenu"
+                  :key="link.title"
+                  @click="menuShow = false"
                 )
                   router-link.navbar-link(
                     :to = " `${link.url}`"
@@ -41,6 +41,9 @@ export default {
     return {
       menuShow: false
     }
+  },
+  mounted () {
+    // console.log(this.$route.path.substr(0, 7) === '/lesson')
   },
   computed: {
     linkMenu () {
