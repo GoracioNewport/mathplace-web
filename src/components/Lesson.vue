@@ -2,17 +2,20 @@
   .content-wrapper
     //- img#imgSmile(src="@/components/images/back.png")
     .taskbar(v-if = "error === 'none'")
-      router-link(to='/')
-        img#imgBack(src="@/components/images/back.png")
+      .lessonNavbar
+        //- router-link(to='/')
+        //-   img#imgBack(src="@/components/images/back.png")
+        .headerName
+          span {{ tasksInfo.name }}
       .container
         .taskbar-content
           .taskbar-list__wrapper
             .taskbar-list
               .taskbar-item(
-                v-if = "taskList.length"
-                v-for = "task in this.taskList"
-                @click = 'changeActiveTask(task.id, task)'
-                :key = "task.id")
+                v-if ="taskList.length"
+                v-for ="task in this.taskList"
+                @click ='changeActiveTask(task.id, task)'
+                :key ="task.id")
                 .taskbar-link
                   img.img_taskbar(
                     v-if = "task.type == 'theory'"
@@ -331,6 +334,15 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .lessonNavbar
+    height 60px
+    align-items center
+    .headerName
+      margin auto
+      margin-top 0.5%
+      text-align center
+      color #FFFFFF
+      font-size 3em
   ::-webkit-scrollbar-button
     background-image:url('');
     background-repeat:no-repeat;
@@ -362,7 +374,6 @@ export default {
     overflow auto
     overflow-y hidden
     white-space nowrap
-    margin-left 12%
   .solutionButton
     grid-column 3
     grid-row 1
@@ -449,7 +460,7 @@ export default {
     height 36px
     width 36px
     margin-left 2%
-    margin-top 15px
+    margin-top 0.5%
     // display block
     // margin 0px auto
     // text-align center
@@ -502,6 +513,7 @@ export default {
   .content
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
   .name
+    vertical-align center
     position relative
     height 60px
     background #763DCA
@@ -519,14 +531,11 @@ export default {
       margin-left 6%
     }
   .name-span
-    position relative
     height 60px
     width 50%
-    vertical-align middle
     text-align center
     color #FFFFFF
-    margin-top 300px
-    margin-left 20px
+    padding-top 40%
   .name.strong
     position relative
     height auto
