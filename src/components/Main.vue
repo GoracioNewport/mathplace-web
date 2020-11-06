@@ -7,7 +7,7 @@
 
                 <div id="leftText">
                     <p class="textMargin" style="color:#000000; font-family: 'Roboto', sans-serif; font-size: 1.5em; font-weight: bold;">платформа</p>
-                    <p class="textMargin" style="color:#763DCA; font-family: 'Roboto', sans-serif; font-size: 4.8em; font-weight: bold;">MathPlace</p>
+                    <p class="textMargin" style="color:#763DCA; font-family: 'Roboto', sans-serif; font-size: 4.2em; font-weight: bold;">MathPlace</p>
                     <h3 class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 1.4em;" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень по математике</h3>
                     router-link.button.designButtonLesson.goButton(to='/') Начать!
                 </div>
@@ -279,7 +279,6 @@ p
     margin-bottom 0px
     @media screen and (max-width: 850px) {
         max-width 4500px
-        width 80%
         margin-left 10%
     }
 .LeftVerticalText
@@ -594,7 +593,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     width 42%
     min-width 450px
     text-align center
-    margin 10% auto
+    margin auto
     margin-bottom 150px
     margin-top 50px
     color #525252
@@ -605,7 +604,8 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
         // display inline-block
         width 80%
         min-width 100px
-        // margin 0 auto
+        font-size 1.9em
+        margin auto
     }
 .AllAdvantages
     position relative
@@ -777,8 +777,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     text-align center
     @media screen and (max-width: 1000px) {
         width 90%
-        margin-left 10%
-        margin-right 10%
+        margin-left auto
         // display block
     }
 .MainTask
@@ -804,19 +803,14 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     }
 
 #rightTask
-    position relative
     width 300px
     hegith auto
+    width 30%
     float right
-    margin-left 30px
-    margin-top 200px
-    display inline-block
-    margin-right 10%
+    margin 5%
     @media screen and (max-width: 1100px) {
         float none
         width 70%
-        margin-top 20px
-        margin-left 100px
     }
 
 #TextTask2
