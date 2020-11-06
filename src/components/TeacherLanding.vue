@@ -513,7 +513,7 @@ export default {
   font-weight 500
   line-height 1.2
   font-family "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
-  font-size 30pt
+  font-size 25pt
   @media screen and (max-width: 450px) {
     width 90%
     margin-left 5%
