@@ -3,8 +3,8 @@
     //- img#imgSmile(src="@/components/images/back.png")
     .taskbar(v-if = "error === 'none'")
       .lessonNavbar
-        //- router-link(to='/')
-        //-   img#imgBack(src="@/components/images/back.png")
+        router-link(to='/main')
+          img#imgBack(src="@/components/images/back.png")
         .headerName
           span {{ tasksInfo.name }}
       .container
@@ -37,7 +37,7 @@
           color = '#763dca')
     .content(v-else-if="error === 'none'")
       .name
-        span.name-span(v-if = 'this.taskList[this.activeTask].type == "theory"') {{ tasksInfo.name }}
+        span.name-span(v-if = 'this.taskList[this.activeTask].type == "theory"') Теория
         span.name-span(v-else) Задача {{ this.taskList[this.activeTask].taskId }}
 
         img.star(
@@ -254,7 +254,7 @@ export default {
       if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
         if (this.$store.getters.getUser === null) this.$router.push('/login')
-        else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/')
+        else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/main')
         else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) { // Task complition
           let verdict = 1
           if (this.solutionFile !== null) {
@@ -295,7 +295,7 @@ export default {
           this.taskList[this.activeTask].userAnswer = this.answer
           // Проверка для теории и задачи на доказательство, что бы можно было листать задачи по нажатии на кнопку
           if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') {
-            if (this.activeTask === this.taskList.length - 1) this.$router.push('/')
+            if (this.activeTask === this.taskList.length - 1) this.$router.push('/main')
             else this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
           }
         } else {
@@ -342,7 +342,12 @@ export default {
       margin-top 0.5%
       text-align center
       color #FFFFFF
-      font-size 3em
+      font-size 32pt
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1; /* number of lines to show */
+      -webkit-box-orient: vertical;
   ::-webkit-scrollbar-button
     background-image:url('');
     background-repeat:no-repeat;
@@ -537,6 +542,11 @@ export default {
     color #FFFFFF
     float left
     margin 10px
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* number of lines to show */
+    -webkit-box-orient: vertical;
   .name.strong
     position relative
     height auto

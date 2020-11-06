@@ -28,12 +28,12 @@ export default new Router({
   },
   routes: [
     {
-      path: '/main',
+      path: '/',
       name: 'main',
       component: Main
     },
     {
-      path: '/',
+      path: '/main',
       name: 'home',
       component: Home
     },

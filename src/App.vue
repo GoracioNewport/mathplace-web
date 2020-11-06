@@ -5,7 +5,7 @@
         .container
           .navbar-content
             .header-logo
-              router-link(to = '/main')
+              router-link(to = '/')
                 img.mathplace-img-logo.md-display-3(src="@/components/images/logo_purple.png")
               //- router-link(to = '/main').mathplace-logo.md-display-3 MathPlace
             .button-burger(
@@ -30,7 +30,8 @@
                   ) <strong class="router-link-title">{{ link.title }}</strong>
             .header-logo-right
               //- button.button--round.designButtonLesson.router-link(to='/customTitle') Присоединиться
-              router-link.button.button--round.designButtonLesson(to='/customTitle') Стать автором
+              router-link.button.button--round.designButtonLesson(v-if ='this.$store.getters.checkUser' to='/customTitle') Создать урок
+              router-link.button.button--round.designButtonLesson(v-else to='/teacher') Стать автором
     .margin_bottom
     router-view
 </template>
@@ -50,7 +51,7 @@ export default {
       if (this.$store.getters.checkUser) {
         return [
           // {title: 'Главная', url: '/main'},
-          {title: 'Главная', url: '/'},
+          {title: 'Главная', url: '/main'},
           {title: 'Профиль', url: '/profile'},
           {title: 'Чаты', url: '/chat'}
         ]

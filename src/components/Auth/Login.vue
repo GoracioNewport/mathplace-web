@@ -119,7 +119,7 @@ export default {
         this.$store.dispatch('loginUser', user)
           .then(() => {
             this.submitStatus = this.$store.getters.getErrors
-            if (this.submitStatus === null) this.$router.push('/')
+            if (this.submitStatus === null) this.$router.push('/main')
           })
           .catch(err => {
             this.submitStatus = err.message
@@ -187,7 +187,6 @@ export default {
   @media screen and (max-width:775px)
     width 90%
     margin-left 5%
-
 
 .openIns
   font-size 12pt
