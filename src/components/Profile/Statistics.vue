@@ -30,13 +30,7 @@
         button.showStatsButton.button--round.button-primary(v-else @click ='toggleStats(topic.token)') Показать статистику
         .statsBox(v-if = 'topic.showStats')
           .loadingBox(v-if = 'Object.keys(topic.stats).length == 0')
-            .vld-parent
-              loading(
-                :active.sync = "Object.keys(topic.stats).length == 0"
-                :is-full-page = 'false'
-                loader = 'dots'
-                color = "#763dca"
-                :opacity = 0.5)
+            md-empty-state(md-rounded='' md-icon='access_time' md-label='В уроке пока нет учеников' md-description="В данный урок пока не присоединились ученики.")
           //- .errorBox(v-else-if = 'topic.')
           .loadedBox(v-else)
             md-table.statsTable(v-model='myTopics[myTopics.indexOf(topic)].stats', md-sort='name', md-sort-order='asc', md-fixed-header='')

@@ -188,7 +188,6 @@ export default {
     width 90%
     margin-left 5%
 
-
 .openIns
   font-size 12pt
   margin 8px

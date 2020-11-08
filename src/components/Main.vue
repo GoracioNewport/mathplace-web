@@ -181,7 +181,7 @@ export default {
 
 #TitleMathPlace
     position relative
-    color #763DCA; 
+    color #763DCA;
     font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size: 4.8em;
     font-weight: bold;
@@ -1140,12 +1140,11 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     margin-top 40px
 
 #social
-    position relative
     height auto
     width 150px
     margin 60px
     // margin-left 20%
-    transition 0.7s
+    transition 1.0s
     margin-bottom 150px
     display inline-block
     @media screen and (max-width: 750px) {
@@ -1158,7 +1157,6 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     }
 #social:hover
     transition 0.8s
-    height auto
     width 200px
 #telegram
     position relative

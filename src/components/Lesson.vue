@@ -136,13 +136,18 @@
               span(v-else) Завершить
     .placeholderScreen(v-else-if ='error === "no_material_author" || error === "no_material_member"')
       .ownerScreen(v-if = 'userId === tasksInfo.author')
-        strong.md-headline Вы еще не добавили материал в этот урок.
-        br
-        .button.button--round.button-success(@click = '$router.push("/customTitle/" + taskId)') Добавить!
+        div
+          md-empty-state(md-icon='add' md-label='Добавьте материал в урок' md-description="Вы пока не добавили материал в урок, чтобы это исправить нажмите кнопку снизу.")
+            md-button.md-primary.md-raised(@click = '$router.push("/customTitle/" + taskId)') Добавить материал
+
+        //- strong.md-headline Вы еще не добавили материал в этот урок.
+        //- br
+        //- .button.button--round.button-success(@click = '$router.push("/customTitle/" + taskId)') Добавить!
       .guestScreen(v-else)
-        strong.md-headline Учитель еще не добавил материал в этот урок.
-        br
-        strong.md-headline Возвращайтесь позже!
+        md-empty-state(md-rounded='' md-icon='access_time' md-label='Учитель ещё не добавил материал в урок' md-description="Вскоре учитель добавит материал. Возвращайтесь позже.")
+        //- strong.md-headline Учитель еще не добавил материал в этот урок.
+        //- br
+        //- strong.md-headline Возвращайтесь позже!
     .placeholderScreen(v-else-if ='error === "too_early" || error === "too_late"')
       .tooEarlyScreen(v-if ='error === "too_early"')
         strong.md-headline Ой-ой...
@@ -400,7 +405,7 @@ export default {
   span
     line-height normal
   .placeholderScreen
-    margin-top 20%
+    margin-top 10%
     text-align center
     .md-headline
       font-size 24pt

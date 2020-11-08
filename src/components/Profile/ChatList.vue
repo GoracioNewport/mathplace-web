@@ -29,50 +29,54 @@
                 span(v-else) {{ chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] }}: {{ chats.msgs[chats.msgCnt - 1].text }}
         .chat-border(v-if = 'i < chatList.length - 1')
     .newChatButton
-      md-button.md-fab.mdc-fab--extended.md-fab-bottom-right.md-primary(@click = 'createNewChat()')
-        md-icon add
+      //- md-button.md-fab.mdc-fab--extended.md-fab-bottom-right.md-primary(@click = 'createNewChat()')
+      //-   md-icon add
+      button.button--round.designButtonLesson.md-fab-bottom-right.md-primary.md-fab(@click = 'createNewChat()') Создать новый чат
+
 
     .joinMenu(v-if = 'this.joinMenuShow')
-      .joinMenuBox(v-if = '!groupChat')
-        .joinMenuText
-          span.md-headline.enterEmail Введите почту собеседника
-        .joinMenuField
-          input(
-                  type="text"
-                  placeholder="Введите email"
-                  v-model="personalEmail"
-          )
-        .joinMenuCancel
-          .button.button--round.button-success(@click ='createChat("personal")') Готово
-          .button.button--round.button-success(@click ='groupChat = true') Создать групповой чат
-          .button.button--round.button-warning(@click ='joinMenuShow = false; groupChat = false')  Отмена
+      .joinMenuMain
+        img(src="@/components/images/clear.png", @click ='joinMenuShow = false; groupChat = false').delete_button
+        .joinMenuBox(v-if = '!groupChat')
+          .joinMenuText
+            span.md-headline.enterEmail Введите почту собеседника
+          .joinMenuField
+            input(
+                    type="text"
+                    placeholder="Введите email участника"
+                    v-model="personalEmail"
+            )
+          .joinMenuCancel
+            .button.button--round.designButtonLesson(@click ='createChat("personal")') Начать чат
+            .button.button--round.designButtonLesson(@click ='groupChat = true') Создать групповой чат
+            //- .button.button--round.button-warning(@click ='joinMenuShow = false; groupChat = false')  Отмена
 
-      // Сверху персональное меню, снизу - групповое
+        // Сверху персональное меню, снизу - групповое
 
-      .joinMenuBox(v-else)
-        .joinMenuText
-          span.groupHeadText.md-headline.enterEmail Добавить пользователя
-          md-button.buttonAdd.md-fab.md-primary(@click ='groupEmail.push("")')
-            md-icon add
-        .joinMenuField
-          input.nameField(
-                  type="text"
-                  placeholder="Введите название чата"
-                  v-model="groupName"
-          )
-        label(for='img') Выберите картинку
-        input#img(type='file', name='img', accept='image/*', @change="onFileSelected")
-        .joinMenuField(v-for = '(email, i) in groupEmail')
-          input.emailField(
-                  type="text"
-                  placeholder="Введите email"
-                  v-model="groupEmail[i]"
-          )
-          md-button.removeButton.md-accent.md-raised(@click ='groupEmail.splice(i, 1)') X
-        .joinMenuCancel
-          .button.button--round.button-success(@click ='createChat("group")') Готово
-          .button.button--round.button-success(@click ='groupChat = false') Создать персональный чат
-          .button.button--round.button-warning(@click ='joinMenuShow = false; groupChat = false')  Отмена
+        .joinMenuBox(v-else)
+          .joinMenuText
+            span.groupHeadText.md-headline.enterEmail Добавить пользователя
+            md-button.buttonAdd.md-fab.md-primary(@click ='groupEmail.push("")')
+              md-icon add
+          .joinMenuField
+            input.nameField(
+                    type="text"
+                    placeholder="Введите название чата"
+                    v-model="groupName"
+            )
+          label(for='img') Выберите картинку беседы
+          input#img(type='file', name='img', accept='image/*', @change="onFileSelected")
+          .joinMenuField(v-for = '(email, i) in groupEmail')
+            input.emailField(
+                    type="text"
+                    placeholder="Введите email участника"
+                    v-model="groupEmail[i]"
+            )
+            md-button.removeButton.md-accent.md-raised(@click ='groupEmail.splice(i, 1)') X
+          .joinMenuCancel
+            .button.button--round.designButtonLesson(@click ='createChat("group")') Создать беседу
+            //- .button.button--round.button-success(@click ='groupChat = false') Создать персональный чат
+            //- .button.delete_button(@click ='joinMenuShow = false; groupChat = false')  Отмена
 </template>
 
 <script>
@@ -267,8 +271,41 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .designButtonLesson
+    padding-top 12.5px
+    position relative
+    height auto
+    border: 2px solid #763DCA;
+    border-radius 50px
+    font-weight 550
+    font-size 23px
+    margin-left 20px
+    color #763DCA !important
+    background-color #FFFFFF
+    opacity 0.5
+    transition: 0.6s;
+    text-align center
+    vertical-align middle
+    @media screen and (max-width: 480px)
+      display none
+  .designButtonLesson:hover
+    transition: 0.6s;
+    color #FFFFFF !important
+    background-color #763DCA
+  .delete_button
+    position relative
+    display inline-block
+    width 40px
+    cursor pointer
+    height 40px
+    margin-top 30px
+    margin-right 30px
+    float right
+
   .md-fab
    position fixed
+   width auto
+   margin 20px
   .loading-indicator
     z-index 50001
   .buttonAdd
@@ -282,16 +319,16 @@ export default {
     height 30px
   .joinMenuText
     position relative
-    font-size 1.0em
     padding-bottom 40px
     span
+      font-weight 500
+      font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
       font-size 24pt
-      font-weight 600
-      color #763dca
   .joinMenuField
     input
       border-color #000000
       border-width 1%
+      font-size 18px
   .joinMenu
     z-index 50000
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
@@ -302,6 +339,15 @@ export default {
     position fixed
     top 0
     left 0
+  .joinMenuMain
+    positine relative
+    text-align center
+    background-color #FFFFFF
+    margin-top 10%
+    margin-left 20%
+    margin-right 20%
+    min-width 350px
+    border-radius 25px
   .joinMenuBox
     positine relative
     padding 5%
@@ -309,12 +355,9 @@ export default {
     padding-right 10%
     text-align center
     background-color #FFFFFF
-    margin-top 10%
-    margin-left 20%
-    margin-right 20%
     min-width 350px
-    border 2px #000000 solid
-    border-radius 10px
+    border 0px #000000 solid
+    border-radius 25px
     .button
       font-size 14pt
       margin 2%

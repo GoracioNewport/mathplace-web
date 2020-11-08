@@ -118,10 +118,11 @@ export default {
   .designButtonLesson
     padding-top 12.5px
     position relative
-    height 50px
+    height auto
     border: 2px solid #763DCA;
     border-radius 50px
     font-weight 550
+    font-size 20px
     margin-left 20px
     color #763DCA !important
     background-color #FFFFFF

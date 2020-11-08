@@ -11,32 +11,63 @@
             color = "#763dca"
             :opacity = 0)
     section(v-if = "!this.isLoading && !this.error && this.arrayPopular.length !== 0")
-      .sidebar
-        a(href='#school', v-smooth-scroll='')
-          img(src="@/components/images/school1.png", width= "50px", height = "50px")
-        a(href='#examination', v-smooth-scroll='')
-          img(src="@/components/images/examination1.png", width= "50px", height = "50px")
-        a(href='#geometry', v-smooth-scroll='')
-          img(src="@/components/images/geometry1.png", width= "50px", height = "50px")
-        a(href='#algebra', v-smooth-scroll='')
-          img(src="@/components/images/algebra1.png", width= "50px", height = "50px")
-        a(href='#komba', v-smooth-scroll='')
-          img(src="@/components/images/komba1.png", width= "50px", height = "50px")
-        a(href='#logic', v-smooth-scroll='')
-          img(src="@/components/images/logic1.png", width= "50px", height = "50px")
-        a(href='#graphs', v-smooth-scroll='')
-          img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
+      //- .sidebar
+      //-   a(href='#school', v-smooth-scroll='')
+      //-     img(src="@/components/images/school1.png", width= "50px", height = "50px")
+      //-   a(href='#examination', v-smooth-scroll='')
+      //-     img(src="@/components/images/examination1.png", width= "50px", height = "50px")
+      //-   a(href='#geometry', v-smooth-scroll='')
+      //-     img(src="@/components/images/geometry1.png", width= "50px", height = "50px")
+      //-   a(href='#algebra', v-smooth-scroll='')
+      //-     img(src="@/components/images/algebra1.png", width= "50px", height = "50px")
+      //-   a(href='#komba', v-smooth-scroll='')
+      //-     img(src="@/components/images/komba1.png", width= "50px", height = "50px")
+      //-   a(href='#logic', v-smooth-scroll='')
+      //-     img(src="@/components/images/logic1.png", width= "50px", height = "50px")
+      //-   a(href='#graphs', v-smooth-scroll='')
+      //-     img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
 
       .joinCustomTitle(@click="joinMenuShow = !joinMenuShow")
-        .button.right_button.button--round.bottom-button
-          span Присоединиться
+        button.designButtonLesson.bottom-button Присоединиться к уроку
 
       .container
+        .AllSections
+          .title_topic2
+            p Разделы
+          a.Section(href='#school', style="background-color: #E9EBFA; color:#3e50cb;", v-smooth-scroll='')
+            //- img(src="@/components/images/school1.png")
+            p.title Школа
+            p.text 23 урока
+          a.Section(href='#examination', style="background-color: #e7f2ff; color:#1466c6;", v-smooth-scroll='')
+            //- img(src="@/components/images/examination1.png")
+            p.title Экзамены
+            p.text 23 урока
+          a.Section(href='#geometry', style="background-color: #e9f9e9; color:#288b28;", v-smooth-scroll='')
+            //- img(src="@/components/images/geometry1.png")
+            p.title Геометрия
+            p.text 23 урока
+          a.Section(href='#algebra', style="background-color: #ffeede; color:#ff810a;", v-smooth-scroll='')
+            //- img(src="@/components/images/algebra1.png")
+            p.title Алгебра
+            p.text 23 урока
+          a.Section(href='#komba', style="background-color: #E9EBFA; color:#3e50cb;", v-smooth-scroll='')
+            //- img(src="@/components/images/komba1.png")
+            p.title Комбинаторика
+            p.text 23 урока
+          a.Section(href='#logic', style="background-color: #e7f2ff; color:#1466c6;", v-smooth-scroll='')
+            //- img(src="@/components/images/logic1.png")
+            p.title Логика
+            p.text 23 урока
+          a.Section(href='#graphs', style="background-color: #e9f9e9; color:#288b28;", v-smooth-scroll='')
+            //- img(src="@/components/images/graph_icon1.png")
+            p.title Графы
+            p.text 23 урока
+
         .pesontedan
           input(id='pesontedan-eight',type='checkbox', name='pesontedans')
           label(for='pesontedan-eight')
             a.title_topic2
-              strong Популярные
+              span Популярные
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
@@ -69,7 +100,7 @@
           input(id='pesontedan-two',type='checkbox', name='pesontedans')
           label#school(for='pesontedan-two')
             a.title_topic2(name='school')
-              strong Школа
+              span Школа
           .topic-list
             .topic-item-wrapper(
               v-for = "(topic, index) in this.arraySchool",
@@ -101,7 +132,7 @@
           input(id='pesontedan-three',type='checkbox', name='pesontedans')
           label#examination(for='pesontedan-three')
             a.title_topic2(name='examination')
-              strong ОГЭ 2020
+              span ОГЭ 2020
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
@@ -134,7 +165,7 @@
           input(id='pesontedan-four',type='checkbox', name='pesontedans')
           label#geometry(for='pesontedan-four')
             a.title_topic2(name='geometry')
-              strong Геометрия
+              span Геометрия
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
@@ -167,7 +198,7 @@
           input(id='pesontedan-five',type='checkbox', name='pesontedans')
           label#algebra(for='pesontedan-five')
             a.title_topic2(name='algebra')
-              strong Алгебра
+              span Алгебра
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
@@ -200,7 +231,7 @@
           input(id='pesontedan-six',type='checkbox', name='pesontedans')
           label#komba(for='pesontedan-six')
             a.title_topic2(name='komba')
-              strong Комбинаторика
+              span Комбинаторика
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
@@ -233,7 +264,7 @@
           input(id='pesontedan-seven',type='checkbox', name='pesontedans')
           label#logic(for='pesontedan-seven')
             a.title_topic2(name='logic')
-              strong Логика
+              span Логика
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
@@ -266,7 +297,7 @@
           input(id='pesontedan-nine',type='checkbox', name='pesontedans')
           label#graphs(for='pesontedan-nine')
             a.title_topic2(name='graphs')
-              strong Графы
+              span Графы
             //- p(:name='gggg').title_topic {{ array[0] }}
           .topic-list
             .topic-item-wrapper(
@@ -296,24 +327,26 @@
                   v-bind:like='topic.like'
                 )
     .joinMenu(v-if = 'this.joinMenuShow')
-      .joinMenuBox
-        .joinMenuText
-          span.md-headline Введите ключ темы
-        .joinMenuField
-          input(
-                  type="text"
-                  :placeholder="this.placeholder"
-                  v-model="customTopicId"
-          )
-        .joinMenuCancel
-          .button.button--round.button-success(@click ='joinCourse(customTopicId)') Подключиться
-          .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
-    .errorBox(v-if = 'this.error')
-      strong.marginText.errorText Ой-ой... :(
-      br
-      span.marginTex Похоже, что-то пошло не так.
-      br
-      span.marginTex Пожалуйста, проверьте свое подключение к интернету.
+      .joinMenuMain
+        img(src="@/components/images/clear.png", @click ='joinMenuShow = false; groupChat = false').delete_button
+        .joinMenuBox
+          .joinMenuText
+            span.md-headline Введите ключ темы
+          .joinMenuField
+            input(
+                    type="text"
+                    :placeholder="this.placeholder"
+                    v-model="customTopicId"
+            )
+          .joinMenuCancel
+            button.button--round.designButtonLesson(@click ='joinCourse(customTopicId)') Подключиться
+            //- .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
+      .errorBox(v-if = 'this.error')
+        strong.marginText.errorText Ой-ой... :(
+        br
+        span.marginTex Похоже, что-то пошло не так.
+        br
+        span.marginTex Пожалуйста, проверьте свое подключение к интернету.
 </template>
 
 <script>
@@ -382,6 +415,93 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .joinMenuMain
+    positine relative
+    height auto
+    text-align center
+    background-color #FFFFFF
+    margin-top 10%
+    margin-left 20%
+    margin-right 20%
+    min-width 350px
+    border-radius 10px
+  .delete_button
+    position relative
+    display inline-block
+    width 40px
+    cursor pointer
+    height 40px
+    margin-top 20px
+    margin-right 20px
+    float right
+  .designButtonLesson
+    padding-top 12.5px
+    position relative
+    height auto
+    border: 2px solid #763DCA;
+    border-radius 50px
+    font-weight 550
+    font-size 23px
+    margin-left 20px
+    opacity 0.85
+    margin-top 20px
+    color #763DCA !important
+    background-color #FFFFFF
+    transition: 0.6s;
+    text-align center
+    vertical-align middle
+    @media screen and (max-width: 480px)
+      display none
+  .designButtonLesson:hover
+    transition: 0.6s;
+    color #FFFFFF !important
+    background-color #763DCA
+
+  .AllSections::-webkit-scrollbar {width:0px;height:0px;}
+  .AllSections
+    position relative
+    height 200px
+    width 100%
+    overflow: auto;
+    margin-bottom 50px
+    overflow-x: hidden;
+    mind-width 800px
+    white-space:nowrap;
+  .Section
+    position relative
+    height 110px
+    width 250px
+    vertical-align: top;
+    display inline-block
+    background-color #ffffff
+    margin 10px
+    border-radius 20px
+    border-width 0px
+    box-shadow 0px 0px 2px
+    &:hover
+      box-shadow 0px 0px 4px 0px
+    img
+      width 100px
+      height auto
+      padding 10px
+      text-align center
+      margin 10px 0px
+    .title
+      width auto
+      margin-top 20px
+      margin-left 20px
+      margin-bottom 20px
+      text-decoration none !important
+      font-weight 600
+      font-size 20px
+    .text
+      position relative
+      text-decoration none !important
+      width auto
+      margin-top 40px
+      float bottom
+      margin-left 20px
+      font-size 14px
   .content-wrapper
     min-height 0
   .marginText
@@ -392,13 +512,15 @@ export default {
   label
     background-color #fafafa !important
   .md-headline
+    font-weight 500
+    font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     font-size 24pt
   strong
     color #000000
   .joinMenuBox
-    padding 5%
-    padding-left 10%
-    padding-right 10%
+    padding 6%
+    // padding-left 10%
+    // padding-right 10%
     .button
       margin 2%
   .joinMenuText
@@ -406,9 +528,12 @@ export default {
     padding-bottom 10%
 
   .joinMenuField
+    height auto
     input
       border-color #000000
       border-width 1%
+      padding 10px
+      font-size 18px
 
   .errorBox
     padding-top 10%
@@ -421,11 +546,10 @@ export default {
   .joinCustomTitle
     z-index 10000
     position fixed
-    bottom 100px
-    right 100px
+    bottom 30px
+    right 20px
   .bottom-button
-    box-shadow 0px 0px 10px rgba(0,0,0,2)
-
+    box-shadow 0px 0px 2px 0px
   .right_button
     position fixed
     bottom 20px
@@ -454,8 +578,8 @@ export default {
     margin-left 20%
     margin-right 20%
     min-width 350px
-    border 2px #000000 solid
-    border-radius 10px
+    border 0px #000000 solid
+    border-radius 25px
     @media screen and (max-width: 600px)
       margin 1%
       margin-top 20%
@@ -484,11 +608,23 @@ export default {
 
   .title_topic2
     position relative
-    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-    color: #000000
-    font-size: 1em
-    margin-top 500px
-    font-weight: 100
+    height auto
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
+    display block
+    margin-bottom 20px
+    font-weight: 400
+    font-size: 35pt
+    &:hover
+      text-decoration none;
+    p
+      height auto
+      width auto
+      color: #000000
+      margin-top 20px
+    span
+      font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
+      font-weight 400
+      color: #000000
 
   .topic-list
     display grid
@@ -539,8 +675,10 @@ export default {
     border solid
     border-radius 30px
     border-color #999999
-    border-width 2px
-    box-shadow 0 0 15px #cccccc
+    border-width 0px
+    box-shadow 0 0 2px 0px
+    &:hover
+      box-shadow 0 0 5px 0px
     @media screen and (max-width: 700px)
       border none
       box-shadow none
@@ -567,14 +705,10 @@ export default {
   .pesontedan-content {
     max-height: 0;
     overflow: hidden;
-    background: #ffffff;
     transition: max-height .40s;
-    color: #ffffff;
-    text-shadow: 0 1px 0 #292727;
   }
 
   .pesontedan-content {
-    background: #ffffff;
   }
   .pesontedan-content p {
     margin: 1em;

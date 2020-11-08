@@ -81,6 +81,9 @@ export default {
 <style lang="stylus" scoped>
   .md-title
     color #FFFFFF
+    font-size 18pt
+    font-weight 500
+    font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
 
   .button
     font-family: 'Roboto', sans-serif

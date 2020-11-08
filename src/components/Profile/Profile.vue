@@ -38,9 +38,11 @@
                     p.textInf Решено {{this.getUser.right}}
                     p.textInf Тугриков {{this.getUser.money}}
                 .userButton
-                  router-link.button.button--round.button.button-primary(to='/statistics') Мои уроки
-                  .button.button--round.button.button-primary(@click ='settingsMenuShow = true') Редактировать
-                  router-link.button.button--round.button.button-primary(to='/logout') Выйти
+                  router-link(to='/statistics')
+                    button.designButtonMini Мои уроки
+                  button.designButtonMini(@click ='settingsMenuShow = true') Редактировать профиль
+                  router-link(to='/logout')
+                    button.designButtonMini Выйти
 
         .content-achieve
           .text-part(
@@ -102,28 +104,30 @@
                 p.achivProgress(
                 ) {{"Прогресс "}} {{ part.progress }}{{" %"}}
       .settingsMenu(v-if = 'settingsMenuShow')
-        .settingsMenuBox
-          .settingsMenuText
-            span.md-headline Изменение имени
-          .settingsMenuField
-            md-field(md-inline='')
-              label Введите имя
-              md-input(v-model='newName')
+        .joinMenuMain
+          img(src="@/components/images/clear.png", @click ='settingsMenuShow = false').delete_button
+          .settingsMenuBox
+            .settingsMenuText
+              p Введите имя
+            .settingsMenuField
+              md-field(md-inline='')
+                label Введите имя
+                md-input(v-model='newName')
 
-          .settingsMenuText
-            span.md-headline Изменение аватара
-          .settingsMenuField
-            md-field
-              label Выберите картинку
-              md-file(v-model='newAvatarName' @md-change ='onFilePicked' accept ="image/*")
+            .settingsMenuText
+              p Добавьте иконку профиля
+            .settingsMenuField
+              md-field
+                label Выберите картинку
+                md-file(v-model='newAvatarName' @md-change ='onFilePicked' accept ="image/*")
 
-          .settingsMenuCancel
-            .button.button--round.button-success(@click ='saveProfile') Сохранить
-            .button.button--round.button-warning(@click ='settingsMenuShow = false')  Отмена
+            .settingsMenuCancel
+              button.designButtonLesson(@click ='saveProfile') Сохранить
+              //- .button.button--round.button-warning(@click ='settingsMenuShow = false')  Отмена
       .createTopicButton
-        router-link(to='/customTitle').button.mdc-fab.mdc-fab--extended.button--round.bottom_button
+        router-link(to='/customTitle').mdc-fab.bottom_button
           .createTopicButtonBox
-          span.createTopicButtonText Создать свой урок
+          button.designButtonLesson Создать свой урок
 
 </template>
 
@@ -205,6 +209,59 @@ export default {
 </script>
 
 <style scoped lang='stylus'>
+  .delete_button
+    position relative
+    display inline-block
+    width 33px
+    cursor pointer
+    height 33px
+    margin-top 30px
+    margin-right 30px
+    float right
+  .joinMenuMain
+    positine relative
+    text-align center
+    background-color #FFFFFF
+    margin-top 10%
+    margin-left 20%
+    margin-right 20%
+    min-width 350px
+    border-radius 10px
+  .designButtonMini
+    padding-top 10px
+    position relative
+    height auto
+    border: 2px solid #763DCA;
+    border-radius 50px
+    font-weight 550
+    font-size 17px
+    margin-left 20px
+    color #763DCA !important
+    background-color #FFFFFF
+    opacity 0.5
+    transition: 0.6s;
+  .designButtonMini:hover
+    transition: 0.6s;
+    color #FFFFFF !important
+    background-color #763DCA
+  .designButtonLesson
+    padding-top 12.5px
+    position relative
+    height auto
+    border: 2px solid #763DCA;
+    border-radius 50px
+    font-weight 550
+    font-size 23px
+    margin-left 20px
+    color #763DCA !important
+    background-color #FFFFFF
+    opacity 0.5
+    margin-top 20px
+    transition: 0.6s;
+  .designButtonLesson:hover
+    transition: 0.6s;
+    color #FFFFFF !important
+    background-color #763DCA
   .md-avatar
     width 10vh
     height 10vh
@@ -214,14 +271,18 @@ export default {
     z-index 10
   .settingsMenuBox
     padding 5%
+    padding-top 3%
     padding-left 10%
     padding-right 10%
     .button
       font-size 20pt
       margin 2%
   .settingsMenuText
-    font-size 1.3em
-    padding-bottom 3%
+    font-weight 400
+    font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    font-size 24pt
+    margin-top 30px
+    margin-bottom 40px
 
   .settingsMenuField
     input
@@ -244,8 +305,8 @@ export default {
     margin-left 20%
     margin-right 20%
     min-width 350px
-    border 2px #000000 solid
-    border-radius 10px
+    border 0px #000000 solid
+    border-radius 25px
     @media screen and (max-width: 600px)
       margin 1%
       margin-top 20%
@@ -291,13 +352,13 @@ export default {
     position fixed
     bottom 20px
     font-size 22px
-    background #763dca
-    font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    // background #763dca
+    // font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     width auto
-    font-weight 500
+    // font-weight 500
     height auto
     right 20px
-    box-shadow 0px 0px 10px rgba(0,0,0,0.5)
+    // box-shadow 0px 0px 10px rgba(0,0,0,0.5)
   .userInf
     width 60%
     margin-top 20px
@@ -308,19 +369,23 @@ export default {
     height auto
     width auto
     margin-left 30px
+    margin-top 20px
     display block
   .textInf
-    font-weight 600
+    font-weight 450
     margin-right 40px
+    font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     margin-left 0px
     align left
+    margin-top 10px
+    font-size 18px
     display inline-block
 
   .userName
-    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-    font-weight 700
-    font-size 2.1em
-    margin-bottom 20px
+    font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    font-weight 550
+    font-size 30pt
+    margin-bottom 30px
 
   .content-block
     margin-left 25%
@@ -364,6 +429,7 @@ export default {
   .content-achieve
     position relative
     width 100%
+    margin-top 50px
     height auto
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     margin-bottom 5%
@@ -417,6 +483,9 @@ export default {
     position relative
     display inline-block
     min-width 250px
+    margin-left 10px
+    margin-right 10px
+    margin-bottom 20px
     img
       width 19%
       height auto
@@ -425,4 +494,7 @@ export default {
         margin-left 0
       margin-bottom 3%
       margin-top 3%
+    &:hover
+      box-shadow 0 0 5px 0px rgba(0,0,0,0.5)
+      border-radius 10px
 </style>
