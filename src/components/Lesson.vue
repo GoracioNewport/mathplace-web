@@ -56,7 +56,7 @@
             :src = 'part.inner')
 
           pdf(
-            v-else-if = 'part.type == "pdf"'
+            v-else-if = 'part.type == "file"'
             :src = 'part.inner')
       .answ(v-if='this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"')
         input.submit-field(
