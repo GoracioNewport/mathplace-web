@@ -544,7 +544,7 @@ export default {
       font-size 2em
 
   .joinCustomTitle
-    z-index 10000
+    z-index 3
     position fixed
     bottom 30px
     right 20px
@@ -562,7 +562,7 @@ export default {
     right 20px
 
   .joinMenu
-    z-index 50000
+    z-index 7
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-size 2vw
     background-color rgba(0, 0, 0, .5)
@@ -644,6 +644,7 @@ export default {
     top 0
     height 100%
     overflow auto
+    z-index 4
   .sidebar a
     display block
     margin-top 50%

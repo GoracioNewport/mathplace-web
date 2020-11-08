@@ -9,7 +9,7 @@
                     p.textMargin#TitlePlatform платформа
                     p.textMargin#TitleMathPlace MathPlace
                     <h3 class="textMargin" style="color:#525252; font-family: 'Roboto', sans-serif; font-size: 1.4em;" id="leftTextDiscrib">место, где вы можете с легкостью поднять свой уровень по математике</h3>
-                    router-link.button.designButtonLesson.goButton(to='/') Начать!
+                    router-link.button.designButtonLesson.goButton(to='/main') Начать!
                 </div>
                 <img id="imgMain" src="./images/mainPhones.png" alt="Второй текст"/>
             </div>
@@ -133,7 +133,7 @@
                 <h1 id="finishTitle">Посмотрите на <br>платформу в деле</h1>
                 <p id="finishText">У нас есть уроки для всех от начинающих до профи.</p>
                 .AlignCenterButton2
-                    router-link.button.designButtonLesson.goButton(to='/') Начать!
+                    router-link.button.designButtonLesson.goButton(to='/main') Начать!
             </div>
         </div>
         <div id="AboutUs">
@@ -183,7 +183,7 @@ export default {
     position relative
     color #763DCA;
     font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
-    font-size: 4.8em;
+    font-size: 4em;
     font-weight: bold;
 p
   letter-spacing auto !important
@@ -203,8 +203,6 @@ p
   transition: 0.6s;
   text-align center
   vertical-align middle
-  @media screen and (max-width: 480px)
-      display none
 .designButtonLesson:hover
   transition: 0.6s;
   color #FFFFFF !important

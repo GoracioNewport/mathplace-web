@@ -197,7 +197,7 @@ export default {
           }
 
           db.collection('account').doc(this.$store.getters.getPreId).set(data)
-          this.$router.push('/')
+          this.$router.push('/main')
         })
     }
   }

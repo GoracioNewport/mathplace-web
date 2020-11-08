@@ -119,7 +119,7 @@ export default {
         this.$store.dispatch('loginUser', user)
           .then(() => {
             this.submitStatus = this.$store.getters.getErrors
-            if (this.submitStatus === null) this.$router.push('/')
+            if (this.submitStatus === null) this.$router.push('/main')
           })
           .catch(err => {
             this.submitStatus = err.message

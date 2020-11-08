@@ -90,9 +90,10 @@ export default {
         async fetchMyChats (ctx) {
             const db = firebase.firestore()
             var moment = require('moment')
+            var vueInstance = this.state.profile
+            // console.log(vueInstance)
             moment.locale('ru')
             var nameList = []
-            var globalNameList = {}
             var userId = this.getters.getUser.id
             // Получаем список чатов
             db.collection('account').doc(this.getters.getUser.id).onSnapshot(async function(doc) { 
@@ -103,9 +104,10 @@ export default {
                     var chatList = {}
                     db.collection('chat').doc(name).onSnapshot(async function(chatDoc) {
                         // chatList - это мепчик, если что-то меняется в одном чате, то мы просто это перезаписываем, если добавляется новый или убирается старый, то все читается заново
-                        console.log('Reading Chat Data from ', name)
+                        // console.log('Reading Chat Data from ', name)
                         // if (!chatDoc.exists) return
                         var data = chatDoc.data()
+                        if (data === undefined) console.log('Chat deleted or corrupted')
                         var ind = userId
                         var info = {}
                         var memb = []
@@ -122,21 +124,55 @@ export default {
                             info['name'] = ind
                         } info['msgs'] = {}
                         for (let j = 0; j < data.all_message; j++) {
-                            info['msgs'][j] = data['messages'][j]
+                            info['msgs'][j] = data['message' + j.toString()]
                             if (info['msgs'][j] === undefined) continue
                             if (j === data.all_message - 1) { // Это поле нужно для сортировки чата по времени
                                 info['msgs'][j].time !== null ? info.lastMessageTime = info['msgs'][j].time.seconds : info.lastMessageTime = 0 
                             }
                             info['msgs'][j].time !== null ? info['msgs'][j].time = moment.unix(info['msgs'][j].time.seconds).format('LLL') : info['msgs'][j].time = ''
+                            if (info.msgs[j].sender === 'System') { // Обработка системных сообщений
+                                let text = info.msgs[j].text.split(' ')
+                                if (text[1] === '+') {
+                                  let f = text[0]
+                                  let s = text[2]
+                                  // Добавление в общий массив пользователей приглашенного
+                                  await ctx.dispatch('fetchMemberName', f)
+                                  await ctx.dispatch('fetchMemberName', s)
+                                  info.msgs[j].text = (vueInstance.globalNameList[f] + ' пригласил ' + vueInstance.globalNameList[s])
+                                } else if (text[1] === '-') {
+                                  let f = text[0]
+                                  let s = text[2]
+                                  // Добавление в общий массив пользователей удаленного
+                                  await ctx.dispatch('fetchMemberName', f)
+                                  await ctx.dispatch('fetchMemberName', s)
+                                  info.msgs[j].text = (vueInstance.globalNameList[f] + ' выгнал ' + vueInstance.globalNameList[s])
+                                } else if (text[1] === 'edited') {
+                                  let f = text[0]
+                                  await vueInstance.fetchMemberName(f)
+                                  let name = text.slice(2).join(' ')
+                                  info.msgs[j].text = (vueInstance.globalNameList[f] + ' изменил название беседы на ' + name)
+                                } else if (text[0] === 'leave') {
+                                  let f = text[1]
+                                  await ctx.dispatch('fetchMemberName', f)
+                                  info.msgs[j].text = (vueInstance.globalNameList[f] + ' вышел из беседы')
+                                } else if (text[0] === 'new') {
+                                  let name = text.slice(1).join(' ')
+                                  info.msgs[j].text = ('Беседа ' + name + ' создана')
+                                } else if (text[0] === 'link') {
+                                  let f = text[1]
+                                  await ctx.dispatch('fetchMemberName', f)
+                                  info.msgs[j].text = (vueInstance.globalNameList[f] + ' присоединился к беседе по ссылке')
+                                }
+                            }
                         }
                         for await (let mem of memb) {
                             // console.log(globalNameList)
-                            if (globalNameList[mem] === undefined) await db.collection('account').doc(mem).get().then(doc => { doc.exists ? globalNameList[mem] = doc.data().name : globalNameList[mem] = 'Deleted User' })
-                            info.members[mem] = globalNameList[mem]
+                            if (vueInstance.globalNameList[mem] === undefined) await db.collection('account').doc(mem).get().then(doc => { doc.exists ? vueInstance.globalNameList[mem] = doc.data().name : vueInstance.globalNameList[mem] = 'Deleted User' })
+                            info.members[mem] = vueInstance.globalNameList[mem]
                         }
                         if (info['type'] === 'personal') await db.collection('account').doc(ind).get().then(doc => {doc.data() !== undefined ? info['image'] = doc.data().image : info['image'] = undefined })
                         chatList[info.id] = info
-                        if (Object.keys(chatList).length >= limit) ctx.commit('updateMyChats', Object.values(chatList))
+                        ctx.commit('updateMyChats', Object.values(chatList))
                     })
                     
                     // for await (let mem of memb) {
@@ -185,7 +221,13 @@ export default {
             const db = firebase.firestore()
             if (payload.name !== null) {
                 await db.collection(chatDb).doc(payload.chatId).update({
-                    name: payload.name
+                    name: payload.name,
+                    all_message: payload.messageId + 1,
+                    ['message' + payload.messageId.toString()]: {
+                        sender: 'System',
+                        text: 'edited ' + payload.name,
+                        time: firebase.firestore.Timestamp.now()
+                    }
                 }) 
             } if (payload.avatar !== null) {
                 // Чтение файла
@@ -244,7 +286,7 @@ export default {
                     // console.log('Final: ', rawMemb)
                     var messageName = 'message'.concat(msgCnt)
                     var messageData = {
-                        text: userName.concat(' присоединился к чату'),
+                        text: payload.invitorId + ' + ' + userId,
                         sender: 'System',
                         time: firebase.firestore.Timestamp.now()
                     }
@@ -288,7 +330,7 @@ export default {
             //  console.log('Final: ', memb)
             var messageName = 'message'.concat(msgCnt)
             var messageData = {
-                text: payload.userName.concat(' был выгнан из беседы администратором'),
+                text: payload.removerId === payload.userId ? 'leave ' + payload.userId : payload.removerId + ' - ' + payload.userId,
                 sender: 'System',
                 time: firebase.firestore.Timestamp.now()
             }
@@ -304,6 +346,12 @@ export default {
             await db.collection(accountDb).doc(payload.userId).update({
                 myChats: chatList
             })
+        },
+        async fetchMemberName (ctx, payload) {
+            // console.log(payload)
+            let name = payload
+            const db = firebase.firestore()
+            if (this.state.profile.globalNameList[name] === undefined) await db.collection('account').doc(name).get().then(doc => { doc.exists ? this.state.profile.globalNameList[name] = doc.data().name : this.state.profile.globalNameList[name] = 'Deleted User' })
         }
     },
     state: {
@@ -313,7 +361,8 @@ export default {
         chatList: [],
         currentChat: [],
         addedMemberStatus: 'None',
-        preChatInfo: {}
+        preChatInfo: {},
+        globalNameList: {}
     },
     getters: {
         getAchievements (state) { return state.achievements },
