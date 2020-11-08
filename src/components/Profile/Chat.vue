@@ -24,9 +24,9 @@
           .chat-modify(v-if = 'admin')
             img.settingIcon(v-if ='chat.type === "group"' @click ='settingsMenuShow = true' src='@/assets/images/settings.png')
       .chat-box(ref='scrollAnchor')
-        .message(v-for = '(msg, i) in chat.msgs')
+        .message(v-for = '(msg, i) in chat.msgs' v-if='msg.status !== "deleted"')
           //- Системные сообщения
-          .systemMessage(v-if = 'msg.sender === "System"')
+          .message-fragment.systemMessage(v-if = 'msg.sender === "System"')
             label.systemMessageText.message-message.md-caption {{ msg.text }}
           //- Обычные сообщения
           .message-fragment(v-else :id ='i')
@@ -36,7 +36,7 @@
               .message-message
                 label {{ msg.text }}
             .message-time
-              label(v-if ='typeof msg.time === "string"') {{ msg.time }}
+              label(v-if ='msg.time !== null && typeof msg.time === "string"') {{ msg.time }}
               label(v-else) ...
       .send-field-box
         textarea(
@@ -149,9 +149,43 @@ export default {
             info['members'] = newMemb
             info['msgs'] = {}
             for (let j = 0; j < data.all_message; j++) {
-              info['msgs'][j] = data['messages'][j]
-              if (info['msgs'][j].time !== null) info['msgs'][j].time = moment.unix(info['msgs'][j].time.seconds).format('MMMM Do YYYY, h:mm:ss a')
-              if (vueInstance.chatMembers[info.msgs[j].sender] === undefined && info.msgs[j].sender !== 'System') { await db.collection('account').doc(info.msgs[j].sender).get().then(async doc => { doc.exists ? vueInstance.chatMembers[info.msgs[j].sender] = doc.data().name : vueInstance.chatMembers[info.msgs[j].sender] = 'Deleted User' }) }
+              info['msgs'][j] = data['message' + j.toString()]
+              if (info['msgs'][j] !== undefined && info['msgs'][j].time !== null) info['msgs'][j].time = moment.unix(info['msgs'][j].time.seconds).format('MMMM Do YYYY, h:mm:ss a')
+              if (vueInstance.chatMembers[info.msgs[j].sender] === undefined && info.msgs[j].sender !== 'System') await vueInstance.fetchMemberName(info.msgs[j].sender)
+              if (info.msgs[j].sender === 'System') { // Обработка системных сообщений
+                let text = info.msgs[j].text.split(' ')
+                if (text[1] === '+') {
+                  let f = text[0]
+                  let s = text[2]
+                  // Добавление в общий массив пользователей приглашенного
+                  await vueInstance.fetchMemberName(f)
+                  await vueInstance.fetchMemberName(s)
+                  info.msgs[j].text = (vueInstance.chatMembers[f] + ' пригласил ' + vueInstance.chatMembers[s])
+                } else if (text[1] === '-') {
+                  let f = text[0]
+                  let s = text[2]
+                  // Добавление в общий массив пользователей удаленного
+                  await vueInstance.fetchMemberName(f)
+                  await vueInstance.fetchMemberName(s)
+                  info.msgs[j].text = (vueInstance.chatMembers[f] + ' выгнал ' + vueInstance.chatMembers[s])
+                } else if (text[1] === 'edited') {
+                  let f = text[0]
+                  await vueInstance.fetchMemberName(f)
+                  let name = text.slice(2).join(' ')
+                  info.msgs[j].text = (vueInstance.chatMembers[f] + ' изменил название беседы на ' + name)
+                } else if (text[0] === 'leave') {
+                  let f = text[1]
+                  await vueInstance.fetchMemberName(f)
+                  info.msgs[j].text = (vueInstance.chatMembers[f] + ' вышел из беседы')
+                } else if (text[0] === 'new') {
+                  let name = text.slice(1).join(' ')
+                  info.msgs[j].text = ('Беседа ' + name + ' создана')
+                } else if (text[0] === 'link') {
+                  let f = text[1]
+                  await vueInstance.fetchMemberName(f)
+                  info.msgs[j].text = (vueInstance.chatMembers[f] + ' присоединился к беседе по ссылке')
+                }
+              }
             }
 
             // Пробегаюсь по всем сообщеням для подгрузки недостающих ников
@@ -160,7 +194,9 @@ export default {
             await vueInstance.$forceUpdate()
             // Если это первая загрузка или мы сами отправили сообщение, скролим в самый низ
             if (first || (Object.keys(vueInstance.chat.msgs).length > 0 && vueInstance.chat.msgs[Object.keys(vueInstance.chat.msgs).length - 1].sender === vueInstance.getUser.id)) {
-              const el = await vueInstance.$el.getElementsByClassName('message-fragment')[data.all_message - 1]
+              const el = await vueInstance.$el.getElementsByClassName('message-fragment')[vueInstance.$el.getElementsByClassName('message-fragment').length - 1]
+              console.log(vueInstance.$el.getElementsByClassName('message-fragment').length - 1, vueInstance.$el.getElementsByClassName('message-fragment'))
+              console.log('Scrolling to ', el)
               if (el !== undefined) el.scrollIntoView()
               first = false
             }
@@ -190,7 +226,7 @@ export default {
             var varName = 'message'.concat(data.all_message.toString())
             var msg = {
               sender: 'System',
-              text: this.getUser.name.concat(' присоединился к чату через ссылку'),
+              text: 'link ' + this.getUser.id,
               time: firebase.firestore.Timestamp.now()
             }
             await db.collection('chat').doc(id).update({
@@ -275,7 +311,7 @@ export default {
       this.loading = true
       this.settingsMenuShow = false
       if (this.newName === this.chat.name || this.newName === '') this.newName = null
-      await this.changeChatSettings({chatId: this.id, name: this.newName, avatar: this.newAvatarFile})
+      await this.changeChatSettings({chatId: this.id, name: this.newName, avatar: this.newAvatarFile, messageId: this.chat.msgCnt})
       this.$router.go()
     },
     onFilePicked (event) {
@@ -284,7 +320,7 @@ export default {
     // Добавление и удаление пользователей из чата
     async addMember () {
       this.loading = true
-      await this.addMemberToChat({chatId: this.id, userId: this.getUser.id, userEmail: this.newMemberEmail})
+      await this.addMemberToChat({chatId: this.id, userId: this.getUser.id, userEmail: this.newMemberEmail, invitorId: this.getUser.id})
       this.newMemberEmail = ''
       this.loading = false
     },
@@ -292,7 +328,7 @@ export default {
       // delete this.chatMembers[id]
       this.removedUsers[id] = true
       this.$forceUpdate()
-      await this.removeMemberFromChat({chatId: this.id, userId: id, userName: name})
+      await this.removeMemberFromChat({chatId: this.id, userId: id, userName: name, removerId: this.getUser.id})
       if (id === this.getUser.id) this.$router.push('/chat')
     },
     async fetchEmptyChat () {
@@ -312,6 +348,10 @@ export default {
       // Объявляем локальные переменные
       this.chat.msgs = {}
       this.chat.msgCnt = 0
+    },
+    async fetchMemberName (name) {
+      const db = firebase.firestore()
+      if (this.chatMembers[name] === undefined) { await db.collection('account').doc(name).get().then(async doc => { doc.exists ? this.chatMembers[name] = doc.data().name : this.chatMembers[name] = 'Deleted User' }) }
     }
   },
   async mounted () {
@@ -354,6 +394,7 @@ export default {
     min-height 60vh
     overflow auto
   .systemMessage
+    background-color rgba(255, 255, 255, 0) !important
     padding 5px
     width 100%
     float left

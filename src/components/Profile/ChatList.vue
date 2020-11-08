@@ -15,7 +15,7 @@
             img(src="@/components/images/user.png")
           .chat-image(v-else)
             img.image_round(:src = "chats.image")
-          .chat-info
+          .chat-info(v-if='chats.msgs[chats.msgCnt - 1] !== undefined')
             div.chat-top
               .chat-time(v-if = 'chats.msgCnt > 0 && chats.msgs[chats.msgCnt - 1] !== null')
                 label {{ chats.msgs[chats.msgCnt - 1].time }}
@@ -201,6 +201,12 @@ export default {
         return
       }
       if (type === 'group') {
+        chatInfo.all_message = 1
+        chatInfo['message0'] = {
+          sender: 'System',
+          text: 'new ' + chatInfo.name,
+          time: firebase.firestore.Timestamp.now()
+        }
         await db.collection('chat').doc(chatId).set(chatInfo)
         for (let j = 0; j < chatInfo.members.length; j++) {
           var myChats = []
