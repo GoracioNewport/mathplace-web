@@ -460,8 +460,10 @@ export default {
     position relative
   .settingIcon
     position absolute
-    width 5vh
+    width 40px
+    cursor pointer
     right 1%
+    margin 10px
     top -6.5vh
   .content-wrapper
     min-height 0
@@ -488,7 +490,7 @@ export default {
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     background-color #EAE9EC
     border-radius 10px 10px 0px 0px
-    box-shadow 0 0 5px rgba(0,0,0,0.5)
+    box-shadow 0 0 0px 0px rgba(0,0,0,0.5)
 
   .chat-image
     position relative

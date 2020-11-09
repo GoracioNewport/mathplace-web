@@ -429,8 +429,10 @@ export default {
   .chat-image
     border-radius: 50%;
     overflow: hidden;
-    width 120px
-    height 120px
+    width 80px
+    height 80px
+    margin-left 20px
+    margin-top 0px
     img
       display: block;
       min-width: 100%;
@@ -458,7 +460,7 @@ export default {
     width 100%
     right 0px
     margin-right 0px
-    margin-left 30px
+    margin-left 20px
     vertical-align middle
   .chat-name
     margin-top 1px
@@ -471,14 +473,14 @@ export default {
   .chat-message
     position relative
     width 100%
-    margin-top 6%
+    margin-top 20px
     margin-bottom 0%
     label
       white-space: nowrap
       overflow: hidden
       padding: 5px
       text-overflow: ellipsis
-      font-size 1.5em
+      font-size 18px
       color #666174
       text-align bottom
     label:hover {
