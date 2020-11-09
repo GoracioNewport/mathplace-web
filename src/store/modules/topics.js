@@ -302,15 +302,20 @@ export default {
       })
       ctx.commit('updateMyTopic', topic)
     },
-    deleteTopic (ctx, payload) {
+    async deleteTopic (ctx, payload) {
       const db = firebase.firestore()
       var docRef = db.collection(accountDb).doc(this.getters.getUser.id)
-      db.runTransaction(function (transaction) {
-        return transaction.get(docRef).then(function (doc) {
-          var list = doc.data().myTopics
-          list = list.filter(e => e !== payload)
-          transaction.update(docRef, { myTopics: list })
-        })
+      let userTopicList = []
+      await docRef.get().then(doc => {
+        let data = doc.data()
+        userTopicList = data.myTopics
+      })
+      console.log(userTopicList, userTopicList.length)
+      userTopicList.splice(userTopicList.findIndex(e => e === payload), 1)
+      console.log(userTopicList, userTopicList.length)
+      console.log(payload)
+      docRef.update({
+        myTopics: userTopicList
       })
       db.collection(olympiadDb).doc(payload).delete()
     },

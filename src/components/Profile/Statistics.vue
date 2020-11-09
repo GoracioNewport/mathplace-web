@@ -10,7 +10,7 @@
       .topicItem(v-for = '(topic, topicIndex) in myTopics.slice().reverse()'
       :key = 'topic.token')
         .img-tooltip
-          img.imageButton(src ='@/assets/images/bin2.png' @click ='deleteMyTopic(topic.token, topicIndex)')
+          img.imageButton(src ='@/assets/images/bin2.png' @click ='deleteMyTopic(topic.token)')
           md-tooltip(md-direction='right') Удалить урок
         .img-tooltip
           img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
@@ -140,8 +140,10 @@ export default {
       this.solutionImageShown = false
       this.markDBSolutionAs({ userId: this.imageUserId, topicName: this.myTopics[this.imageTopic].token, taskId: this.imageTask, newStats: this.myTopics[this.imageTopic].stats[this.imageUser].solveStats })
     },
-    deleteMyTopic (token, i) {
+    deleteMyTopic (token) {
+      let i = this.myTopics.findIndex(e => e.token === token)
       this.myTopics.splice(i, 1)
+      console.log(token, i)
       this.deleteTopic(token)
     }
   },

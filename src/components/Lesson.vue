@@ -208,6 +208,7 @@ export default {
     pdf
   },
   async mounted () {
+    // Начало загрузки, фетчим все данные
     this.isLoading = true
     this.$store.dispatch('changeCurrentTopic', this.taskId)
     this.$store.dispatch('changeCollection', this.collection)
@@ -216,17 +217,35 @@ export default {
     this.userId = this.getUser.id
     await this.fetchLikes(this.collection)
     await this.fetchTasks(this.collection)
+    // Зафетчили, получаем и обрабатываем
     this.tasksInfo.name = this.getTasksInfo.name
     this.tasksInfo.author = this.getTasksInfo.author
     this.tasksInfo.timeStart = this.getTasksInfo.time_start
     this.tasksInfo.timeEnd = this.getTasksInfo.time_end
     this.taskList = this.getTasks
+    // Проверка на ошибки
     if (this.taskList.length === 0 && this.tasksInfo.author === this.getUser.id) this.error = 'no_material_author'
     else if (this.taskList.length === 0 && this.tasksInfo.author !== this.getUser.id) this.error = 'no_material_member'
     else if (this.tasksInfo.timeStart !== null && this.tasksInfo.timeStart.getTime() > new Date().getTime()) this.error = 'too_early'
     else if (this.tasksInfo.timeEnd !== null && this.tasksInfo.timeEnd.getTime() < new Date().getTime()) this.error = 'too_late'
     else this.error = 'none'
+    // Ставим таймеры для выкидывания ученика по концу урока и для напоминалок
+    if (this.tasksInfo.timeEnd !== null && this.error === 'none') {
+      let endTimeLeft = (this.tasksInfo.timeEnd - new Date())
+      let notificationTimeLeft = (this.tasksInfo.timeEnd - new Date() - 600000)
+      let self = this
+      // В случае переполнения все ломается... Думаю, никто не обидется, если я не буду учитывать варианты, когда до конца урока остается 26 дней
+      if (notificationTimeLeft > 0 && notificationTimeLeft <= 2147483647) setTimeout(() => alert('Осталось 10 минут до конца урока!'), notificationTimeLeft)
+      if (endTimeLeft > 0 && endTimeLeft <= 2147483647) {
+        setTimeout(() => {
+          self.$router.push('/main')
+          alert('Урок окончен! Возможность сдачи задач огранчена')
+        }, endTimeLeft)
+      }
+    }
+    // Переключаем стили лайка в случае, если лайк уже поставлен
     if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
+    // Отключаем загрузочный оверлей и обновляем все на всякий случай
     this.isLoading = false
     this.$forceUpdate()
   },
