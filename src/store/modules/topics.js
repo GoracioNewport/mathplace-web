@@ -223,16 +223,21 @@ export default {
       var topicInfo = {}
       for (let i = 0; i < topicList.length; i++) {
         var topicsData = {}
+        let brokenTopic = false
         await db.collection(olympiadDb).doc(topicList[i]).get().then(doc => {
           var data = doc.data()
-          topicsData['token'] = topicList[i]
-          topicsData['name'] = data.name
-          topicsData['members'] = data.members
-          topicsData['showStats'] = false
-          topicsData['statsLoaded'] = false
-          topicsData['stats'] = {}
+          if (data === undefined) brokenTopic = true
+          else {
+            topicsData['token'] = topicList[i]
+            topicsData['name'] = data.name
+            topicsData['members'] = data.members
+            topicsData['showStats'] = false
+            topicsData['statsLoaded'] = false
+            topicsData['stats'] = {}
+          }
         })
-        topicInfo[topicList[i]] = topicsData
+        if (!brokenTopic) topicInfo[topicList[i]] = topicsData
+        else console.log('Topic ', topicList[i], ' either deleted or corrupted')
       }
       ctx.commit('updateMyTopicsDetailedInfo', topicInfo)
     },
