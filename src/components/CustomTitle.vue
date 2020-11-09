@@ -77,7 +77,7 @@
                     )
                       .button.img.delete_button(@click='task.statement.splice(task.statement.indexOf(component), 1)')
                       .theoryTextField(v-if ='component.type === "text"')
-                        vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }]]')
+                        vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "image", "video"], ["clean"]]')
                       .theoryText(v-if ='component.type === "img"')
                         label(for='img') Выберите картинку
                         input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.statement.indexOf(component))")
