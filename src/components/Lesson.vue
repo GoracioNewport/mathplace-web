@@ -144,27 +144,35 @@
         //- br
         //- .button.button--round.button-success(@click = '$router.push("/customTitle/" + taskId)') Добавить!
       .guestScreen(v-else)
-        md-empty-state(md-rounded='' md-icon='access_time' md-label='Учитель ещё не добавил материал в урок' md-description="Вскоре учитель добавит материал. Возвращайтесь позже.")
+        md-empty-state(md-rounded='' md-icon='watch_later' md-label='Учитель ещё не добавил материал в урок' md-description="Вскоре учитель добавит материал. Возвращайтесь позже.")
         //- strong.md-headline Учитель еще не добавил материал в этот урок.
         //- br
         //- strong.md-headline Возвращайтесь позже!
     .placeholderScreen(v-else-if ='error === "too_early" || error === "too_late"')
       .tooEarlyScreen(v-if ='error === "too_early"')
-        strong.md-headline Ой-ой...
-        br
-        strong.md-headline Кажется, этот урок еще не начался.
-        br
-        strong.md-headline Он начнется в
-        span.md-headline {{ this.tasksInfo.timeStart.toLocaleString() }}
-        br
-        strong.md-headline Возвращайтесь позже!
+        //- strong.md-headline Ой-ой...
+        //- br
+        //- strong.md-headline Кажется, этот урок еще не начался.
+        //- br
+        //- strong.md-headline Он начнется в
+        //- span.md-headline {{ this.tasksInfo.timeStart.toLocaleString() }}
+        //- br
+        //- strong.md-headline Возвращайтесь позже!
+        div
+          //- md-empty-state(md-icon='devices_other' md-label='Create your first project' md-description="Creating project, you'll be able to upload your design and collaborate with people.")
+          md-empty-state(md-rounded='' md-icon='watch_later' :md-label=" 'Урок по теме \"' + this.tasksInfo.name + '\" пока не начался'" :md-description=" 'Урок начнется ' + this.tasksInfo.timeStart.toLocaleString() + '. Возвращайтесь позже!' ")
+          md-button.md-primary.md-raised(@click = '$router.push("/main")') На главную страницу
+
       .tooLateScreen(v-else-if ='error === "too_late"')
-        strong.md-headline Ой-ой...
-        br
-        strong.md-headline Кажется, этот урок уже закончился в
-        span.md-headline {{ this.tasksInfo.timeEnd.toLocaleString() }}
-        br
-        strong.md-headline Нам очень жаль!
+        //- strong.md-headline Ой-ой...
+        //- br
+        //- strong.md-headline Кажется, этот урок уже закончился в
+        //- span.md-headline {{ this.tasksInfo.timeEnd.toLocaleString() }}
+        //- br
+        //- strong.md-headline Нам очень жаль!
+        div
+          md-empty-state(md-rounded='' md-icon='history' :md-label=" 'Урок по теме \"' + this.tasksInfo.name + '\" уже закончился'" :md-description=" 'Урок закончился ' + this.tasksInfo.timeEnd.toLocaleString() + '. Спасибо за работу!' ")
+          md-button.md-primary.md-raised(@click = '$router.push("/main")') На главную страницу
     .solution(v-if = 'this.solutionShown', @click='solutionShown = !solutionShown')
       .solutionBox(@click='solutionShown = !solutionShown')
         .solutionText
