@@ -1,8 +1,8 @@
 <template lang='pug'>
   .content-wrapper(novalidate='' @submit.stop.prevent='showSnackbar = true')
-    md-snackbar(:md-position='position' :md-duration='isInfinity ? Infinity : duration' :md-active.sync='showSnackbar' md-persistent='')
-      span Connection timeout. Showing limited messages!
-      md-button.md-primary(@click='showSnackbar = false') Retry
+    //- md-snackbar(:md-position='position' :md-duration='isInfinity ? Infinity : duration' :md-active.sync='showSnackbar' md-persistent='')
+    //-   span Connection timeout. Showing limited messages!
+    //-   md-button.md-primary(@click='showSnackbar = false') Retry
     .loading-indicator(v-if = 'myTopicsLoading')
       loading(
         :active.sync = "this.myTopicsLoading"
@@ -30,6 +30,7 @@
         //- button.showStatsButton.button--round.button-primary(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть статистику
         //- button.showStatsButton.button--round.button-primary(v-else @click ='toggleStats(topic.token)') Показать статистику
         md-button.md-raised.md-primary.showStatsButton(v-else @click ='toggleStats(topic.token)') Показать статистику
+        md-button.md-primary.showStatsButton(style="margin-left: 10px;" @click ='joinCourse(topic.token)') Открыть урок
         .statsBox(v-if = 'topic.showStats')
           .loadingBox(v-if = 'Object.keys(topic.stats).length == 0')
             md-empty-state(md-rounded='' md-icon='access_time' md-label='В уроке пока нет учеников' md-description="В данный урок пока не присоединились ученики.")
@@ -51,7 +52,19 @@
                   img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
                   img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
                 md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
-    .solutionMenu(v-if = 'solutionImageShown')
+    .solutionMenu(v-ifew Promise (<anonymous>)
+    at new F (_export.js?90cd:36)
+    at eval (asyncToGenerator.js?7b11:14)
+    at VueComponent.joinCourse (Statistics.vue?9b62:129)
+vue.esm.js?efeb:628 [Vue warn]: Error in v-on handler (Promise/async): "TypeError: _this3.fetchCustomTopic is not a function"
+
+found in
+
+---> <MdButton> at src/components/MdButton/MdButton.vue
+       <SnackbarExample> at src/components/Profile/Statistics.vue
+         <App> at src/App.vue
+           <Root>
+vue.esm.js?efeb:1897 Type = 'solutionImageShown')
       .solutionMenuBox
         .solutionInner
           img.solutionImage(:src = "myTopics[imageTopic].stats[imageUser].solveStats[imageTask]")
@@ -115,7 +128,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchTopicStatistics', 'markDBSolutionAs', 'deleteTopic']),
+    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchTopicStatistics', 'markDBSolutionAs', 'deleteTopic', 'fetchCustomTopic']),
     async toggleStats (id) {
       let obj = this.myTopics.find(x => x.token === id)
       let index = this.myTopics.indexOf(obj)
@@ -123,6 +136,17 @@ export default {
       if (this.myTopics[index].showStats) {
         await this.fetchTopicStatistics(id)
         this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
+      }
+    },
+    async joinCourse (id) {
+      await this.fetchCustomTopic(id)
+      var res = this.getCustomTopic
+      if (res !== null) {
+        this.$router.push('/lesson/olympiads=' + id)
+      } else {
+        this.customTopicId = ''
+        this.placeholder = 'Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа'
+        alert('Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа')
       }
     },
     searchOnTable () {
@@ -266,7 +290,7 @@ export default {
     position relative
     height auto
     background-color #ffffff
-    box-shadow 0 0 5px rgba(0,0,0,0.5)
+    box-shadow 0 0 2px 0px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
     margin 3%
     padding-left 15px

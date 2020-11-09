@@ -77,12 +77,12 @@
                       label(for='file') Выберите PDF-Файл
                       input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.statement.indexOf(component))")
 
-                  .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
+                  md-button.md-raised.md-primary.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
 
-                  .button.button--round.button-success.buttonAdd(
+                  md-button.md-raised.md-primary.buttonAdd(
                     @click='addContent(tasks.indexOf(task), "img")'
                     ) Добавить картинку
-                  .button.button--round.button-success.buttonAdd(
+                  md-button.md-primary.buttonAdd(
                     @click='addContent(tasks.indexOf(task), "file")'
                     ) Загрузить PDF-файл
                 .taskEditBox(v-if ="task.type === 'task'")
@@ -139,9 +139,9 @@
                   md-field(v-if ='task.solutionType !== "hide" && task.solutionType !== "answer"')
                     label Решение
                     md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
-          .button.button--round.button-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
-          .button.button--round.button-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
-          .button.button--round.button-primary.buttonAddContent(@click='addTask("material")') Добавить готовый материал
+          md-button.md-raised.md-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
+          md-button.md-raised.md-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
+          md-button.md-primary.buttonAddContent(@click='addTask("material")') Добавить готовый материал
         .button.button--round.button-success.buttonPost(@click='sendTitle()')
           span {{ this.edit ? 'Обновить' : 'Опубликовать' }} тему
     .successMenu(v-if = 'this.success')
@@ -711,6 +711,7 @@ export default {
     margin-right 0px
     margin-top 25px
     margin-bottom 20px
+    transition: 0.6s;
     text-align center
     float right
     padding 13px

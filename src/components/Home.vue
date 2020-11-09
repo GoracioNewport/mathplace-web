@@ -27,7 +27,7 @@
       //-   a(href='#graphs', v-smooth-scroll='')
       //-     img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
 
-      .joinCustomTitle(@click="joinMenuShow = !joinMenuShow")
+      .joinCustomTitle(@click="joinMenuShow = !joinMenuShow, showDialog = true")
         button.designButtonLesson.bottom-button Присоединиться к уроку
 
       .container
@@ -327,27 +327,44 @@
                   v-bind:theme='topic.theme'
                   v-bind:like='topic.like'
                 )
-    .joinMenu(v-if = 'this.joinMenuShow')
-      .joinMenuMain
-        img(src="@/components/images/clear.png", @click ='joinMenuShow = false; groupChat = false').delete_button
-        .joinMenuBox
-          .joinMenuText
-            span.md-headline Введите ключ темы
-          .joinMenuField
-            input(
-                    type="text"
-                    :placeholder="this.placeholder"
-                    v-model="customTopicId"
-            )
-          .joinMenuCancel
-            button.button--round.designButtonLesson(@click ='joinCourse(customTopicId)') Подключиться
-            //- .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
-      .errorBox(v-if = 'this.error')
-        strong.marginText.errorText Ой-ой... :(
-        br
-        span.marginTex Похоже, что-то пошло не так.
-        br
-        span.marginTex Пожалуйста, проверьте свое подключение к интернету.
+    div(v-if = 'this.joinMenuShow')
+      md-dialog(:md-active.sync='showDialog')
+        md-dialog-title Подключиться к уроку
+        p(style="margin:20px;margin-top:0px;") К каждого урока есть свой уникальный код.<br> Введите код урока или попросите учителя отправить его вам
+        div(style="margin:20px;margin-top:0px;")
+          md-field
+            label Введите код урока...
+            md-input(v-model="customTopicId" md-counter='6')
+        md-dialog-actions
+          md-button.md-primary(@click='showDialog = false,settingsMenuShow = false') Отмена
+          md-button.md-primary(@click ='joinCourse(customTopicId)') Подключиться
+
+      //- md-dialog-prompt(@click ='joinCourse(customTopicId)', :md-active.sync='showDialog' v-model='customTopicId' md-title="Введите код урока" md-input-maxlength='6' md-input-placeholder='Код урока...' md-confirm-text='Подключиться' md-cancel-text="Отмена")
+        //- md-button.md-primary.md-raised(@click='active = true') Подключиться
+        //- span(v-if='value') Value: {{ value }}
+      //- .joinMenuMain
+      //-   img(src="@/components/images/clear.png", @click ='joinMenuShow = false; groupChat = false').delete_button
+      //-   .joinMenuBox
+      //-     .joinMenuText
+      //-       span.md-headline Введите ключ темы
+      //-     .joinMenuField
+      //-       input(
+      //-               type="text"
+      //-               :placeholder="this.placeholder"
+      //-               v-model="customTopicId"
+      //-       )
+      //-     .joinMenuCancel
+      //-       button.button--round.designButtonLesson(@click ='joinCourse(customTopicId)') Подключиться
+      //-       //- .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
+      //- .errorBox(v-if = 'this.error')
+      //-   strong.marginText.errorText Ой-ой... :(
+      //-   br
+      //-   span.marginTex Похоже, что-то пошло не так.
+      //-   br
+      //-   span.marginTex Пожалуйста, проверьте свое подключение к интернету.
+      //- md-dialog-prompt(:md-active.sync='active' v-model='value' md-title="What's your name?" md-input-maxlength='30' md-input-placeholder='Type your name...' md-confirm-text='Done')
+      //-   md-button.md-primary.md-raised(@click='active = true') Prompt
+      //-   span(v-if='value') Value: {{ value }}
 </template>
 
 <script>
@@ -372,6 +389,7 @@ export default {
       arrayLogics: [],
       arrayGraphs: [],
       isLoading: true,
+      showDialog: false,
       joinMenuShow: false,
       customTopicId: '',
       error: false,
