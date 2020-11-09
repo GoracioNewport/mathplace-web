@@ -26,8 +26,10 @@
           md-tooltip(md-direction='right') Скопировать ссылку на урок
         span.md-title.topicName {{ topic.name }}
         span.md-body-1.topicToken Ключ: {{ topic.token }}
-        button.showStatsButton.button--round.button-primary(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть статистику
-        button.showStatsButton.button--round.button-primary(v-else @click ='toggleStats(topic.token)') Показать статистику
+        md-button.md-raised.md-primary.showStatsButton(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть статистику
+        //- button.showStatsButton.button--round.button-primary(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть статистику
+        //- button.showStatsButton.button--round.button-primary(v-else @click ='toggleStats(topic.token)') Показать статистику
+        md-button.md-raised.md-primary.showStatsButton(v-else @click ='toggleStats(topic.token)') Показать статистику
         .statsBox(v-if = 'topic.showStats')
           .loadingBox(v-if = 'Object.keys(topic.stats).length == 0')
             md-empty-state(md-rounded='' md-icon='access_time' md-label='В уроке пока нет учеников' md-description="В данный урок пока не присоединились ученики.")
@@ -254,10 +256,9 @@ export default {
     width 100%
   .showStatsButton
     position relative
-    height auto
-    background-color #763dca
-    margin-bottom 10px
-    margin-top 10px
+    margin-bottom 0px
+    margin-left 0px
+    margin-top 20px
   .answerRight
     height 2em !important
     width 2em

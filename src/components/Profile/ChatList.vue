@@ -7,32 +7,38 @@
         color = "#763dca"
         :opacity = 0.5)
     .chatList
-      .chat-fragment(v-for = '(chats, i) in chatList'
-      @click = 'goToChat(chats.id)'
-      )
-        .chat-header
-          .chat-image(v-if = 'chats.image === undefined')
-            img(src="@/components/images/user.png")
-          .chat-image(v-else)
-            img.image_round(:src = "chats.image")
-          .chat-info(v-if='chats.msgs[chats.msgCnt - 1] !== undefined')
-            div.chat-top
-              .chat-time(v-if = 'chats.msgCnt > 0 && chats.msgs[chats.msgCnt - 1] !== null')
-                label {{ chats.msgs[chats.msgCnt - 1].time }}
-              .chat-name
+      div(v-if ='chatList.length === 0')
+        //- .chat-fragment
+          //- md-empty-state(md-icon='devices_other' md-label='Create your first project' md-description="Creating project, you'll be able to upload your design and collaborate with people.")
+        md-empty-state(md-rounded='' md-icon='create' md-label=" У вас нету ни одного чата" md-description="Создайте личный или гурпповой чат")
+          md-button.md-primary.md-raised(@click = 'createNewChat()') Создать чат
+
+      div(v-else)
+        .chat-fragment(v-for = '(chats, i) in chatList'
+        @click = 'goToChat(chats.id)'
+        )
+          .chat-header
+            .chat-image(v-if = 'chats.image === undefined')
+              img(src="@/components/images/user.png")
+            .chat-image(v-else)
+              img.image_round(:src = "chats.image")
+            .chat-info(v-if='chats.msgs[chats.msgCnt - 1] !== undefined')
+              div.chat-top
+                .chat-time(v-if = 'chats.msgCnt > 0 && chats.msgs[chats.msgCnt - 1] !== null')
+                  label {{ chats.msgs[chats.msgCnt - 1].time }}
+                .chat-name
+                  label
+                    strong(v-if = 'chats.type === "group"') {{ chats.name }}
+                    strong(v-else) {{ chats['members'][chats.name] }}
+              .chat-message(v-if = 'chats.msgCnt > 0')
                 label
-                  strong(v-if = 'chats.type === "group"') {{ chats.name }}
-                  strong(v-else) {{ chats['members'][chats.name] }}
-            .chat-message(v-if = 'chats.msgCnt > 0')
-              label
-                span(v-if ='chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] === undefined') {{ chats.msgs[chats.msgCnt - 1].text }}
-                span(v-else) {{ chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] }}: {{ chats.msgs[chats.msgCnt - 1].text }}
-        .chat-border(v-if = 'i < chatList.length - 1')
+                  span(v-if ='chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] === undefined') {{ chats.msgs[chats.msgCnt - 1].text }}
+                  span(v-else) {{ chatList[i].members[chats.msgs[chats.msgCnt - 1].sender] }}: {{ chats.msgs[chats.msgCnt - 1].text }}
+          .chat-border(v-if = 'i < chatList.length - 1')
     .newChatButton
       //- md-button.md-fab.mdc-fab--extended.md-fab-bottom-right.md-primary(@click = 'createNewChat()')
       //-   md-icon add
       button.button--round.designButtonLesson.md-fab-bottom-right.md-primary.md-fab(@click = 'createNewChat()') Создать новый чат
-
 
     .joinMenu(v-if = 'this.joinMenuShow')
       .joinMenuMain
@@ -290,10 +296,6 @@ export default {
     background-color #FFFFFF
     opacity 0.5
     transition: 0.6s;
-    text-align center
-    vertical-align middle
-    @media screen and (max-width: 480px)
-      display none
   .designButtonLesson:hover
     transition: 0.6s;
     color #FFFFFF !important

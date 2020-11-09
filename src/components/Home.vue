@@ -31,37 +31,38 @@
         button.designButtonLesson.bottom-button Присоединиться к уроку
 
       .container
-        .AllSections
+        .AllSection
           .title_topic2
             p Разделы
-          a.Section(href='#school', style="background-color: #E9EBFA; color:#3e50cb;", v-smooth-scroll='')
-            //- img(src="@/components/images/school1.png")
-            p.title Школа
-            p.text 23 урока
-          a.Section(href='#examination', style="background-color: #e7f2ff; color:#1466c6;", v-smooth-scroll='')
-            //- img(src="@/components/images/examination1.png")
-            p.title Экзамены
-            p.text 23 урока
-          a.Section(href='#geometry', style="background-color: #e9f9e9; color:#288b28;", v-smooth-scroll='')
-            //- img(src="@/components/images/geometry1.png")
-            p.title Геометрия
-            p.text 23 урока
-          a.Section(href='#algebra', style="background-color: #ffeede; color:#ff810a;", v-smooth-scroll='')
-            //- img(src="@/components/images/algebra1.png")
-            p.title Алгебра
-            p.text 23 урока
-          a.Section(href='#komba', style="background-color: #E9EBFA; color:#3e50cb;", v-smooth-scroll='')
-            //- img(src="@/components/images/komba1.png")
-            p.title Комбинаторика
-            p.text 23 урока
-          a.Section(href='#logic', style="background-color: #e7f2ff; color:#1466c6;", v-smooth-scroll='')
-            //- img(src="@/components/images/logic1.png")
-            p.title Логика
-            p.text 23 урока
-          a.Section(href='#graphs', style="background-color: #e9f9e9; color:#288b28;", v-smooth-scroll='')
-            //- img(src="@/components/images/graph_icon1.png")
-            p.title Графы
-            p.text 23 урока
+          .AllSections
+              a.Section(href='#school', style="background-color: #E9EBFA; color:#3e50cb;", v-smooth-scroll='')
+                //- img(src="@/components/images/school1.png")
+                p.title Школа
+                p.text 23 урока
+              a.Section(href='#examination', style="background-color: #e7f2ff; color:#1466c6;", v-smooth-scroll='')
+                //- img(src="@/components/images/examination1.png")
+                p.title Экзамены
+                p.text 23 урока
+              a.Section(href='#geometry', style="background-color: #e9f9e9; color:#288b28;", v-smooth-scroll='')
+                //- img(src="@/components/images/geometry1.png")
+                p.title Геометрия
+                p.text 23 урока
+              a.Section(href='#algebra', style="background-color: #ffeede; color:#ff810a;", v-smooth-scroll='')
+                //- img(src="@/components/images/algebra1.png")
+                p.title Алгебра
+                p.text 23 урока
+              a.Section(href='#komba', style="background-color: #E9EBFA; color:#3e50cb;", v-smooth-scroll='')
+                //- img(src="@/components/images/komba1.png")
+                p.title Комбинаторика
+                p.text 23 урока
+              a.Section(href='#logic', style="background-color: #e7f2ff; color:#1466c6;", v-smooth-scroll='')
+                //- img(src="@/components/images/logic1.png")
+                p.title Логика
+                p.text 23 урока
+              a.Section(href='#graphs', style="background-color: #e9f9e9; color:#288b28;", v-smooth-scroll='')
+                //- img(src="@/components/images/graph_icon1.png")
+                p.title Графы
+                p.text 23 урока
 
         .pesontedan
           input(id='pesontedan-eight',type='checkbox', name='pesontedans')
@@ -415,6 +416,33 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  ::-webkit-scrollbar-button
+    background-image:url('');
+    background-repeat:no-repeat;
+    width:0px;
+    height:0px
+
+  ::-webkit-scrollbar-track
+    background-color:#ecedee
+
+  ::-webkit-scrollbar-thumb
+    -webkit-border-radius: 0px;
+    border-radius: 20px;
+    background-color #763DCA
+
+  ::-webkit-scrollbar-thumb:hover
+    background-color:#56999f;
+
+  ::-webkit-resizer
+    background-image:url('');
+    background-repeat:no-repeat;
+    width:0px;
+    height:0px
+
+  ::-webkit-scrollbar
+    width: 0px;
+    height 0px
+
   .joinMenuMain
     positine relative
     height auto
@@ -457,21 +485,24 @@ export default {
     color #FFFFFF !important
     background-color #763DCA
 
-  .AllSections::-webkit-scrollbar {width:0px;height:0px;}
+  // .AllSections::-webkit-scrollbar {width:0px;height:0px;}
   .AllSections
     position relative
-    height 200px
+    height auto
     width 100%
+    margin-bottom 0px
     overflow: auto;
-    margin-bottom 50px
-    overflow-x: hidden;
-    mind-width 800px
     white-space:nowrap;
-  .Section
+  .AllSection
     position relative
+    width: 100%;
+    height: 100%;
+    margin-bottom 50px
+    // overflow: auto;
+  .Section
     height 110px
     width 250px
-    vertical-align: top;
+    background: #fc0;  /* Цвет фона */
     display inline-block
     background-color #ffffff
     margin 10px
