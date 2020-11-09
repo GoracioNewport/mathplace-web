@@ -16,6 +16,7 @@
   "dependencies": {
     "-": "0.0.1",
     "axios": "^0.19.2",
+    "element-ui": "^2.14.0",
     "express": "^4.17.1",
     "firebase": "^7.14.3",
     "jade": "^1.11.0",
@@ -35,6 +36,7 @@
     "v-tooltip": "^2.0.3",
     "vue": "^2.5.2",
     "vue-carousel": "^0.18.0",
+    "vue-ctk-date-time-picker": "^2.5.0",
     "vue-datetime": "^1.0.0-beta.14",
     "vue-firebase": "^1.0.8",
     "vue-firestore": "^0.3.30",

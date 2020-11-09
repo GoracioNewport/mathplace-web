@@ -148,7 +148,7 @@ export default {
                                   info.msgs[j].text = (vueInstance.globalNameList[f] + ' выгнал ' + vueInstance.globalNameList[s])
                                 } else if (text[1] === 'edited') {
                                   let f = text[0]
-                                  await vueInstance.fetchMemberName(f)
+                                  await ctx.dispatch('fetchMemberName', f)
                                   let name = text.slice(2).join(' ')
                                   info.msgs[j].text = (vueInstance.globalNameList[f] + ' изменил название беседы на ' + name)
                                 } else if (text[0] === 'leave') {

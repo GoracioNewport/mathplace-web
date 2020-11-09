@@ -33,7 +33,6 @@
       //-   md-icon add
       button.button--round.designButtonLesson.md-fab-bottom-right.md-primary.md-fab(@click = 'createNewChat()') Создать новый чат
 
-
     .joinMenu(v-if = 'this.joinMenuShow')
       .joinMenuMain
         img(src="@/components/images/clear.png", @click ='joinMenuShow = false; groupChat = false').delete_button

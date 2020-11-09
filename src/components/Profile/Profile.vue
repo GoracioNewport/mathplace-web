@@ -14,23 +14,13 @@
             .avatar
                 md-avatar
                   img.avatarImage.avatar(
-                    @mouseover ='avatarHover = true'
-                    @mouseleave ='avatarHover = false'
-                    @click ='settingsMenuShow = true'
                     v-if = 'getUser.image === undefined'
                       src = '@/assets/images/account_new.png',
                       alt = 'Аватар')
                   img.avatarImage.avatar(
-                    @mouseover ='avatarHover = true'
-                    @mouseleave ='avatarHover = false'
-                    @click ='settingsMenuShow = true'
                     v-else
                       :src = 'getUser.image',
                       alt = 'Аватар')
-                img.avatarChange(
-                  v-if = 'avatarHover'
-                  src = '@/assets/images/camera.png'
-                )
                 .userInf
                   p.userName {{ this.getUser.name }}
                   .info

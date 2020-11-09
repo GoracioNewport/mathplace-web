@@ -8,142 +8,150 @@
         :opacity = 0.5)
     .editBox(v-else)
       .marginBox
-        .titleInfo
-          span.olympTitle {{ this.edit ? 'Обновить' : 'Создать' }} урок
-          //- input.olympName(type = 'text', placeholder = 'Введите название вашей темы', v-model = "name")
-          md-field.olympName
-            label Введите название темы
-            md-input(v-model='name' maxlength = "30")
+       span.olympTitle {{ this.edit ? 'Обновить' : 'Создать' }} урок
+      md-steppers(md-vertical)
+        md-step#first(md-label='Шаг №1' md-description='Основная информация')
+          .titleInfo
+            //- input.olympName(type = 'text', placeholder = 'Введите название вашей темы', v-model = "name")
+            md-field.olympName
+              label Введите название темы
+              md-input(v-model='name' maxlength = "30")
 
-          //- label(for = 'isPrivate') Приватная тема
-            //- input#isPrivate(type = 'checkbox', v-model = "private")
-          .checkboxBox
-            md-checkbox.olympPrivate(v-model='private') Приватная тема
-            md-tooltip(md-direction='left') Приватная тема показывается только вашим ученикам
-          .checkboxBox
-            md-checkbox.olympPrivate(v-model='timeStartOn') Ограничить время начала
-            datetime(v-if ='timeStartOn' type='datetime' v-model='timeStart')
-            md-tooltip(md-direction='left') В установленное время начнется урок
-          .checkboxBox
-            md-checkbox.olympPrivate(v-model='timeFinishOn') Ограничить время конца
-            datetime(v-if ='timeFinishOn' type='datetime' v-model='timeFinish')
-            md-tooltip(md-direction='left') В установленное время закончиться урок
-          //- span {{ timeStart }} {{ timeFinish }}
+            //- label(for = 'isPrivate') Приватная тема
+              //- input#isPrivate(type = 'checkbox', v-model = "private")
+            //- span {{ timeStart }} {{ timeFinish }}
 
-          //- select.olympTheme(v-model = "theme")
-          //-   option(v-for = 'theme in themeList') {{ theme }}
-          .md-layout-item.olympTheme2
-            md-field
-              md-select.olympTheme2(v-model = "theme" placeholder='Выберите тему урока')
-                md-option(v-for = '(theme, i) in themeList' :key="i" :value="theme") {{ theme }}
-          //- md-select.olympTheme(v-model = "theme" name='country' placeholder='Country')
-          //-   md-option(v-for = 'theme in themeList') {{ theme }}
+            //- select.olympTheme(v-model = "theme")
+            //-   option(v-for = 'theme in themeList') {{ theme }}
+            .md-layout-item.olympTheme2
+              md-field
+                label(for="theme") Выберите тему урока
+                md-select.olympTheme2#theme(v-model = "theme" placeholder='Выберите тему урока')
+                  md-option(v-for = '(theme, i) in themeList' :key="i" :value="theme") {{ theme }}
 
-          md-field.classCnt
-            label Введите класс
-            md-input(v-model='classCnt' type='number')
-            span.md-helper-text Число от 1 до 11
-        .tasksInfo
-          .tasksContent
-            .task(v-for = '(task, taskId) in tasks')
-              .button.img.delete_button(@click='tasks.splice(tasks.indexOf(task), 1)')
-              .preMadeBox(v-if = 'task.type === "preMade"')
-                .componentName
-                  strong(v-if = 'task.originData.type === "theory"') Теория из темы "{{ task.topicName }}"
-                  strong(v-else) Задача №{{ task.taskInd }} из темы "{{ task.topicName }}"
-              .componentBox(v-else)
-                .componentName
-                  strong(v-if = 'task.type === "theory"') Теория
-                  strong(v-else) Задача
-                //- .taskType
-                //-   label(for='theory') Теория
-                //-     input#theory(type = 'radio', value = 'theory', v-model = "task.type")
-                //-   label(for='task') Задача
-                //-     input#task(type = 'radio', value = 'task', v-model = "task.type")
+            md-field.classCnt
+              label Введите класс
+              md-input(v-model='classCnt' type='number')
+              span.md-helper-text Число от 1 до 11
+        md-step#second(md-label='Шаг №2' md-description='Настройка доступа')
+          .titleInfo
+            .checkboxBox
+              md-checkbox.olympPrivate(v-model='private') Приватная тема
+              md-tooltip(md-direction='left') Приватная тема показывается только вашим ученикам
+            .checkboxBox
+              md-checkbox.olympPrivate(v-model='timeStartOn') Ограничить время начала
+              md-tooltip(md-direction='left') Урок начнется в установленное время
+            .checkboxBox
+              md-checkbox.olympPrivate(v-model='timeFinishOn') Ограничить время конца
+              md-tooltip(md-direction='left') Урок закончится в установленое время
+              //- datetime(v-if ='timeFinishOn' type='datetime' v-model='timeFinish')
+              //- VueCtkDateTimePicker(v-if = 'timeFinishOn' v-model="timeFinish" :no-value-to-custom-elem="true" :overlay="true")
+              //-   md-field(md-inline)
+              //-     label Укажите время конца
+              //-     md-input(v-model='timeFinish')
+            el-date-picker(v-if = 'timeStartOn' v-model='timeStart' type='datetime' placeholder='Дата начала' style='margin: 1%')
+            el-date-picker(v-if = 'timeFinishOn' v-model='timeFinish' type='datetime' placeholder='Дата конца' style='margin: 1%')
 
-                .theoryEditBox
-                  .theoryComponent(
-                    v-for = 'component in task.statement'
-                  )
-                    .button.img.delete_button(@click='task.statement.splice(task.statement.indexOf(component), 1)')
-                    .theoryTextField(v-if ='component.type === "text"')
-                      vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner")
-                      //- md-field.theoryText
-                      //-   md-textarea(placeholder = 'Введите текст здесь', v-model = "component.inner")
-                    .theoryText(v-if ='component.type === "img"')
-                      label(for='img') Выберите картинку
-                      input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.statement.indexOf(component))")
-                    .theoryTextFile(v-else-if ='component.type === "file"')
-                      label(for='file') Выберите PDF-Файл
-                      input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.statement.indexOf(component))")
+        md-step#third(md-label='Шаг №3' md-description='Материал')
+          .tasksInfo
+            .tasksContent
+              .task(v-for = '(task, taskId) in tasks')
+                .button.img.delete_button(@click='tasks.splice(tasks.indexOf(task), 1)')
+                .preMadeBox(v-if = 'task.type === "preMade"')
+                  .componentName
+                    strong(v-if = 'task.originData.type === "theory"') Теория из темы "{{ task.topicName }}"
+                    strong(v-else) Задача №{{ task.taskInd }} из темы "{{ task.topicName }}"
+                .componentBox(v-else)
+                  .componentName
+                    strong(v-if = 'task.type === "theory"') Теория
+                    strong(v-else) Задача
+                  //- .taskType
+                  //-   label(for='theory') Теория
+                  //-     input#theory(type = 'radio', value = 'theory', v-model = "task.type")
+                  //-   label(for='task') Задача
+                  //-     input#task(type = 'radio', value = 'task', v-model = "task.type")
 
-                  .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
+                  .theoryEditBox
+                    .theoryComponent(
+                      v-for = 'component in task.statement'
+                    )
+                      .button.img.delete_button(@click='task.statement.splice(task.statement.indexOf(component), 1)')
+                      .theoryTextField(v-if ='component.type === "text"')
+                        vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }]]')
+                      .theoryText(v-if ='component.type === "img"')
+                        label(for='img') Выберите картинку
+                        input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.statement.indexOf(component))")
+                      .theoryTextFile(v-else-if ='component.type === "file"')
+                        label(for='file') Выберите PDF-Файл
+                        input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.statement.indexOf(component))")
 
-                  .button.button--round.button-success.buttonAdd(
-                    @click='addContent(tasks.indexOf(task), "img")'
-                    ) Добавить картинку
-                  .button.button--round.button-success.buttonAdd(
-                    @click='addContent(tasks.indexOf(task), "file")'
-                    ) Загрузить PDF-файл
-                .taskEditBox(v-if ="task.type === 'task'")
-                  .taskAnswerBox
-                    md-field.taskTypeSelect
-                      label(for='taskType') Тип ответа
-                      md-select#taskType(v-model='task.taskType' name='taskTypeText' @md-selected='changeAnswerType(task.taskType, taskId)')
-                        md-option(value='task') Единственный ответ
-                        md-option(value='multipleAnswer') Несколько ответов
-                        md-option(value='multipleChoice') Множественный выбор
-                        md-option(value='upload') Загрузка развернутого решения
-                        md-option(value='proof') Без ответа
-                    md-field(v-if='task.taskType == "task"')
-                      md-input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
-                    span.md-body-2(v-else-if='task.taskType == "upload"') Вы сможете проверить ответ ученика в личном кабинете в разделе 'Мои темы'.
-                    span.md-body-2(v-else-if='task.taskType == "proof"') Дополнительная задача не подразумевает проверку ответа. Пожалуйста, напишите развернутый ответ в секции 'Решение', что бы ученики могли проверить себя самостоятельно.
-                    md-chips(v-else-if='task.taskType == "multipleAnswer"' v-model='task.answer' md-placeholder='Введите ответ и нажмите Enter...')
-                    .checkboxesBox(v-else-if='task.taskType == "multipleChoice"')
+                    .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
+
+                    .button.button--round.button-success.buttonAdd(
+                      @click='addContent(tasks.indexOf(task), "img")'
+                      ) Добавить картинку
+                    .button.button--round.button-success.buttonAdd(
+                      @click='addContent(tasks.indexOf(task), "file")'
+                      ) Загрузить PDF-файл
+                  .taskEditBox(v-if ="task.type === 'task'")
+                    .taskAnswerBox
+                      md-field.taskTypeSelect
+                        label(for='taskType') Тип ответа
+                        md-select#taskType(v-model='task.taskType' name='taskTypeText' @md-selected='changeAnswerType(task.taskType, taskId)')
+                          md-option(value='task') Единственный ответ
+                          md-option(value='multipleAnswer') Несколько ответов
+                          md-option(value='multipleChoice') Множественный выбор
+                          md-option(value='upload') Загрузка развернутого решения
+                          md-option(value='proof') Без ответа
+                      md-field(v-if='task.taskType == "task"')
+                        md-input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
+                      span.md-body-2(v-else-if='task.taskType == "upload"') Вы сможете проверить ответ ученика в личном кабинете в разделе 'Мои темы'.
+                      span.md-body-2(v-else-if='task.taskType == "proof"') Дополнительная задача не подразумевает проверку ответа. Пожалуйста, напишите развернутый ответ в секции 'Решение', что бы ученики могли проверить себя самостоятельно.
+                      md-chips(v-else-if='task.taskType == "multipleAnswer"' v-model='task.answer' md-placeholder='Введите ответ и нажмите Enter...')
+                      .checkboxesBox(v-else-if='task.taskType == "multipleChoice"')
+                        md-field
+                          label Введите вариант ответа
+                          md-input(v-model='newCheckboxAnswer' placeholder='Добавить вариант ответа')
+                          md-button.addMemeberButton(@click ='addCheckBoxAnswer(newCheckboxAnswer, taskId)') Добавить
+                        span.md-body-2(v-if='task.options.length > 0') Отметьте правильные ответы
+                        br
+                        .checkboxesBoxCheckboxes(v-for ='(op, opI) in task.options' :key="opI" )
+                          md-checkbox(v-model='task.answer' :value='op') {{ op }}
+                          md-button.removeButton.md-accent.md-raised(@click ='task.options.splice(opI, 1); if (task.answer.findIndex(f => f === op) !== -1) task.answer.splice(task.answer.findIndex(f => f === op), 1);') X
+                        //- span {{ task.answer }}
+
+                    br
+                    //- span Выберите сложность
+                    br
+
+                    .md-layout-item.olympTheme2
                       md-field
-                        label Введите вариант ответа
-                        md-input(v-model='newCheckboxAnswer' placeholder='Добавить вариант ответа')
-                        md-button.addMemeberButton(@click ='addCheckBoxAnswer(newCheckboxAnswer, taskId)') Добавить
-                      span.md-body-2(v-if='task.options.length > 0') Отметьте правильные ответы
-                      br
-                      .checkboxesBoxCheckboxes(v-for ='(op, opI) in task.options' :key="opI" )
-                        md-checkbox(v-model='task.answer' :value='op') {{ op }}
-                        md-button.removeButton.md-accent.md-raised(@click ='task.options.splice(opI, 1); if (task.answer.findIndex(f => f === op) !== -1) task.answer.splice(task.answer.findIndex(f => f === op), 1);') X
-                      //- span {{ task.answer }}
+                        md-select.olympTheme2(v-model = "task.difficulty" placeholder="Выберите сложность")
+                          md-option(v-for = '(diff, i) in difficultyList' :key="i" :value="diff") {{ diff }}
+                        md-tooltip(md-direction='left') Укажите, чтобы ученикам было проще ориентироваться
 
-                  br
-                  //- span Выберите сложность
-                  br
+                    //- label(for='difOne') Легкая
+                    //-   input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
+                    //- label(for='difTwo') Средняя
+                    //-   input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
+                    //- label(for='difThree') Трудная
+                    //-   input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
 
-                  .md-layout-item.olympTheme2
                     md-field
-                      md-select.olympTheme2(v-model = "task.difficulty" placeholder="Выберите сложность")
-                        md-option(v-for = '(diff, i) in difficultyList' :key="i" :value="diff") {{ diff }}
-                      md-tooltip(md-direction='left') Укажите, чтобы ученикам было проще ориентироваться
-
-                  //- label(for='difOne') Легкая
-                  //-   input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
-                  //- label(for='difTwo') Средняя
-                  //-   input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
-                  //- label(for='difThree') Трудная
-                  //-   input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
-
-                  md-field
-                    label(for='solutionType') Тип решения
-                    md-select#solutionType(v-model='task.solutionType' name='solutionTypeText')
-                      md-option(value='hide') Без решения
-                      md-option(value='solution') Показывать решение
-                      md-option(v-if ='task.taskType != "proof" && task.taskType != "upload"' value='answer') Показывать ответ
-                    md-tooltip(md-direction='left') Решение показывается всем ученикам
-                  md-field(v-if ='task.solutionType !== "hide" && task.solutionType !== "answer"')
-                    label Решение
-                    md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
-          .button.button--round.button-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
-          .button.button--round.button-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
-          .button.button--round.button-primary.buttonAddContent(@click='addTask("material")') Добавить готовый материал
-        .button.button--round.button-success.buttonPost(@click='sendTitle()')
-          span {{ this.edit ? 'Обновить' : 'Опубликовать' }} тему
+                      label(for='solutionType') Тип решения
+                      md-select#solutionType(v-model='task.solutionType' name='solutionTypeText')
+                        md-option(value='hide') Без решения
+                        md-option(value='solution') Показывать решение
+                        md-option(v-if ='task.taskType != "proof" && task.taskType != "upload"' value='answer') Показывать ответ
+                      md-tooltip(md-direction='left') Решение показывается всем ученикам
+                    md-field(v-if ='task.solutionType !== "hide" && task.solutionType !== "answer"')
+                      label Решение
+                      md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
+            .button.button--round.button-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
+            .button.button--round.button-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
+            .button.button--round.button-primary.buttonAddContent(@click='addTask("material")') Добавить готовый материал
+            .button.button--round.button-success.buttonPost(@click='sendTitle()')
+              span {{ this.edit ? 'Обновить' : 'Опубликовать' }} тему
     .successMenu(v-if = 'this.success')
       .successMenuBox
         .successText(v-if = 'this.loading')
@@ -405,8 +413,8 @@ export default {
         created: firebase.firestore.Timestamp.now()
       }
       // Время начала и конца
-      if (this.timeStartOn && this.timeStart !== '') data.time_start = firebase.firestore.Timestamp.fromDate(new Date(this.timeStart))
-      if (this.timeFinishOn && this.timeFinish !== '') data.time_end = firebase.firestore.Timestamp.fromDate(new Date(this.timeFinish))
+      if (this.timeStartOn && this.timeStart !== null) data.time_start = firebase.firestore.Timestamp.fromDate(this.timeStart)
+      if (this.timeFinishOn && this.timeFinish !== null) data.time_end = firebase.firestore.Timestamp.fromDate(this.timeFinish)
       console.log(data.time_start, data.time_end)
       // Парсинг задач
       for (let i = 0; i < this.tasks.length; i++) {
@@ -657,10 +665,10 @@ export default {
     margin-left 25%
     margin-right 25%
     margin-bottom 10%
-    background-color #FCFCFF
+    background-color #FFFFFF
     box-shadow 0 0 5px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
-    @media screen and (max-width: 600px)
+    @media screen and (max-width: 1000px)
       margin 1%
       margin-top 3%
 
@@ -679,7 +687,7 @@ export default {
 
   .marginBox
     position relative
-    margin 30px
+    margin 3%
 
   .olympName
     position relative
@@ -738,8 +746,7 @@ export default {
 
   .olympTheme2
     position relative
-    max-width: 300px;
-    color red;
+    max-width: 300px
 
   .delete_button
       position relative

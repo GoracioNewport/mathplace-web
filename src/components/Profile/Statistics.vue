@@ -1,8 +1,5 @@
 <template lang='pug'>
-  .content-wrapper(novalidate='' @submit.stop.prevent='showSnackbar = true')
-    md-snackbar(:md-position='position' :md-duration='isInfinity ? Infinity : duration' :md-active.sync='showSnackbar' md-persistent='')
-      span Connection timeout. Showing limited messages!
-      md-button.md-primary(@click='showSnackbar = false') Retry
+  .content-wrapper
     .loading-indicator(v-if = 'myTopicsLoading')
       loading(
         :active.sync = "this.myTopicsLoading"
@@ -80,7 +77,6 @@ const searchByName = (items, term) => {
 }
 
 export default {
-  name: 'SnackbarExample',
 
   components: {
     Right,
@@ -194,8 +190,8 @@ export default {
     margin-left 25%
     margin-right 25%
     @media screen and (max-width: 1300px)
-      margin-left 18%
-      margin-right 18%
+      margin-left 6%
+      margin-right 6%
     @media screen and (max-width: 700px)
       margin-left 2%
       margin-right 2%
