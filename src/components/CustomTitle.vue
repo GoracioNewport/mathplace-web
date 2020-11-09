@@ -77,7 +77,7 @@
                     )
                       .button.img.delete_button(@click='task.statement.splice(task.statement.indexOf(component), 1)')
                       .theoryTextField(v-if ='component.type === "text"')
-                        vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "image", "video"], ["clean"]]')
+                        vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "video"], ["clean"]]')
                       .theoryText(v-if ='component.type === "img"')
                         label(for='img') Выберите картинку
                         input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.statement.indexOf(component))")
@@ -415,7 +415,7 @@ export default {
       // Время начала и конца
       if (this.timeStartOn && this.timeStart !== null) data.time_start = firebase.firestore.Timestamp.fromDate(this.timeStart)
       if (this.timeFinishOn && this.timeFinish !== null) data.time_end = firebase.firestore.Timestamp.fromDate(this.timeFinish)
-      console.log(data.time_start, data.time_end)
+      // console.log(data.time_start, data.time_end)
       // Парсинг задач
       for (let i = 0; i < this.tasks.length; i++) {
         var task = {}
@@ -499,10 +499,10 @@ export default {
         this.theme = myTopic.theme
         if (myTopic.time_start !== undefined) {
           this.timeStartOn = true
-          this.timeStart = myTopic.time_start.toDate().toISOString()
+          this.timeStart = myTopic.time_start.toDate()
         } if (myTopic.time_end !== undefined) {
           this.timeFinishOn = true
-          this.timeFinish = myTopic.time_end.toDate().toISOString()
+          this.timeFinish = myTopic.time_end.toDate()
         }
         // Парсинг задач
         for (let i = 0; i < myTopic.tasks.length; i++) {
