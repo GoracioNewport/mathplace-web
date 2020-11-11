@@ -10,7 +10,7 @@
     .backButtonBox(v-if = '!loading' @click ='$router.push("/chat")')
       span.backButtonText Назад
       br
-      span.backButtonText <-
+      Back(:size="48")
     .chat-main(v-if = '!loading && chat.members !== undefined')
       .chat-info(v-if = 'chat !== null')
           .chat-image(v-if = 'chat.image === undefined')
@@ -90,10 +90,13 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import Loading from 'vue-loading-overlay'
 import { mapGetters, mapActions } from 'vuex'
+// Icons
+import Back from 'vue-material-design-icons/KeyboardBackspace.vue'
 
 export default {
   components: {
-    Loading
+    Loading,
+    Back
   },
   watch: {
     '$route' (to, from) {
