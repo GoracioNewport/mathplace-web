@@ -5,22 +5,23 @@
         div(style="margin-top: 30px;margin-bottom: 20px;")
           strong(style="display:block; font-size: 25px;font-weight:500") Рейтинг
           span(style="display:block;margin-top:10px; font-size: 16px;font-weight:500") всего участников {{ Object.keys(userStatistics).length }}
-      md-list(v-if='!isLoadingStat')
+      .loading-indicator(v-if='isLoadingStat')
+        p Загрузка...
+        .vld-parent
+          loading(
+            is-full-page = 'false',
+            :active.sync = "isLoadingStat",
+            color = '#763dca')
+      md-list(v-else)
         md-list-item(
           v-for = "i in MembersSort"
           :key = "i"
         )
-
-            div
-              strong.md-list-item-text {{ userStatistics[i].name }}
-              span.md-list-item-text Решено задач {{ userStatistics[i].solveSum }}
-            md-button.md-icon-button.md-list-action(@click="openChatWithUser(userStatistics[i].id)")
-              md-icon.md-primary chat_bubble
-      md-list
-        .loading-indicator(v-if='isLoadingStat')
-          loading(
-            :active.sync = "this.isLoadingStat",
-            color = '#763dca')
+          div
+            strong.md-list-item-text {{ userStatistics[i].name }}
+            span.md-list-item-text Решено задач {{ userStatistics[i].solveSum }}
+          md-button.md-icon-button.md-list-action(@click="openChatWithUser(userStatistics[i].id)")
+            md-icon.md-primary chat_bubble
     .taskbar(v-if = "error === 'none'")
       .lessonNavbar
         md-button.md-raised.showStatsButton(style="float:right;margin-right:20px;margin-top:15px;" @click="getDataMembers") {{ tasksInfo.author === getUser.id ? "Статистика" : "Рейтинг"}}
@@ -57,11 +58,6 @@
           :is-full-page = 'true',
           color = '#763dca')
     .content(v-else-if="error === 'none'")
-      div(v-if="rightAns")
-        img.rightAns(src="https://js.cx/clipart/train.gif")
-      //- div#anim-block2.slideUp
-      //-   p Текст или другие элементы, к которым применяется анимация
-        //- img.train(src="https://js.cx/clipart/train.gif" onclick="this.style.left='450px'")
       .name
         span.name-span(v-if = 'this.taskList[this.activeTask].type == "theory"') Теория
         span.name-span(v-else) Задача {{ this.taskList[this.activeTask].taskId }}
@@ -199,21 +195,14 @@
         div
           md-empty-state(md-rounded='' md-icon='history' :md-label=" 'Урок по теме \"' + this.tasksInfo.name + '\" уже закончился'" :md-description=" 'Урок закончился ' + this.tasksInfo.timeEnd.toLocaleString() + '. Спасибо за работу!' ")
           md-button.md-primary.md-raised(@click = '$router.push("/main")') На главную страницу
-    md-dialog(:md-active.sync='solutionShown')
-      md-dialog-title Ответ на задачу
-      .solutionText
-        span.md-headline(v-if ='this.taskList[this.activeTask].solution !== "null"') {{ this.taskList[this.activeTask].solution }}
-        span.md-hedline(v-else) Ответ: {{ this.taskList[this.activeTask].answer }}
-      md-dialog-actions
-        md-button.md-primary(@click='solutionShown = false') OK!
-
-      //- .solutionBox(@click='solutionShown = !solutionShown')
-      //-   .solutionText
-      //-     strong.md-headline(v-if ='this.taskList[this.activeTask].solution !== "null"') {{ this.taskList[this.activeTask].solution }}
-      //-     strong.md-hedline(v-else) Ответ: {{ this.taskList[this.activeTask].answer }}
-      //-   .solutionButtonClose
-      //-     .button.button--round.button-success(
-      //-       @click='solutionShown = false') ОК!
+    .solution(v-if = 'this.solutionShown', @click='solutionShown = !solutionShown')
+      .solutionBox(@click='solutionShown = !solutionShown')
+        .solutionText
+          strong.md-headline(v-if ='this.taskList[this.activeTask].solution !== "null"') {{ this.taskList[this.activeTask].solution }}
+          strong.md-hedline(v-else) Ответ: {{ this.taskList[this.activeTask].answer }}
+        .solutionButtonClose
+          .button.button--round.button-success(
+            @click='solutionShown = false') ОК!
 </template>
 
 <script>
@@ -296,7 +285,7 @@ export default {
       userStatistics: {},
       isLoading: true,
       rightAns: false,
-      isLoadingStat: true,
+      isLoadingStat: false,
       showSidepanel: false,
       answer: '',
       status: 'Idle',
@@ -395,6 +384,7 @@ export default {
       this.$router.push('/pm/' + userId)
     },
     async getDataMembers () {
+      this.isLoadingStat = true
       this.showSidepanel = true
       await this.fetchMembersStatistics(this.getCurrentTopic)
       this.MembersSort = this.getMembersSort
@@ -420,31 +410,15 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .page-container
-    min-height: 300px;
-    overflow: hidden;
-    position: relative;
-    border: 1px solid rgba(#000, .12);
-  .md-drawer
-  .md-content
-    padding: 16px;
-  .rightAns
-    position absolute
-    top 40%
-    right 45%
-
   .lessonNavbar
     height 60px
     align-items center
     .headerName
-      position relative
-      // width 100%
+      margin auto
       margin-top 0.5%
       text-align center
       color #FFFFFF
       font-size 32pt
-      margin-left 0px
-      margin-right 0px
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
@@ -475,7 +449,6 @@ export default {
 
   ::-webkit-scrollbar
     width: 4px;
-    height 5px
 
   .container
     max-height 64px
@@ -521,7 +494,6 @@ export default {
         text-decoration none
   .content-wrapper
     height 100%
-    overflow show
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-weight 800
   input
