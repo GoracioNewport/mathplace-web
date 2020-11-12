@@ -89,6 +89,8 @@ export default {
         },
         async fetchMyChats (ctx) {
             const db = firebase.firestore()
+            // Очищаем хранилище, что бы не вылезало говно
+            ctx.commit('updateMyChats', [])
             var moment = require('moment')
             var vueInstance = this.state.profile
             // console.log(vueInstance)
