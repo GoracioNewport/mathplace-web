@@ -5,7 +5,6 @@ import store from '@/store'
 
 // eslint-disable-next-line
 import { accountDb, tasksDb, olympiadDb, userTasksDb } from './global'
-import { mapMutations } from 'vuex'
 
 export default {
   actions: {

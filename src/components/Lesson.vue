@@ -199,14 +199,21 @@
         div
           md-empty-state(md-rounded='' md-icon='history' :md-label=" 'Урок по теме \"' + this.tasksInfo.name + '\" уже закончился'" :md-description=" 'Урок закончился ' + this.tasksInfo.timeEnd.toLocaleString() + '. Спасибо за работу!' ")
           md-button.md-primary.md-raised(@click = '$router.push("/main")') На главную страницу
-    .solution(v-if = 'this.solutionShown', @click='solutionShown = !solutionShown')
-      .solutionBox(@click='solutionShown = !solutionShown')
-        .solutionText
-          strong.md-headline(v-if ='this.taskList[this.activeTask].solution !== "null"') {{ this.taskList[this.activeTask].solution }}
-          strong.md-hedline(v-else) Ответ: {{ this.taskList[this.activeTask].answer }}
-        .solutionButtonClose
-          .button.button--round.button-success(
-            @click='solutionShown = false') ОК!
+    md-dialog(:md-active.sync='solutionShown')
+      md-dialog-title Ответ на задачу
+      .solutionText
+        span.md-headline(v-if ='this.taskList[this.activeTask].solution !== "null"') {{ this.taskList[this.activeTask].solution }}
+        span.md-hedline(v-else) Ответ: {{ this.taskList[this.activeTask].answer }}
+      md-dialog-actions
+        md-button.md-primary(@click='solutionShown = false') OK!
+
+      //- .solutionBox(@click='solutionShown = !solutionShown')
+      //-   .solutionText
+      //-     strong.md-headline(v-if ='this.taskList[this.activeTask].solution !== "null"') {{ this.taskList[this.activeTask].solution }}
+      //-     strong.md-hedline(v-else) Ответ: {{ this.taskList[this.activeTask].answer }}
+      //-   .solutionButtonClose
+      //-     .button.button--round.button-success(
+      //-       @click='solutionShown = false') ОК!
 </template>
 
 <script>
@@ -335,7 +342,7 @@ export default {
               this.updateUser(['money', this.getUser.money + 3])
               this.updateUser(['right', this.getUser.right + 1])
             } this.status = 'Correct'
-            rightAns = true
+            this.rightAns = true
             if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') verdict = 3
             else verdict = 2
           } else if (this.solutionFile === null) {
@@ -379,9 +386,9 @@ export default {
         this.like(true)
       }
     },
-    showVerdictTask(){
+    showVerdictTask () {
       setTimeout(() => {
-        
+        this.rightAns = false
       }, 3000)
     },
     openChatWithUser (userId) {
