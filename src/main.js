@@ -17,18 +17,24 @@ import 'vue-material/dist/vue-material.min.css'
 import 'vue-material-design-icons/styles.css'
 import 'vue-datetime/dist/vue-datetime.css'
 
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import locale from 'element-ui/lib/locale/lang/ru-RU'
+
 // import { MdButton, MdContent, MdTabs } from 'vue-material/dist/components'
 // import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import Clipboard from 'v-clipboard'
-import { Datetime } from 'vue-datetime'
+// import VueCtkDateTimePicker from 'vue-ctk-date-time-picker'
+// import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 
 // Vue.use(MdButton)
 // Vue.use(MdContent)
 // Vue.use(MdTabs)
 
 Vue.use(VueMaterial)
-Vue.use(Datetime)
+Vue.use(ElementUI, {locale})
+// Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker)
 Vue.use(VueCarousel)
 
 Vue.use(Topic)
@@ -59,7 +65,7 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App, Topic },
+  components: { App },
   template: '<App/>',
   beforeCreate () { this.$store.commit('initialiseStore') }
 })

@@ -1,8 +1,29 @@
 <template lang="pug">
   .content-wrapper
-    //- img#imgSmile(src="@/components/images/back.png")
+    md-drawer(:md-active.sync='showSidepanel')
+      md-toolbar.md-transparent(md-elevation='0')
+        div(style="margin-top: 30px;margin-bottom: 20px;")
+          strong(style="display:block; font-size: 25px;font-weight:500") Рейтинг
+          span(style="display:block;margin-top:10px; font-size: 16px;font-weight:500") всего участников {{ Object.keys(userStatistics).length }}
+      md-list(v-if='!isLoadingStat')
+        md-list-item(
+          v-for = "i in MembersSort"
+          :key = "i"
+        )
+
+            div
+              strong.md-list-item-text {{ userStatistics[i].name }}
+              span.md-list-item-text Решено задач {{ userStatistics[i].solveSum }}
+            md-button.md-icon-button.md-list-action(@click="openChatWithUser(userStatistics[i].id)")
+              md-icon.md-primary chat_bubble
+      md-list
+        .loading-indicator(v-if='isLoadingStat')
+          loading(
+            :active.sync = "this.isLoadingStat",
+            color = '#763dca')
     .taskbar(v-if = "error === 'none'")
       .lessonNavbar
+        md-button.md-raised.showStatsButton(style="float:right;margin-right:20px;margin-top:15px;" @click="getDataMembers") {{ tasksInfo.author === getUser.id ? "Статистика" : "Рейтинг"}}
         router-link(to='/main')
           img#imgBack(src="@/components/images/back.png")
         .headerName
@@ -36,6 +57,11 @@
           :is-full-page = 'true',
           color = '#763dca')
     .content(v-else-if="error === 'none'")
+      div(v-if="rightAns")
+        img.rightAns(src="https://js.cx/clipart/train.gif")
+      //- div#anim-block2.slideUp
+      //-   p Текст или другие элементы, к которым применяется анимация
+        //- img.train(src="https://js.cx/clipart/train.gif" onclick="this.style.left='450px'")
       .name
         span.name-span(v-if = 'this.taskList[this.activeTask].type == "theory"') Теория
         span.name-span(v-else) Задача {{ this.taskList[this.activeTask].taskId }}
@@ -208,6 +234,7 @@ export default {
     pdf
   },
   async mounted () {
+    // Начало загрузки, фетчим все данные
     this.isLoading = true
     this.$store.dispatch('changeCurrentTopic', this.taskId)
     this.$store.dispatch('changeCollection', this.collection)
@@ -216,17 +243,35 @@ export default {
     this.userId = this.getUser.id
     await this.fetchLikes(this.collection)
     await this.fetchTasks(this.collection)
+    // Зафетчили, получаем и обрабатываем
     this.tasksInfo.name = this.getTasksInfo.name
     this.tasksInfo.author = this.getTasksInfo.author
     this.tasksInfo.timeStart = this.getTasksInfo.time_start
     this.tasksInfo.timeEnd = this.getTasksInfo.time_end
     this.taskList = this.getTasks
+    // Проверка на ошибки
     if (this.taskList.length === 0 && this.tasksInfo.author === this.getUser.id) this.error = 'no_material_author'
     else if (this.taskList.length === 0 && this.tasksInfo.author !== this.getUser.id) this.error = 'no_material_member'
     else if (this.tasksInfo.timeStart !== null && this.tasksInfo.timeStart.getTime() > new Date().getTime()) this.error = 'too_early'
     else if (this.tasksInfo.timeEnd !== null && this.tasksInfo.timeEnd.getTime() < new Date().getTime()) this.error = 'too_late'
     else this.error = 'none'
+    // Ставим таймеры для выкидывания ученика по концу урока и для напоминалок
+    if (this.tasksInfo.timeEnd !== null && this.error === 'none') {
+      let endTimeLeft = (this.tasksInfo.timeEnd - new Date())
+      let notificationTimeLeft = (this.tasksInfo.timeEnd - new Date() - 600000)
+      let self = this
+      // В случае переполнения все ломается... Думаю, никто не обидется, если я не буду учитывать варианты, когда до конца урока остается 26 дней
+      if (notificationTimeLeft > 0 && notificationTimeLeft <= 2147483647) setTimeout(() => alert('Осталось 10 минут до конца урока!'), notificationTimeLeft)
+      if (endTimeLeft > 0 && endTimeLeft <= 2147483647) {
+        setTimeout(() => {
+          self.$router.push('/main')
+          alert('Урок окончен! Возможность сдачи задач огранчена')
+        }, endTimeLeft)
+      }
+    }
+    // Переключаем стили лайка в случае, если лайк уже поставлен
     if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
+    // Отключаем загрузочный оверлей и обновляем все на всякий случай
     this.isLoading = false
     this.$forceUpdate()
   },
@@ -239,8 +284,13 @@ export default {
       proofImage,
       activeTask: 0,
       taskList: [],
+      MembersSort: [],
       tasksInfo: {},
+      userStatistics: {},
       isLoading: true,
+      rightAns: false,
+      isLoadingStat: true,
+      showSidepanel: false,
       answer: '',
       status: 'Idle',
       topicLiked: false,
@@ -251,7 +301,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution']),
+    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics']),
     changeActiveTask (i, thisTask) {
       this.status = 'Idle'
       this.activeTask = i
@@ -285,6 +335,7 @@ export default {
               this.updateUser(['money', this.getUser.money + 3])
               this.updateUser(['right', this.getUser.right + 1])
             } this.status = 'Correct'
+            rightAns = true
             if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') verdict = 3
             else verdict = 2
           } else if (this.solutionFile === null) {
@@ -328,10 +379,25 @@ export default {
         this.like(true)
       }
     },
+    showVerdictTask(){
+      setTimeout(() => {
+        
+      }, 3000)
+    },
+    openChatWithUser (userId) {
+      this.$router.push('/pm/' + userId)
+    },
+    async getDataMembers () {
+      this.showSidepanel = true
+      await this.fetchMembersStatistics(this.getCurrentTopic)
+      this.MembersSort = this.getMembersSort
+      this.userStatistics = this.getMembersStatistics
+      this.isLoadingStat = false
+    },
     onFilePicked (event) { this.solutionFile = event[0] }
   },
   computed: {
-    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo']),
+    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort']),
     getDifficulty () {
       var dif
       this.taskList[this.activeTask].difficulty === undefined ? dif = 0 : dif = this.taskList[this.activeTask].difficulty
@@ -347,15 +413,31 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .page-container
+    min-height: 300px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(#000, .12);
+  .md-drawer
+  .md-content
+    padding: 16px;
+  .rightAns
+    position absolute
+    top 40%
+    right 45%
+
   .lessonNavbar
     height 60px
     align-items center
     .headerName
-      margin auto
+      position relative
+      // width 100%
       margin-top 0.5%
       text-align center
       color #FFFFFF
       font-size 32pt
+      margin-left 0px
+      margin-right 0px
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
@@ -386,6 +468,7 @@ export default {
 
   ::-webkit-scrollbar
     width: 4px;
+    height 5px
 
   .container
     max-height 64px
@@ -431,6 +514,7 @@ export default {
         text-decoration none
   .content-wrapper
     height 100%
+    overflow show
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
     font-weight 800
   input

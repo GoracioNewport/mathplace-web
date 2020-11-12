@@ -5,6 +5,7 @@ import store from '@/store'
 
 // eslint-disable-next-line
 import { accountDb, tasksDb, olympiadDb, userTasksDb } from './global'
+import { mapMutations } from 'vuex'
 
 export default {
   actions: {
@@ -223,16 +224,21 @@ export default {
       var topicInfo = {}
       for (let i = 0; i < topicList.length; i++) {
         var topicsData = {}
+        let brokenTopic = false
         await db.collection(olympiadDb).doc(topicList[i]).get().then(doc => {
           var data = doc.data()
-          topicsData['token'] = topicList[i]
-          topicsData['name'] = data.name
-          topicsData['members'] = data.members
-          topicsData['showStats'] = false
-          topicsData['statsLoaded'] = false
-          topicsData['stats'] = {}
+          if (data === undefined) brokenTopic = true
+          else {
+            topicsData['token'] = topicList[i]
+            topicsData['name'] = data.name
+            topicsData['members'] = data.members
+            topicsData['showStats'] = false
+            topicsData['statsLoaded'] = false
+            topicsData['stats'] = {}
+          }
         })
-        topicInfo[topicList[i]] = topicsData
+        if (!brokenTopic) topicInfo[topicList[i]] = topicsData
+        else console.log('Topic ', topicList[i], ' either deleted or corrupted')
       }
       ctx.commit('updateMyTopicsDetailedInfo', topicInfo)
     },
@@ -297,15 +303,20 @@ export default {
       })
       ctx.commit('updateMyTopic', topic)
     },
-    deleteTopic (ctx, payload) {
+    async deleteTopic (ctx, payload) {
       const db = firebase.firestore()
       var docRef = db.collection(accountDb).doc(this.getters.getUser.id)
-      db.runTransaction(function (transaction) {
-        return transaction.get(docRef).then(function (doc) {
-          var list = doc.data().myTopics
-          list = list.filter(e => e !== payload)
-          transaction.update(docRef, { myTopics: list })
-        })
+      let userTopicList = []
+      await docRef.get().then(doc => {
+        let data = doc.data()
+        userTopicList = data.myTopics
+      })
+      console.log(userTopicList, userTopicList.length)
+      userTopicList.splice(userTopicList.findIndex(e => e === payload), 1)
+      console.log(userTopicList, userTopicList.length)
+      console.log(payload)
+      docRef.update({
+        myTopics: userTopicList
       })
       db.collection(olympiadDb).doc(payload).delete()
     },
@@ -364,6 +375,49 @@ export default {
           })
         })
       ctx.commit('updateTopicList', list)
+    },
+    async fetchMembersStatistics (ctx, id) {
+      const db = firebase.firestore()
+      console.log(id)
+      var members = this.getters.getMyTopicsDetailedInfo[id].members
+      console.log(members)
+      var sendData = {}
+      var membersSort = []
+      for (let i = 0; i < members.length; i++) {
+        var info = {}
+        membersSort.push(members[i])
+        await db.collection(accountDb).doc(members[i]).get().then(async doc => {
+          var data = doc.data()
+          info['id'] = members[i]
+          console.log(data)
+          info['name'] = data.name
+          await db.collection(accountDb).doc(members[i]).collection(userTasksDb).doc(id).get().then(statDoc => {
+            var statData = statDoc.data()
+            info['solveStats'] = statData.grades
+          })
+          info['solveSum'] = 0
+        })
+        var cnt = 0
+        for (let i = 0; i < info.solveStats.length; i++) {
+          if (Number(info.solveStats[i]) === 2) cnt++
+        }
+        info.solveSum = cnt
+        sendData[members[i]] = info
+      }
+      // var usrData = {
+      //   id: id,
+      //   data: sendData
+      // }
+      membersSort.sort(function (a, b) {
+        if (sendData[a].solveSum < sendData[b].solveSum) {
+          return 1
+        } else {
+          return -1
+        }
+      })
+      console.log(sendData)
+      ctx.commit('updateMembersSort', membersSort)
+      ctx.commit('updateMembersStats', sendData)
     }
   },
   mutations: {
@@ -394,6 +448,12 @@ export default {
     updateTopicStats (state, payload) {
       state.myTopicsDetailedInfo[payload.id].stats = payload.data
     },
+    updateMembersStats (state, payload) {
+      state.MembersStatistics = payload
+    },
+    updateMembersSort (state, payload) {
+      state.MembersSort = payload
+    },
     updateMyTopic (state, payload) {
       state.myTopic = payload
     },
@@ -408,7 +468,9 @@ export default {
     customTopicTitle: '',
     myTopics: [],
     myTopic: {},
-    topicList: []
+    topicList: [],
+    MembersSort: [],
+    MembersStatistics: {}
   },
   getters: {
     getTopics (state) {
@@ -435,6 +497,12 @@ export default {
     },
     getTopicList (state) {
       return state.topicList
+    },
+    getMembersStatistics (state) {
+      return state.MembersStatistics
+    },
+    getMembersSort (state) {
+      return state.MembersSort
     }
   }
 }

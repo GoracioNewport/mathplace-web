@@ -171,22 +171,26 @@ export default {
   position relative
   width 100%
   font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-  display block
   margin-left 0px
 
 .auth-form
   position relative
   width 45%
+  height auto
   min-width 300px
-  display inline-block
-  box-shadow 0 0 5px 0px rgba(0,0,0,0.5)
+  float right
+  // display inline-block
+  box-shadow 0 0 3px 0px rgba(0,0,0,0.5)
   border-radius 10px
   padding-left 20px
+  margin-bottom 30px
   margin-top 0px
+  top 0px
   padding-right 20px
   @media screen and (max-width:775px)
     width 90%
-    margin-left 5%
+    margin-left 0%
+    float left
 
 .openIns
   font-size 12pt
@@ -196,18 +200,20 @@ export default {
 
 .auth-title
   position relative
-  margin-right 6%
+  // margin-right 6%
   width 45%
+  height auto
   min-width 300px
-  display inline-block
-  box-shadow 0 0 5px 0px rgba(0,0,0,0.5)
+  float left
+  // display inline-block
+  box-shadow 0 0 3px 0px rgba(0,0,0,0.5)
   border-radius 10px
   margin-bottom 30px
   margin-top 0px
   text-align center
   @media screen and (max-width:775px)
     width 90%
-    margin-left 5%
+    margin-left 0%
 
 .textTop
   position relative
@@ -276,13 +282,6 @@ button
   @media screen and (max-width:400px)
     font-size 5pt
 
-@media screen and (max-width:200px)
-  .auth-title
-      display none
-  .auth-form
-    width 100%
-  .auth-space
-    width 0%
 .error
   color #fc5c65
 

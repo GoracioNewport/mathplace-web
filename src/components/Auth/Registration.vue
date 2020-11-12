@@ -15,9 +15,9 @@
               img(class="picture", src='@/assets/googleplay.png', alt='Наше приложение')
             span.ui-title-2.textTop
               strong Интсрукции
-            a.openIns(class=".openIns" href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+            a.openIns(href="./BroshureFinal.pdf")
               p Скачать инструкцию для учеников
-            a.openIns(href="https://play.google.com/store/apps/details?id=com.math4.user.mathplace")
+            a.openIns(href="./Auth/BroshureFinal.pdf")
               p.openIns Скачать инструкцию для учителей
 
           .auth-space
@@ -252,7 +252,7 @@ export default {
     height auto
     min-width 220px
     display inline-block
-    box-shadow 0 0 10px rgba(0,0,0,0.5)
+    box-shadow 0 0 2px 0px rgba(0,0,0,0.5)
     border-radius 10px
     padding-left 20px
     padding-right 20px
@@ -264,7 +264,7 @@ export default {
     width 47%
     min-width 200px
     display inline-block
-    box-shadow 0 0 10px rgba(0,0,0,0.5)
+    box-shadow 0 0 2px 0px rgba(0,0,0,0.5)
     border-radius 10px
     text-align center
 

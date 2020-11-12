@@ -1,28 +1,23 @@
 <template lang='pug'>
-  .content-wrapper(novalidate='' @submit.stop.prevent='showSnackbar = true')
-    //- md-snackbar(:md-position='position' :md-duration='isInfinity ? Infinity : duration' :md-active.sync='showSnackbar' md-persistent='')
-    //-   span Connection timeout. Showing limited messages!
-    //-   md-button.md-primary(@click='showSnackbar = false') Retry
+  .content-wrapper
     .loading-indicator(v-if = 'myTopicsLoading')
       loading(
         :active.sync = "this.myTopicsLoading"
         :is-full-page = 'true'
         color = "#763dca"
         :opacity = 0.5)
+    md-dialog-confirm(:md-active.sync='active' md-title="Вы уверены, что хотите удалить урок?" md-content='Вы больше не сможете зайти в этот урок' md-confirm-text='Удалить' md-cancel-text='Отмена' @md-cancel='onCancel' @md-confirm='deleteMyTopic(topic.token, topicIndex)')
     .topicsBox(v-if = 'myTopics.length !== 0')
       .topicItem(v-for = '(topic, topicIndex) in myTopics.slice().reverse()'
       :key = 'topic.token')
         .img-tooltip
-          img.imageButton(src ='@/assets/images/bin2.png' @click ='deleteMyTopic(topic.token, topicIndex)')
+          img.imageButton(src ='@/assets/images/bin2.png' @click ='active = true')
           md-tooltip(md-direction='right') Удалить урок
         .img-tooltip
           img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
           md-tooltip(md-direction='right') Редактировать урок
         .img-tooltip(@click='showSnack = true')
           img.imageButton(src ='@/assets/images/share_24px.png' @click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + topic.token)')
-          md-snackbar(md-position='center' :md-active.sync='showSnack' :md-persistent='true')
-            span Ссылка скопирована в буфер обмена
-            md-button.md-primary(@click='showSnackbar = false') Ок!
           md-tooltip(md-direction='right') Скопировать ссылку на урок
         span.md-title.topicName {{ topic.name }}
         span.md-body-1.topicToken Ключ: {{ topic.token }}
@@ -30,7 +25,7 @@
         //- button.showStatsButton.button--round.button-primary(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть статистику
         //- button.showStatsButton.button--round.button-primary(v-else @click ='toggleStats(topic.token)') Показать статистику
         md-button.md-raised.md-primary.showStatsButton(v-else @click ='toggleStats(topic.token)') Показать статистику
-        md-button.md-primary.showStatsButton(style="margin-left: 10px;" @click ='joinCourse(topic.token)') Открыть урок
+        md-button.md-primary.showStatsButton(style="margin-left: 10px;", @click ='joinCourse(topic.token)') Открыть урок
         .statsBox(v-if = 'topic.showStats')
           .loadingBox(v-if = 'Object.keys(topic.stats).length == 0')
             md-empty-state(md-rounded='' md-icon='access_time' md-label='В уроке пока нет учеников' md-description="В данный урок пока не присоединились ученики.")
@@ -52,19 +47,7 @@
                   img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
                   img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
                 md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
-    .solutionMenu(v-ifew Promise (<anonymous>)
-    at new F (_export.js?90cd:36)
-    at eval (asyncToGenerator.js?7b11:14)
-    at VueComponent.joinCourse (Statistics.vue?9b62:129)
-vue.esm.js?efeb:628 [Vue warn]: Error in v-on handler (Promise/async): "TypeError: _this3.fetchCustomTopic is not a function"
-
-found in
-
----> <MdButton> at src/components/MdButton/MdButton.vue
-       <SnackbarExample> at src/components/Profile/Statistics.vue
-         <App> at src/App.vue
-           <Root>
-vue.esm.js?efeb:1897 Type = 'solutionImageShown')
+    .solutionMenu(v-if = 'solutionImageShown')
       .solutionMenuBox
         .solutionInner
           img.solutionImage(:src = "myTopics[imageTopic].stats[imageUser].solveStats[imageTask]")
@@ -95,7 +78,6 @@ const searchByName = (items, term) => {
 }
 
 export default {
-  name: 'SnackbarExample',
 
   components: {
     Right,
@@ -117,6 +99,7 @@ export default {
       isInfinity: false,
       myTopics: [],
       search: null,
+      active: false,
       searched: {},
       solutionImageShown: false,
       imageTopic: 0,
@@ -138,6 +121,9 @@ export default {
         this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
       }
     },
+    // async getUserStatisctics(){
+    //     await this.fetchTopicStatistics(id);
+    // },
     async joinCourse (id) {
       await this.fetchCustomTopic(id)
       var res = this.getCustomTopic
@@ -179,7 +165,7 @@ export default {
     this.searched = this.myTopics
   },
   computed: {
-    ...mapGetters(['getMyTopicsDetailedInfo'])
+    ...mapGetters(['getMyTopicsDetailedInfo', 'getCustomTopic'])
   }
 }
 </script>

@@ -14,23 +14,13 @@
             .avatar
                 md-avatar
                   img.avatarImage.avatar(
-                    @mouseover ='avatarHover = true'
-                    @mouseleave ='avatarHover = false'
-                    @click ='settingsMenuShow = true'
                     v-if = 'getUser.image === undefined'
                       src = '@/assets/images/account_new.png',
                       alt = 'Аватар')
                   img.avatarImage.avatar(
-                    @mouseover ='avatarHover = true'
-                    @mouseleave ='avatarHover = false'
-                    @click ='settingsMenuShow = true'
                     v-else
                       :src = 'getUser.image',
                       alt = 'Аватар')
-                img.avatarChange(
-                  v-if = 'avatarHover'
-                  src = '@/assets/images/camera.png'
-                )
                 .userInf
                   p.userName {{ this.getUser.name }}
                   .info
@@ -45,7 +35,6 @@
                     //- button.designButtonMini Выйти
                   button.designButtonMini(@click='active = true') Выйти
                   md-dialog-confirm(:md-active.sync='active' md-title="Вы уверены, что хотите выйти?" md-content='Вы сможете перезайти в другой аккаунт' md-confirm-text='Выйти' md-cancel-text='Отмена' @md-cancel='onCancel' @md-confirm='onConfirm')
-
 
         .content-achieve
           .text-part(
@@ -230,7 +219,7 @@ export default {
       this.newAvatarFile = event[0]
     },
     onConfirm () {
-      this.$router.push('\logout')
+      this.$router.push('/logout')
     },
     onCancel () {
     }

@@ -21,8 +21,8 @@
             label
               strong(v-if = 'chat.type === "group"') {{ chat.name }}
               strong(v-else) {{ chatMembers[chat.name] }}
-          .chat-modify(v-if = 'admin')
-            img.settingIcon(v-if ='chat.type === "group"' @click ='settingsMenuShow = true, showDialog = true' src='@/assets/images/settings.png')
+          .chat-modify(v-if = 'chat.type === "group"')
+            img.settingIcon(v-if ='chat.type === "group"' @click ='settingsMenuShow = true, showDialog=true' src='@/assets/images/settings.png')
       .chat-box(ref='scrollAnchor')
         .message(v-for = '(msg, i) in chat.msgs' v-if='msg.status !== "deleted"')
           //- Системные сообщения
@@ -55,8 +55,8 @@
       md-dialog(:md-active.sync='showDialog')
         md-dialog-title Настройки чата
         md-tabs(md-dynamic-height='')
-          md-tab(md-label='Общие')
-            .settingsAdminBox(v-if = 'admin')
+          md-tab(v-if = 'admin' md-label='Общие')
+            .settingsAdminBox
               .settingsMenuText
                 span.md-headline Изменение имени
               .settingsMenuField
