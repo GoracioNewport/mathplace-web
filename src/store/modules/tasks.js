@@ -97,12 +97,17 @@ export default {
                 for (let i = 0; i < generatePattern.length; i++) generatePatternMap[i] = generatePattern[i]
                 if (generatePattern.length > 0) userData.update({ 'generatePattern': generatePatternMap })
               } else {
+                var blockCnt = 0
                 for (let i = 0; i < docData.tasks.length; i++) {
-                  var blockCnt = 0
+                  console.log(userTopicDetails.generatePattern)
                   if (docData.tasks[i].type !== 'block') tasks.push(docData.tasks[i])
                   else {
+                    console.log('enter block')
+                    console.log('pattern: ', userTopicDetails.generatePattern[blockCnt], blockCnt)
                     for (let j = 0; j < userTopicDetails.generatePattern[blockCnt].length; j++) tasks.push(docData.tasks[i].tasks[userTopicDetails.generatePattern[blockCnt][j]])
-                    blockCnt++
+                    console.log('aaa', blockCnt)
+                    blockCnt += 1
+                    console.log('bbb', blockCnt)
                   }
                 }
               } docData.tasks = tasks
