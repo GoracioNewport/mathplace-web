@@ -1,8 +1,30 @@
 <template lang="pug">
   .content-wrapper
-    //- img#imgSmile(src="@/components/images/back.png")
+    md-drawer(:md-active.sync='showSidepanel')
+      md-toolbar.md-transparent(md-elevation='0')
+        div(style="margin-top: 30px;margin-bottom: 20px;")
+          strong(style="display:block; font-size: 25px;font-weight:500") Рейтинг
+          span(style="display:block;margin-top:10px; font-size: 16px;font-weight:500") всего участников {{ Object.keys(userStatistics).length }}
+      .loading-indicator(v-if='isLoadingStat')
+        p Загрузка...
+        .vld-parent
+          loading(
+            is-full-page = 'false',
+            :active.sync = "isLoadingStat",
+            color = '#763dca')
+      md-list(v-else)
+        md-list-item(
+          v-for = "i in MembersSort"
+          :key = "i"
+        )
+          div
+            strong.md-list-item-text {{ userStatistics[i].name }}
+            span.md-list-item-text Решено задач {{ userStatistics[i].solveSum }}
+          md-button.md-icon-button.md-list-action(@click="openChatWithUser(userStatistics[i].id)")
+            md-icon.md-primary chat_bubble
     .taskbar(v-if = "error === 'none'")
       .lessonNavbar
+        md-button.md-raised.showStatsButton(style="float:right;margin-right:20px;margin-top:15px;" @click="getDataMembers") {{ tasksInfo.author === getUser.id ? "Статистика" : "Рейтинг"}}
         router-link(to='/main')
           img#imgBack(src="@/components/images/back.png")
         .headerName
@@ -258,8 +280,13 @@ export default {
       proofImage,
       activeTask: 0,
       taskList: [],
+      MembersSort: [],
       tasksInfo: {},
+      userStatistics: {},
       isLoading: true,
+      rightAns: false,
+      isLoadingStat: false,
+      showSidepanel: false,
       answer: '',
       status: 'Idle',
       topicLiked: false,
@@ -270,7 +297,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution']),
+    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics']),
     changeActiveTask (i, thisTask) {
       this.status = 'Idle'
       this.activeTask = i
@@ -304,6 +331,7 @@ export default {
               this.updateUser(['money', this.getUser.money + 3])
               this.updateUser(['right', this.getUser.right + 1])
             } this.status = 'Correct'
+            this.rightAns = true
             if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') verdict = 3
             else verdict = 2
           } else if (this.solutionFile === null) {
@@ -347,10 +375,26 @@ export default {
         this.like(true)
       }
     },
+    showVerdictTask () {
+      setTimeout(() => {
+        this.rightAns = false
+      }, 3000)
+    },
+    openChatWithUser (userId) {
+      this.$router.push('/pm/' + userId)
+    },
+    async getDataMembers () {
+      this.isLoadingStat = true
+      this.showSidepanel = true
+      await this.fetchMembersStatistics(this.getCurrentTopic)
+      this.MembersSort = this.getMembersSort
+      this.userStatistics = this.getMembersStatistics
+      this.isLoadingStat = false
+    },
     onFilePicked (event) { this.solutionFile = event[0] }
   },
   computed: {
-    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo']),
+    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort']),
     getDifficulty () {
       var dif
       this.taskList[this.activeTask].difficulty === undefined ? dif = 0 : dif = this.taskList[this.activeTask].difficulty

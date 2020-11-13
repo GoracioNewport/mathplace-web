@@ -6,25 +6,26 @@
         :is-full-page = 'true'
         color = "#763dca"
         :opacity = 0.5)
+    md-dialog-confirm(:md-active.sync='active' md-title="Вы уверены, что хотите удалить урок?" md-content='Вы больше не сможете зайти в этот урок' md-confirm-text='Удалить' md-cancel-text='Отмена' @md-cancel='onCancel' @md-confirm='deleteMyTopic(topic.token, topicIndex)')
     .topicsBox(v-if = 'myTopics.length !== 0')
       .topicItem(v-for = '(topic, topicIndex) in myTopics.slice().reverse()'
       :key = 'topic.token')
         .img-tooltip
-          img.imageButton(src ='@/assets/images/bin2.png' @click ='deleteMyTopic(topic.token)')
+          img.imageButton(src ='@/assets/images/bin2.png' @click ='active = true')
           md-tooltip(md-direction='right') Удалить урок
         .img-tooltip
           img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
           md-tooltip(md-direction='right') Редактировать урок
         .img-tooltip(@click='showSnack = true')
           img.imageButton(src ='@/assets/images/share_24px.png' @click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + topic.token)')
-          md-snackbar(md-position='center' :md-active.sync='showSnack' :md-persistent='true')
-            span Ссылка скопирована в буфер обмена
-            md-button.md-primary(@click='showSnackbar = false') Ок!
           md-tooltip(md-direction='right') Скопировать ссылку на урок
         span.md-title.topicName {{ topic.name }}
         span.md-body-1.topicToken Ключ: {{ topic.token }}
-        button.showStatsButton.button--round.button-primary(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть статистику
-        button.showStatsButton.button--round.button-primary(v-else @click ='toggleStats(topic.token)') Показать статистику
+        md-button.md-raised.md-primary.showStatsButton(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть статистику
+        //- button.showStatsButton.button--round.button-primary(v-if = 'topic.showStats' @click ='toggleStats(topic.token)') Скрыть статистику
+        //- button.showStatsButton.button--round.button-primary(v-else @click ='toggleStats(topic.token)') Показать статистику
+        md-button.md-raised.md-primary.showStatsButton(v-else @click ='toggleStats(topic.token)') Показать статистику
+        md-button.md-primary.showStatsButton(style="margin-left: 10px;", @click ='joinCourse(topic.token)') Открыть урок
         .statsBox(v-if = 'topic.showStats')
           .loadingBox(v-if = 'Object.keys(topic.stats).length == 0')
             md-empty-state(md-rounded='' md-icon='access_time' md-label='В уроке пока нет учеников' md-description="В данный урок пока не присоединились ученики.")
@@ -98,6 +99,7 @@ export default {
       isInfinity: false,
       myTopics: [],
       search: null,
+      active: false,
       searched: {},
       solutionImageShown: false,
       imageTopic: 0,
@@ -109,7 +111,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchTopicStatistics', 'markDBSolutionAs', 'deleteTopic']),
+    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchTopicStatistics', 'markDBSolutionAs', 'deleteTopic', 'fetchCustomTopic']),
     async toggleStats (id) {
       let obj = this.myTopics.find(x => x.token === id)
       let index = this.myTopics.indexOf(obj)
@@ -117,6 +119,20 @@ export default {
       if (this.myTopics[index].showStats) {
         await this.fetchTopicStatistics(id)
         this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
+      }
+    },
+    // async getUserStatisctics(){
+    //     await this.fetchTopicStatistics(id);
+    // },
+    async joinCourse (id) {
+      await this.fetchCustomTopic(id)
+      var res = this.getCustomTopic
+      if (res !== null) {
+        this.$router.push('/lesson/olympiads=' + id)
+      } else {
+        this.customTopicId = ''
+        this.placeholder = 'Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа'
+        alert('Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа')
       }
     },
     searchOnTable () {
@@ -140,10 +156,8 @@ export default {
       this.solutionImageShown = false
       this.markDBSolutionAs({ userId: this.imageUserId, topicName: this.myTopics[this.imageTopic].token, taskId: this.imageTask, newStats: this.myTopics[this.imageTopic].stats[this.imageUser].solveStats })
     },
-    deleteMyTopic (token) {
-      let i = this.myTopics.findIndex(e => e.token === token)
+    deleteMyTopic (token, i) {
       this.myTopics.splice(i, 1)
-      console.log(token, i)
       this.deleteTopic(token)
     }
   },
@@ -151,7 +165,7 @@ export default {
     this.searched = this.myTopics
   },
   computed: {
-    ...mapGetters(['getMyTopicsDetailedInfo'])
+    ...mapGetters(['getMyTopicsDetailedInfo', 'getCustomTopic'])
   }
 }
 </script>
@@ -192,8 +206,8 @@ export default {
     margin-left 25%
     margin-right 25%
     @media screen and (max-width: 1300px)
-      margin-left 6%
-      margin-right 6%
+      margin-left 18%
+      margin-right 18%
     @media screen and (max-width: 700px)
       margin-left 2%
       margin-right 2%
@@ -252,10 +266,9 @@ export default {
     width 100%
   .showStatsButton
     position relative
-    height auto
-    background-color #763dca
-    margin-bottom 10px
-    margin-top 10px
+    margin-bottom 0px
+    margin-left 0px
+    margin-top 20px
   .answerRight
     height 2em !important
     width 2em
@@ -263,7 +276,7 @@ export default {
     position relative
     height auto
     background-color #ffffff
-    box-shadow 0 0 5px rgba(0,0,0,0.5)
+    box-shadow 0 0 2px 0px rgba(0,0,0,0.5)
     border-radius 20px 20px 20px 20px
     margin 3%
     padding-left 15px

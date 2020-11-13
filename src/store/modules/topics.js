@@ -383,6 +383,49 @@ export default {
           })
         })
       ctx.commit('updateTopicList', list)
+    },
+    async fetchMembersStatistics (ctx, id) {
+      const db = firebase.firestore()
+      console.log(id)
+      var members = this.getters.getMyTopicsDetailedInfo[id].members
+      console.log(members)
+      var sendData = {}
+      var membersSort = []
+      for (let i = 0; i < members.length; i++) {
+        var info = {}
+        membersSort.push(members[i])
+        await db.collection(accountDb).doc(members[i]).get().then(async doc => {
+          var data = doc.data()
+          info['id'] = members[i]
+          console.log(data)
+          info['name'] = data.name
+          await db.collection(accountDb).doc(members[i]).collection(userTasksDb).doc(id).get().then(statDoc => {
+            var statData = statDoc.data()
+            info['solveStats'] = statData.grades
+          })
+          info['solveSum'] = 0
+        })
+        var cnt = 0
+        for (let i = 0; i < info.solveStats.length; i++) {
+          if (Number(info.solveStats[i]) === 2) cnt++
+        }
+        info.solveSum = cnt
+        sendData[members[i]] = info
+      }
+      // var usrData = {
+      //   id: id,
+      //   data: sendData
+      // }
+      membersSort.sort(function (a, b) {
+        if (sendData[a].solveSum < sendData[b].solveSum) {
+          return 1
+        } else {
+          return -1
+        }
+      })
+      console.log(sendData)
+      ctx.commit('updateMembersSort', membersSort)
+      ctx.commit('updateMembersStats', sendData)
     }
   },
   mutations: {
@@ -413,6 +456,12 @@ export default {
     updateTopicStats (state, payload) {
       state.myTopicsDetailedInfo[payload.id].stats = payload.data
     },
+    updateMembersStats (state, payload) {
+      state.MembersStatistics = payload
+    },
+    updateMembersSort (state, payload) {
+      state.MembersSort = payload
+    },
     updateMyTopic (state, payload) {
       state.myTopic = payload
     },
@@ -427,7 +476,9 @@ export default {
     customTopicTitle: '',
     myTopics: [],
     myTopic: {},
-    topicList: []
+    topicList: [],
+    MembersSort: [],
+    MembersStatistics: {}
   },
   getters: {
     getTopics (state) {
@@ -454,6 +505,12 @@ export default {
     },
     getTopicList (state) {
       return state.topicList
+    },
+    getMembersStatistics (state) {
+      return state.MembersStatistics
+    },
+    getMembersSort (state) {
+      return state.MembersSort
     }
   }
 }

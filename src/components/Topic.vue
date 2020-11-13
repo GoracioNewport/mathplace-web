@@ -159,6 +159,7 @@ export default {
     border-radius 10%
     height 300px
     margin 5%
+    max-width 400px
 
   .topic-item-percentage
     font-size 2em

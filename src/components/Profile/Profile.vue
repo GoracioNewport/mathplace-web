@@ -30,9 +30,11 @@
                 .userButton
                   router-link(to='/statistics')
                     button.designButtonMini Мои уроки
-                  button.designButtonMini(@click ='settingsMenuShow = true') Редактировать профиль
-                  router-link(to='/logout')
-                    button.designButtonMini Выйти
+                  button.designButtonMini(@click ='settingsMenuShow = true, showDialog = true') Редактировать профиль
+                  //- router-link(to='/logout')
+                    //- button.designButtonMini Выйти
+                  button.designButtonMini(@click='active = true') Выйти
+                  md-dialog-confirm(:md-active.sync='active' md-title="Вы уверены, что хотите выйти?" md-content='Вы сможете перезайти в другой аккаунт' md-confirm-text='Выйти' md-cancel-text='Отмена' @md-cancel='onCancel' @md-confirm='onConfirm')
 
         .content-achieve
           .text-part(
@@ -93,27 +95,47 @@
                 ) {{ part.condition }}
                 p.achivProgress(
                 ) {{"Прогресс "}} {{ part.progress }}{{" %"}}
-      .settingsMenu(v-if = 'settingsMenuShow')
-        .joinMenuMain
-          img(src="@/components/images/clear.png", @click ='settingsMenuShow = false').delete_button
-          .settingsMenuBox
-            .settingsMenuText
-              p Введите имя
-            .settingsMenuField
-              md-field(md-inline='')
-                label Введите имя
-                md-input(v-model='newName')
+      div(v-if = 'settingsMenuShow')
+        md-dialog(:md-active.sync='showDialog')
+          md-dialog-title Изменить профиль
+          md-tab(md-label='Участники')
+            .settingsMenuBox
+              .settingsMenuText
+                p Введите имя
+              .settingsMenuField
+                md-field(md-inline='')
+                  label Введите имя
+                  md-input(v-model='newName')
 
-            .settingsMenuText
-              p Добавьте иконку профиля
-            .settingsMenuField
-              md-field
-                label Выберите картинку
-                md-file(v-model='newAvatarName' @md-change ='onFilePicked' accept ="image/*")
+              .settingsMenuText
+                p Добавьте иконку профиля
+              .settingsMenuField
+                md-field
+                  label Выберите картинку
+                  md-file(v-model='newAvatarName' @md-change ='onFilePicked' accept ="image/*")
+          md-dialog-actions
+            md-button.md-primary(@click='showDialog = false,settingsMenuShow = false') Закрыть
+            md-button.md-primary(@click='saveProfile') Сохранить
+        //- .joinMenuMain
+        //-   img(src="@/components/images/clear.png", @click ='settingsMenuShow = false').delete_button
+        //-   .settingsMenuBox
+        //-     .settingsMenuText
+        //-       p Введите имя
+        //-     .settingsMenuField
+        //-       md-field(md-inline='')
+        //-         label Введите имя
+        //-         md-input(v-model='newName')
 
-            .settingsMenuCancel
-              button.designButtonLesson(@click ='saveProfile') Сохранить
-              //- .button.button--round.button-warning(@click ='settingsMenuShow = false')  Отмена
+        //-     .settingsMenuText
+        //-       p Добавьте иконку профиля
+        //-     .settingsMenuField
+        //-       md-field
+        //-         label Выберите картинку
+        //-         md-file(v-model='newAvatarName' @md-change ='onFilePicked' accept ="image/*")
+
+        //-     .settingsMenuCancel
+        //-       button.designButtonLesson(@click ='saveProfile') Сохранить
+        //-       //- .button.button--round.button-warning(@click ='settingsMenuShow = false')  Отмена
       .createTopicButton
         router-link(to='/customTitle').mdc-fab.bottom_button
           .createTopicButtonBox
@@ -147,7 +169,10 @@ export default {
         done: 0,
         difficulty: 'easy'
       }],
+      active: false,
+      value: null,
       isLoading: true,
+      showDialog: false,
       avatarHover: false,
       settingsMenuShow: false,
       newName: '',
@@ -192,6 +217,11 @@ export default {
     },
     onFilePicked (event) {
       this.newAvatarFile = event[0]
+    },
+    onConfirm () {
+      this.$router.push('/logout')
+    },
+    onCancel () {
     }
   }
 }
@@ -260,18 +290,12 @@ export default {
   .createTopicButton
     z-index 10
   .settingsMenuBox
-    padding 5%
-    padding-top 3%
-    padding-left 10%
-    padding-right 10%
-    .button
-      font-size 20pt
-      margin 2%
+    padding 10px
   .settingsMenuText
     font-weight 400
     font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     font-size 24pt
-    margin-top 30px
+    margin-top 10px
     margin-bottom 40px
 
   .settingsMenuField
@@ -288,18 +312,6 @@ export default {
     position fixed
     top 0
     left 0
-  .settingsMenuBox
-    text-align center
-    background-color #FFFFFF
-    margin-top 10%
-    margin-left 20%
-    margin-right 20%
-    min-width 350px
-    border 0px #000000 solid
-    border-radius 25px
-    @media screen and (max-width: 600px)
-      margin 1%
-      margin-top 20%
   .avatarChange
     top 55%
     right 93.8%

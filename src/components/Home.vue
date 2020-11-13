@@ -27,41 +27,42 @@
       //-   a(href='#graphs', v-smooth-scroll='')
       //-     img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
 
-      .joinCustomTitle(@click="joinMenuShow = !joinMenuShow")
+      .joinCustomTitle(@click="joinMenuShow = !joinMenuShow, showDialog = true")
         button.designButtonLesson.bottom-button Присоединиться к уроку
 
       .container
-        .AllSections
+        .AllSection
           .title_topic2
             p Разделы
-          a.Section(href='#school', style="background-color: #E9EBFA; color:#3e50cb;", v-smooth-scroll='')
-            //- img(src="@/components/images/school1.png")
-            p.title Школа
-            p.text 23 урока
-          a.Section(href='#examination', style="background-color: #e7f2ff; color:#1466c6;", v-smooth-scroll='')
-            //- img(src="@/components/images/examination1.png")
-            p.title Экзамены
-            p.text 23 урока
-          a.Section(href='#geometry', style="background-color: #e9f9e9; color:#288b28;", v-smooth-scroll='')
-            //- img(src="@/components/images/geometry1.png")
-            p.title Геометрия
-            p.text 23 урока
-          a.Section(href='#algebra', style="background-color: #ffeede; color:#ff810a;", v-smooth-scroll='')
-            //- img(src="@/components/images/algebra1.png")
-            p.title Алгебра
-            p.text 23 урока
-          a.Section(href='#komba', style="background-color: #E9EBFA; color:#3e50cb;", v-smooth-scroll='')
-            //- img(src="@/components/images/komba1.png")
-            p.title Комбинаторика
-            p.text 23 урока
-          a.Section(href='#logic', style="background-color: #e7f2ff; color:#1466c6;", v-smooth-scroll='')
-            //- img(src="@/components/images/logic1.png")
-            p.title Логика
-            p.text 23 урока
-          a.Section(href='#graphs', style="background-color: #e9f9e9; color:#288b28;", v-smooth-scroll='')
-            //- img(src="@/components/images/graph_icon1.png")
-            p.title Графы
-            p.text 23 урока
+          .AllSections
+              a.Section(href='#school', style="background-color: #E9EBFA; color:#3e50cb;", v-smooth-scroll='')
+                //- img(src="@/components/images/school1.png")
+                p.title Школа
+                p.text 23 урока
+              a.Section(href='#examination', style="background-color: #e7f2ff; color:#1466c6;", v-smooth-scroll='')
+                //- img(src="@/components/images/examination1.png")
+                p.title Экзамены
+                p.text 23 урока
+              a.Section(href='#geometry', style="background-color: #e9f9e9; color:#288b28;", v-smooth-scroll='')
+                //- img(src="@/components/images/geometry1.png")
+                p.title Геометрия
+                p.text 23 урока
+              a.Section(href='#algebra', style="background-color: #ffeede; color:#ff810a;", v-smooth-scroll='')
+                //- img(src="@/components/images/algebra1.png")
+                p.title Алгебра
+                p.text 23 урока
+              a.Section(href='#komba', style="background-color: #E9EBFA; color:#3e50cb;", v-smooth-scroll='')
+                //- img(src="@/components/images/komba1.png")
+                p.title Комбинаторика
+                p.text 23 урока
+              a.Section(href='#logic', style="background-color: #e7f2ff; color:#1466c6;", v-smooth-scroll='')
+                //- img(src="@/components/images/logic1.png")
+                p.title Логика
+                p.text 23 урока
+              a.Section(href='#graphs', style="background-color: #e9f9e9; color:#288b28;", v-smooth-scroll='')
+                //- img(src="@/components/images/graph_icon1.png")
+                p.title Графы
+                p.text 23 урока
 
         .pesontedan
           input(id='pesontedan-eight',type='checkbox', name='pesontedans')
@@ -326,27 +327,44 @@
                   v-bind:theme='topic.theme'
                   v-bind:like='topic.like'
                 )
-    .joinMenu(v-if = 'this.joinMenuShow')
-      .joinMenuMain
-        img(src="@/components/images/clear.png", @click ='joinMenuShow = false; groupChat = false').delete_button
-        .joinMenuBox
-          .joinMenuText
-            span.md-headline Введите ключ темы
-          .joinMenuField
-            input(
-                    type="text"
-                    :placeholder="this.placeholder"
-                    v-model="customTopicId"
-            )
-          .joinMenuCancel
-            button.button--round.designButtonLesson(@click ='joinCourse(customTopicId)') Подключиться
-            //- .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
-      .errorBox(v-if = 'this.error')
-        strong.marginText.errorText Ой-ой... :(
-        br
-        span.marginTex Похоже, что-то пошло не так.
-        br
-        span.marginTex Пожалуйста, проверьте свое подключение к интернету.
+    div(v-if = 'this.joinMenuShow')
+      md-dialog(:md-active.sync='showDialog')
+        md-dialog-title Подключиться к уроку
+        p(style="margin:20px;margin-top:0px;") К каждого урока есть свой уникальный код.<br> Введите код урока или попросите учителя отправить его вам
+        div(style="margin:20px;margin-top:0px;")
+          md-field
+            label Введите код урока...
+            md-input(v-model="customTopicId" md-counter='6')
+        md-dialog-actions
+          md-button.md-primary(@click='showDialog = false,settingsMenuShow = false') Отмена
+          md-button.md-primary(@click ='joinCourse(customTopicId)') Подключиться
+
+      //- md-dialog-prompt(@click ='joinCourse(customTopicId)', :md-active.sync='showDialog' v-model='customTopicId' md-title="Введите код урока" md-input-maxlength='6' md-input-placeholder='Код урока...' md-confirm-text='Подключиться' md-cancel-text="Отмена")
+        //- md-button.md-primary.md-raised(@click='active = true') Подключиться
+        //- span(v-if='value') Value: {{ value }}
+      //- .joinMenuMain
+      //-   img(src="@/components/images/clear.png", @click ='joinMenuShow = false; groupChat = false').delete_button
+      //-   .joinMenuBox
+      //-     .joinMenuText
+      //-       span.md-headline Введите ключ темы
+      //-     .joinMenuField
+      //-       input(
+      //-               type="text"
+      //-               :placeholder="this.placeholder"
+      //-               v-model="customTopicId"
+      //-       )
+      //-     .joinMenuCancel
+      //-       button.button--round.designButtonLesson(@click ='joinCourse(customTopicId)') Подключиться
+      //-       //- .button.button--round.button-warning(@click ='joinMenuShow = false')  Отмена
+      //- .errorBox(v-if = 'this.error')
+      //-   strong.marginText.errorText Ой-ой... :(
+      //-   br
+      //-   span.marginTex Похоже, что-то пошло не так.
+      //-   br
+      //-   span.marginTex Пожалуйста, проверьте свое подключение к интернету.
+      //- md-dialog-prompt(:md-active.sync='active' v-model='value' md-title="What's your name?" md-input-maxlength='30' md-input-placeholder='Type your name...' md-confirm-text='Done')
+      //-   md-button.md-primary.md-raised(@click='active = true') Prompt
+      //-   span(v-if='value') Value: {{ value }}
 </template>
 
 <script>
@@ -371,6 +389,7 @@ export default {
       arrayLogics: [],
       arrayGraphs: [],
       isLoading: true,
+      showDialog: false,
       joinMenuShow: false,
       customTopicId: '',
       error: false,
@@ -415,6 +434,33 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  ::-webkit-scrollbar-button
+    background-image:url('');
+    background-repeat:no-repeat;
+    width:0px;
+    height:0px
+
+  ::-webkit-scrollbar-track
+    background-color:#ecedee
+
+  ::-webkit-scrollbar-thumb
+    -webkit-border-radius: 0px;
+    border-radius: 20px;
+    background-color #763DCA
+
+  ::-webkit-scrollbar-thumb:hover
+    background-color:#56999f;
+
+  ::-webkit-resizer
+    background-image:url('');
+    background-repeat:no-repeat;
+    width:0px;
+    height:0px
+
+  ::-webkit-scrollbar
+    width: 0px;
+    height 0px
+
   .joinMenuMain
     positine relative
     height auto
@@ -457,21 +503,24 @@ export default {
     color #FFFFFF !important
     background-color #763DCA
 
-  .AllSections::-webkit-scrollbar {width:0px;height:0px;}
+  // .AllSections::-webkit-scrollbar {width:0px;height:0px;}
   .AllSections
     position relative
-    height 200px
+    height auto
     width 100%
+    margin-bottom 0px
     overflow: auto;
-    margin-bottom 50px
-    overflow-x: hidden;
-    mind-width 800px
     white-space:nowrap;
-  .Section
+  .AllSection
     position relative
+    width: 100%;
+    height: 100%;
+    margin-bottom 50px
+    // overflow: auto;
+  .Section
     height 110px
     width 250px
-    vertical-align: top;
+    background: #fc0;  /* Цвет фона */
     display inline-block
     background-color #ffffff
     margin 10px

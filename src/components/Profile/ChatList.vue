@@ -1,12 +1,17 @@
 <template lang="pug">
   .content-wrapper
-    .loading-indicator
+    .loading-indicator(v-if = 'loading')
       loading(
         :active.sync = "this.loading"
         is-full-page = true
         color = "#763dca"
         :opacity = 0.5)
-    .chatList
+    div(v-else-if ='!loading && chatList.length === 0' style="margin-top: 50px")
+        //- .chat-fragment
+          //- md-empty-state(md-icon='devices_other' md-label='Create your first project' md-description="Creating project, you'll be able to upload your design and collaborate with people.")
+        md-empty-state(md-rounded='' md-icon='create' md-label=" У вас нету ни одного чата" md-description="Создайте личный или групповой чат")
+          md-button.md-primary.md-raised(@click = 'createNewChat()') Создать чат
+    .chatList(v-else)
       .chat-fragment(v-for = '(chats, i) in chatList'
       @click = 'goToChat(chats.id)'
       )
@@ -289,10 +294,6 @@ export default {
     background-color #FFFFFF
     opacity 0.5
     transition: 0.6s;
-    text-align center
-    vertical-align middle
-    @media screen and (max-width: 480px)
-      display none
   .designButtonLesson:hover
     transition: 0.6s;
     color #FFFFFF !important

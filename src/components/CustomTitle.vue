@@ -846,6 +846,7 @@ export default {
     margin-right 0px
     margin-top 25px
     margin-bottom 20px
+    transition: 0.6s;
     text-align center
     float right
     padding 13px

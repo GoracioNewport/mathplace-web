@@ -22,7 +22,7 @@
               strong(v-if = 'chat.type === "group"') {{ chat.name }}
               strong(v-else) {{ chatMembers[chat.name] }}
           .chat-modify(v-if = 'chat.type === "group"')
-            img.settingIcon(v-if ='chat.type === "group"' @click ='settingsMenuShow = true' src='@/assets/images/settings.png')
+            img.settingIcon(v-if ='chat.type === "group"' @click ='settingsMenuShow = true, showDialog=true' src='@/assets/images/settings.png')
       .chat-box(ref='scrollAnchor')
         .message(v-for = '(msg, i) in chat.msgs' v-if='msg.status !== "deleted"')
           //- Системные сообщения
@@ -51,25 +51,26 @@
             :is-full-page = 'false'
             color = "#763dca"
             :opacity = 0)
-    .settingsMenu(v-if = 'settingsMenuShow && !loading')
-        .settingsMenuBox
-          .settingsAdminBox(v-if = 'admin')
-            .settingsMenuText
-              span.md-headline Изменение имени
-            .settingsMenuField
-              md-field(md-inline='')
-                label Введите имя
-                md-input(v-model='newName')
+    div(v-if = 'settingsMenuShow && !loading')
+      md-dialog(:md-active.sync='showDialog')
+        md-dialog-title Настройки чата
+        md-tabs(md-dynamic-height='')
+          md-tab(v-if = 'admin' md-label='Общие')
+            .settingsAdminBox
+              .settingsMenuText
+                span.md-headline Изменение имени
+              .settingsMenuField
+                md-field(md-inline='')
+                  label Введите имя
+                  md-input(v-model='newName')
 
-            .settingsMenuText
-              span.md-headline Изменение аватара
-            .settingsMenuField
-              md-field
-                label Выберите картинку
-                md-file(v-model='newAvatarName' @md-change ='onFilePicked' accept="image/*")
-          .settingsMenuText
-            span.md-headline Участники
-          .settingsMenuField
+              .settingsMenuText
+                span.md-headline Изменение аватара
+              .settingsMenuField
+                md-field
+                  label Выберите картинку
+                  md-file(v-model='newAvatarName' @md-change ='onFilePicked' accept="image/*")
+          md-tab(md-label='Участники')
             .memberBox
               md-field
                 label Введите email
@@ -78,11 +79,44 @@
             .memberBox(v-for ='(mem, memId) in chatMembers' :key = 'memId' v-if ='!removedUsers[memId]')
               span.memberText.md-body-2 {{ mem }}
               img.memberCross(v-if ='admin || memId === getUser.id' src = '@/assets/images/wrong.png' @click ='deleteMember(memId, mem)')
-          .settingsMenuCancel
-            .button.button--round.button-success(v-if ='admin' @click ='saveProfile') Сохранить
-            .button.button--round.button-warning(@click ='settingsMenuShow = false')  Отмена
-            .button.button--round.button-light(@click ='deleteMember(getUser.id, getUser.name)') Выйти из беседы
-            .button.button--round.button-default(@click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Fpm%2F" + id)') Скопировать ссылку на беседу
+          md-tab(md-label='Дополнительно')
+            md-button.button.md-raised.md-primary(@click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Fpm%2F" + id)') Скопировать ссылку на беседу
+            md-button.button.md-raised.md-accent(@click ='deleteMember(getUser.id, getUser.name)') Выйти из беседы
+        md-dialog-actions
+          md-button.md-primary(@click='showDialog = false') Закрыть
+          //- md-button.md-primary(@click='showDialog = false') Сохранить
+
+        //- .settingsMenuBox
+        //-   .settingsAdminBox(v-if = 'admin')
+        //-     .settingsMenuText
+        //-       span.md-headline Изменение имени
+        //-     .settingsMenuField
+        //-       md-field(md-inline='')
+        //-         label Введите имя
+        //-         md-input(v-model='newName')
+
+        //-     .settingsMenuText
+        //-       span.md-headline Изменение аватара
+        //-     .settingsMenuField
+        //-       md-field
+        //-         label Выберите картинку
+        //-         md-file(v-model='newAvatarName' @md-change ='onFilePicked' accept="image/*")
+        //-   .settingsMenuText
+        //-     span.md-headline Участники
+        //-   .settingsMenuField
+        //-     .memberBox
+        //-       md-field
+        //-         label Введите email
+        //-         md-input(v-model='newMemberEmail' placeholder='Добавить участника')
+        //-         md-button.addMemeberButton(@click ='addMember') Добавить
+        //-     .memberBox(v-for ='(mem, memId) in chatMembers' :key = 'memId' v-if ='!removedUsers[memId]')
+        //-       span.memberText.md-body-2 {{ mem }}
+        //-       img.memberCross(v-if ='admin || memId === getUser.id' src = '@/assets/images/wrong.png' @click ='deleteMember(memId, mem)')
+        //-   .settingsMenuCancel
+        //-     .button.button--round.button-success(v-if ='admin' @click ='saveProfile') Сохранить
+        //-     .button.button--round.button-warning(@click ='settingsMenuShow = false')  Отмена
+        //-     .button.button--round.button-light(@click ='deleteMember(getUser.id, getUser.name)') Выйти из беседы
+        //-     .button.button--round.button-default(@click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Fpm%2F" + id)') Скопировать ссылку на беседу
 </template>
 
 <script>
@@ -110,6 +144,7 @@ export default {
       chatMembers: {},
       messageField: null,
       loading: false,
+      showDialog: false,
       settingsMenuShow: false,
       lastReadMessage: null,
       newName: '',
@@ -372,6 +407,46 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .designButtonLesson
+    padding-top 12.5px
+    position relative
+    height auto
+    display block
+    border 2px solid #763DCA
+    border-radius 50px
+    font-weight 550
+    font-size 20px
+    margin-top 20px
+    margin-left 20px
+    color #763DCA
+    background-color #FFFFFF
+    opacity 0.5
+    transition: 0.6s;
+  .designButtonLesson:hover
+    transition: 0.6s;
+    color #FFFFFF !important
+    background-color #763DCA
+  .designButtonLesson2
+    padding-top 12.5px
+    position relative
+    height auto
+    display block
+    border 2px solid #FF1842
+    border-radius 50px
+    font-weight 550
+    font-size 20px
+    margin-top 20px
+    margin-left 20px
+    color #FF1842
+    background-color #FFFFFF
+    opacity 0.5
+    transition: 0.6s;
+  .designButtonLesson2:hover
+    transition: 0.6s;
+    color #FFFFFF !important
+    background-color #FF1842
+  .md-dialog /deep/.md-dialog-container
+    max-width: 768px;
   .scrollAnchor
     float left
   .backButtonBox
