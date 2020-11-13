@@ -12,17 +12,9 @@
       md-steppers(md-vertical)
         md-step#first(md-label='Шаг №1' md-description='Основная информация')
           .titleInfo
-            //- input.olympName(type = 'text', placeholder = 'Введите название вашей темы', v-model = "name")
             md-field.olympName
               label Введите название темы
               md-input(v-model='name' maxlength = "30")
-
-            //- label(for = 'isPrivate') Приватная тема
-              //- input#isPrivate(type = 'checkbox', v-model = "private")
-            //- span {{ timeStart }} {{ timeFinish }}
-
-            //- select.olympTheme(v-model = "theme")
-            //-   option(v-for = 'theme in themeList') {{ theme }}
             .md-layout-item.olympTheme2
               md-field
                 label(for="theme") Выберите тему урока
@@ -44,11 +36,6 @@
             .checkboxBox
               md-checkbox.olympPrivate(v-model='timeFinishOn') Ограничить время конца
               md-tooltip(md-direction='left') Урок закончится в установленое время
-              //- datetime(v-if ='timeFinishOn' type='datetime' v-model='timeFinish')
-              //- VueCtkDateTimePicker(v-if = 'timeFinishOn' v-model="timeFinish" :no-value-to-custom-elem="true" :overlay="true")
-              //-   md-field(md-inline)
-              //-     label Укажите время конца
-              //-     md-input(v-model='timeFinish')
             el-date-picker(v-if = 'timeStartOn' v-model='timeStart' type='datetime' placeholder='Дата начала' style='margin: 1%')
             el-date-picker(v-if = 'timeFinishOn' v-model='timeFinish' type='datetime' placeholder='Дата конца' style='margin: 1%')
 
@@ -57,10 +44,104 @@
             .tasksContent
               .task(v-for = '(task, taskId) in tasks')
                 .button.img.delete_button(@click='tasks.splice(tasks.indexOf(task), 1)')
-                .preMadeBox(v-if = 'task.type === "preMade"')
+                .preMadeBox(v-if ='task.type === "preMade"')
                   .componentName
                     strong(v-if = 'task.originData.type === "theory"') Теория из темы "{{ task.topicName }}"
                     strong(v-else) Задача №{{ task.taskInd }} из темы "{{ task.topicName }}"
+                .taskBlockBox(v-else-if ='task.type === "block"')
+                  .componentName
+                    strong Блок задач
+                  .componentBox
+                    md-field(v-if ='task.tasks.length > 0')
+                      label Введите количество задач, которые должны отображаться
+                      md-input(v-model='task.choiceTask' type='number')
+                      span.md-helper-text Число от 1 до {{ task.tasks.length }}
+                    .task(v-for ='(blockTask, blockTaskId) in task.tasks')
+                      .button.img.delete_button(@click='task.tasks.splice(task.tasks.indexOf(blockTask), 1)')
+                      .preMadeBox(v-if ='blockTask.type === "preMade"')
+                        .componentName
+                          strong(v-if = 'blockTask.originData.type === "theory"') Теория из темы "{{ blockTask.topicName }}"
+                          strong(v-else) Задача №{{ blockTask.taskInd }} из темы "{{ blockTask.topicName }}"
+                      .componentBox(v-else)
+                        .componentName
+                          strong Задача
+                        .theoryEditBox
+                          .theoryComponent(
+                            v-for = 'component in blockTask.statement'
+                          )
+                            .button.img.delete_button(@click='blockTask.statement.splice(blockTask.statement.indexOf(component), 1)')
+                            .theoryTextField(v-if ='component.type === "text"')
+                              vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "video"], ["clean"]]')
+                            .theoryText(v-if ='component.type === "img"')
+                              label(for='img') Выберите картинку
+                              input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked([tasks.indexOf(task), task.tasks.indexOf(blockTask)], blockTask.statement.indexOf(component))")
+                            .theoryTextFile(v-else-if ='component.type === "file"')
+                              label(for='file') Выберите PDF-Файл
+                              input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked([tasks.indexOf(task), task.tasks.indexOf(blockTask)], blockTask.statement.indexOf(component))")
+
+                          .button.button--round.button-success.buttonAdd(@click='addContent([tasks.indexOf(task), task.tasks.indexOf(blockTask)], "text")') Добавить абзац
+
+                          .button.button--round.button-success.buttonAdd(
+                            @click='addContent([tasks.indexOf(task), task.tasks.indexOf(blockTask)], "img")'
+                            ) Добавить картинку
+                          .button.button--round.button-success.buttonAdd(
+                            @click='addContent([tasks.indexOf(task), task.tasks.indexOf(blockTask)], "file")'
+                            ) Загрузить PDF-файл
+                        .taskEditBox
+                          .taskAnswerBox
+                            //- span {{ typeof blockTask.answer }}
+                            md-field.taskTypeSelect
+                              label(for='taskType') Тип ответа
+                              md-select#taskType(v-model='blockTask.taskType' name='taskTypeText' @md-selected='changeAnswerType(blockTask.taskType, [taskId, blockTaskId])')
+                                md-option(value='task') Единственный ответ
+                                md-option(value='multipleAnswer') Несколько ответов
+                                md-option(value='multipleChoice') Множественный выбор
+                                md-option(value='upload') Загрузка развернутого ответа
+                                md-option(value='proof') Без ответа
+                            md-field(v-if='blockTask.taskType == "task"')
+                              md-input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "blockTask.answer")
+                            span.md-body-2(v-else-if='blockTask.taskType == "upload"') Вы сможете проверить ответ ученика в личном кабинете в разделе 'Мои темы'.
+                            span.md-body-2(v-else-if='blockTask.taskType == "proof"') Дополнительная задача не подразумевает проверку ответа. Пожалуйста, напишите развернутый ответ в секции 'Решение', что бы ученики могли проверить себя самостоятельно.
+                            md-chips(v-else-if='blockTask.taskType == "multipleAnswer"' v-model='blockTask.answer' md-placeholder='Введите ответ и нажмите Enter...')
+                            .checkboxesBox(v-else-if='blockTask.taskType == "multipleChoice"')
+                              md-field
+                                label Введите вариант ответа
+                                md-input(v-model='newCheckboxAnswer' placeholder='Добавить вариант ответа')
+                                md-button.addMemeberButton(@click ='addCheckBoxAnswer(newCheckboxAnswer, [taskId, blockTaskId])') Добавить
+                              span.md-body-2(v-if='blockTask.options.length > 0') Отметьте правильные ответы
+                              br
+                              .checkboxesBoxCheckboxes(v-for ='(op, opI) in blockTask.options' :key="opI" )
+                                md-checkbox(v-model='blockTask.answer' :value='op') {{ op }}
+                                md-button.removeButton.md-accent.md-raised(@click ='blockTask.options.splice(opI, 1); if (blockTask.answer.findIndex(f => f === op) !== -1) blockTask.answer.splice(blockTask.answer.findIndex(f => f === op), 1);') X
+                              //- span {{ task.answer }}
+
+                          .md-layout-item.olympTheme2
+                            md-field
+                              label Выберите сложность
+                              md-select.olympTheme2(v-model = "blockTask.difficulty" placeholder="Выберите сложность")
+                                md-option(v-for = '(diff, i) in difficultyList' :key="i" :value="diff") {{ diff }}
+                              md-tooltip(md-direction='left') Укажите, чтобы ученикам было проще ориентироваться
+
+                          //- label(for='difOne') Легкая
+                          //-   input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
+                          //- label(for='difTwo') Средняя
+                          //-   input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
+                          //- label(for='difThree') Трудная
+                          //-   input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
+
+                          md-field
+                            label(for='solutionType') Тип решения
+                            md-select#solutionType(v-model='blockTask.solutionType' name='solutionTypeText')
+                              md-option(value='hide') Без решения
+                              md-option(value='solution') Показывать решение
+                              md-option(v-if ='blockTask.taskType != "proof" && blockTask.taskType != "upload"' value='answer') Показывать ответ
+                            md-tooltip(md-direction='left') Решение показывается всем ученикам
+                          md-field(v-if ='blockTask.solutionType !== "hide" && blockTask.solutionType !== "answer"')
+                            label Решение
+                            md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "blockTask.solution")
+                    .button.button--round.button-primary.buttonAddContent(@click='addTask("task", taskId)') Добавить задачу
+                    .button.button--round.button-primary.buttonAddContent(@click='addTask("material", taskId)') Добавить готовый материал
+
                 .componentBox(v-else)
                   .componentName
                     strong(v-if = 'task.type === "theory"') Теория
@@ -120,12 +201,9 @@
                           md-button.removeButton.md-accent.md-raised(@click ='task.options.splice(opI, 1); if (task.answer.findIndex(f => f === op) !== -1) task.answer.splice(task.answer.findIndex(f => f === op), 1);') X
                         //- span {{ task.answer }}
 
-                    br
-                    //- span Выберите сложность
-                    br
-
                     .md-layout-item.olympTheme2
                       md-field
+                        label Выберите сложность
                         md-select.olympTheme2(v-model = "task.difficulty" placeholder="Выберите сложность")
                           md-option(v-for = '(diff, i) in difficultyList' :key="i" :value="diff") {{ diff }}
                         md-tooltip(md-direction='left') Укажите, чтобы ученикам было проще ориентироваться
@@ -150,6 +228,7 @@
             .button.button--round.button-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
             .button.button--round.button-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
             .button.button--round.button-primary.buttonAddContent(@click='addTask("material")') Добавить готовый материал
+            .button.button--round.button-primary.buttonAddContent(@click='addTask("block")') Добавить блок случайных задач
             .button.button--round.button-success.buttonPost(@click='sendTitle()')
               span {{ this.edit ? 'Обновить' : 'Опубликовать' }} тему
     .successMenu(v-if = 'this.success')
@@ -196,7 +275,7 @@
           .emptyTopicMessage(v-if = 'topicList[selectedMaterialThemeIndex].tasks.length === 0')
             span Тут пока нет задач!
           .materialMenuCards(v-else)
-              md-card.materialContent(v-for ='(task, taskIndex) in topicList[selectedMaterialThemeIndex].tasks' :key ='taskIndex' md-with-hover='')
+              md-card.materialContent(v-for ='(task, taskIndex) in topicList[selectedMaterialThemeIndex].tasks' :key ='taskIndex' v-if ='!(materialBlockIndex !== -1 && task.type === "theory")' md-with-hover='')
                 md-ripple
                   md-card-header
                     .md-title(v-if = 'task.type === "theory"') Теория
@@ -212,7 +291,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { required, minLength, maxLength, between } from 'vuelidate/lib/validators'
+import { required, minLength, maxLength, between, requiredUnless } from 'vuelidate/lib/validators'
 import firebase from 'firebase/app'
 import Loading from 'vue-loading-overlay'
 import { Datetime } from 'vue-datetime'
@@ -234,7 +313,7 @@ export default {
       cnt_task: 0,
       items: 0,
       like: 0,
-      private: false,
+      private: true,
       tasks: [],
       theme: 'Школа',
       themeList: [
@@ -267,6 +346,7 @@ export default {
       materialMenuTaskSectionShow: false,
       selectedMaterialTheme: '',
       selectedMaterialThemeIndex: 0,
+      materialBlockIndex: -1,
       newCheckboxAnswer: '',
       timeStartOn: false,
       timeFinishOn: false,
@@ -286,10 +366,13 @@ export default {
     },
     tasks: {
       $each: {
-        answer: {
-        },
-        statement: {
-          minLength: minLength(1)
+        statement: { required: requiredUnless(n => n.type === 'block') },
+        answer: { required: requiredUnless(n => (n.type === 'block' || n.type === 'theory' || n.taskType === 'upload' || n.taskType === 'proof')) },
+        tasks: {
+          $each: {
+            statement: { required: requiredUnless(n => n.type === 'block') },
+            answer: { required: requiredUnless(n => (n.type === 'block' || n.type === 'theory' || n.taskType === 'upload' || n.taskType === 'proof')) }
+          }
         }
       }
     }
@@ -298,11 +381,12 @@ export default {
     ...mapActions(['sendTopic', 'addMyTopicsToList', 'fetchMyTopic', 'fetchTopicList']),
     addCheckBoxAnswer (ans, i) {
       this.newCheckboxAnswer = ''
-      if (this.tasks[i].options.findIndex(f => f === ans) === -1) this.tasks[i].options.push(ans)
+      if (typeof i === 'number' && this.tasks[i].options.findIndex(f => f === ans) === -1) this.tasks[i].options.push(ans)
+      else if (typeof i === 'object' && this.tasks[i[0]].tasks[i[1]].options.findIndex(f => f === ans) === -1) this.tasks[i[0]].tasks[i[1]].options.push(ans)
     },
     changeAnswerType (type, i) {
-      if (type === 'multipleChoice' || type === 'multipleAnswer') this.tasks[i].answer = []
-      else if (type === 'task') this.tasks[i].answer = ''
+      if (type === 'multipleChoice' || type === 'multipleAnswer') (typeof i === 'number') ? this.tasks[i].answer = [] : this.tasks[i[0]].tasks[i[1]].answer = []
+      else if (type === 'task') (typeof i === 'number') ? this.tasks[i].answer = '' : this.tasks[i[0]].tasks[i[1]].answer = ''
     },
     goToProfile () {
       this.$router.push('/profile')
@@ -325,11 +409,22 @@ export default {
         await this.fetchTopicList()
         this.topicList = this.getTopicList
         this.topicListLoading = false
+        if (ind === undefined) this.materialBlockIndex = -1
+        else this.materialBlockIndex = ind
       } else if (type === 'preMadeMaterial') {
         this.materialMenuShow = false
         task = this.topicList[this.selectedMaterialThemeIndex].tasks[ind]
         task.type = 'preMade'
         task.topicName = this.topicList[this.selectedMaterialThemeIndex].name
+        if (this.materialBlockIndex === -1) this.tasks.push(task)
+        else this.tasks[this.materialBlockIndex].tasks.push(task)
+      } else if (type === 'block') {
+        task = {
+          type: 'block',
+          allTask: 0,
+          choiceTask: 1,
+          tasks: []
+        }
         this.tasks.push(task)
       } else {
         task = {
@@ -345,7 +440,9 @@ export default {
           taskType: 'task',
           options: []
         }
-        this.tasks.push(task)
+        // Если индекс не передается, то пушим в конец, а если передается, то пушим в блок
+        if (ind !== undefined) this.tasks[ind].tasks.push(task)
+        else this.tasks.push(task)
       }
     },
     addContent (id, type) {
@@ -353,7 +450,8 @@ export default {
         type: type,
         inner: ''
       }
-      this.tasks[id].statement.push(data)
+      if (typeof id === 'number') this.tasks[id].statement.push(data)
+      else this.tasks[id[0]].tasks[id[1]].statement.push(data)
     },
     nullifyContent (id) {
       this.tasks[id].statement = []
@@ -363,7 +461,8 @@ export default {
       this.currComponentId = componentId
     },
     onFileSelected (event) {
-      this.tasks[this.currTaskId].statement[this.currComponentId].inner = event.target.files[0]
+      if (typeof this.currTaskId === 'number') this.tasks[this.currTaskId].statement[this.currComponentId].inner = event.target.files[0]
+      else this.tasks[this.currTaskId[0]].tasks[this.currTaskId[1]].statement[this.currComponentId].inner = event.target.files[0]
     },
     async generateToken (length) {
       var a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('')
@@ -388,6 +487,7 @@ export default {
     async sendTitle () {
       this.$v.$touch()
       if (this.$v.$invalid) {
+        console.log(this.$v)
         this.submitStatus = 'error'
         alert('Проверьте правильность заполнения полей!')
         return
@@ -396,9 +496,15 @@ export default {
       this.success = true
       this.loading = true
       this.theme = this.theme.toLowerCase()
-      for (let i = 0; i < this.tasks.length; i++) {
+      this.items = 0
+      this.cnt_task = 0
+      for (let i = 0; i < this.tasks.length; i++) { // Считаем количество задач, учитывая блоки
         if (this.tasks[i].type === 'task') this.cnt_task++
-      } this.items = this.tasks.length
+        if (this.tasks[i].type === 'block') {
+          this.items += Number(this.tasks[i].choiceTask) - 1
+          this.cnt_task += Number(this.tasks[i].choiceTask)
+        } this.items++
+      }
       var data = {
         author: this.getUser.id,
         like: 0,
@@ -418,41 +524,10 @@ export default {
       // console.log(data.time_start, data.time_end)
       // Парсинг задач
       for (let i = 0; i < this.tasks.length; i++) {
-        var task = {}
-        for (let j = 0; j < this.tasks[i].statement.length; j++) {
-          // Обработка картинок и файлов
-          if ((this.tasks[i].statement[j].type === 'img' || this.tasks[i].statement[j].type === 'file') && typeof this.tasks[i].statement[j].inner !== 'string') {
-            // Чтение файла
-            let file = this.tasks[i].statement[j].inner
-            let fileName = file.name
-            const fileReader = new FileReader()
-            fileReader.readAsDataURL(file)
-            // Получение данных для имени файла
-            const ext = fileName.slice(fileName.lastIndexOf('.'))
-            let currentTime = new Date().getTime()
-            let imageUrl
-            let imageTimeName = 'uploads/' + currentTime + ext
-            // Загрузка в бд
-            await firebase.storage().ref(imageTimeName).put(file)
-            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
-            this.tasks[i].statement[j].inner = imageUrl.toString()
-          }
-        }
-        // Обработка решения задачи
-        if (this.tasks[i].solutionType === 'hide') this.tasks[i].solution = 'hide' // Тупой костыль, но без него никак
-        else if (this.tasks[i].solutionType === 'answer') this.tasks[i].solution = 'null'
-        // hide в этом поле означает, что надо показывать ответ вместо решения
-        // Обработка сложности
-        if (this.tasks[i].difficulty === 'Легкая') this.tasks[i].difficulty = 1
-        else if (this.tasks[i].difficulty === 'Средняя') this.tasks[i].difficulty = 2
-        else this.tasks[i].difficulty = 3
-        // Обработка типов задач
-        if (this.tasks[i].type === 'task') this.tasks[i].type = this.tasks[i].taskType
-        // Обработка заготовленных заданий
-        if (this.tasks[i].type === 'preMade') task = this.tasks[i].originData
-        else task = this.tasks[i]
+        var task = await this.parseTask(this.tasks[i])
         data.tasks.push(task)
       }
+
       var token
       if (!this.edit) token = await this.generateToken(5)
       else token = this.token
@@ -461,6 +536,7 @@ export default {
         title: data
       }
       this.token = token
+      console.log(sendInformation)
       try {
         await this.sendTopic(sendInformation)
       } catch (error) {
@@ -480,6 +556,51 @@ export default {
             } else result = true
           })
       return result
+    },
+    async parseTask (rawTask) {
+      var task = {}
+      if (rawTask.type !== 'block') {
+        for (let j = 0; j < rawTask.statement.length; j++) {
+          // Обработка картинок и файлов
+          if ((rawTask.statement[j].type === 'img' || rawTask.statement[j].type === 'file') && typeof rawTask.statement[j].inner !== 'string') {
+            // Чтение файла
+            let file = rawTask.statement[j].inner
+            let fileName = file.name
+            const fileReader = new FileReader()
+            fileReader.readAsDataURL(file)
+            // Получение данных для имени файла
+            const ext = fileName.slice(fileName.lastIndexOf('.'))
+            let currentTime = new Date().getTime()
+            let imageUrl
+            let imageTimeName = 'uploads/' + currentTime + ext
+            // Загрузка в бд
+            await firebase.storage().ref(imageTimeName).put(file)
+            await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
+            rawTask.statement[j].inner = imageUrl.toString()
+          }
+        }
+      }
+      // Обработка решения задачи
+      if (rawTask.solutionType === 'hide') rawTask.solution = 'hide' // Тупой костыль, но без него никак
+      else if (rawTask.solutionType === 'answer') rawTask.solution = 'null'
+      // hide в этом поле означает, что надо показывать ответ вместо решения
+      // Обработка сложности
+      if (rawTask.difficulty === 'Легкая') rawTask.difficulty = 1
+      else if (rawTask.difficulty === 'Средняя') rawTask.difficulty = 2
+      else rawTask.difficulty = 3
+      // Обработка типов задач
+      if (rawTask.type === 'task') rawTask.type = rawTask.taskType
+      // Обработка блоков задач
+      if (rawTask.type === 'block') {
+        let self = this
+        rawTask.allTask = rawTask.tasks.length
+        rawTask.tasks.forEach(async (blockTask, i) => { rawTask.tasks[i] = await self.parseTask(blockTask) })
+      }
+      // Обработка заготовленных заданий
+      if (rawTask.type === 'preMade') task = rawTask.originData
+      else task = rawTask
+
+      return task
     }
   },
   async mounted () {
@@ -507,9 +628,15 @@ export default {
         // Парсинг задач
         for (let i = 0; i < myTopic.tasks.length; i++) {
           this.tasks.push(myTopic.tasks[i])
-          if (myTopic.tasks[i].type !== 'theory') {
+          if (myTopic.tasks[i].type !== 'theory' && myTopic.tasks[i].type !== 'block') {
             this.tasks[i].taskType = myTopic.tasks[i].type
             this.tasks[i].type = 'task'
+          } if (myTopic.tasks[i].type === 'block') {
+            for (let j = 0; j < myTopic.tasks[i].tasks.length; j++) {
+              var rawBlockTask = myTopic.tasks[i].tasks[j]
+              rawBlockTask.taskType = rawBlockTask.type
+              rawBlockTask.type = 'task'
+            }
           }
         }
         this.token = this.$route.params.topicId

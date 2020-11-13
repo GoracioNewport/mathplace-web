@@ -32,7 +32,13 @@ export default {
               // Обновление значений юзера в бд
 
               userTopicDetails = usrData
-              itemCount = docData.tasks.length
+              itemCount = docData.items
+
+              let newMember = false
+              let modified = false
+              if (userTopicDetails === undefined || userTopicDetails.lastAnswers === undefined || userTopicDetails.solution === undefined || userTopicDetails.grades === undefined) newMember = true
+              if (!newMember && (userTopicDetails.lastAnswers.length !== itemCount || userTopicDetails.solution.length !== itemCount || userTopicDetails.grades.length !== itemCount)) modified = true
+
               if (userTopicDetails === undefined || userTopicDetails.lastAnswers === undefined || userTopicDetails.solution === undefined || userTopicDetails.grades === undefined || userTopicDetails.lastAnswers.length > itemCount || userTopicDetails.solution.length > itemCount || userTopicDetails.grades.length > itemCount) {
                 let blankArray = []
                 let nullArray = []
@@ -67,8 +73,44 @@ export default {
                 }
               }
 
+              let tasks = []
+              // Вариант контроши. Если чел зашел первый раз или препод изменил тему:
+              if (newMember || modified) {
+                let generatePattern = []
+                for (let i = 0; i < docData.tasks.length; i++) {
+                  console.log(docData.tasks[i])
+                  if (docData.tasks[i].type !== 'block') tasks.push(docData.tasks[i])
+                  else {
+                    var taskIndexes = [...Array(docData.tasks[i].tasks.length).keys()]
+                    for (var k = taskIndexes.length - 1; k > 0; k--) { // Шафл
+                      var j = Math.floor(Math.random() * (k + 1))
+                      var temp = taskIndexes[k]
+                      taskIndexes[k] = taskIndexes[j]
+                      taskIndexes[j] = temp
+                    }
+                    let randomTasks = taskIndexes.slice(0, Number(docData.tasks[i].choiceTask))
+                    console.log(randomTasks)
+                    generatePattern.push(randomTasks)
+                    for (let j = 0; j < randomTasks.length; j++) tasks.push(docData.tasks[i].tasks[randomTasks[j]])
+                  }
+                } var generatePatternMap = {}
+                for (let i = 0; i < generatePattern.length; i++) generatePatternMap[i] = generatePattern[i]
+                if (generatePattern.length > 0) userData.update({ 'generatePattern': generatePatternMap })
+              } else {
+                for (let i = 0; i < docData.tasks.length; i++) {
+                  var blockCnt = 0
+                  if (docData.tasks[i].type !== 'block') tasks.push(docData.tasks[i])
+                  else {
+                    for (let j = 0; j < userTopicDetails.generatePattern[blockCnt].length; j++) tasks.push(docData.tasks[i].tasks[userTopicDetails.generatePattern[blockCnt][j]])
+                    blockCnt++
+                  }
+                }
+              } docData.tasks = tasks
+              console.log(docData.tasks)
+
               // Парсинг задач
               for (let i = 0; i < itemCount; i++) {
+                // console.log(docData.tasks[i])
                 var task = docData.tasks[i]
                 if (task.type !== 'theory') taskCount++
                 task.id = i

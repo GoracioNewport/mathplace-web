@@ -58,7 +58,7 @@ export default new Router({
         Store.dispatch('logoutUser')
         // Очищаем все данные сайта
         window.localStorage.clear()
-        next('/login')
+        // next('/login')
       }
     },
     {
