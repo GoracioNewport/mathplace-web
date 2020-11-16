@@ -1,15 +1,13 @@
 <template lang="pug">
   .content-wrapper
-    md-drawer(:md-active.sync='showSidepanel')
+    md-drawer.md-drawer_rating(:md-active.sync='showSidepanel')
       md-toolbar.md-transparent(md-elevation='0')
         div(style="margin-top: 30px;margin-bottom: 20px;")
           strong(style="display:block; font-size: 25px;font-weight:500") Рейтинг
           span(style="display:block;margin-top:10px; font-size: 16px;font-weight:500") всего участников {{ Object.keys(userStatistics).length }}
       .loading-indicator(v-if='isLoadingStat')
-        p Загрузка...
         .vld-parent
           loading(
-            is-full-page = 'false',
             :active.sync = "isLoadingStat",
             color = '#763dca')
       md-list(v-else)
@@ -22,108 +20,30 @@
             span.md-list-item-text Решено задач {{ userStatistics[i].solveSum }}
           md-button.md-icon-button.md-list-action(@click="openChatWithUser(userStatistics[i].id)")
             md-icon.md-primary chat_bubble
-    .taskbar(v-if = "error === 'none'")
-      .lessonNavbar
-        md-button.md-raised.showStatsButton(style="float:right;margin-right:20px;margin-top:15px;" @click="getDataMembers") {{ tasksInfo.author === getUser.id ? "Статистика" : "Рейтинг"}}
-        router-link(to='/main')
-          img#imgBack(src="@/components/images/back.png")
-        .headerName
-          span {{ tasksInfo.name }}
-      .container
-        .taskbar-content
-          .taskbar-list__wrapper
-            .taskbar-list
-              .taskbar-item(
-                v-if ="taskList.length"
-                v-for ="task in this.taskList"
-                @click ='changeActiveTask(task.id, task)'
-                :key ="task.id")
-                .taskbar-link
-                  img.img_taskbar(
-                    v-if = "task.type == 'theory'"
-                    :class ='{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
-                    :src = "theoryImage")
-                  img.img_taskbar(
-                      v-else-if = 'task.type == "proof"'
-                      :class ='{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
-                      :src = 'proofImage')
-                  img.img_taskbar(
-                      v-else
-                      :class ='{ solvedTask : task.tries === 2, failedTask : task.tries === 0, pendingTask : Number(task.tries) !== 0 && Number(task.tries) !== 1 && Number(task.tries) !== 2 && Number(task.tries) !== 3, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
-                      :src = 'taskImage')
-
-    .loading-indicator(v-if='isLoading')
-        loading(
-          :active.sync = "this.isLoading",
-          :is-full-page = 'true',
-          color = '#763dca')
-    .content(v-else-if="error === 'none'")
-      .name
-        span.name-span(v-if = 'this.taskList[this.activeTask].type == "theory"') Теория
-        span.name-span(v-else) Задача {{ this.taskList[this.activeTask].taskId }}
-
-        img.star(
-          class = "star1",
-          src = '@/assets/images/star.png',
-          alt = 'Звезда',
-          v-for = 'i in getDifficulty')
-
-      .condition
-        .text-part(v-for = "part in this.taskList[this.activeTask].statement")
-          span(v-if = 'part.type == "text"'
-              v-html = "part.inner") {{ part.inner }}
-
-          img.condition-image(
-            v-else-if = 'part.type == "img"'
-            :src = 'part.inner')
-
-          pdf(
-            v-else-if = 'part.type == "file"'
-            :src = 'part.inner')
-      .answ(v-if='this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"')
-        input.submit-field(
-          v-if ='this.taskList[this.activeTask].type === "task"'
-          size = "40",
-          placeholder = "Введите ответ",
-          class = "ans",
-          v-bind:disabled = "this.taskList[this.activeTask].tries === 2",
-          v-model = 'answer',
-          @keyup.enter = 'sendAnswer',
-          v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 || this.taskList[this.activeTask].tries == 3 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
-        label(for='img' v-else-if ='this.taskList[this.activeTask].type === "upload"')
-          .pendingBox(v-if ='this.taskList[this.activeTask].tries !== 0 && this.taskList[this.activeTask].tries !== 1 && this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3')
-            span Преподователь еще не проверил ваш ответ
-          .rightBox(v-else-if ='this.taskList[this.activeTask].tries === 2')
-            span Ваш ответ оказался правильным
-          .else(v-else)
-            span(v-if ='this.taskList[this.activeTask].tries === 0') Ваш ответ оказался неправильным. Вы можете отправить решение заново
-            //- input#img(type='file', name='img', accept='image/*', @click="onFileButtonClicked(this.tasks.indexOf(task), task.text.indexOf(component))")
-            md-field(name='img')
-              label Выберите картинку
-              md-file(v-model = 'answer' @md-change ='onFilePicked' accept="image/*")
-        .multipleChoiceBox(v-else-if ='this.taskList[this.activeTask].type === "multipleChoice"')
-          .choiceBox(v-for = "choice in this.taskList[this.activeTask].options")
-            //- md-checkbox(v-if ='taskList[activeTask].tries')
-            md-checkbox(v-model = 'answer', :value = "choice") {{ choice }}
-        .multipleAnswerBox(v-else-if ='this.taskList[this.activeTask].type === "multipleAnswer"')
-          .answerBox(v-for = "(answers, i) in answer")
-            md-field
-              label Введите ответ
-              //- md-input(v-model = "answer[i]" disabled = '')
-              md-input.answerField(v-model = "answer[i]")
-              .button.button-round.button-warning.deleteButton(@click='answer.splice(answer.indexOf(answers), 1)') X
-          .button.button--round.button-success.buttonAdd(@click='answer.push("")') Добавить вариант ответа
-      .enter
-        .send
-          a.solutionButton.but(@click='solutionShown = true',
-            v-if = 'this.taskList[this.activeTask].type ==="task" && this.taskList[this.activeTask].solution !=="hide" ')
-            md-tooltip(md-direction='right') Посмотреть решение
-            img(src='@/assets/images/lock.png' alt='Решения',id="lock")
-                    //- .but
-          //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
-          .likeButton.but
+    md-drawer(:md-active.sync='showNavigation' md-swipeable='')
+      md-toolbar.md-transparent(md-elevation='0')
+        span(style="height:auto;font-size:25px;margin-bottom:20px;margin-top:20px;") {{ tasksInfo.name }}
+        span.nd-title(v-if = "tasksInfo.timeEnd !== null") Осталось {{ Days }} дней {{ Hours }} часов {{ Minutes }} минут {{ Seconds }} секунд
+      md-list(style="margin-left:10px")
+        md-list-item.md-button(@click="goBack")
+          md-icon arrow_back
+          span.md-list-item-text Назад
+        md-list-item.md-button
+          md-icon create
+          span.md-list-item-text Черновик
+        md-list-item.md-button
+          md-icon forum
+          span.md-list-item-text Комментарии
+        md-list-item.md-button(@click="getDataMembers")
+          md-icon sort
+          span.md-list-item-text Рейтинг
+        md-list-item.md-button(@click="getDataMembers")
+          md-icon content_copy
+          p.md-list-item-text(style="height:auto") Скопировать ссылку на урок
+        md-list-item
+          .likeButton.but(style="cursor:pointer;", @click = 'likeButton')
             input#checkbox.checkbox(type='checkbox' v-model = 'topicLiked')
-            label(for='checkbox' @click = 'likeButton')
+            label(for='checkbox')
               svg#heart-svg(viewBox='467 392 58 57', xmlns='http://www.w3.org/2000/svg')
                 g#Group(fill='none', fill-rule='evenodd', transform='translate(467 392)')
                   path#heart(d='M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z', fill='#AAB8C2')
@@ -149,13 +69,148 @@
                   g#grp1(opacity='0', transform='translate(24)')
                     circle#oval1(fill='#9FC7FA', cx='2.5', cy='3', r='2')
                     circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
-              md-tooltip(md-direction='left') Поставить лайк уроку
-          button.submit-button.sub(
-            type = 'submit',
-            @click = 'sendAnswer')
-              span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Отправить
-              span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
-              span(v-else) Завершить
+              p.md-subheading(style="text-align:center;") Поставить лайк
+              md-tooltip(md-direction='bottom') Поставить лайк уроку
+
+    .taskbar(v-if = "error === 'none'")
+      .lessonNavbar
+
+        md-button.md-raised(style="float:right;margin-right:20px;margin-top:15px;" @click="getDataMembers") {{ tasksInfo.author === getUser.id ? "Статистика" : "Рейтинг"}}
+
+        md-button.md-icon-button(style="height: 70px;width: 70px;margin-left:30px;color: #FFFFFF;", @click='showNavigation = true')
+            md-icon.fa.fa-bars(style="height: 70px;width: 70px;color: #FFFFFF;").md-size-2x menu
+
+        span {{ tasksInfo.name }}
+        //- router-link#imgBack(to='/main')
+        //-   img(src="@/components/images/back.png")
+      .container
+        .taskbar-content
+          .taskbar-list
+            .taskbar-item(
+              v-if ="taskList.length"
+              v-for ="task in this.taskList"
+              @click ='changeActiveTask(task.id, task)'
+              :key ="task.id")
+              .taskbar-link
+                img.img_taskbar(
+                  v-if = "task.type == 'theory'"
+                  :class ='{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
+                  :src = "theoryImage")
+                img.img_taskbar(
+                    v-else-if = 'task.type == "proof"'
+                    :class ='{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
+                    :src = 'proofImage')
+                img.img_taskbar(
+                    v-else
+                    :class ='{ solvedTask : task.tries === 2, failedTask : task.tries === 0, pendingTask : Number(task.tries) !== 0 && Number(task.tries) !== 1 && Number(task.tries) !== 2 && Number(task.tries) !== 3, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
+                    :src = 'taskImage')
+
+    .loading-indicator(v-if='isLoading')
+        loading(
+          :active.sync = "this.isLoading",
+          :is-full-page = 'true',
+          color = '#763dca')
+    .contentMain(v-else-if="error === 'none'")
+      .content
+        div(v-if="this.rightAns")
+          img.rightAns(v-if="this.status === 'Correct'", src="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjUxMnB0IiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im01MTIgNTguNjY3OTY5YzAtMzIuMzYzMjgxLTI2LjMwNDY4OC01OC42Njc5NjktNTguNjY3OTY5LTU4LjY2Nzk2OWgtMzk0LjY2NDA2MmMtMzIuMzYzMjgxIDAtNTguNjY3OTY5IDI2LjMwNDY4OC01OC42Njc5NjkgNTguNjY3OTY5djM5NC42NjQwNjJjMCAzMi4zNjMyODEgMjYuMzA0Njg4IDU4LjY2Nzk2OSA1OC42Njc5NjkgNTguNjY3OTY5aDM5NC42NjQwNjJjMzIuMzYzMjgxIDAgNTguNjY3OTY5LTI2LjMwNDY4OCA1OC42Njc5NjktNTguNjY3OTY5em0wIDAiIGZpbGw9IiM0Y2FmNTAiLz48cGF0aCBkPSJtMzg1Ljc1IDE3MS41ODU5MzhjOC4zMzk4NDQgOC4zMzk4NDMgOC4zMzk4NDQgMjEuODIwMzEyIDAgMzAuMTY0MDYybC0xMzguNjY3OTY5IDEzOC42NjQwNjJjLTQuMTYwMTU2IDQuMTYwMTU3LTkuNjIxMDkzIDYuMjUzOTA3LTE1LjA4MjAzMSA2LjI1MzkwN3MtMTAuOTIxODc1LTIuMDkzNzUtMTUuMDgyMDMxLTYuMjUzOTA3bC02OS4zMzIwMzEtNjkuMzMyMDMxYy04LjM0Mzc1LTguMzM5ODQzLTguMzQzNzUtMjEuODI0MjE5IDAtMzAuMTY0MDYyIDguMzM5ODQzLTguMzQzNzUgMjEuODIwMzEyLTguMzQzNzUgMzAuMTY0MDYyIDBsNTQuMjUgNTQuMjUgMTIzLjU4NTkzOC0xMjMuNTgyMDMxYzguMzM5ODQzLTguMzQzNzUgMjEuODIwMzEyLTguMzQzNzUgMzAuMTY0MDYyIDB6bTAgMCIgZmlsbD0iI2ZhZmFmYSIvPjwvc3ZnPg==")
+          img.rightAns(v-else-if =  "this.status === 'Wrong'", src="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjUxMnB0IiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im0yNTYgMGMtMTQxLjE2NDA2MiAwLTI1NiAxMTQuODM1OTM4LTI1NiAyNTZzMTE0LjgzNTkzOCAyNTYgMjU2IDI1NiAyNTYtMTE0LjgzNTkzOCAyNTYtMjU2LTExNC44MzU5MzgtMjU2LTI1Ni0yNTZ6bTAgMCIgZmlsbD0iI2Y0NDMzNiIvPjxwYXRoIGQ9Im0zNTAuMjczNDM4IDMyMC4xMDU0NjljOC4zMzk4NDMgOC4zNDM3NSA4LjMzOTg0MyAyMS44MjQyMTkgMCAzMC4xNjc5NjktNC4xNjAxNTcgNC4xNjAxNTYtOS42MjEwOTQgNi4yNS0xNS4wODU5MzggNi4yNS01LjQ2MDkzOCAwLTEwLjkyMTg3NS0yLjA4OTg0NC0xNS4wODIwMzEtNi4yNWwtNjQuMTA1NDY5LTY0LjEwOTM3Ni02NC4xMDU0NjkgNjQuMTA5Mzc2Yy00LjE2MDE1NiA0LjE2MDE1Ni05LjYyMTA5MyA2LjI1LTE1LjA4MjAzMSA2LjI1LTUuNDY0ODQ0IDAtMTAuOTI1NzgxLTIuMDg5ODQ0LTE1LjA4NTkzOC02LjI1LTguMzM5ODQzLTguMzQzNzUtOC4zMzk4NDMtMjEuODI0MjE5IDAtMzAuMTY3OTY5bDY0LjEwOTM3Ni02NC4xMDU0NjktNjQuMTA5Mzc2LTY0LjEwNTQ2OWMtOC4zMzk4NDMtOC4zNDM3NS04LjMzOTg0My0yMS44MjQyMTkgMC0zMC4xNjc5NjkgOC4zNDM3NS04LjMzOTg0MyAyMS44MjQyMTktOC4zMzk4NDMgMzAuMTY3OTY5IDBsNjQuMTA1NDY5IDY0LjEwOTM3NiA2NC4xMDU0NjktNjQuMTA5Mzc2YzguMzQzNzUtOC4zMzk4NDMgMjEuODI0MjE5LTguMzM5ODQzIDMwLjE2Nzk2OSAwIDguMzM5ODQzIDguMzQzNzUgOC4zMzk4NDMgMjEuODI0MjE5IDAgMzAuMTY3OTY5bC02NC4xMDkzNzYgNjQuMTA1NDY5em0wIDAiIGZpbGw9IiNmYWZhZmEiLz48L3N2Zz4=")
+        div(v-if = 'this.taskList[this.activeTask].type !== "theory"', style="height:60px;")
+        .name(v-if = 'this.taskList[this.activeTask].type !== "theory"')
+          //- span.name-span(v-if = 'this.taskList[this.activeTask].type == "theory"') Теория
+          span.name-span Задача {{ this.taskList[this.activeTask].taskId }}
+
+          img.star(
+            class = "star1",
+            :src = 'proofImage',
+            alt = 'Звезда',
+            v-for = 'i in getDifficulty')
+        div(v-else, style="position:relative;height:100px;")
+
+        .condition(v-if = 'this.taskList[this.activeTask].type !== "theory"')
+          .text-part(v-for = "part in this.taskList[this.activeTask].statement")
+            span(v-if = 'part.type == "text"'
+                v-html = "part.inner") {{ part.inner }}
+
+            img.condition-image(
+              v-else-if = 'part.type == "img"'
+              :src = 'part.inner')
+
+            pdf(
+              v-else-if = 'part.type == "file"'
+              :src = 'part.inner')
+        .conditionTheory(v-else)
+          p.md-display-3(style="position:relative; margin-bottom:15px;") Теория
+          .text-part(v-for = "part in this.taskList[this.activeTask].statement")
+            span(v-if = 'part.type == "text"'
+                v-html = "part.inner") {{ part.inner }}
+
+            img.condition-image(
+              v-else-if = 'part.type == "img"'
+              :src = 'part.inner')
+
+            pdf(
+              v-else-if = 'part.type == "file"'
+              :src = 'part.inner')
+
+        .answ(v-if='this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"')
+          input.submit-field(
+            v-if ='this.taskList[this.activeTask].type === "task"'
+            size = "40",
+            placeholder = "Введите ответ",
+            class = "ans",
+            v-bind:disabled = "this.taskList[this.activeTask].tries === 2",
+            v-model = 'answer',
+            @keyup.enter = 'sendAnswer',
+            v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 || this.taskList[this.activeTask].tries == 3 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
+          label(for='img' v-else-if ='this.taskList[this.activeTask].type === "upload"')
+            .pendingBox(v-if ='this.taskList[this.activeTask].tries !== 0 && this.taskList[this.activeTask].tries !== 1 && this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3')
+              span Преподователь еще не проверил ваш ответ
+            .rightBox(v-else-if ='this.taskList[this.activeTask].tries === 2')
+              span Ваш ответ оказался правильным
+            .else(v-else)
+              span(v-if ='this.taskList[this.activeTask].tries === 0') Ваш ответ оказался неправильным. Вы можете отправить решение заново
+              //- input#img(type='file', name='img', accept='image/*', @click="onFileButtonClicked(this.tasks.indexOf(task), task.text.indexOf(component))")
+              md-field(name='img')
+                label Выберите картинку
+                md-file(v-model = 'answer' @md-change ='onFilePicked' accept="image/*")
+          .multipleChoiceBox(v-else-if ='this.taskList[this.activeTask].type === "multipleChoice"')
+            .choiceBox(v-for = "choice in this.taskList[this.activeTask].options")
+              //- md-checkbox(v-if ='taskList[activeTask].tries')
+              md-checkbox(v-model = 'answer', :value = "choice") {{ choice }}
+          .multipleAnswerBox(v-else-if ='this.taskList[this.activeTask].type === "multipleAnswer"')
+            .answerBox(v-for = "(answers, i) in answer")
+              md-field
+                label Введите ответ
+                //- md-input(v-model = "answer[i]" disabled = '')
+                md-input.answerField(v-model = "answer[i]")
+                .button.button-round.button-warning.deleteButton(@click='answer.splice(answer.indexOf(answers), 1)') X
+            .button.button--round.button-success.buttonAdd(@click='answer.push("")') Добавить вариант ответа
+        .enter
+          .send(v-if = 'this.taskList[this.activeTask].type ==="task" && this.taskList[this.activeTask].solution !=="hide" ')
+            a.solutionButton.but(@click='solutionShown = true')
+              md-tooltip(md-direction='right') Посмотреть решение
+              img(src='@/assets/images/lock.png' alt='Решения')
+                      //- .but
+            //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
+            button.submit-button.sub(
+              type = 'submit',
+              @click = 'sendAnswer')
+                span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Ответить
+                span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
+                span(v-else) Завершить
+          .sendNotSolve(v-else)
+            a.solutionButton.but(@click='solutionShown = true')
+              md-tooltip(md-direction='right') Посмотреть решение
+              img(src='@/assets/images/lock.png' alt='Решения')
+                      //- .but
+            //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
+            button.submit-button.sub(
+              type = 'submit',
+              @click = 'sendAnswer')
+                span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Ответить
+                span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
+                span(v-else) Завершить
     .placeholderScreen(v-else-if ='error === "no_material_author" || error === "no_material_member"')
       .ownerScreen(v-if = 'userId === tasksInfo.author')
         div
@@ -180,9 +235,25 @@
         //- span.md-headline {{ this.tasksInfo.timeStart.toLocaleString() }}
         //- br
         //- strong.md-headline Возвращайтесь позже!
+        div.tooEarly
+          li
+            span(style="font-size:38px;font-weight: normal;") До начала урока "{{ tasksInfo.name }}" осталось
+          ul
+            li
+              span {{ Days }}
+              span Дней
+            li
+              span {{ Hours }}
+              span Часов
+            li
+              span {{ Minutes }}
+              span Минут
+            li
+              span {{ Seconds }}
+              span Секунд
         div
           //- md-empty-state(md-icon='devices_other' md-label='Create your first project' md-description="Creating project, you'll be able to upload your design and collaborate with people.")
-          md-empty-state(md-rounded='' md-icon='watch_later' :md-label=" 'Урок по теме \"' + this.tasksInfo.name + '\" пока не начался'" :md-description=" 'Урок начнется ' + this.tasksInfo.timeStart.toLocaleString() + '. Возвращайтесь позже!' ")
+          //- md-empty-state(md-rounded='' md-icon='watch_later' :md-label=" 'Урок по теме \"' + this.tasksInfo.name + '\" пока не начался'" :md-description=" 'Урок начнется ' + this.tasksInfo.timeStart.toLocaleString() + '. Возвращайтесь позже!' ")
           md-button.md-primary.md-raised(@click = '$router.push("/main")') На главную страницу
 
       .tooLateScreen(v-else-if ='error === "too_late"')
@@ -196,13 +267,13 @@
           md-empty-state(md-rounded='' md-icon='history' :md-label=" 'Урок по теме \"' + this.tasksInfo.name + '\" уже закончился'" :md-description=" 'Урок закончился ' + this.tasksInfo.timeEnd.toLocaleString() + '. Спасибо за работу!' ")
           md-button.md-primary.md-raised(@click = '$router.push("/main")') На главную страницу
     .solution(v-if = 'this.solutionShown', @click='solutionShown = !solutionShown')
-      .solutionBox(@click='solutionShown = !solutionShown')
-        .solutionText
-          strong.md-headline(v-if ='this.taskList[this.activeTask].solution !== "null"') {{ this.taskList[this.activeTask].solution }}
-          strong.md-hedline(v-else) Ответ: {{ this.taskList[this.activeTask].answer }}
-        .solutionButtonClose
-          .button.button--round.button-success(
-            @click='solutionShown = false') ОК!
+      md-dialog(:md-active.sync='solutionShown')
+        md-dialog-title Ответ на задачу
+          .solutionText
+            strong.md-headline(v-if ='this.taskList[this.activeTask].solution !== "null"') {{ this.taskList[this.activeTask].solution }}
+            strong.md-hedline(v-else) Ответ: {{ this.taskList[this.activeTask].answer }}
+        md-dialog-actions
+          md-button.md-primary(@click='solutionShown = false') ОК!
 </template>
 
 <script>
@@ -213,6 +284,7 @@ import proofImage from '@/assets/images/star_evidence.png'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions, mapGetters } from 'vuex'
 import pdf from 'vue-pdf'
+// import func from '../../vue-temp/vue-editor-bridge'
 // import { beforeRouteLeave } from 'vue-router'
 
 export default {
@@ -248,14 +320,39 @@ export default {
     // Проверка на ошибки
     if (this.taskList.length === 0 && this.tasksInfo.author === this.getUser.id) this.error = 'no_material_author'
     else if (this.taskList.length === 0 && this.tasksInfo.author !== this.getUser.id) this.error = 'no_material_member'
-    else if (this.tasksInfo.timeStart !== null && this.tasksInfo.timeStart.getTime() > new Date().getTime()) this.error = 'too_early'
-    else if (this.tasksInfo.timeEnd !== null && this.tasksInfo.timeEnd.getTime() < new Date().getTime()) this.error = 'too_late'
+    else if (this.tasksInfo.timeStart !== null && this.tasksInfo.timeStart.getTime() > new Date().getTime()) {
+      this.error = 'too_early'
+      this.secondsLesson = this.tasksInfo.timeStart - new Date().getTime()
+      setInterval(() => {
+        this.secondsLesson -= 1000
+        if (this.secondsLesson <= 0) {
+          this.error = 'none'
+          // self.$router.$forceUpdate
+          clearInterval()
+        }
+        this.Days = Math.floor(this.secondsLesson / 86400000) % 360
+
+        this.Hours = Math.floor(this.secondsLesson / 3600000) % 24
+        this.Minutes = Math.floor(this.secondsLesson / 60000) % 60
+        this.Seconds = Math.floor(this.secondsLesson / 1000) % 60
+      }, 1000)
+    } else if (this.tasksInfo.timeEnd !== null && this.tasksInfo.timeEnd.getTime() < new Date().getTime()) this.error = 'too_late'
     else this.error = 'none'
     // Ставим таймеры для выкидывания ученика по концу урока и для напоминалок
     if (this.tasksInfo.timeEnd !== null && this.error === 'none') {
       let endTimeLeft = (this.tasksInfo.timeEnd - new Date())
       let notificationTimeLeft = (this.tasksInfo.timeEnd - new Date() - 600000)
       let self = this
+
+      this.secondsLesson = endTimeLeft
+      setInterval(() => {
+        this.secondsLesson -= 1000
+        this.Days = Math.floor(this.secondsLesson / 86400000)
+
+        this.Hours = Math.floor(this.secondsLesson / 3600000) % 24
+        this.Minutes = Math.floor(this.secondsLesson / 60000) % 60
+        this.Seconds = Math.floor(this.secondsLesson / 1000) % 60
+      }, 1000)
       // В случае переполнения все ломается... Думаю, никто не обидется, если я не буду учитывать варианты, когда до конца урока остается 26 дней
       if (notificationTimeLeft > 0 && notificationTimeLeft <= 2147483647) setTimeout(() => alert('Осталось 10 минут до конца урока!'), notificationTimeLeft)
       if (endTimeLeft > 0 && endTimeLeft <= 2147483647) {
@@ -285,8 +382,14 @@ export default {
       userStatistics: {},
       isLoading: true,
       rightAns: false,
+      secondsLesson: 0,
+      Days: 0,
+      Hours: 0,
+      Minutes: 0,
+      Seconds: 0,
       isLoadingStat: false,
       showSidepanel: false,
+      showNavigation: false,
       answer: '',
       status: 'Idle',
       topicLiked: false,
@@ -332,11 +435,14 @@ export default {
               this.updateUser(['right', this.getUser.right + 1])
             } this.status = 'Correct'
             this.rightAns = true
+            this.showVerdictTask()
             if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') verdict = 3
             else verdict = 2
           } else if (this.solutionFile === null) {
             this.status = 'Wrong'
             verdict = 0
+            this.rightAns = true
+            this.showVerdictTask()
           }
 
           this.solutionFile = null
@@ -378,18 +484,23 @@ export default {
     showVerdictTask () {
       setTimeout(() => {
         this.rightAns = false
-      }, 3000)
+      }, 1500)
     },
     openChatWithUser (userId) {
       this.$router.push('/pm/' + userId)
     },
     async getDataMembers () {
+      this.showNavigation = false
       this.isLoadingStat = true
       this.showSidepanel = true
       await this.fetchMembersStatistics(this.getCurrentTopic)
       this.MembersSort = this.getMembersSort
       this.userStatistics = this.getMembersStatistics
       this.isLoadingStat = false
+    },
+    goBack () {
+      if (this.$router.history.length > 0) this.$router.go(-1)
+      else this.$router.push('/main')
     },
     onFilePicked (event) { this.solutionFile = event[0] }
   },
@@ -410,18 +521,53 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .tooEarly
+    li
+      display: inline-block;
+      font-size: 1.5em;
+      list-style-type: none;
+      padding: 1.5em;
+      text-transform: uppercase;
+
+    li span
+      display: block;
+      font-size: 4.0rem;
+
+  .md-drawer_rating
+    width: 230px;
+    max-width: calc(100vw - 125px);
+  .md-content
+    padding: 16px;
+  .rightAns
+    position absolute
+    width 300px
+    height 300px
+    left 40%
+    top 30%
+    border-radius 20px
+    // box-shadow 0px 5px 4px 4px
   .lessonNavbar
+    position relative
     height 60px
-    align-items center
-    .headerName
+    color #FFFFFF
+    width 100%
+    span
+      position relative
       margin auto
-      margin-top 0.5%
+      line-height: 70px;
       text-align center
+      align justify
       color #FFFFFF
-      font-size 32pt
+      font-family "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
+      font-size 25pt
+      font-weight 500
+      margin-top 20px
+      margin-left 20px
+      margin-bottom 20px
+      vertical-align middle
       overflow: hidden;
       text-overflow: ellipsis;
-      display: -webkit-box;
+      // display: -webkit-box;
       -webkit-line-clamp: 1; /* number of lines to show */
       -webkit-box-orient: vertical;
   ::-webkit-scrollbar-button
@@ -449,16 +595,21 @@ export default {
 
   ::-webkit-scrollbar
     width: 4px;
+    height 4px;
 
   .container
-    max-height 64px
+    position relative
+    height auto
+    width auto
+    margin 0px auto
+    padding 0px
     overflow auto
     overflow-y hidden
     white-space nowrap
   .solutionButton
-    grid-column 3
+    grid-column 2
     grid-row 1
-    margin-top 20% !important
+    margin auto
   .likeButton
     grid-column 1
     grid-row 1
@@ -466,16 +617,11 @@ export default {
     position relative
     height auto
     width auto
-    margin-top 3% !important
-    grid-column 2
-    grid-row 1
-    width 100% !important
-    height 30% !important
+    grid-column 1
     text-align center
     vertical-align middle
     @media screen and (max-width: 800px)
       height 50% !important
-      margin-top 7% !important
     &:hover
       cursor pointer
   span
@@ -493,9 +639,9 @@ export default {
         color #FFFFFF
         text-decoration none
   .content-wrapper
-    height 100%
+    height auto
     font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
-    font-weight 800
+    background #FFFFFF
   input
     margin-bottom auto
   .solution
@@ -533,7 +679,8 @@ export default {
     width 90%
   .taskbar-content
     position relative
-    max-height 64px
+    width auto
+    margin:0px auto 0px;
   #imgBack
     position absolute
     float left
@@ -577,33 +724,47 @@ export default {
     max-height 300px
     display block
     float none
-    margin-left auto
-    margin-right auto
+    margin-top 20px
   .star
     positine relative
-    height 40px
+    height 30px
     width auto
     float right
-    margin 10px
+    margin-top 12px
+    margin-right 10px
   .taskbar-list
-    max-height 64px
-    margin 0 auto
+    position relative
+    width auto
     display table
+    margin:0px auto 0px;
+    right 0px
   .taskbar-item
+    position relative
+    width auto
     display inline-block
     padding 13px 9px 9px 20px
+  .contentMain
+    position relative
+    height 100%
+    min-height 100%
+    background #763DCA
+    font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
   .content
+    position relative
+    height 100%
+    min-height 100%
+    border-radius 20px 20px 0px 0px
+    background #FFFFFF
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
   .name
-    vertical-align center
-    position relative
     height 60px
+    vertical-align center
     background #763DCA
     font-family 'Roboto', sans-serif
     font-size 30px
     font-weight bold
     box-shadow 0 0 0px rgba(0,0,0,0.5)
-    border-radius 10px 10px 0 0
+    border-radius 15px 15px 0 0
     margin-top 50px
     margin-left 23%
     margin-right 23%
@@ -618,6 +779,9 @@ export default {
     color #FFFFFF
     float left
     margin 10px
+    font-family "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
+    font-size 23pt
+    font-weight 500
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -647,8 +811,25 @@ export default {
     font-family: 'Roboto'
     font-size: 19px
     font-weight: 400
-    border-radius 0 0 10px 10px
-    box-shadow 0 0 5px rgba(0,0,0,0.5)
+    border-radius 0 0 15px 15px
+    box-shadow 0 0 2px rgba(0,0,0,0.5)
+    padding 10px
+    margin-left 23%
+    margin-right 23%
+    @media screen and (max-width: 800px) {
+        width 88%
+        margin-right 6%
+        margin-left 6%
+    }
+  .conditionTheory
+    position relative
+    height auto
+    min-height 45vh
+    color:#525252
+    line-height 1.6
+    font-family: 'Roboto'
+    font-size: 19px
+    font-weight: 400
     padding 10px
     margin-left 23%
     margin-right 23%
@@ -663,6 +844,7 @@ export default {
     margin-top 20px
     margin-left 23%
     margin-right 23%
+    margin-bottom 20px
     @media screen and (max-width: 800px) {
         width 88%
         margin-right 0%
@@ -672,7 +854,7 @@ export default {
   .enter
     position relative
     width 54%
-    height 100%
+    height auto
     margin-left 23%
     margin-right 23%
     @media screen and (max-width: 800px) {
@@ -683,6 +865,7 @@ export default {
   .submit-field
     position relative
     width 100%
+    height auto
     margin-top 0px
     margin-left 0%
     margin-right 0%
@@ -695,61 +878,74 @@ export default {
 
   .send
     display grid
-    grid-template-columns 10% 80% 10%
+    grid-template-columns 90% 10%
+    grid-template-rows auto
+    positine relative
+    height auto
+    width 100%
+    margin-left 0%
+    margin-right 0%
+    margin-top 30px
+    // @media screen and (max-width: 800px) {
+    //   grid-template-columns 18% 64% 18%
+    // }
+  .sendNotSolve
+    display grid
+    grid-template-columns 100%
+    grid-template-rows auto
     positine relative
     height auto
     width 100%
     margin-left 0%
     margin-right 0%
     margin-top 8px
-    @media screen and (max-width: 800px) {
-      grid-template-columns 18% 64% 18%
-    }
-    float right
+    // @media screen and (max-width: 800px) {
+    //   grid-template-columns 18% 64% 18%
+    // }
   .sub
     position relative
-    width 90%
-    height auto
-    margin-top 20%
-    margin-bottom 20%
+    width 100%
+    height 70px
+    min-height 50px
     display inline-block
     color #ffffff
-    padding 0%
+    padding 0px
     font-family "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size: 30px
     font-weight: 400
     background-color #763DCA
-    box-shadow 0 0 3px 0px rgba(0,0,0,0.5)
-    border-radius 10px
+    box-shadow 0 0 2px 0px
+    border-radius 15px
     outline none
-    transition: 0.6s;
+    transition: 0.8s;
     border none
+    margin-bottom 20px
     text-align center
     vertical-align middle
     &:hover
-      transition: 0.6s;
+      transition: 0.8s;
       background-color #ffffff
       color #763DCA
       border: 2px solid #763DCA;
 
   .but
     position relative
-    display inline-block
     img
-      width 70%
-      height auto
-    // margin auto
+      position relative
+      width auto
+      height 50px
+      margin 0px auto
   .ans
     postion relative
     height 55px
     width 100%
-    border-radius 10px
+    border-radius 15px
     margin-bottom 0px
     color #525252
     font-family: 'Roboto'
     font-size: 22px
     font-weight: 450
-    box-shadow 0 0 5px 0px rgba(0,0,0,0.5)
+    box-shadow 0 0 2px 0px rgba(0,0,0,0.5)
     padding 11px
     outline none
     border none
@@ -815,6 +1011,7 @@ export default {
     orientation top
     align-items center
     diaply flex
+    box-shadow 0 0 2px 0px
   .wrapper
     width 100%
     max-width: 100%

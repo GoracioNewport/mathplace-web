@@ -38,31 +38,31 @@
               a.Section(href='#school', style="background-color: #E9EBFA; color:#3e50cb;", v-smooth-scroll='')
                 //- img(src="@/components/images/school1.png")
                 p.title Школа
-                p.text 23 урока
+                p.text {{arraySchool.length}} урока
               a.Section(href='#examination', style="background-color: #e7f2ff; color:#1466c6;", v-smooth-scroll='')
                 //- img(src="@/components/images/examination1.png")
                 p.title Экзамены
-                p.text 23 урока
+                p.text {{arrayOGE.length}} урока
               a.Section(href='#geometry', style="background-color: #e9f9e9; color:#288b28;", v-smooth-scroll='')
                 //- img(src="@/components/images/geometry1.png")
                 p.title Геометрия
-                p.text 23 урока
+                p.text {{arrayGeometry.length}} урока
               a.Section(href='#algebra', style="background-color: #ffeede; color:#ff810a;", v-smooth-scroll='')
                 //- img(src="@/components/images/algebra1.png")
                 p.title Алгебра
-                p.text 23 урока
+                p.text {{arrayAlgebra.length}} урока
               a.Section(href='#komba', style="background-color: #E9EBFA; color:#3e50cb;", v-smooth-scroll='')
                 //- img(src="@/components/images/komba1.png")
                 p.title Комбинаторика
-                p.text 23 урока
+                p.text {{arrayKomba.length}} урока
               a.Section(href='#logic', style="background-color: #e7f2ff; color:#1466c6;", v-smooth-scroll='')
                 //- img(src="@/components/images/logic1.png")
                 p.title Логика
-                p.text 23 урока
+                p.text {{arrayGraphs.length}} урока
               a.Section(href='#graphs', style="background-color: #e9f9e9; color:#288b28;", v-smooth-scroll='')
                 //- img(src="@/components/images/graph_icon1.png")
                 p.title Графы
-                p.text 23 урока
+                p.text {{arraySchool.length}} урока
 
         .pesontedan
           input(id='pesontedan-eight',type='checkbox', name='pesontedans')
@@ -369,6 +369,7 @@
 
 <script>
 import Topic from './Topic.vue'
+// import TopicNewModal from './TopicNewModal.vue'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapGetters, mapActions } from 'vuex'
@@ -723,12 +724,12 @@ export default {
     color #000
     overflow hidden
     border solid
-    border-radius 30px
+    border-radius 20px
     border-color #999999
     border-width 0px
     box-shadow 0 0 2px 0px
-    &:hover
-      box-shadow 0 0 5px 0px
+    // &:hover
+    //   box-shadow 0 0 5px 0px
     @media screen and (max-width: 700px)
       border none
       box-shadow none

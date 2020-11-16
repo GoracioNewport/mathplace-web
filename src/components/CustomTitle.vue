@@ -85,12 +85,12 @@
                         label(for='file') Выберите PDF-Файл
                         input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.statement.indexOf(component))")
 
-                    .button.button--round.button-success.buttonAdd(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
+                    md-button.md-raised.md-primary(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
 
-                    .button.button--round.button-success.buttonAdd(
+                    md-button.md-raised.md-primary(
                       @click='addContent(tasks.indexOf(task), "img")'
                       ) Добавить картинку
-                    .button.button--round.button-success.buttonAdd(
+                    md-button.md-primary(
                       @click='addContent(tasks.indexOf(task), "file")'
                       ) Загрузить PDF-файл
                   .taskEditBox(v-if ="task.type === 'task'")
@@ -147,9 +147,10 @@
                     md-field(v-if ='task.solutionType !== "hide" && task.solutionType !== "answer"')
                       label Решение
                       md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
-            .button.button--round.button-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
-            .button.button--round.button-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
-            .button.button--round.button-primary.buttonAddContent(@click='addTask("material")') Добавить готовый материал
+            div(style="margin-top:20px")
+              md-button.md-raised.md-primary(@click='addTask("theory")') Добавить теорию
+              md-button.md-raised.md-primary(@click='addTask("task")') Добавить задачу
+              md-button.md-primary(@click='addTask("material")') Добавить готовый материал
             .button.button--round.button-success.buttonPost(@click='sendTitle()')
               span {{ this.edit ? 'Обновить' : 'Опубликовать' }} тему
     .successMenu(v-if = 'this.success')
@@ -166,18 +167,17 @@
               loader = 'dots'
               :opacity = 0
               :width = 150)
-        .successText(v-else)
-          strong.md-title.titleTokenText.md-display-3 Готово!
-          br
-          span.titleTokenText.md-display-3 Ключ темы:
-          strong.titleTokenText  {{ this.token }}
-          br
-          br
-          span.md-title Тема {{ this.edit ? 'обновится' : 'появится в сети' }} через несколько секунд.
-          br
-          span.md-title Поделитесь ключом со своими учениками, что бы они могли изучать вашу тему!
-          .successGoButton
-            .button.button--round.successButton.button-primary(@click = 'goToProfile') Понятно!
+        .div(v-else)
+          md-dialog(:md-active.sync='showDialog')
+            md-dialog-title Урок опубликован!
+            div(style='position:relative; margin: 0px 20px 20px 20px')
+              span.md-title Ключ темы:
+              strong.md-title  {{ this.token }}
+              br
+              p.md-text(style="position:relative;font-size:18px;margin-top:30px;") Поделитесь ключом со своими учениками, что бы они могли подключиться к вашему уроку!
+            md-dialog-actions
+              md-button.md-primary(@click='showDialog = false') Понятно
+              md-button.md-primary(:to="'/lesson/olympiads=' + this.token",@click='showDialog = false') Перейти в урок
     .materialMenu(v-if = 'materialMenuShow')
       .materialMenuBox
         .materialMenuText
@@ -258,6 +258,7 @@ export default {
       loading: false,
       falseVar: false,
       classCnt: '',
+      showDialog: false,
       submitStatus: null,
       myTopicLoading: false,
       edit: false,
@@ -295,7 +296,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['sendTopic', 'addMyTopicsToList', 'fetchMyTopic', 'fetchTopicList']),
+    ...mapActions(['sendTopic', 'addMyTopicsToList', 'fetchMyTopic', 'fetchTopicList', 'fetchCustomTopic']),
     addCheckBoxAnswer (ans, i) {
       this.newCheckboxAnswer = ''
       if (this.tasks[i].options.findIndex(f => f === ans) === -1) this.tasks[i].options.push(ans)
@@ -315,6 +316,17 @@ export default {
       var i = this.topicList.map(e => e.name).indexOf(task)
       this.selectedMaterialThemeIndex = i
       this.materialMenuTaskSectionShow = true
+    },
+    async joinCourse (id) {
+      await this.fetchCustomTopic(id)
+      var res = this.getCustomTopic
+      if (res !== null) {
+        this.$router.push('/lesson/olympiads=' + id)
+      } else {
+        this.customTopicId = ''
+        this.placeholder = 'Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа'
+        alert('Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа')
+      }
     },
     async addTask (type, ind) {
       var task
@@ -468,6 +480,7 @@ export default {
       }
       this.addMyTopicsToList(token)
       this.loading = false
+      this.showDialog = true
     },
     async isTokenValid (token) {
       const db = firebase.firestore()
@@ -518,7 +531,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getUser', 'getMyTopic', 'getTopicList'])
+    ...mapGetters(['getUser', 'getMyTopic', 'getTopicList', 'getCustomTopic'])
   }
 }
 </script>
@@ -652,8 +665,6 @@ export default {
     margin-left 20%
     margin-right 20%
     min-width 350px
-    border 2px #000000 solid
-    border-radius 10px
     @media screen and (max-width: 600px)
       margin 1%
       margin-top 20%
@@ -715,7 +726,7 @@ export default {
     font-weight 550
     color #763DCA
     background-color #FFFFFF
-    opacity 0.4
+    opacity 1.0
     margin-right 0px
     margin-top 25px
     margin-bottom 20px

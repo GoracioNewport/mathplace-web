@@ -47,7 +47,7 @@
               .form-item.stayInCheckbox
                 md-checkbox(v-model = 'staySigned') Запомнить меня
               .buttons-list
-                button.button.button-primary(
+                button.button-login.button.button-primary(
                   type="submit"
                   :disabled="submitStatus === 'PENDING'"
                 )
@@ -63,17 +63,25 @@
               .buttons-list-reference
                 p Нет аккаунта?
                   router-link(style="color: #763DCA" to='/registration')    Создайте его!
-    .successMenu(v-if = 'submitStatus === "Validation Required"')
-      .successMenuBox
+    div(v-if = 'submitStatus === "Validation Required"')
+      md-dialog(:md-active.sync='showDialog')
+        md-dialog-title Ваш аккаунт не подтвержден
         .successText
-          strong.md-title.titleTokenText.md-display-3 Внимание!
-          br
-          span.titleTokenText.md-display-1 Ваш аккаунт не подтвержден
-          br
-          span.titleTokenText.md-display-1 Пожалуйста, перейдите по ссылке, которую мы прислали вам на почту
-          .successGoButton
-            .md-button.md-raised.successButton(@click = 'sendEmailConfirmationMessage') Отправить письмо повторно
-            .md-button.md-raised.successButton(@click ='submitStatus = null') Сделано
+          span.md-headline Пожалуйста, перейдите по ссылке, которую мы прислали вам на почту
+        md-dialog-actions
+          md-button.md-primary(@click = 'sendEmailConfirmationMessage, submitStatus = null') Отправить письмо повторно
+          md-button.md-primary(@click ='submitStatus = null') Окей
+
+      //- .successMenuBox
+      //-   .successText
+      //-     strong.md-title.titleTokenText.md-display-3 Внимание!
+      //-     br
+      //-     span.titleTokenText.md-display-1 Ваш аккаунт не подтвержден
+      //-     br
+      //-     span.titleTokenText.md-display-1 Пожалуйста, перейдите по ссылке, которую мы прислали вам на почту
+      //-     .successGoButton
+      //-       .md-button.md-raised.successButton(@click = 'sendEmailConfirmationMessage') Отправить письмо повторно
+      //-       .md-button.md-raised.successButton(@click ='submitStatus = null') Сделано
 </template>
 
 <script>
@@ -85,6 +93,7 @@ export default {
       email: '',
       password: '',
       repeatPassword: '',
+      showDialog: false,
       staySigned: false,
       submitStatus: null
     }
@@ -119,6 +128,9 @@ export default {
         this.$store.dispatch('loginUser', user)
           .then(() => {
             this.submitStatus = this.$store.getters.getErrors
+            if (this.submitStatus === 'Validation Required') {
+              this.showDialog = true
+            }
             if (this.submitStatus === null) this.$router.push('/main')
           })
           .catch(err => {
@@ -138,7 +150,7 @@ export default {
   margin 10px
   font-size 22pt
 .successText
-    padding 10%
+    padding 20px
     text-color #000000 !important
   .successGoButton
     padding 5%
@@ -254,7 +266,7 @@ input
   &.error
     border-color #fc5c65
 
-button
+.button-login
   border-radius 10px
   background-color #763DCA
   width auto
