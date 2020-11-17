@@ -5,6 +5,7 @@ import 'firebase/auth'
 import { accountDb, tasksDb, olympiadDb, userTasksDb } from './global'
 
 import User from './user_help'
+import router from '@/router'
 
 export default {
   state: {
@@ -83,6 +84,7 @@ export default {
     },
     logoutUser ({commit}) {
       firebase.auth().signOut()
+      router.go()
       commit('setUser', null)
     },
     updateUser ({commit}, [key, value]) {

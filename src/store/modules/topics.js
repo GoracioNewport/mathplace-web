@@ -293,11 +293,19 @@ export default {
         topic['tasks'] = rawTopic.tasks
         topic['time_start'] = rawTopic.time_start
         topic['time_end'] = rawTopic.time_end
-        for (let i = 0; i < rawTopic.items; i++) {
+        for (let i = 0; i < rawTopic.tasks.length; i++) {
           var rawTask = topic.tasks[i]
           if (rawTask.difficulty === 1) rawTask.difficulty = 'Легкая'
           else if (rawTask.difficulty === 2) rawTask.difficulty = 'Средняя'
           else rawTask.difficulty = 'Сложная'
+          if (rawTask.type === 'block') {
+            for (let j = 0; j < rawTask.tasks.length; j++) {
+              var rawBlockTask = rawTask.tasks[j]
+              if (rawBlockTask.difficulty === 1) rawBlockTask.difficulty = 'Легкая'
+              else if (rawBlockTask.difficulty === 2) rawBlockTask.difficulty = 'Средняя'
+              else rawBlockTask.difficulty = 'Сложная'
+            }
+          }
         }
       })
       ctx.commit('updateMyTopic', topic)
@@ -327,6 +335,7 @@ export default {
       await db.collection(accountDb).doc(this.getters.getUser.id).get().then(doc => { doc.data().myTopics !== undefined ? myTopics = doc.data().myTopics : myTopics = [] })
       for await (var topic of myTopics) {
         db.collection(olympiadDb).doc(topic).get().then(doc => {
+          if (doc.data() === undefined) return
           var data = JSON.parse(JSON.stringify(doc.data()))
           var info = {}
           info.collection = 'user'
