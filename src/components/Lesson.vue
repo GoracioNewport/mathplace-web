@@ -21,23 +21,24 @@
           md-button.md-icon-button.md-list-action(@click="openChatWithUser(userStatistics[i].id)")
             md-icon.md-primary chat_bubble
     md-drawer(:md-active.sync='showNavigation' md-swipeable='')
-      md-toolbar.md-transparent(md-elevation='0')
-        span(style="height:auto;font-size:25px;margin-bottom:20px;margin-top:20px;") {{ tasksInfo.name }}
+      md-toolbar.md-transparent(md-elevation='0',style="display:block;")
+        span.md-display-2(style="position:relative;height:100%;display:block;margin-bottom:5px;margin-top:20px;") {{ tasksInfo.name }}<br>
+        span.md-title(v-if="tasksInfo.token !== null", style="position:relative;height:100%;display:block;margin-left:10px") Ключ: {{ tasksInfo.token }}
         span.nd-title(v-if = "tasksInfo.timeEnd !== null") Осталось {{ Days }} дней {{ Hours }} часов {{ Minutes }} минут {{ Seconds }} секунд
       md-list(style="margin-left:10px")
         md-list-item.md-button(@click="goBack")
           md-icon arrow_back
-          span.md-list-item-text Назад
-        md-list-item.md-button
-          md-icon create
-          span.md-list-item-text Черновик
-        md-list-item.md-button
-          md-icon forum
-          span.md-list-item-text Комментарии
-        md-list-item.md-button(@click="getDataMembers")
+          span.md-list-item-text В главное меню
+        //- md-list-item.md-button
+        //-   md-icon create
+        //-   span.md-list-item-text Черновик
+        //- md-list-item.md-button
+        //-   md-icon forum
+        //-   span.md-list-item-text Комментарии
+        md-list-item.md-button(v-if="tasksInfo.token !== null", @click="getDataMembers")
           md-icon sort
           span.md-list-item-text Рейтинг
-        md-list-item.md-button(@click="getDataMembers")
+        md-list-item.md-button(v-if="tasksInfo.token !== null", @click ='showNavigation = false, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + tasksInfo.token)')
           md-icon content_copy
           p.md-list-item-text(style="height:auto") Скопировать ссылку на урок
         md-list-item
@@ -75,7 +76,8 @@
     .taskbar(v-if = "error === 'none'")
       .lessonNavbar
 
-        md-button.md-raised(style="float:right;margin-right:20px;margin-top:15px;" @click="getDataMembers") {{ tasksInfo.author === getUser.id ? "Статистика" : "Рейтинг"}}
+        md-button.md-raised(v-if="tasksInfo.author === getUser.id", style="float:right;margin-right:20px;margin-top:15px;" to="/statistics") Статистика
+        md-button.md-raised(v-else, style="float:right;margin-right:20px;margin-top:15px;" @click="getDataMembers") Рейтинг
 
         md-button.md-icon-button(style="height: 70px;width: 70px;margin-left:30px;color: #FFFFFF;", @click='showNavigation = true')
             md-icon.fa.fa-bars(style="height: 70px;width: 70px;color: #FFFFFF;").md-size-2x menu
@@ -314,8 +316,10 @@ export default {
     // Зафетчили, получаем и обрабатываем
     this.tasksInfo.name = this.getTasksInfo.name
     this.tasksInfo.author = this.getTasksInfo.author
+    this.tasksInfo.token = this.getTasksInfo.token
     this.tasksInfo.timeStart = this.getTasksInfo.time_start
     this.tasksInfo.timeEnd = this.getTasksInfo.time_end
+    console.log(this.tasksInfo)
     this.taskList = this.getTasks
     // Проверка на ошибки
     if (this.taskList.length === 0 && this.tasksInfo.author === this.getUser.id) this.error = 'no_material_author'
@@ -372,6 +376,7 @@ export default {
     return {
       collection: this.$route.params.collectionId,
       taskId: this.$route.params.taskId,
+      token: this.$route.params.token,
       theoryImage,
       taskImage,
       proofImage,

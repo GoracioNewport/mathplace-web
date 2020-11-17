@@ -70,7 +70,7 @@
                 .error(v-if="!$v.repeatPassword.required") Это поле обязательно
                 .error(v-if="!$v.repeatPassword.sameAsPassword") Пароли не совпадают
               .buttons-list
-                button.button.button-primary(
+                button.button-registr.button.button-primary(
                   type="submit"
                 )
                   span(v-if="loading") Загрузка...
@@ -93,13 +93,19 @@
                 span Уже есть аккаунт?
                   router-link(style="color: #763DCA" to='/login')  Войдите
     .successMenu(v-if = 'submitStatus === "Validation Pending"')
-      .successMenuBox
-        .successText
-          strong.md-title.titleTokenText.md-display-3 Готово!
-          br
-          span.titleTokenText.md-display-1 Осталось только подтвердить ваш аккаунт
-          .successGoButton
-            .md-button.md-raised.successButton(@click = '$router.push("/login")') Сделано
+      md-dialog(:md-active.sync='showEmailVerified')
+        md-dialog-title Подтвердите, пожалуйста, вашу почту
+        span.md-headline(style="margin:20px;") Вам на почту было отправлено письмо,<br> перейдите по ссылке в этом письме
+        md-dialog-actions
+          md-button.md-primary(@click = '$router.push("/login")') Подтвердил
+
+      //- .successMenuBox
+      //-   .successText
+      //-     strong.md-title.titleTokenText.md-display-3 Готово!
+      //-     br
+      //-     span.titleTokenText.md-display-1 Осталось только подтвердить ваш аккаунт
+      //-     .successGoButton
+      //-       .md-button.md-raised.successButton(@click = '$router.push("/login")') Сделано
 </template>
 
 <script>
@@ -112,6 +118,7 @@ export default {
       name: '',
       email: '',
       password: '',
+      showEmailVerified: false,
       repeatPassword: '',
       submitStatus: null
     }
@@ -155,6 +162,7 @@ export default {
             this.submitStatus = 'OK'
             this.registerUserInDatabase(this.name, user)
             this.submitStatus = 'Validation Pending'
+            this.showEmailVerified = true
           })
           .catch(err => {
             this.submitStatus = err.message
@@ -197,7 +205,7 @@ export default {
           }
 
           db.collection('account').doc(this.$store.getters.getPreId).set(data)
-          this.$router.push('/main')
+          // this.$router.push('/main')
         })
     }
   }
@@ -305,8 +313,9 @@ export default {
   text-decoration none
   color #525252
   text-align center
+  margin-bottom 15px
 
-button
+.button-registr
     border-radius 10px
     background-color #763DCA
     width auto

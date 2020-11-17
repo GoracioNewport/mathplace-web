@@ -79,12 +79,12 @@
                               label(for='file') Выберите PDF-Файл
                               input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked([tasks.indexOf(task), task.tasks.indexOf(blockTask)], blockTask.statement.indexOf(component))")
 
-                          .button.button--round.button-success.buttonAdd(@click='addContent([tasks.indexOf(task), task.tasks.indexOf(blockTask)], "text")') Добавить абзац
+                          md-button.md-raised.md-primary(@click='addContent([tasks.indexOf(task), task.tasks.indexOf(blockTask)], "text")') Добавить абзац
 
-                          .button.button--round.button-success.buttonAdd(
+                          md-button.md-raised.md-primary(
                             @click='addContent([tasks.indexOf(task), task.tasks.indexOf(blockTask)], "img")'
                             ) Добавить картинку
-                          .button.button--round.button-success.buttonAdd(
+                          md-button.md-primary(
                             @click='addContent([tasks.indexOf(task), task.tasks.indexOf(blockTask)], "file")'
                             ) Загрузить PDF-файл
                         .taskEditBox
@@ -139,8 +139,9 @@
                           md-field(v-if ='blockTask.solutionType !== "hide" && blockTask.solutionType !== "answer"')
                             label Решение
                             md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "blockTask.solution")
-                    .button.button--round.button-primary.buttonAddContent(@click='addTask("task", taskId)') Добавить задачу
-                    .button.button--round.button-primary.buttonAddContent(@click='addTask("material", taskId)') Добавить готовый материал
+                    div(style="margin-top:20px")
+                      md-button.md-raised.md-primary(@click='addTask("task", taskId)') Добавить задачу
+                      md-button.md-raised.md-primary(@click='addTask("material", taskId)') Добавить готовый материал
 
                 .componentBox(v-else)
                   .componentName
@@ -225,10 +226,11 @@
                     md-field(v-if ='task.solutionType !== "hide" && task.solutionType !== "answer"')
                       label Решение
                       md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
-            .button.button--round.button-primary.buttonAddContent(@click='addTask("theory")') Добавить теорию
-            .button.button--round.button-primary.buttonAddContent(@click='addTask("task")') Добавить задачу
-            .button.button--round.button-primary.buttonAddContent(@click='addTask("material")') Добавить готовый материал
-            .button.button--round.button-primary.buttonAddContent(@click='addTask("block")') Добавить блок случайных задач
+            div(style="margin-top:20px")
+              md-button.md-raised.md-primary(@click='addTask("theory")') Добавить теорию
+              md-button.md-raised.md-primary(@click='addTask("task")') Добавить задачу
+              md-button.md-primary(@click='addTask("material")') Добавить готовый материал
+              md-button.md-primary(@click='addTask("block")') Добавить блок случайных задач
             .button.button--round.button-success.buttonPost(@click='sendTitle()')
               span {{ this.edit ? 'Обновить' : 'Опубликовать' }} тему
     .successMenu(v-if = 'this.success')
@@ -257,9 +259,8 @@
               md-button.md-primary(@click='showDialog = false') Понятно
               md-button.md-primary(:to="'/lesson/olympiads=' + this.token",@click='showDialog = false') Перейти в урок
     .materialMenu(v-if = 'materialMenuShow')
-      .materialMenuBox
-        .materialMenuText
-          span.md-headline Выберите тему
+      md-dialog(:md-active.sync='materialMenuShow')
+        md-dialog-title Выберите тему
         .materialMenuField
           .md-layout.md-gutter
             .md-layout-item
@@ -283,8 +284,36 @@
                     span {{ task.textPreview }}
                   md-card-actions
                     md-button(@click ='addTask("preMadeMaterial", taskIndex)') Добавить
-        .materialMenuCancel
-          .button.button--round.button-warning(@click ='materialMenuShow = false')  Отмена
+        md-dialog-actions
+          md-button.md-primary(@click='materialMenuShow = false') Отмена
+      //- .materialMenuBox
+      //-   .materialMenuText
+      //-     span.md-headline Выберите тему
+      //-   .materialMenuField
+      //-     .md-layout.md-gutter
+      //-       .md-layout-item
+      //-         md-field
+      //-           label(for='theme') Тема
+      //-           md-select#theme(v-model='selectedMaterialTheme', name='theme' @md-selected = 'selectTopic(selectedMaterialTheme)')
+      //-             md-optgroup(label='Ваши темы')
+      //-               md-option(v-for = '(topic, i) in topicList' v-if = 'topic.collection === "user"' :key = 'topic.name' :value='topic.name') {{ topic.name }}
+      //-             md-optgroup(label='Темы MathPlace')
+      //-               md-option(v-for = '(topic, i) in topicList' v-if = 'topic.collection === "mathplace"' :key = 'topic.name' :value='topic.name') {{ topic.name }}
+      //-   .materialMenuTaskBox(v-if = 'materialMenuTaskSectionShow')
+      //-     .emptyTopicMessage(v-if = 'topicList[selectedMaterialThemeIndex].tasks.length === 0')
+      //-       span Тут пока нет задач!
+      //-     .materialMenuCards(v-else)
+      //-         md-card.materialContent(v-for ='(task, taskIndex) in topicList[selectedMaterialThemeIndex].tasks' :key ='taskIndex' v-if ='!(materialBlockIndex !== -1 && task.type === "theory")' md-with-hover='')
+      //-           md-ripple
+      //-             md-card-header
+      //-               .md-title(v-if = 'task.type === "theory"') Теория
+      //-               .md-title(v-else) Задача №{{ task.taskInd }}
+      //-             md-card-content.materialContentText
+      //-               span {{ task.textPreview }}
+      //-             md-card-actions
+      //-               md-button(@click ='addTask("preMadeMaterial", taskIndex)') Добавить
+      //-   .materialMenuCancel
+      //-     .button.button--round.button-warning(@click ='materialMenuShow = false')  Отмена
 
 </template>
 
@@ -690,7 +719,8 @@ export default {
     overflow hidden
   .materialContent
     max-height 30vh
-    margin 5%
+    margin-left 5%
+    margin-top 40px
     width 40%
     float left
   .materialMenuTaskBox
@@ -719,6 +749,7 @@ export default {
     padding-bottom 1%
 
   .materialMenuField
+    padding 20px
     md-field
       border-color #000000
       border-width 1%

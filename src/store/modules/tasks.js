@@ -129,6 +129,7 @@ export default {
 
               docData.name === undefined ? tasksInfo.name = this.getters.getCurrentTopic : tasksInfo.name = docData.name
               docData.author === undefined ? tasksInfo.author = null : tasksInfo.author = docData.author
+              docData.author === undefined ? tasksInfo.token = null : tasksInfo.token = this.getters.getCurrentTopic
               docData.time_start === undefined ? tasksInfo.time_start = null : tasksInfo.time_start = docData.time_start.toDate()
               docData.time_end === undefined ? tasksInfo.time_end = null : tasksInfo.time_end = docData.time_end.toDate()
             })
