@@ -146,6 +146,31 @@ export default {
     changeCollection (ctx, name) {
       ctx.commit('updateCollection', name)
     },
+    // async fetchLessonStatistics (ctx, id) {
+    //   const db = firebase.firestore()
+    //   var members = this.getters.getMyTopicsDetailedInfo[id].members
+    //   var sendData = []
+    //   for (let i = 0; i < members.length; i++) {
+    //     var info = {}
+    //     await db.collection(accountDb).doc(members[i]).get().then(async doc => {
+    //       var data = doc.data()
+    //       info['id'] = members[i]
+    //       info['name'] = data.name
+    //       await db.collection(accountDb).doc(members[i]).collection(userTasksDb).doc(id).get().then(statDoc => {
+    //         var statData = statDoc.data()
+    //         info['solveStats'] = statData.grades
+    //       })
+    //       info['solveSum'] = 0
+    //     })
+    //     var cnt = 0
+    //     for (let i = 0; i < info.solveStats.length; i++) {
+    //       if (Number(info.solveStats[i]) === 3 || Number(info.solveStats[i]) === 2) cnt++
+    //     }
+    //     info.solveSum = cnt
+    //     sendData.push(info)
+    //   }
+    //   ctx.commit('updateLessonStatistic', sendData)
+    // },
     async sendImageSolution (ctx, payload) {
       const db = firebase.firestore()
       let file = payload.image
@@ -186,6 +211,9 @@ export default {
     updateCollection (state, payload) {
       state.collection = payload
     },
+    // updateLessonStatistic (state, payload) {
+    //   state.lessonStatistics = payload
+    // },
     updateTasksInfo (state, payload) {
       state.tasksInfo = payload
     }
@@ -193,6 +221,7 @@ export default {
   state: {
     currentTopic: 'ОГЭ Вариант 1',
     tasks: [],
+    // lessonStatistics: [],
     tasksInfo: {
       name: '',
       author: ''
@@ -208,6 +237,9 @@ export default {
     getTasks (state) {
       return state.tasks
     },
+    // getMyLessonstatistics (state) {
+    //   return state.lessonStatistics
+    // },
     getCurrentLogo (state) {
       return state.logo
     },

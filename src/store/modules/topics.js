@@ -270,6 +270,39 @@ export default {
       }
       ctx.commit('updateTopicStats', usrData)
     },
+    async fetchLessonStatistics (ctx, id) {
+      const db = firebase.firestore()
+      console.log(id)
+      var sendDataLesson = []
+
+      await db.collection(olympiadDb).doc(id).get().then(async doc => {
+        var lesson = doc.data()
+        console.log(lesson)
+        var members = lesson.members
+        for (let i = 0; i < members.length; i++) {
+          var info = {}
+          await db.collection(accountDb).doc(members[i]).get().then(async doc => {
+            var data = doc.data()
+            info['id'] = members[i]
+            info['name'] = data.name
+            await db.collection(accountDb).doc(members[i]).collection(userTasksDb).doc(id).get().then(statDoc => {
+              var statData = statDoc.data()
+              info['solveStats'] = statData.grades
+            })
+            info['solveSum'] = 0
+            // sendData[members[i]] = info
+            sendDataLesson.push(info)
+          })
+          var cnt = 0
+          for (let i = 0; i < info.solveStats.length; i++) {
+            if (Number(info.solveStats[i]) === 3 || Number(info.solveStats[i]) === 2) cnt++
+          }
+          info.solveSum = cnt
+        }
+      })
+    console.log(sendDataLesson)
+    ctx.commit('updateLessonStatistic', sendDataLesson)
+    },
     markDBSolutionAs (ctx, payload) {
       // console.log(payload)
       const db = firebase.firestore()
@@ -456,6 +489,9 @@ export default {
     updateTopicStats (state, payload) {
       state.myTopicsDetailedInfo[payload.id].stats = payload.data
     },
+    updateLessonStatistic (state, payload) {
+      state.lessonStatistics = payload
+    },
     updateMembersStats (state, payload) {
       state.MembersStatistics = payload
     },
@@ -476,6 +512,7 @@ export default {
     customTopicTitle: '',
     myTopics: [],
     myTopic: {},
+    lessonStatistics: [],
     topicList: [],
     MembersSort: [],
     MembersStatistics: {}
@@ -499,6 +536,10 @@ export default {
     },
     getMyTopicsDetailedInfo (state) {
       return state.myTopicsDetailedInfo
+    },
+    getMyLessonstatistics (state) {
+      console.log(state.lessonStatistics)
+      return state.lessonStatistics
     },
     getMyTopic (state) {
       return state.myTopic

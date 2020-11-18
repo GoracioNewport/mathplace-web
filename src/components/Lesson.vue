@@ -1,6 +1,6 @@
 <template lang="pug">
   .content-wrapper
-    md-drawer.md-drawer_rating(:md-active.sync='showSidepanel')
+    md-drawer(:md-active.sync='showSidepanel')
       md-toolbar.md-transparent(md-elevation='0')
         div(style="margin-top: 30px;margin-bottom: 20px;")
           strong(style="display:block; font-size: 25px;font-weight:500") Рейтинг
@@ -74,18 +74,18 @@
               md-tooltip(md-direction='bottom') Поставить лайк уроку
     div(v-if = 'showStats')
       md-dialog(:md-active.sync='showStats')
-        md-dialog-title Изменить профиль
+        md-dialog-title Статистика по уроку
         //- .loadingBox(v-if = 'Object.keys(topic.stats).length == 0')
         //-   md-empty-state(md-rounded='' md-icon='access_time' md-label='В уроке пока нет учеников' md-description="В данный урок пока не присоединились ученики.")
         //- //- .errorBox(v-else-if = 'topic.')
         //- .loadedBox(v-else)
-        md-table.statsTable(v-model='myTopics[myTopics.indexOf(tasksInfo.token)].stats', md-sort='name', md-sort-order='asc', md-fixed-header='')
+        md-table.statsTable(v-model='myTopics', md-sort='name', md-sort-order='asc', md-fixed-header='')
           md-table-toolbar
             .md-toolbar-section-start
-              h1.md-title Пользователи
+              h1.md-title Ученики
+            md-button.md-primary(@click ='toggleStats(tasksInfo.token)') Обновить статистику
             //- md-field.md-toolbar-section-end(md-clearable='')
             //-   md-input(placeholder='Поиск по имени...', v-model='search', @input='searchOnTable')
-          md-table-empty-state(md-label='Пользователи не найдены', :md-description="`По запросу '${search}' ничего не нашлось. Попробуйте другое имя.`")
           md-table-row(slot='md-table-row', slot-scope='{ item }')
             md-table-cell.nameSlot(md-label='Имя', md-sort-by='name') {{ item.name }}
             md-table-cell.taskSlot(v-for = '(task, taskIndex) in item.solveStats' :key = 'taskIndex'
@@ -94,20 +94,19 @@
               img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'Number(task) == 0')
               img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
               img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
-            md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
+            md-table-cell.nameSlot(md-label='Всего', md-sort-by='solveSum') {{ item.solveSum }}
+        md-dialog-actions
+          md-button.md-primary(@click='showDialog = false,settingsMenuShow = false') Закрыть
 
     .taskbar(v-if = "error === 'none'")
       .lessonNavbar
-        md-toolbar.md-transparent(md-elevation='0',style="height:auto;")
-          md-button.md-icon-button.burger(@click='showNavigation = true')
-              md-icon.fa.fa-bars(style="height: 70px;width: 70px;color: #FFFFFF;").md-size-2x menu
+        md-button.md-icon-button.burger(@click='showNavigation = true')
+            md-icon.fa.fa-bars(style="height: 70px;width: 70px;color: #FFFFFF;").md-size-2x menu
 
-          span.md-display-2 {{ tasksInfo.name }}
+        span.md-display-2 {{ tasksInfo.name }}
 
-          md-button.hideStat.md-raised(v-if="tasksInfo.author === getUser.id", @click ='toggleStats(tasksInfo.token)') Статистика
-          md-button.hideStat.md-raised(v-else, @click="getDataMembers") Рейтинг
-        //- router-link#imgBack(to='/main')
-        //-   img(src="@/components/images/back.png")
+        md-button.hideStat.md-raised(v-if="tasksInfo.author === getUser.id", @click ='toggleStats(tasksInfo.token)') Статистика
+        md-button.hideStat.md-raised(v-else, @click="getDataMembers") Рейтинг
       .container
         .taskbar-content
           .taskbar-list
@@ -306,6 +305,9 @@ import Loading from 'vue-loading-overlay'
 import theoryImage from '@/assets/images/theory.png'
 import taskImage from '@/assets/images/question.png'
 import proofImage from '@/assets/images/star_evidence.png'
+import Right from 'vue-material-design-icons/CheckboxMarkedCircleOutline.vue'
+import Dots from 'vue-material-design-icons/DotsHorizontal.vue'
+import Wrong from 'vue-material-design-icons/Close.vue'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions, mapGetters } from 'vuex'
 import pdf from 'vue-pdf'
@@ -324,7 +326,10 @@ export default {
   },
   components: {
     Loading,
-    pdf
+    pdf,
+    Right,
+    Dots,
+    Wrong
   },
   async mounted () {
     // Начало загрузки, фетчим все данные
@@ -349,7 +354,7 @@ export default {
     else if (this.taskList.length === 0 && this.tasksInfo.author !== this.getUser.id) this.error = 'no_material_member'
     else if (this.tasksInfo.timeStart !== null && this.tasksInfo.timeStart.getTime() > new Date().getTime()) {
       this.error = 'too_early'
-      this.secondsLesson = this.tasksInfo.timeStart - new Date().getTime()
+      this.secondsLesson = this.tasksInfo.timeEnd - new Date().getTime()
       setInterval(() => {
         this.secondsLesson -= 1000
         if (this.secondsLesson <= 0) {
@@ -431,16 +436,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchTopicStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics']),
+    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics']),
     async toggleStats (id) {
-      let obj = this.myTopics.find(x => x.token === id)
-      let index = this.myTopics.indexOf(obj)
-      this.myTopics[index].showStats = !this.myTopics[index].showStats
-      if (this.myTopics[index].showStats) {
-        await this.fetchTopicStatistics(id)
-        this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
-        this.showStats = true
-      }
+      await this.fetchLessonStatistics(id)
+      // this.myTopics = this.fetchLessonStatistics
+      this.myTopics = this.convertToArray(this.getMyLessonstatistics)
+      console.log(this.myTopics)
+      this.showStats = true
     },
     changeActiveTask (i, thisTask) {
       this.status = 'Idle'
@@ -549,7 +551,7 @@ export default {
     onFilePicked (event) { this.solutionFile = event[0] }
   },
   computed: {
-    ...mapGetters(['getMyTopicsDetailedInfo', 'getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort']),
+    ...mapGetters(['getMyTopicsDetailedInfo', 'getMyLessonstatistics', 'getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort']),
     getDifficulty () {
       var dif
       this.taskList[this.activeTask].difficulty === undefined ? dif = 0 : dif = this.taskList[this.activeTask].difficulty
@@ -565,6 +567,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .taskSlot
+    width 50px
+    margin auto
   .burger
     height: 70px;
     width: 70px;
@@ -609,17 +614,16 @@ export default {
     height 60px
     color #FFFFFF
     width auto
-    overflow hidden
-    md-button
-      widht 60px
-      display inline-block
+    // md-button
+    //   widht 60px
+    //   display inline-block
     span
-      // position relative
-      // width auto
-      // height auto
+      position relative
+      width auto
+      height auto
       // margin auto
       // white-space: nowrap;
-      // line-height: 70px;
+      line-height: 70px;
       color #FFFFFF
       display inline-block
       font-family "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
@@ -628,7 +632,7 @@ export default {
       // margin-top 20px
       // margin-left 20px
       // margin-bottom 20px
-      // vertical-align middle
+      vertical-align middle
       overflow: hidden;
       text-overflow: ellipsis;
       // display: -webkit-box;
