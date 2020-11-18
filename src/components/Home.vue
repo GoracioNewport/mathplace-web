@@ -263,7 +263,7 @@
                 )
         .pesontedan
           input(id='pesontedan-seven',type='checkbox', name='pesontedans')
-          label#logic(for='pesontedan-seven')
+          div#logic(for='pesontedan-seven')
             a.title_topic2(name='logic')
               span Логика
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -661,6 +661,7 @@ export default {
     height auto
     font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     display block
+    margin-left 0px
     margin-bottom 20px
     font-weight: 400
     font-size: 35pt
@@ -741,17 +742,19 @@ export default {
     z-index: -1;
   }
 
-  .pesontedan label {
+  .pesontedan label
     position: relative;
     display: block;
-    padding: 0 0 0 1em;
     background: #ffffff;
     line-height: 3;
     cursor: pointer;
     text-shadow: 0 1px 0 #333131;
-    margin-left 25px
+    margin-left 50px
     font-size: 50px;
-  }
+    @media screen and (max-width: 700px)
+      border none
+      margin-left 0px
+      box-shadow none
 
   .pesontedan-content {
     max-height: 0;
@@ -846,7 +849,7 @@ export default {
       // right 18%
 
     .pesontedan label
-      margin-left 30px
+      margin-left 0px
       font-size 40px
 
   @media screen and (max-width: 400px) {
@@ -871,7 +874,7 @@ export default {
       // right 16%
     }
     .pesontedan label {
-      margin-left 30px
+      margin-left 0px
       font-size: 35px
     }
   }

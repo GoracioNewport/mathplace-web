@@ -21,8 +21,8 @@
           md-button.md-icon-button.md-list-action(@click="openChatWithUser(userStatistics[i].id)")
             md-icon.md-primary chat_bubble
     md-drawer(:md-active.sync='showNavigation' md-swipeable='')
-      md-toolbar.md-transparent(md-elevation='0',style="display:block;")
-        span.md-display-2(style="position:relative;height:100%;display:block;margin-bottom:5px;margin-top:20px;") {{ tasksInfo.name }}<br>
+      md-toolbar.md-transparent(md-elevation='0',style="height:auto;")
+        span.md-display-2(style="position:relative;height:auto;width:auto;margin-bottom:5px;margin-top:20px;") {{ tasksInfo.name }}<br>
         span.md-title(v-if="tasksInfo.token !== null", style="position:relative;height:100%;display:block;margin-left:10px") Ключ: {{ tasksInfo.token }}
         span.nd-title(v-if = "tasksInfo.timeEnd !== null") Осталось {{ Days }} дней {{ Hours }} часов {{ Minutes }} минут {{ Seconds }} секунд
       md-list(style="margin-left:10px")
@@ -72,17 +72,40 @@
                     circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
               p.md-subheading(style="text-align:center;") Поставить лайк
               md-tooltip(md-direction='bottom') Поставить лайк уроку
+    div(v-if = 'showStats')
+      md-dialog(:md-active.sync='showStats')
+        md-dialog-title Изменить профиль
+        //- .loadingBox(v-if = 'Object.keys(topic.stats).length == 0')
+        //-   md-empty-state(md-rounded='' md-icon='access_time' md-label='В уроке пока нет учеников' md-description="В данный урок пока не присоединились ученики.")
+        //- //- .errorBox(v-else-if = 'topic.')
+        //- .loadedBox(v-else)
+        md-table.statsTable(v-model='myTopics[myTopics.indexOf(tasksInfo.token)].stats', md-sort='name', md-sort-order='asc', md-fixed-header='')
+          md-table-toolbar
+            .md-toolbar-section-start
+              h1.md-title Пользователи
+            //- md-field.md-toolbar-section-end(md-clearable='')
+            //-   md-input(placeholder='Поиск по имени...', v-model='search', @input='searchOnTable')
+          md-table-empty-state(md-label='Пользователи не найдены', :md-description="`По запросу '${search}' ничего не нашлось. Попробуйте другое имя.`")
+          md-table-row(slot='md-table-row', slot-scope='{ item }')
+            md-table-cell.nameSlot(md-label='Имя', md-sort-by='name') {{ item.name }}
+            md-table-cell.taskSlot(v-for = '(task, taskIndex) in item.solveStats' :key = 'taskIndex'
+            :md-label = '(taskIndex + 1).toString()')
+              Dots.answerNo.answerLabel(v-if = 'Number(task) === 1')
+              img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'Number(task) == 0')
+              img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
+              img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
+            md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
 
     .taskbar(v-if = "error === 'none'")
       .lessonNavbar
+        md-toolbar.md-transparent(md-elevation='0',style="height:auto;")
+          md-button.md-icon-button.burger(@click='showNavigation = true')
+              md-icon.fa.fa-bars(style="height: 70px;width: 70px;color: #FFFFFF;").md-size-2x menu
 
-        md-button.md-raised(v-if="tasksInfo.author === getUser.id", style="float:right;margin-right:20px;margin-top:15px;" to="/statistics") Статистика
-        md-button.md-raised(v-else, style="float:right;margin-right:20px;margin-top:15px;" @click="getDataMembers") Рейтинг
+          span.md-display-2 {{ tasksInfo.name }}
 
-        md-button.md-icon-button(style="height: 70px;width: 70px;margin-left:30px;color: #FFFFFF;", @click='showNavigation = true')
-            md-icon.fa.fa-bars(style="height: 70px;width: 70px;color: #FFFFFF;").md-size-2x menu
-
-        span {{ tasksInfo.name }}
+          md-button.hideStat.md-raised(v-if="tasksInfo.author === getUser.id", @click ='toggleStats(tasksInfo.token)') Статистика
+          md-button.hideStat.md-raised(v-else, @click="getDataMembers") Рейтинг
         //- router-link#imgBack(to='/main')
         //-   img(src="@/components/images/back.png")
       .container
@@ -392,9 +415,12 @@ export default {
       Hours: 0,
       Minutes: 0,
       Seconds: 0,
+      myTopicsLoading: false,
+      myTopics: [],
       isLoadingStat: false,
       showSidepanel: false,
       showNavigation: false,
+      showStats: false,
       answer: '',
       status: 'Idle',
       topicLiked: false,
@@ -405,7 +431,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics']),
+    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchTopicStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics']),
+    async toggleStats (id) {
+      let obj = this.myTopics.find(x => x.token === id)
+      let index = this.myTopics.indexOf(obj)
+      this.myTopics[index].showStats = !this.myTopics[index].showStats
+      if (this.myTopics[index].showStats) {
+        await this.fetchTopicStatistics(id)
+        this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
+        this.showStats = true
+      }
+    },
     changeActiveTask (i, thisTask) {
       this.status = 'Idle'
       this.activeTask = i
@@ -486,6 +522,9 @@ export default {
         this.like(true)
       }
     },
+    convertToArray (map) {
+      return Object.values(map)
+    },
     showVerdictTask () {
       setTimeout(() => {
         this.rightAns = false
@@ -510,7 +549,7 @@ export default {
     onFilePicked (event) { this.solutionFile = event[0] }
   },
   computed: {
-    ...mapGetters(['getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort']),
+    ...mapGetters(['getMyTopicsDetailedInfo', 'getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort']),
     getDifficulty () {
       var dif
       this.taskList[this.activeTask].difficulty === undefined ? dif = 0 : dif = this.taskList[this.activeTask].difficulty
@@ -526,6 +565,20 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .burger
+    height: 70px;
+    width: 70px;
+    margin-left:30px;
+    color: #FFFFFF;
+    @media screen and (max-width: 800px)
+      margin-left 5px;
+      margin-right 0px
+  .hideStat
+    float:right;
+    margin-right:20px;
+    margin-top:15px;
+    @media screen and (max-width: 800px)
+      display none
   .tooEarly
     li
       display: inline-block;
@@ -555,21 +608,27 @@ export default {
     position relative
     height 60px
     color #FFFFFF
-    width 100%
+    width auto
+    overflow hidden
+    md-button
+      widht 60px
+      display inline-block
     span
-      position relative
-      margin auto
-      line-height: 70px;
-      text-align center
-      align justify
+      // position relative
+      // width auto
+      // height auto
+      // margin auto
+      // white-space: nowrap;
+      // line-height: 70px;
       color #FFFFFF
+      display inline-block
       font-family "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
       font-size 25pt
       font-weight 500
-      margin-top 20px
-      margin-left 20px
-      margin-bottom 20px
-      vertical-align middle
+      // margin-top 20px
+      // margin-left 20px
+      // margin-bottom 20px
+      // vertical-align middle
       overflow: hidden;
       text-overflow: ellipsis;
       // display: -webkit-box;
@@ -582,15 +641,15 @@ export default {
     height:0px
 
   ::-webkit-scrollbar-track
-    background-color:#ecedee
+    background-color:#763DCA
 
   ::-webkit-scrollbar-thumb
     -webkit-border-radius: 0px;
     border-radius: 20px;
-    background-color #763DCA
+    background-color #FFFFFF
 
   ::-webkit-scrollbar-thumb:hover
-    background-color:#56999f;
+    background-color:#763DCA;
 
   ::-webkit-resizer
     background-image:url('');
@@ -606,7 +665,7 @@ export default {
     position relative
     height auto
     width auto
-    margin 0px auto
+    margin 0px auto 5px
     padding 0px
     overflow auto
     overflow-y hidden

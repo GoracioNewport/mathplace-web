@@ -90,6 +90,8 @@ export default {
     await this.fetchMyTopicsDetailedInfo()
     this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
     this.myTopicsLoading = false
+
+    console.log(this.myTopics)
   },
   data () {
     return {

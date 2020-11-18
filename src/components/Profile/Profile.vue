@@ -33,7 +33,7 @@
                   button.designButtonMini(@click ='settingsMenuShow = true, showDialog = true') Редактировать профиль
                   //- router-link(to='/logout')
                     //- button.designButtonMini Выйти
-                  button.designButtonMini(@click='active = true') Выйти
+                  button.designButtonMiniRed(@click='active = true') Выйти
                   md-dialog-confirm(:md-active.sync='active' md-title="Вы уверены, что хотите выйти?" md-content='Вы сможете перезайти в другой аккаунт' md-confirm-text='Выйти' md-cancel-text='Отмена' @md-cancel='onCancel' @md-confirm='onConfirm')
 
         .content-achieve
@@ -264,6 +264,23 @@ export default {
     transition: 0.6s;
     color #FFFFFF !important
     background-color #763DCA
+  .designButtonMiniRed
+    padding-top 10px
+    position relative
+    height auto
+    border: 2px solid #FF4D18;
+    border-radius 50px
+    font-weight 550
+    font-size 17px
+    margin-left 20px
+    color #FF4D18 !important
+    background-color #FFFFFF
+    opacity 0.5
+    transition: 0.6s;
+  .designButtonMiniRed:hover
+    transition: 0.6s;
+    color #FFFFFF !important
+    background-color #FF4D18
   .designButtonLesson
     padding-top 12.5px
     position relative
