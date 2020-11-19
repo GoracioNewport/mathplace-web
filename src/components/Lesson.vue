@@ -36,15 +36,15 @@
           :key = "i"
         )
           div
-            strong.md-list-item-text {{ i.userId }}
+            strong.md-list-item-text {{ i.userName }}
             span.md-list-item-text {{ i.text }}
-          md-button.md-icon-button.md-list-action(@click="openChatWithUser(i.userId)")
+          md-button.md-icon-button.md-list-action(@click="openChatWithUser(tasksInfo.token)")
             md-icon.md-primary chat_bubble
       .sendComment
         md-field
           label Комментарии
           md-input(v-model="textNewComment", plceholder="Введите комментарий")
-        md-button(@click="sendComment") Отправить
+          md-button(@click="sendComment(tasksInfo.token)") Отправить
     md-drawer(:md-active.sync='showNavigation' md-swipeable='')
       md-toolbar.md-transparent(md-elevation='0',style="height:auto;")
         span.md-display-2(style="position:relative;height:auto;width:auto;margin-bottom:5px;margin-top:20px;") {{ tasksInfo.name }}<br>
@@ -97,7 +97,7 @@
                     circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
               p.md-subheading(style="text-align:center;") Поставить лайк
               md-tooltip(md-direction='bottom') Поставить лайк уроку
-    md-snackbar(:md-position='Centered' :md-duration='4000' :md-active.sync='showSnackbar' md-persistent='')
+    md-snackbar(md-position='center' md-duration='4000' :md-active.sync='showSnackbar' md-persistent='')
       span Ссылка скопирована. Отправьте её ученикам!
       md-button.md-primary(@click='showSnackbar = false') Скрыть
     div(v-if = 'showStats')
@@ -470,7 +470,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchComments', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics']),
+    ...mapActions(['fetchMyTopicsDetailedInfo', 'sendComments', 'fetchComments', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics']),
     async toggleStats (id) {
       await this.fetchLessonStatistics(id)
       // this.myTopics = this.fetchLessonStatistics
@@ -558,9 +558,12 @@ export default {
       console.log(this.arrayComments)
       this.isLoadingComment = false
     },
-    sendComment () {
+    async sendComment (id) {
       console.log(this.textNewComment)
-      
+
+      await this.sendComments({token: id, userId: this.userId, text: this.textNewComment})
+      this.showComments(id)
+      this.textNewComment = ''
     },
     likeButton () {
       let liked = this.getUser.like
@@ -619,7 +622,9 @@ export default {
 <style lang="stylus" scoped>
   .sendComment
     float bottom
-    width 80%
+    width 90%
+    margin-top 50px
+    margin-left 5%
     md-field
       position relative
       width 50px

@@ -167,6 +167,7 @@ export default {
     background-color #763DCA
 
   .content-wrapper
+    height 300px
     max-height 300px
 
   .circle
@@ -180,6 +181,8 @@ export default {
     border-top-left-radius 30px
     border-top-right-radius 30px
 
+  .topic-item-wrapper
+    height 300px
   .topic-item-body
     height 45%
     padding 7%
@@ -197,7 +200,7 @@ export default {
     margin 5%
     margin-bottom 0px
     cursor pointer
-    max-width 400px
+    max-width 300px
     &:hover
       box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
   .topic-item-percentage
