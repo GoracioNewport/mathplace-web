@@ -4,7 +4,7 @@ import 'firebase/firestore'
 import store from '@/store'
 
 // eslint-disable-next-line
-import { accountDb, tasksDb, olympiadDb, userTasksDb } from './global'
+import { accountDb, tasksDb, olympiadDb, userTasksDb, commentsDb, AllCommentsDb } from './global'
 
 export default {
   actions: {
@@ -215,6 +215,18 @@ export default {
         myTopics: topics
       }, { merge: true })
     },
+    async fetchComments (ctx, token) {
+      console.log("FETCHCOMMENTS")
+      console.log(token)
+      const db = firebase.firestore()
+      var allComments = []
+      await db.collection(olympiadDb).doc(token).collection(commentsDb).doc(AllCommentsDb).get().then(doc => {
+        var data = doc.data()
+        allComments = data.messages
+      })
+      console.log(allComments)
+      ctx.commit('updateAllComments', allComments)
+    },
     async fetchMyTopicsDetailedInfo (ctx) {
       ctx.commit('updateMyTopicsDetailedInfo', {})
       const db = firebase.firestore()
@@ -300,8 +312,8 @@ export default {
           info.solveSum = cnt
         }
       })
-    console.log(sendDataLesson)
-    ctx.commit('updateLessonStatistic', sendDataLesson)
+      console.log(sendDataLesson)
+      ctx.commit('updateLessonStatistic', sendDataLesson)
     },
     markDBSolutionAs (ctx, payload) {
       // console.log(payload)
@@ -486,6 +498,9 @@ export default {
     updateMyTopicsDetailedInfo (state, payload) {
       state.myTopicsDetailedInfo = payload
     },
+    updateAllComments (state, payload) {
+      state.allComments = payload
+    },
     updateTopicStats (state, payload) {
       state.myTopicsDetailedInfo[payload.id].stats = payload.data
     },
@@ -512,6 +527,7 @@ export default {
     customTopicTitle: '',
     myTopics: [],
     myTopic: {},
+    allComments: [],
     lessonStatistics: [],
     topicList: [],
     MembersSort: [],
@@ -536,6 +552,9 @@ export default {
     },
     getMyTopicsDetailedInfo (state) {
       return state.myTopicsDetailedInfo
+    },
+    getCommentsFromLesson (state) {
+      return state.allComments
     },
     getMyLessonstatistics (state) {
       console.log(state.lessonStatistics)

@@ -20,6 +20,31 @@
             span.md-list-item-text Решено задач {{ userStatistics[i].solveSum }}
           md-button.md-icon-button.md-list-action(@click="openChatWithUser(userStatistics[i].id)")
             md-icon.md-primary chat_bubble
+    md-drawer(:md-active.sync='showComment')
+      md-toolbar.md-transparent(md-elevation='0')
+        div(style="margin-top: 30px;margin-bottom: 20px;")
+          strong(style="display:block; font-size: 25px;font-weight:500") Комментарии
+          //- span(style="display:block;margin-top:10px; font-size: 16px;font-weight:500") всего участников {{ Object.keys(userStatistics).length }}
+      .loading-indicator(v-if='isLoadingComment')
+        .vld-parent
+          loading(
+            :active.sync = "isLoadingComment",
+            color = '#763dca')
+      md-list(v-else)
+        md-list-item(
+          v-for = "i in this.arrayComments"
+          :key = "i"
+        )
+          div
+            strong.md-list-item-text {{ i.userId }}
+            span.md-list-item-text {{ i.text }}
+          md-button.md-icon-button.md-list-action(@click="openChatWithUser(i.userId)")
+            md-icon.md-primary chat_bubble
+      .sendComment
+        md-field
+          label Комментарии
+          md-input(v-model="textNewComment", plceholder="Введите комментарий")
+        md-button(@click="sendComment") Отправить
     md-drawer(:md-active.sync='showNavigation' md-swipeable='')
       md-toolbar.md-transparent(md-elevation='0',style="height:auto;")
         span.md-display-2(style="position:relative;height:auto;width:auto;margin-bottom:5px;margin-top:20px;") {{ tasksInfo.name }}<br>
@@ -32,13 +57,13 @@
         //- md-list-item.md-button
         //-   md-icon create
         //-   span.md-list-item-text Черновик
-        //- md-list-item.md-button
-        //-   md-icon forum
-        //-   span.md-list-item-text Комментарии
+        md-list-item.md-button(@click="showComments(tasksInfo.token)")
+          md-icon forum
+          span.md-list-item-text Комментарии
         md-list-item.md-button(v-if="tasksInfo.token !== null", @click="getDataMembers")
           md-icon sort
           span.md-list-item-text Рейтинг
-        md-list-item.md-button(v-if="tasksInfo.token !== null", @click ='showNavigation = false, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + tasksInfo.token)')
+        md-list-item.md-button(v-if="tasksInfo.token !== null", @click ='showNavigation = false, showSnackbar=true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + tasksInfo.token)')
           md-icon content_copy
           p.md-list-item-text(style="height:auto") Скопировать ссылку на урок
         md-list-item
@@ -72,10 +97,13 @@
                     circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
               p.md-subheading(style="text-align:center;") Поставить лайк
               md-tooltip(md-direction='bottom') Поставить лайк уроку
+    md-snackbar(:md-position='Centered' :md-duration='4000' :md-active.sync='showSnackbar' md-persistent='')
+      span Ссылка скопирована. Отправьте её ученикам!
+      md-button.md-primary(@click='showSnackbar = false') Скрыть
     div(v-if = 'showStats')
       md-dialog(:md-active.sync='showStats')
         md-dialog-title Статистика по уроку
-        //- .loadingBox(v-if = 'Object.keys(topic.stats).length == 0')
+        //- .loadingBox(v-if = 'myTopics.size() == 0')
         //-   md-empty-state(md-rounded='' md-icon='access_time' md-label='В уроке пока нет учеников' md-description="В данный урок пока не присоединились ученики.")
         //- //- .errorBox(v-else-if = 'topic.')
         //- .loadedBox(v-else)
@@ -96,7 +124,7 @@
               img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
             md-table-cell.nameSlot(md-label='Всего', md-sort-by='solveSum') {{ item.solveSum }}
         md-dialog-actions
-          md-button.md-primary(@click='showDialog = false,settingsMenuShow = false') Закрыть
+          md-button.md-primary(@click='showStats = false') Закрыть
 
     .taskbar(v-if = "error === 'none'")
       .lessonNavbar
@@ -106,7 +134,7 @@
         span.md-display-2 {{ tasksInfo.name }}
 
         md-button.hideStat.md-raised(v-if="tasksInfo.author === getUser.id", @click ='toggleStats(tasksInfo.token)') Статистика
-        md-button.hideStat.md-raised(v-else, @click="getDataMembers") Рейтинг
+        md-button.hideStat.md-raised(v-else-if="tasksInfo.token !== null", @click="getDataMembers") Рейтинг
       .container
         .taskbar-content
           .taskbar-list
@@ -311,6 +339,7 @@ import Wrong from 'vue-material-design-icons/Close.vue'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions, mapGetters } from 'vuex'
 import pdf from 'vue-pdf'
+
 // import func from '../../vue-temp/vue-editor-bridge'
 // import { beforeRouteLeave } from 'vue-router'
 
@@ -416,10 +445,15 @@ export default {
       isLoading: true,
       rightAns: false,
       secondsLesson: 0,
+      showSnackbar: false,
+      showComment: false,
+      arrayComments: [],
+      isLoadingComment: false,
       Days: 0,
       Hours: 0,
       Minutes: 0,
       Seconds: 0,
+      textNewComment: '',
       myTopicsLoading: false,
       myTopics: [],
       isLoadingStat: false,
@@ -436,7 +470,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics']),
+    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchComments', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics']),
     async toggleStats (id) {
       await this.fetchLessonStatistics(id)
       // this.myTopics = this.fetchLessonStatistics
@@ -512,6 +546,22 @@ export default {
         }
       }
     },
+    async showComments (id) {
+      console.log(id)
+      this.showNavigation = false
+      this.showComment = true
+      this.isLoadingComment = true
+
+      await this.fetchComments(id)
+      this.arrayComments = this.getCommentsFromLesson;
+
+      console.log(this.arrayComments)
+      this.isLoadingComment = false
+    },
+    sendComment () {
+      console.log(this.textNewComment)
+      
+    },
     likeButton () {
       let liked = this.getUser.like
       if (this.getUser.like.find(t => t === this.getCurrentTopic)) {
@@ -551,7 +601,7 @@ export default {
     onFilePicked (event) { this.solutionFile = event[0] }
   },
   computed: {
-    ...mapGetters(['getMyTopicsDetailedInfo', 'getMyLessonstatistics', 'getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort']),
+    ...mapGetters(['getMyTopicsDetailedInfo', 'getCommentsFromLesson', 'getMyLessonstatistics', 'getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort']),
     getDifficulty () {
       var dif
       this.taskList[this.activeTask].difficulty === undefined ? dif = 0 : dif = this.taskList[this.activeTask].difficulty
@@ -567,6 +617,17 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .sendComment
+    float bottom
+    width 80%
+    md-field
+      position relative
+      width 50px
+      display inline-block
+    md-button
+      position relative
+      width 20px
+      display inline-block
   .taskSlot
     width 50px
     margin auto

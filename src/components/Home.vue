@@ -65,7 +65,7 @@
                 p.text {{arraySchool.length}} урока
 
         .pesontedan
-          input(id='pesontedan-eight',type='checkbox', name='pesontedans')
+          input(v-id="this.arrayPopular.length > 4",id='pesontedan-eight',type='checkbox', name='pesontedans')
           label(for='pesontedan-eight')
             a.title_topic2
               span Популярные
@@ -229,7 +229,7 @@
                   v-bind:like='topic.like'
                 )
         .pesontedan
-          input(id='pesontedan-six',type='checkbox', name='pesontedans')
+          input(v-if="this.arrayKomba.length > 4", id='pesontedan-six',type='checkbox', name='pesontedans')
           label#komba(for='pesontedan-six')
             a.title_topic2(name='komba')
               span Комбинаторика
@@ -262,8 +262,8 @@
                   v-bind:like='topic.like'
                 )
         .pesontedan
-          input(id='pesontedan-seven',type='checkbox', name='pesontedans')
-          div#logic(for='pesontedan-seven')
+          input(v-if="this.arrayLogics.length > 4", id='pesontedan-seven',type='checkbox', name='pesontedans')
+          label#logic(for='pesontedan-seven')
             a.title_topic2(name='logic')
               span Логика
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -295,7 +295,7 @@
                   v-bind:like='topic.like'
                 )
         .pesontedan
-          input(id='pesontedan-nine',type='checkbox', name='pesontedans')
+          input(v-if="this.arrayGraphs.length > 4", id='pesontedan-nine',type='checkbox', name='pesontedans')
           label#graphs(for='pesontedan-nine')
             a.title_topic2(name='graphs')
               span Графы

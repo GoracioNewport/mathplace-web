@@ -27,7 +27,8 @@
                 )
                   router-link.navbar-link(
                     :to = " `${link.url}`"
-                  ) <strong class="router-link-title">{{ link.title }}</strong>
+                  )
+                    md-button.router-link-title {{ link.title }}
             .header-logo-right
               //- button.button--round.designButtonLesson.router-link(to='/customTitle') Присоединиться
               router-link.button.button--round.designButtonLesson(v-if ='this.$store.getters.checkUser' to='/customTitle') Создать урок
@@ -87,7 +88,7 @@ export default {
     position fixed
     width 100%
     z-index 5
-    opacity 0.85
+    opacity 0.9
     height 80px
     background-color #FFFFFF
     border-bottom-width 0px
@@ -169,8 +170,9 @@ export default {
     string
       color #000000
   .router-link-title
-    font-size 1.3em
-    color #ffffff
+    font-size 16px
+    margin-left 10px
+    color #000000
     @media screen and (max-width: 480px)
       color #000000
 </style>
