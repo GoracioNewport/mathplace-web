@@ -300,8 +300,8 @@ export default {
           info.solveSum = cnt
         }
       })
-    console.log(sendDataLesson)
-    ctx.commit('updateLessonStatistic', sendDataLesson)
+      console.log(sendDataLesson)
+      ctx.commit('updateLessonStatistic', sendDataLesson)
     },
     markDBSolutionAs (ctx, payload) {
       // console.log(payload)

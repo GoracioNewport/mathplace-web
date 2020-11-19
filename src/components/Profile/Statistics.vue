@@ -6,12 +6,12 @@
         :is-full-page = 'true'
         color = "#763dca"
         :opacity = 0.5)
-    md-dialog-confirm(:md-active.sync='active' md-title="Вы уверены, что хотите удалить урок?" md-content='Вы больше не сможете зайти в этот урок' md-confirm-text='Удалить' md-cancel-text='Отмена' @md-cancel='onCancel' @md-confirm='deleteMyTopic(topic.token, topicIndex)')
+    md-dialog-confirm(:md-active.sync='active' md-title="Вы уверены, что хотите удалить урок?" md-content='Вы больше не сможете зайти в этот урок' md-confirm-text='Удалить' md-cancel-text='Отмена' @md-cancel='active = false' @md-confirm='deleteMyTopic(deletedTopicToken, deletedTopicId)')
     .topicsBox(v-if = 'myTopics.length !== 0')
       .topicItem(v-for = '(topic, topicIndex) in myTopics.slice().reverse()'
       :key = 'topic.token')
         .img-tooltip
-          img.imageButton(src ='@/assets/images/bin2.png' @click ='active = true')
+          img.imageButton(src ='@/assets/images/bin2.png' @click ='active = true; deletedTopicId = (myTopics.length - topicIndex - 1); deletedTopicToken = topic.token')
           md-tooltip(md-direction='right') Удалить урок
         .img-tooltip
           img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
@@ -109,7 +109,9 @@ export default {
       imageUser: 0,
       imageUserId: '',
       myTopicsLoading: false,
-      showSnack: false
+      showSnack: false,
+      deletedTopicId: 0,
+      deletedTopicToken: ''
     }
   },
   methods: {
@@ -159,8 +161,10 @@ export default {
       this.markDBSolutionAs({ userId: this.imageUserId, topicName: this.myTopics[this.imageTopic].token, taskId: this.imageTask, newStats: this.myTopics[this.imageTopic].stats[this.imageUser].solveStats })
     },
     deleteMyTopic (token, i) {
+      console.log(token, i)
       this.myTopics.splice(i, 1)
       this.deleteTopic(token)
+      this.$forceUpdate()
     }
   },
   created () {
