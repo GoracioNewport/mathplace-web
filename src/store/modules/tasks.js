@@ -78,7 +78,6 @@ export default {
               if (newMember || modified) {
                 let generatePattern = []
                 for (let i = 0; i < docData.tasks.length; i++) {
-                  console.log(docData.tasks[i])
                   if (docData.tasks[i].type !== 'block') tasks.push(docData.tasks[i])
                   else {
                     var taskIndexes = [...Array(docData.tasks[i].tasks.length).keys()]
@@ -89,7 +88,6 @@ export default {
                       taskIndexes[j] = temp
                     }
                     let randomTasks = taskIndexes.slice(0, Number(docData.tasks[i].choiceTask))
-                    console.log(randomTasks)
                     generatePattern.push(randomTasks)
                     for (let j = 0; j < randomTasks.length; j++) tasks.push(docData.tasks[i].tasks[randomTasks[j]])
                   }
@@ -99,23 +97,16 @@ export default {
               } else {
                 var blockCnt = 0
                 for (let i = 0; i < docData.tasks.length; i++) {
-                  console.log(userTopicDetails.generatePattern)
                   if (docData.tasks[i].type !== 'block') tasks.push(docData.tasks[i])
                   else {
-                    console.log('enter block')
-                    console.log('pattern: ', userTopicDetails.generatePattern[blockCnt], blockCnt)
                     for (let j = 0; j < userTopicDetails.generatePattern[blockCnt].length; j++) tasks.push(docData.tasks[i].tasks[userTopicDetails.generatePattern[blockCnt][j]])
-                    console.log('aaa', blockCnt)
                     blockCnt += 1
-                    console.log('bbb', blockCnt)
                   }
                 }
               } docData.tasks = tasks
-              console.log(docData.tasks)
 
               // Парсинг задач
               for (let i = 0; i < itemCount; i++) {
-                // console.log(docData.tasks[i])
                 var task = docData.tasks[i]
                 if (task.type !== 'theory') taskCount++
                 task.id = i
@@ -132,6 +123,8 @@ export default {
               docData.author === undefined ? tasksInfo.token = null : tasksInfo.token = this.getters.getCurrentTopic
               docData.time_start === undefined ? tasksInfo.time_start = null : tasksInfo.time_start = docData.time_start.toDate()
               docData.time_end === undefined ? tasksInfo.time_end = null : tasksInfo.time_end = docData.time_end.toDate()
+              docData.members === undefined ? tasksInfo.members = [] : tasksInfo.members = docData.members
+              docData.blacklist === undefined ? tasksInfo.blacklist = [] : tasksInfo.blacklist = docData.blacklist
             })
         })
       ctx.commit('updateTasksInfo', tasksInfo)
