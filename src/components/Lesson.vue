@@ -347,7 +347,6 @@ export default {
     this.tasksInfo.token = this.getTasksInfo.token
     this.tasksInfo.timeStart = this.getTasksInfo.time_start
     this.tasksInfo.timeEnd = this.getTasksInfo.time_end
-    console.log(this.tasksInfo)
     this.taskList = this.getTasks
     // Проверка на ошибки
     if (this.taskList.length === 0 && this.tasksInfo.author === this.getUser.id) this.error = 'no_material_author'
@@ -441,7 +440,6 @@ export default {
       await this.fetchLessonStatistics(id)
       // this.myTopics = this.fetchLessonStatistics
       this.myTopics = this.convertToArray(this.getMyLessonstatistics)
-      console.log(this.myTopics)
       this.showStats = true
     },
     changeActiveTask (i, thisTask) {
@@ -465,6 +463,7 @@ export default {
           if (this.solutionFile !== null) {
             this.isLoading = true
             await this.sendImageSolution({ colletion: this.collection, id: this.taskId, i: this.activeTask, image: this.solutionFile })
+            this.answer = this.getLoadedImageURL
             this.isLoading = false
             verdict = '4'
           } if (Array.isArray(this.answer)) {
@@ -551,7 +550,7 @@ export default {
     onFilePicked (event) { this.solutionFile = event[0] }
   },
   computed: {
-    ...mapGetters(['getMyTopicsDetailedInfo', 'getMyLessonstatistics', 'getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort']),
+    ...mapGetters(['getMyTopicsDetailedInfo', 'getMyLessonstatistics', 'getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort', 'getLoadedImageURL']),
     getDifficulty () {
       var dif
       this.taskList[this.activeTask].difficulty === undefined ? dif = 0 : dif = this.taskList[this.activeTask].difficulty

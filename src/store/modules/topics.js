@@ -254,6 +254,7 @@ export default {
           await db.collection(accountDb).doc(members[i]).collection(userTasksDb).doc(id).get().then(statDoc => {
             var statData = statDoc.data()
             info['solveStats'] = statData.grades
+            info['answers'] = statData.lastAnswers
           })
           info['solveSum'] = 0
         })

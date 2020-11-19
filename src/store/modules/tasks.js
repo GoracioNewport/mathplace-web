@@ -172,7 +172,7 @@ export default {
     //   ctx.commit('updateLessonStatistic', sendData)
     // },
     async sendImageSolution (ctx, payload) {
-      const db = firebase.firestore()
+      // const db = firebase.firestore()
       let file = payload.image
       let fileName = file.name
       const fileReader = new FileReader()
@@ -186,13 +186,14 @@ export default {
       await firebase.storage().ref(imageTimeName).put(file)
       await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
       imageUrl = imageUrl.toString()
+      ctx.commit('updateImageURL', imageUrl)
       // Запись ссылки в бд
-      var grades = []
-      await db.collection(accountDb).doc(this.getters.getUser.id).collection(userTasksDb).doc(payload.id).get().then(doc => { grades = doc.data().grades })
-      grades[payload.i] = imageUrl
-      await db.collection(accountDb).doc(this.getters.getUser.id).collection(userTasksDb).doc(payload.id).update({
-        grades: grades
-      })
+      // var grades = []
+      // await db.collection(accountDb).doc(this.getters.getUser.id).collection(userTasksDb).doc(payload.id).get().then(doc => { grades = doc.data().grades })
+      // grades[payload.i] = imageUrl
+      // await db.collection(accountDb).doc(this.getters.getUser.id).collection(userTasksDb).doc(payload.id).update({
+      //   grades: grades
+      // })
     }
   },
   mutations: {
@@ -216,6 +217,9 @@ export default {
     // },
     updateTasksInfo (state, payload) {
       state.tasksInfo = payload
+    },
+    updateImageURL (state, payload) {
+      state.loadImageURL = payload
     }
   },
   state: {
@@ -228,7 +232,8 @@ export default {
     },
     tasksLoading: false,
     logo: 'MathPlace',
-    collection: 'tasks'
+    collection: 'tasks',
+    loadImageURL: ''
   },
   getters: {
     getCurrentTopic (state) {
@@ -248,6 +253,9 @@ export default {
     },
     getTasksInfo (state) {
       return state.tasksInfo
+    },
+    getLoadedImageURL (state) {
+      return state.loadImageURL
     }
   }
 }

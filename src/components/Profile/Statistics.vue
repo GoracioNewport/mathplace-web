@@ -50,7 +50,7 @@
     .solutionMenu(v-if = 'solutionImageShown')
       .solutionMenuBox
         .solutionInner
-          img.solutionImage(:src = "myTopics[imageTopic].stats[imageUser].solveStats[imageTask]")
+          img.solutionImage(:src = "myTopics[imageTopic].stats[imageUser].answers[imageTask]")
         .solutionMenuButtons
           md-button.md-raised(@click ='markSolutionAs("right")').md-primary Правильно
           md-button.md-raised(@click ='markSolutionAs("wrong")').md-accent Неправильно
@@ -90,8 +90,6 @@ export default {
     await this.fetchMyTopicsDetailedInfo()
     this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
     this.myTopicsLoading = false
-
-    console.log(this.myTopics)
   },
   data () {
     return {
@@ -146,7 +144,7 @@ export default {
       return Object.values(map)
     },
     showSolution (topicIndex, taskIndex, userIndex) {
-      this.imageTopic = topicIndex
+      this.imageTopic = (this.myTopics.length - topicIndex - 1)
       this.imageTask = taskIndex
       this.imageUserId = userIndex
       for (let i = 0; i < this.myTopics[this.imageTopic].stats.length; i++) {
@@ -161,7 +159,6 @@ export default {
       this.markDBSolutionAs({ userId: this.imageUserId, topicName: this.myTopics[this.imageTopic].token, taskId: this.imageTask, newStats: this.myTopics[this.imageTopic].stats[this.imageUser].solveStats })
     },
     deleteMyTopic (token, i) {
-      console.log(token, i)
       this.myTopics.splice(i, 1)
       this.deleteTopic(token)
       this.$forceUpdate()
