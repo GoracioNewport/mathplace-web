@@ -6,12 +6,12 @@
         :is-full-page = 'true'
         color = "#763dca"
         :opacity = 0.5)
-    md-dialog-confirm(:md-active.sync='active' md-title="Вы уверены, что хотите удалить урок?" md-content='Вы больше не сможете зайти в этот урок' md-confirm-text='Удалить' md-cancel-text='Отмена' @md-cancel='onCancel' @md-confirm='deleteMyTopic(topic.token, topicIndex)')
+    md-dialog-confirm(:md-active.sync='active' md-title="Вы уверены, что хотите удалить урок?" md-content='Вы больше не сможете зайти в этот урок' md-confirm-text='Удалить' md-cancel-text='Отмена' @md-cancel='active = false' @md-confirm='deleteMyTopic(deletedTopicToken, deletedTopicId)')
     .topicsBox(v-if = 'myTopics.length !== 0')
       .topicItem(v-for = '(topic, topicIndex) in myTopics.slice().reverse()'
       :key = 'topic.token')
         .img-tooltip
-          img.imageButton(src ='@/assets/images/bin2.png' @click ='active = true')
+          img.imageButton(src ='@/assets/images/bin2.png' @click ='active = true; deletedTopicId = (myTopics.length - topicIndex - 1); deletedTopicToken = topic.token')
           md-tooltip(md-direction='right') Удалить урок
         .img-tooltip
           img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
@@ -53,7 +53,7 @@
     .solutionMenu(v-if = 'solutionImageShown')
       .solutionMenuBox
         .solutionInner
-          img.solutionImage(:src = "myTopics[imageTopic].stats[imageUser].solveStats[imageTask]")
+          img.solutionImage(:src = "myTopics[imageTopic].stats[imageUser].answers[imageTask]")
         .solutionMenuButtons
           md-button.md-raised(@click ='markSolutionAs("right")').md-primary Правильно
           md-button.md-raised(@click ='markSolutionAs("wrong")').md-accent Неправильно
@@ -93,8 +93,6 @@ export default {
     await this.fetchMyTopicsDetailedInfo()
     this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
     this.myTopicsLoading = false
-
-    console.log(this.myTopics)
   },
   data () {
     return {
@@ -112,7 +110,9 @@ export default {
       imageUserId: '',
       myTopicsLoading: false,
       showSnack: false,
-      showSnackbar: false
+      showSnackbar: false,
+      deletedTopicId: 0,
+      deletedTopicToken: ''
     }
   },
   methods: {
@@ -147,7 +147,7 @@ export default {
       return Object.values(map)
     },
     showSolution (topicIndex, taskIndex, userIndex) {
-      this.imageTopic = topicIndex
+      this.imageTopic = (this.myTopics.length - topicIndex - 1)
       this.imageTask = taskIndex
       this.imageUserId = userIndex
       for (let i = 0; i < this.myTopics[this.imageTopic].stats.length; i++) {
@@ -164,6 +164,7 @@ export default {
     deleteMyTopic (token, i) {
       this.myTopics.splice(i, 1)
       this.deleteTopic(token)
+      this.$forceUpdate()
     }
   },
   created () {

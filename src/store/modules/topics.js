@@ -289,6 +289,7 @@ export default {
           await db.collection(accountDb).doc(members[i]).collection(userTasksDb).doc(id).get().then(statDoc => {
             var statData = statDoc.data()
             info['solveStats'] = statData.grades
+            info['answers'] = statData.lastAnswers
           })
           info['solveSum'] = 0
         })
@@ -453,10 +454,10 @@ export default {
       ctx.commit('updateTopicList', list)
     },
     async fetchMembersStatistics (ctx, id) {
+      ctx.commit('updateMembersSort', [])
       const db = firebase.firestore()
       console.log(id)
       var members = this.getters.getMyTopicsDetailedInfo[id].members
-      console.log(members)
       var sendData = {}
       var membersSort = []
       for (let i = 0; i < members.length; i++) {
@@ -494,6 +495,22 @@ export default {
       console.log(sendData)
       ctx.commit('updateMembersSort', membersSort)
       ctx.commit('updateMembersStats', sendData)
+    },
+    async banLessonMember (ctx, payload) {
+      const db = firebase.firestore()
+      // Стираем прогресс пользователя
+      await db.collection(accountDb).doc(payload.id).collection(userTasksDb).doc(payload.token).delete()
+      // Убираем из массива members
+      var members, blacklist
+      await db.collection(olympiadDb).doc(payload.token).get().then(doc => { members = doc.data().members; blacklist = doc.data().blacklist })
+      members.splice(members.findIndex(e => e === payload.id), 1)
+      await db.collection(olympiadDb).doc(payload.token).update({ members: members })
+      // Если надо забанить, то добавляем пользователя в блеклист
+      if (payload.ban === true) {
+        if (blacklist === undefined) blacklist = []
+        blacklist.push(payload.id)
+        await db.collection(olympiadDb).doc(payload.token).update({ blacklist: blacklist })
+      }
     }
   },
   mutations: {

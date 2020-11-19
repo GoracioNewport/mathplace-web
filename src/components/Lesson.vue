@@ -4,7 +4,7 @@
       md-toolbar.md-transparent(md-elevation='0')
         div(style="margin-top: 30px;margin-bottom: 20px;")
           strong(style="display:block; font-size: 25px;font-weight:500") Рейтинг
-          span(style="display:block;margin-top:10px; font-size: 16px;font-weight:500") всего участников {{ Object.keys(userStatistics).length }}
+          span(style="display:block;margin-top:10px; font-size: 16px;font-weight:500") всего участников {{ MembersSort.length }}
       .loading-indicator(v-if='isLoadingStat')
         .vld-parent
           loading(
@@ -18,6 +18,8 @@
           div
             strong.md-list-item-text {{ userStatistics[i].name }}
             span.md-list-item-text Решено задач {{ userStatistics[i].solveSum }}
+          md-button.md-icon-button.md-list-action(@click="deleteMember(userStatistics[i].id, i)")
+            md-icon.md-primary remove_circle
           md-button.md-icon-button.md-list-action(@click="openChatWithUser(userStatistics[i].id)")
             md-icon.md-primary chat_bubble
     md-drawer(:md-active.sync='showComment')
@@ -284,7 +286,7 @@
         //- strong.md-headline Кажется, этот урок еще не начался.
         //- br
         //- strong.md-headline Он начнется в
-        //- span.md-headline {{ this.tasksInfo.timeStart.toLocaleString() }}
+        //- span.md-headline {{ tasksInfo.timeStart.toLocaleString() }}
         //- br
         //- strong.md-headline Возвращайтесь позже!
         div.tooEarly
@@ -376,10 +378,12 @@ export default {
     this.tasksInfo.token = this.getTasksInfo.token
     this.tasksInfo.timeStart = this.getTasksInfo.time_start
     this.tasksInfo.timeEnd = this.getTasksInfo.time_end
-    console.log(this.tasksInfo)
+    this.tasksInfo.blacklist = this.getTasksInfo.blacklist
     this.taskList = this.getTasks
     // Проверка на ошибки
-    if (this.taskList.length === 0 && this.tasksInfo.author === this.getUser.id) this.error = 'no_material_author'
+    console.log
+    if (this.tasksInfo.blacklist.includes(this.getUser.id)) this.error = 'banned'
+    else if (this.taskList.length === 0 && this.tasksInfo.author === this.getUser.id) this.error = 'no_material_author'
     else if (this.taskList.length === 0 && this.tasksInfo.author !== this.getUser.id) this.error = 'no_material_member'
     else if (this.tasksInfo.timeStart !== null && this.tasksInfo.timeStart.getTime() > new Date().getTime()) {
       this.error = 'too_early'
@@ -399,6 +403,7 @@ export default {
       }, 1000)
     } else if (this.tasksInfo.timeEnd !== null && this.tasksInfo.timeEnd.getTime() < new Date().getTime()) this.error = 'too_late'
     else this.error = 'none'
+    console.log(this.error)
     // Ставим таймеры для выкидывания ученика по концу урока и для напоминалок
     if (this.tasksInfo.timeEnd !== null && this.error === 'none') {
       let endTimeLeft = (this.tasksInfo.timeEnd - new Date())
@@ -470,12 +475,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchMyTopicsDetailedInfo', 'sendComments', 'fetchComments', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics']),
+    ...mapActions(['fetchMyTopicsDetailedInfo', 'sendComments', 'fetchComments', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics', 'banLessonMember']),
+    // ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics', 'banLessonMember']),
     async toggleStats (id) {
       await this.fetchLessonStatistics(id)
       // this.myTopics = this.fetchLessonStatistics
       this.myTopics = this.convertToArray(this.getMyLessonstatistics)
-      console.log(this.myTopics)
       this.showStats = true
     },
     changeActiveTask (i, thisTask) {
@@ -499,6 +504,7 @@ export default {
           if (this.solutionFile !== null) {
             this.isLoading = true
             await this.sendImageSolution({ colletion: this.collection, id: this.taskId, i: this.activeTask, image: this.solutionFile })
+            this.answer = this.getLoadedImageURL
             this.isLoading = false
             verdict = '4'
           } if (Array.isArray(this.answer)) {
@@ -588,6 +594,10 @@ export default {
     openChatWithUser (userId) {
       this.$router.push('/pm/' + userId)
     },
+    deleteMember (id, i) {
+      this.MembersSort.splice(i, 1)
+      this.banLessonMember({token: this.getCurrentTopic, id: id, ban: true})
+    },
     async getDataMembers () {
       this.showNavigation = false
       this.isLoadingStat = true
@@ -604,7 +614,8 @@ export default {
     onFilePicked (event) { this.solutionFile = event[0] }
   },
   computed: {
-    ...mapGetters(['getMyTopicsDetailedInfo', 'getCommentsFromLesson', 'getMyLessonstatistics', 'getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort']),
+    ...mapGetters(['getMyTopicsDetailedInfo', 'getCommentsFromLesson', 'getMyLessonstatistics', 'getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort', 'getLoadedImageURL']),
+    // ...mapGetters(['getMyTopicsDetailedInfo', 'getMyLessonstatistics', 'getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort', 'getLoadedImageURL']),
     getDifficulty () {
       var dif
       this.taskList[this.activeTask].difficulty === undefined ? dif = 0 : dif = this.taskList[this.activeTask].difficulty
