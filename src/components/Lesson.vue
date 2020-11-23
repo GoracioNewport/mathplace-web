@@ -74,7 +74,6 @@
                     circle#oval1(fill='#9FC7FA', cx='2.5', cy='3', r='2')
                     circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
               p.md-subheading(style="text-align:center;") Поставить лайк
-              md-tooltip(md-direction='bottom') Поставить лайк уроку
     div(v-if = 'showStats')
       md-dialog(:md-active.sync='showStats')
         md-dialog-title Статистика по уроку

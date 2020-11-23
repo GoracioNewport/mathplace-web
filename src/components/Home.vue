@@ -497,7 +497,7 @@ export default {
     transition: 0.6s;
     text-align center
     vertical-align middle
-    @media screen and (max-width: 480px)
+    @media screen and (max-width: 300px)
       display none
   .designButtonLesson:hover
     transition: 0.6s;

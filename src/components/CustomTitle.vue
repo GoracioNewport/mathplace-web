@@ -257,7 +257,7 @@
               p.md-text(style="position:relative;font-size:18px;margin-top:30px;") Поделитесь ключом со своими учениками, что бы они могли подключиться к вашему уроку!
             md-dialog-actions
               md-button.md-primary(@click='showDialog = false') Понятно
-              md-button.md-primary(:to="'/lesson/olympiads=' + this.token",@click='showDialog = false') Перейти в урок
+              md-button.md-primary(:to="'/lesson/tasks=' + this.token",@click='showDialog = false') Перейти в урок
     .materialMenu(v-if = 'materialMenuShow')
       md-dialog(:md-active.sync='materialMenuShow')
         md-dialog-title Выберите тему
@@ -433,7 +433,7 @@ export default {
       await this.fetchCustomTopic(id)
       var res = this.getCustomTopic
       if (res !== null) {
-        this.$router.push('/lesson/olympiads=' + id)
+        this.$router.push('/lesson/tasks=' + id)
       } else {
         this.customTopicId = ''
         this.placeholder = 'Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа'
@@ -589,7 +589,7 @@ export default {
     async isTokenValid (token) {
       const db = firebase.firestore()
       var result
-      await db.collection('olympiads').doc(token)
+      await db.collection('tasks').doc(token)
         .get().then(
           doc => {
             if (doc.data() !== undefined) {
