@@ -95,7 +95,7 @@
     .successMenu(v-if = 'submitStatus === "Validation Pending"')
       md-dialog(:md-active.sync='showEmailVerified')
         md-dialog-title Подтвердите, пожалуйста, вашу почту
-        span.md-headline(style="margin:20px;") Вам на почту было отправлено письмо,<br> перейдите по ссылке в этом письме
+        span.md-headline(style="margin:20px;") На вашу почту было направлено письмо. Пожалуйста, перейдите по ссылке в нем для завершения регистрации.
         md-dialog-actions
           md-button.md-primary(@click = '$router.push("/login")') Подтвердил
 

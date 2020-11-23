@@ -69,7 +69,7 @@
         .successText
           span.md-headline Пожалуйста, перейдите по ссылке, которую мы прислали вам на почту
         md-dialog-actions
-          md-button.md-primary(@click = 'sendEmailConfirmationMessage, submitStatus = null') Отправить письмо повторно
+          md-button.md-primary(@click ='sendEmailConfirmationMessage, submitStatus = null') Отправить письмо повторно
           md-button.md-primary(@click ='submitStatus = null') Окей
 
       //- .successMenuBox
@@ -131,7 +131,7 @@ export default {
             if (this.submitStatus === 'Validation Required') {
               this.showDialog = true
             }
-            if (this.submitStatus === null) this.$router.push('/main')
+            if (this.submitStatus === null) this.$router.push(this.$route.query.redirect || '/main')
           })
           .catch(err => {
             this.submitStatus = err.message

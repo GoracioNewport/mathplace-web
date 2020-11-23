@@ -43,7 +43,7 @@ export default new Router({
       name: 'lesson',
       component: Lesson,
       beforeEnter (to, from, next) {
-        Store.getters.checkUser ? next() : next('/login')
+        Store.getters.checkUser ? next() : next({ name: 'login', query: { redirect: to.fullPath } })
       }
     },
     {
@@ -77,7 +77,7 @@ export default new Router({
       name: 'profile',
       component: Profile,
       beforeEnter (to, from, next) {
-        Store.getters.checkUser ? next() : next('/login')
+        Store.getters.checkUser ? next() : next({ name: 'login', query: { redirect: to.fullPath } })
       }
     },
     {
@@ -85,7 +85,7 @@ export default new Router({
       name: 'customTitle',
       component: CustomTitle,
       beforeEnter (to, from, next) {
-        Store.getters.checkUser ? next() : next('/login')
+        Store.getters.checkUser ? next() : next({ name: 'login', query: { redirect: to.fullPath } })
       }
     },
     {
@@ -93,7 +93,7 @@ export default new Router({
       name: 'statistics',
       component: Statistics,
       beforeEnter (to, from, next) {
-        Store.getters.checkUser ? next() : next('/login')
+        Store.getters.checkUser ? next() : next({ name: 'login', query: { redirect: to.fullPath } })
       }
     },
     {
@@ -101,7 +101,7 @@ export default new Router({
       name: 'chatList',
       component: ChatList,
       beforeEnter (to, from, next) {
-        Store.getters.checkUser ? next() : next('/login')
+        Store.getters.checkUser ? next() : next({ name: 'login', query: { redirect: to.fullPath } })
       }
     },
     {
@@ -109,7 +109,7 @@ export default new Router({
       name: 'chat',
       component: Chat,
       beforeEnter (to, from, next) {
-        Store.getters.checkUser ? next() : next('/login')
+        Store.getters.checkUser ? next() : next({ name: 'login', query: { redirect: to.fullPath } })
       }
     },
     {
