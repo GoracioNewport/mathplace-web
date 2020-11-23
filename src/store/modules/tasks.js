@@ -42,7 +42,7 @@ export default {
               if (userTopicDetails === undefined || userTopicDetails.lastAnswers === undefined || userTopicDetails.solution === undefined || userTopicDetails.grades === undefined || userTopicDetails.lastAnswers.length > itemCount || userTopicDetails.solution.length > itemCount || userTopicDetails.grades.length > itemCount) {
                 let blankArray = []
                 let nullArray = []
-                for (let i = 0; i < itemCount; i++) blankArray.push(1)
+                for (let i = 0; i < itemCount; i++) blankArray.push('1')
                 for (let i = 0; i < itemCount; i++) nullArray.push('null')
                 userData.set({
                   grades: blankArray,
@@ -57,8 +57,8 @@ export default {
               // Что делать, если чел зашел, а препод изменил тему...
               } else if (userTopicDetails.grades.length < itemCount) {
                 for (let i = userTopicDetails.grades.length; i < itemCount; i++) {
-                  userTopicDetails.grades.push(1)
-                  userTopicDetails.solution.push(1)
+                  userTopicDetails.grades.push('1')
+                  userTopicDetails.solution.push('1')
                   userTopicDetails.lastAnswers.push('null')
                 }
                 userData.set({
@@ -125,6 +125,7 @@ export default {
               docData.time_end === undefined ? tasksInfo.time_end = null : tasksInfo.time_end = docData.time_end.toDate()
               docData.members === undefined ? tasksInfo.members = [] : tasksInfo.members = docData.members
               docData.blacklist === undefined ? tasksInfo.blacklist = [] : tasksInfo.blacklist = docData.blacklist
+              docData.isHiddenResults === undefined ? tasksInfo.isHiddenResults = false : tasksInfo.isHiddenResults = docData.isHiddenResults
             })
         })
       ctx.commit('updateTasksInfo', tasksInfo)

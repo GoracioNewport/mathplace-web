@@ -128,7 +128,7 @@
         md-dialog-actions
           md-button.md-primary(@click='showStats = false') Закрыть
 
-    .taskbar(v-if = "error === 'none'")
+    .taskbar(v-if = "error === 'none' || error === 'too_late'")
       .lessonNavbar
         md-button.md-icon-button.burger(@click='showNavigation = true')
             md-icon.fa.fa-bars(style="height: 70px;width: 70px;color: #FFFFFF;").md-size-2x menu
@@ -148,15 +148,15 @@
               .taskbar-link
                 img.img_taskbar(
                   v-if = "task.type == 'theory'"
-                  :class ='{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
+                  :class ='{ unknownTask : (tasksInfo.isHiddenResults && Number(task.tries) !== 1 && Number(task.tries) !== 3), solvedTask : Number(task.tries) === 3, failedTask : Number(task.tries) === 0, thisButton : task.activeTask === activeTask  || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask && !(activeTask === 0 && task.id === 0)}'
                   :src = "theoryImage")
                 img.img_taskbar(
                     v-else-if = 'task.type == "proof"'
-                    :class ='{ solvedTask : task.tries === 3, failedTask : task.tries === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
+                    :class ='{ unknownTask : (tasksInfo.isHiddenResults && Number(task.tries) !== 1 && Number(task.tries) !== 3), solvedTask : Number(task.tries) === 3, failedTask : Number(task.tries) === 0, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
                     :src = 'proofImage')
                 img.img_taskbar(
                     v-else
-                    :class ='{ solvedTask : task.tries === 2, failedTask : task.tries === 0, pendingTask : Number(task.tries) !== 0 && Number(task.tries) !== 1 && Number(task.tries) !== 2 && Number(task.tries) !== 3, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
+                    :class ='{ unknownTask : (tasksInfo.isHiddenResults && Number(task.tries) !== 1 && Number(task.tries) !== 3), solvedTask : Number(task.tries) === 2, failedTask : Number(task.tries) === 0, pendingTask : Number(task.tries) !== 0 && Number(task.tries) !== 1 && Number(task.tries) !== 2 && Number(task.tries) !== 3, thisButton : task.activeTask === activeTask || (activeTask === 0 && task.id === 0), anotherButton : task.activeTask != activeTask  && !(activeTask === 0 && task.id === 0)}'
                     :src = 'taskImage')
 
     .loading-indicator(v-if='isLoading')
@@ -164,9 +164,9 @@
           :active.sync = "this.isLoading",
           :is-full-page = 'true',
           color = '#763dca')
-    .contentMain(v-else-if="error === 'none'")
+    .contentMain(v-else-if="error === 'none' || error === 'too_late'")
       .content
-        div(v-if="this.rightAns")
+        div(v-if="this.rightAns && !this.tasksInfo.isHiddenResults")
           img.rightAns(v-if="this.status === 'Correct'", src="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjUxMnB0IiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im01MTIgNTguNjY3OTY5YzAtMzIuMzYzMjgxLTI2LjMwNDY4OC01OC42Njc5NjktNTguNjY3OTY5LTU4LjY2Nzk2OWgtMzk0LjY2NDA2MmMtMzIuMzYzMjgxIDAtNTguNjY3OTY5IDI2LjMwNDY4OC01OC42Njc5NjkgNTguNjY3OTY5djM5NC42NjQwNjJjMCAzMi4zNjMyODEgMjYuMzA0Njg4IDU4LjY2Nzk2OSA1OC42Njc5NjkgNTguNjY3OTY5aDM5NC42NjQwNjJjMzIuMzYzMjgxIDAgNTguNjY3OTY5LTI2LjMwNDY4OCA1OC42Njc5NjktNTguNjY3OTY5em0wIDAiIGZpbGw9IiM0Y2FmNTAiLz48cGF0aCBkPSJtMzg1Ljc1IDE3MS41ODU5MzhjOC4zMzk4NDQgOC4zMzk4NDMgOC4zMzk4NDQgMjEuODIwMzEyIDAgMzAuMTY0MDYybC0xMzguNjY3OTY5IDEzOC42NjQwNjJjLTQuMTYwMTU2IDQuMTYwMTU3LTkuNjIxMDkzIDYuMjUzOTA3LTE1LjA4MjAzMSA2LjI1MzkwN3MtMTAuOTIxODc1LTIuMDkzNzUtMTUuMDgyMDMxLTYuMjUzOTA3bC02OS4zMzIwMzEtNjkuMzMyMDMxYy04LjM0Mzc1LTguMzM5ODQzLTguMzQzNzUtMjEuODI0MjE5IDAtMzAuMTY0MDYyIDguMzM5ODQzLTguMzQzNzUgMjEuODIwMzEyLTguMzQzNzUgMzAuMTY0MDYyIDBsNTQuMjUgNTQuMjUgMTIzLjU4NTkzOC0xMjMuNTgyMDMxYzguMzM5ODQzLTguMzQzNzUgMjEuODIwMzEyLTguMzQzNzUgMzAuMTY0MDYyIDB6bTAgMCIgZmlsbD0iI2ZhZmFmYSIvPjwvc3ZnPg==")
           img.rightAns(v-else-if =  "this.status === 'Wrong'", src="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjUxMnB0IiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im0yNTYgMGMtMTQxLjE2NDA2MiAwLTI1NiAxMTQuODM1OTM4LTI1NiAyNTZzMTE0LjgzNTkzOCAyNTYgMjU2IDI1NiAyNTYtMTE0LjgzNTkzOCAyNTYtMjU2LTExNC44MzU5MzgtMjU2LTI1Ni0yNTZ6bTAgMCIgZmlsbD0iI2Y0NDMzNiIvPjxwYXRoIGQ9Im0zNTAuMjczNDM4IDMyMC4xMDU0NjljOC4zMzk4NDMgOC4zNDM3NSA4LjMzOTg0MyAyMS44MjQyMTkgMCAzMC4xNjc5NjktNC4xNjAxNTcgNC4xNjAxNTYtOS42MjEwOTQgNi4yNS0xNS4wODU5MzggNi4yNS01LjQ2MDkzOCAwLTEwLjkyMTg3NS0yLjA4OTg0NC0xNS4wODIwMzEtNi4yNWwtNjQuMTA1NDY5LTY0LjEwOTM3Ni02NC4xMDU0NjkgNjQuMTA5Mzc2Yy00LjE2MDE1NiA0LjE2MDE1Ni05LjYyMTA5MyA2LjI1LTE1LjA4MjAzMSA2LjI1LTUuNDY0ODQ0IDAtMTAuOTI1NzgxLTIuMDg5ODQ0LTE1LjA4NTkzOC02LjI1LTguMzM5ODQzLTguMzQzNzUtOC4zMzk4NDMtMjEuODI0MjE5IDAtMzAuMTY3OTY5bDY0LjEwOTM3Ni02NC4xMDU0NjktNjQuMTA5Mzc2LTY0LjEwNTQ2OWMtOC4zMzk4NDMtOC4zNDM3NS04LjMzOTg0My0yMS44MjQyMTkgMC0zMC4xNjc5NjkgOC4zNDM3NS04LjMzOTg0MyAyMS44MjQyMTktOC4zMzk4NDMgMzAuMTY3OTY5IDBsNjQuMTA1NDY5IDY0LjEwOTM3NiA2NC4xMDU0NjktNjQuMTA5Mzc2YzguMzQzNzUtOC4zMzk4NDMgMjEuODI0MjE5LTguMzM5ODQzIDMwLjE2Nzk2OSAwIDguMzM5ODQzIDguMzQzNzUgOC4zMzk4NDMgMjEuODI0MjE5IDAgMzAuMTY3OTY5bC02NC4xMDkzNzYgNjQuMTA1NDY5em0wIDAiIGZpbGw9IiNmYWZhZmEiLz48L3N2Zz4=")
         div(v-if = 'this.taskList[this.activeTask].type !== "theory"', style="height:60px;")
@@ -213,17 +213,17 @@
             size = "40",
             placeholder = "Введите ответ",
             class = "ans",
-            v-bind:disabled = "this.taskList[this.activeTask].tries === 2",
+            v-bind:disabled = "Number(this.taskList[this.activeTask].tries) === 2",
             v-model = 'answer',
             @keyup.enter = 'sendAnswer',
-            v-bind:class = "{ 'answerCorrect' : this.taskList[this.activeTask].tries == 2 || this.taskList[this.activeTask].tries == 3 , 'answerWrong' : this.taskList[this.activeTask].tries == 0 }")
+            v-bind:class = "{ 'unknownTask' : this.tasksInfo.isHiddenResults && Number(this.taskList[this.activeTask].tries) !== 1, 'solvedTask' : Number(this.taskList[this.activeTask].tries) == 2 || Number(this.taskList[this.activeTask].tries) == 3 , 'failedTask' : Number(this.taskList[this.activeTask].tries) == 0 }")
           label(for='img' v-else-if ='this.taskList[this.activeTask].type === "upload"')
-            .pendingBox(v-if ='this.taskList[this.activeTask].tries !== 0 && this.taskList[this.activeTask].tries !== 1 && this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3')
+            .pendingBox(v-if ='Number(this.taskList[this.activeTask].tries) !== 0 && Number(this.taskList[this.activeTask].tries) !== 1 && Number(this.taskList[this.activeTask].tries) !== 2 && Number(this.taskList[this.activeTask].tries) !== 3')
               span Преподователь еще не проверил ваш ответ
-            .rightBox(v-else-if ='this.taskList[this.activeTask].tries === 2')
+            .rightBox(v-else-if ='Number(this.taskList[this.activeTask].tries) === 2')
               span Ваш ответ оказался правильным
             .else(v-else)
-              span(v-if ='this.taskList[this.activeTask].tries === 0') Ваш ответ оказался неправильным. Вы можете отправить решение заново
+              span(v-if ='Number(this.taskList[this.activeTask].tries) === 0') Ваш ответ оказался неправильным. Вы можете отправить решение заново
               //- input#img(type='file', name='img', accept='image/*', @click="onFileButtonClicked(this.tasks.indexOf(task), task.text.indexOf(component))")
               md-field(name='img')
                 label Выберите картинку
@@ -250,7 +250,7 @@
             button.submit-button.sub(
               type = 'submit',
               @click = 'sendAnswer')
-                span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Ответить
+                span(v-if ='Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Ответить
                 span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
                 span(v-else) Завершить
           .sendNotSolve(v-else)
@@ -261,8 +261,9 @@
             //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
             button.submit-button.sub(
               type = 'submit',
+              :disabled = 'error === "too_late"'
               @click = 'sendAnswer')
-                span(v-if = 'this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Ответить
+                span(v-if ='Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Ответить
                 span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
                 span(v-else) Завершить
     .placeholderScreen(v-else-if ='error === "no_material_author" || error === "no_material_member"')
@@ -302,7 +303,7 @@
           //- md-empty-state(md-rounded='' md-icon='watch_later' :md-label=" 'Урок по теме \"' + this.tasksInfo.name + '\" пока не начался'" :md-description=" 'Урок начнется ' + this.tasksInfo.timeStart.toLocaleString() + '. Возвращайтесь позже!' ")
           md-button.md-primary.md-raised(@click = '$router.push("/main")') На главную страницу
 
-      .tooLateScreen(v-else-if ='error === "too_late"')
+      //- .tooLateScreen(v-else-if ='error === "too_late"')
         //- strong.md-headline Ой-ой...
         //- br
         //- strong.md-headline Кажется, этот урок уже закончился в
@@ -375,7 +376,9 @@ export default {
     this.tasksInfo.timeStart = this.getTasksInfo.time_start
     this.tasksInfo.timeEnd = this.getTasksInfo.time_end
     this.tasksInfo.blacklist = this.getTasksInfo.blacklist
+    this.tasksInfo.isHiddenResults = this.getTasksInfo.isHiddenResults
     this.taskList = this.getTasks
+    console.log(this.taskList)
     // Проверка на ошибки
     if (this.tasksInfo.blacklist.includes(this.getUser.id)) this.error = 'banned'
     else if (this.taskList.length === 0 && this.tasksInfo.author === this.getUser.id) this.error = 'no_material_author'
@@ -396,9 +399,15 @@ export default {
         this.Minutes = Math.floor(this.secondsLesson / 60000) % 60
         this.Seconds = Math.floor(this.secondsLesson / 1000) % 60
       }, 1000)
-    } else if (this.tasksInfo.timeEnd !== null && this.tasksInfo.timeEnd.getTime() < new Date().getTime()) this.error = 'too_late'
-    else this.error = 'none'
-    console.log(this.error)
+    } else if (this.tasksInfo.timeEnd !== null && this.tasksInfo.timeEnd.getTime() < new Date().getTime()) {
+      this.error = 'too_late'
+      // Показываем результаты работы уже после завершения
+      this.tasksInfo.isHiddenResults = false
+    } else {
+      this.error = 'none'
+      // Переключаемся на нулевой элемент навбара, что бы обновился ответ в форме
+      this.changeActiveTask(0, this.taskList[0])
+    } console.log(this.error)
     // Ставим таймеры для выкидывания ученика по концу урока и для напоминалок
     if (this.tasksInfo.timeEnd !== null && this.error === 'none') {
       let endTimeLeft = (this.tasksInfo.timeEnd - new Date())
@@ -418,7 +427,7 @@ export default {
       if (notificationTimeLeft > 0 && notificationTimeLeft <= 2147483647) setTimeout(() => alert('Осталось 10 минут до конца урока!'), notificationTimeLeft)
       if (endTimeLeft > 0 && endTimeLeft <= 2147483647) {
         setTimeout(() => {
-          self.$router.push('/main')
+          self.$router.go()
           alert('Урок окончен! Возможность сдачи задач огранчена')
         }, endTimeLeft)
       }
@@ -482,20 +491,28 @@ export default {
       this.status = 'Idle'
       this.activeTask = i
       thisTask.activeTask = i
-      if (this.taskList[this.activeTask].tries === 2) {
-        this.answer = this.taskList[this.activeTask].answer
-      } else {
+      if (this.taskList[this.activeTask].userAnswer === 'null') {
         if (this.taskList[this.activeTask].type === 'multipleChoice' || this.taskList[this.activeTask].type === 'multipleAnswer') this.answer = []
         else this.answer = ''
+      } else {
+        if (this.taskList[this.activeTask].type === 'multipleChoice' || this.taskList[this.activeTask].type === 'multipleAnswer') this.answer = this.taskList[this.activeTask].userAnswer.split(',')
+        else this.answer = this.taskList[this.activeTask].userAnswer
       }
     },
     async sendAnswer () { // Боже, как тут много говна... хуй вообще разберешь какой пиздец тут творится
       if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
         if (this.$store.getters.getUser === null) this.$router.push('/login')
-        else if (this.activeTask === (this.taskList.length - 1) && (this.taskList[this.activeTask].tries === 2 || this.taskList[this.activeTask].tries === 3)) this.$router.push('/main')
-        else if (this.taskList[this.activeTask].tries !== 2 && this.taskList[this.activeTask].tries !== 3) { // Task complition
+        else if (this.activeTask === (this.taskList.length - 1) && (Number(this.taskList[this.activeTask].tries) === 2 || Number(this.taskList[this.activeTask].tries) === 3)) this.$router.push('/main')
+        else if (Number(this.taskList[this.activeTask].tries) !== 2 && Number(this.taskList[this.activeTask].tries) !== 3) { // Task complition
           let verdict = 1
+
+          // Если урок завершился, то шлем нафиг
+          if (this.error === 'too_late') {
+            alert('Урок окончен! Отправка решений ограничена')
+            return
+          }
+
           if (this.solutionFile !== null) {
             this.isLoading = true
             await this.sendImageSolution({ colletion: this.collection, id: this.taskId, i: this.activeTask, image: this.solutionFile })
@@ -505,6 +522,7 @@ export default {
           } if (Array.isArray(this.answer)) {
             for (let i = 0; i < this.answer.length; i++) this.answer[i].replace(',', '.')
             this.answer.sort()
+            console.log(this.answer)
           } else this.answer = this.answer.replace(',', '.')
           var equals = (Array.isArray(this.answer) && this.answer.length === this.taskList[this.activeTask].answer.length && this.answer.every((value, index) => value === this.taskList[this.activeTask].answer[index]))
           if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof' || equals) {
@@ -514,11 +532,11 @@ export default {
             } this.status = 'Correct'
             this.rightAns = true
             this.showVerdictTask()
-            if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') verdict = 3
-            else verdict = 2
+            if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') verdict = '3'
+            else verdict = '2'
           } else if (this.solutionFile === null) {
             this.status = 'Wrong'
-            verdict = 0
+            verdict = '0'
             this.rightAns = true
             this.showVerdictTask()
           }
@@ -529,14 +547,14 @@ export default {
           // Обновляем значения оценок
           let newStatus = []
           for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
-          newStatus[this.activeTask] = verdict
+          newStatus[this.activeTask] = String(verdict)
           this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
-          this.taskList[this.activeTask].tries = verdict
+          this.taskList[this.activeTask].tries = Number(verdict)
           // Обновляем значения последних ответов
-          for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].userAnswer
-          newStatus[this.activeTask] = this.answer
+          for (let i = 0; i < this.taskList.length; i++) newStatus[i] = String(this.taskList[i].userAnswer)
+          newStatus[this.activeTask] = String(this.answer)
           this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'lastAnswers'})
-          this.taskList[this.activeTask].userAnswer = this.answer
+          this.taskList[this.activeTask].userAnswer = String(this.answer)
           // Проверка для теории и задачи на доказательство, что бы можно было листать задачи по нажатии на кнопку
           if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') {
             if (this.activeTask === this.taskList.length - 1) this.$router.push('/main')
@@ -839,6 +857,8 @@ export default {
   .failedTask
     background rgba(255, 0, 0, .5) !important
   .pendingTask
+    background rgba(255, 255, 0, .5) !important
+  .unknownTask
     background rgba(255, 255, 0, .5) !important
   .answerCorrect
     background-color rgba(0, 255, 0, .4)
