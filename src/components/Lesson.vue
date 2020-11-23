@@ -136,7 +136,7 @@
         span.md-display-2 {{ tasksInfo.name }}
 
         md-button.hideStat.md-raised(v-if="tasksInfo.author === getUser.id", @click ='toggleStats(tasksInfo.token)') Статистика
-        md-button.hideStat.md-raised(v-else-if="tasksInfo.token !== null", @click="getDataMembers") Рейтинг
+        //- md-button.hideStat.md-raised(v-else-if="tasksInfo.token !== null", @click="getDataMembers") Рейтинг
       .container
         .taskbar-content
           .taskbar-list
