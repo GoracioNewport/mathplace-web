@@ -31,6 +31,9 @@
               md-checkbox.olympPrivate(v-model='private') Приватная тема
               md-tooltip(md-direction='left') Приватная тема показывается только вашим ученикам
             .checkboxBox
+              md-checkbox.olympPrivate(v-model='isHiddenResults') Не показывать результаты ученикам
+              md-tooltip(md-direction='left') Вердикт покажется только после окончания урока
+            .checkboxBox
               md-checkbox.olympPrivate(v-model='timeStartOn') Ограничить время начала
               md-tooltip(md-direction='left') Урок начнется в установленное время
             .checkboxBox
@@ -380,7 +383,8 @@ export default {
       timeStartOn: false,
       timeFinishOn: false,
       timeStart: '',
-      timeFinish: ''
+      timeFinish: '',
+      isHiddenResults: false
     }
   },
   validations: {
@@ -550,6 +554,7 @@ export default {
         like: 0,
         name: this.name,
         public: !this.private,
+        isHiddenResults: this.isHiddenResults,
         theme: this.theme,
         cnt_task: this.cnt_task,
         items: this.items,
@@ -659,6 +664,7 @@ export default {
         this.items = myTopic.cnt_items
         this.private = myTopic.private
         this.theme = myTopic.theme
+        this.isHiddenResults = myTopic.isHiddenResults
         if (myTopic.time_start !== undefined) {
           this.timeStartOn = true
           this.timeStart = myTopic.time_start.toDate()
