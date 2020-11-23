@@ -49,7 +49,7 @@
           md-button(@click="sendComment(tasksInfo.token)") Отправить
     md-drawer(:md-active.sync='showNavigation' md-swipeable='')
       md-toolbar.md-transparent(md-elevation='0',style="height:auto;")
-        span.md-display-2(style="position:relative;height:auto;width:auto;margin-bottom:5px;margin-top:20px;") {{ tasksInfo.name }}<br>
+        span.md-display-1(style="position:relative;height:auto;width:auto;margin-bottom:5px;margin-top:20px;") {{ tasksInfo.name }}
         span.md-title(v-if="tasksInfo.token !== null", style="position:relative;height:100%;display:block;margin-left:10px") Ключ: {{ tasksInfo.token }}
         span.nd-title(v-if = "tasksInfo.timeEnd !== null") Осталось {{ Days }} дней {{ Hours }} часов {{ Minutes }} минут {{ Seconds }} секунд
       md-list(style="margin-left:10px")
@@ -281,14 +281,6 @@
         //- strong.md-headline Возвращайтесь позже!
     .placeholderScreen(v-else-if ='error === "too_early" || error === "too_late"')
       .tooEarlyScreen(v-if ='error === "too_early"')
-        //- strong.md-headline Ой-ой...
-        //- br
-        //- strong.md-headline Кажется, этот урок еще не начался.
-        //- br
-        //- strong.md-headline Он начнется в
-        //- span.md-headline {{ tasksInfo.timeStart.toLocaleString() }}
-        //- br
-        //- strong.md-headline Возвращайтесь позже!
         div.tooEarly
           li
             span(style="font-size:38px;font-weight: normal;") До начала урока "{{ tasksInfo.name }}" осталось
@@ -320,6 +312,10 @@
         div
           md-empty-state(md-rounded='' md-icon='history' :md-label=" 'Урок по теме \"' + this.tasksInfo.name + '\" уже закончился'" :md-description=" 'Урок закончился ' + this.tasksInfo.timeEnd.toLocaleString() + '. Спасибо за работу!' ")
           md-button.md-primary.md-raised(@click = '$router.push("/main")') На главную страницу
+    .placeholderScreen(v-else-if ='error === "banned"')
+      div
+        md-empty-state(md-rounded='' md-icon='block' :md-label=" 'Урок \"' + this.tasksInfo.name + '\" недосутпен'" md-description="Обратитесь к своему учителю")
+        md-button.md-primary.md-raised(@click = '$router.push("/main")') На главную страницу
     .solution(v-if = 'this.solutionShown', @click='solutionShown = !solutionShown')
       md-dialog(:md-active.sync='solutionShown')
         md-dialog-title Ответ на задачу
@@ -381,7 +377,6 @@ export default {
     this.tasksInfo.blacklist = this.getTasksInfo.blacklist
     this.taskList = this.getTasks
     // Проверка на ошибки
-    console.log
     if (this.tasksInfo.blacklist.includes(this.getUser.id)) this.error = 'banned'
     else if (this.taskList.length === 0 && this.tasksInfo.author === this.getUser.id) this.error = 'no_material_author'
     else if (this.taskList.length === 0 && this.tasksInfo.author !== this.getUser.id) this.error = 'no_material_member'
@@ -559,7 +554,7 @@ export default {
       this.isLoadingComment = true
 
       await this.fetchComments(id)
-      this.arrayComments = this.getCommentsFromLesson;
+      this.arrayComments = this.getCommentsFromLesson
 
       console.log(this.arrayComments)
       this.isLoadingComment = false

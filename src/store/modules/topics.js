@@ -216,19 +216,17 @@ export default {
       }, { merge: true })
     },
     async fetchComments (ctx, token) {
-      console.log("FETCHCOMMENTS")
       console.log(token)
       const db = firebase.firestore()
       var allComments = []
       await db.collection(olympiadDb).doc(token).collection(commentsDb).doc(AllCommentsDb).get().then(doc => {
         var data = doc.data()
         allComments = data.messages
-        for(let i = 0;i < allComments.length; i++) {
+        for (let i = 0; i < allComments.length; i++) {
           console.log(allComments[i].userId)
           db.collection(accountDb).doc(allComments[i].userId).get().then(doc => {
             allComments[i]['userName'] = doc.data().name
           })
-    
         }
       })
       console.log(allComments)

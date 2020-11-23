@@ -9,7 +9,7 @@
     .editBox(v-else)
       .marginBox
        span.olympTitle {{ this.edit ? 'Обновить' : 'Создать' }} урок
-      md-steppers(md-vertical)
+      md-steppers(md-horizontal)
         md-step#first(md-label='Шаг №1' md-description='Основная информация')
           .titleInfo
             md-field.olympName
@@ -257,6 +257,7 @@
               p.md-text(style="position:relative;font-size:18px;margin-top:30px;") Поделитесь ключом со своими учениками, что бы они могли подключиться к вашему уроку!
             md-dialog-actions
               md-button.md-primary(@click='showDialog = false') Понятно
+              md-button.md-primary(@click='showDialog = false, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + this.token)') Скопировать ссылку на урок
               md-button.md-primary(:to="'/lesson/olympiads=' + this.token",@click='showDialog = false') Перейти в урок
     .materialMenu(v-if = 'materialMenuShow')
       md-dialog(:md-active.sync='materialMenuShow')

@@ -188,8 +188,8 @@ export default {
     width 25px
     float right
     margin 8px
-    &:hover
-      cursor pointer
+    // &:hover
+    //   cursor pointer
   .vld-parent
     min-height 15vh
   .content-wrapper
