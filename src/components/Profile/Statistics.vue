@@ -17,7 +17,7 @@
           img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
           md-tooltip(md-direction='right') Редактировать урок
         .img-tooltip(@click='showSnack = true')
-          img.imageButton(src ='@/assets/images/share_24px.png' @click ='$clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + topic.token)')
+          img.imageButton(src ='@/assets/images/share_24px.png' @click ='showSnackbar=true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + topic.token)')
           md-tooltip(md-direction='right') Скопировать ссылку на урок
         span.md-title.topicName {{ topic.name }}
         span.md-body-1.topicToken Ключ: {{ topic.token }}
@@ -47,6 +47,9 @@
                   img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
                   img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
                 md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
+    md-snackbar(:md-position='Centered' :md-duration='4000' :md-active.sync='showSnackbar' md-persistent='')
+      span Ссылка скопирована. Отправьте её ученикам!
+      md-button.md-primary(@click='showSnackbar = false') Скрыть
     .solutionMenu(v-if = 'solutionImageShown')
       .solutionMenuBox
         .solutionInner
@@ -93,7 +96,6 @@ export default {
   },
   data () {
     return {
-      showSnackbar: false,
       position: 'center',
       duration: 4000,
       isInfinity: false,
@@ -108,6 +110,7 @@ export default {
       imageUserId: '',
       myTopicsLoading: false,
       showSnack: false,
+      showSnackbar: false,
       deletedTopicId: 0,
       deletedTopicToken: ''
     }
@@ -185,8 +188,8 @@ export default {
     width 25px
     float right
     margin 8px
-    &:hover
-      cursor pointer
+    // &:hover
+    //   cursor pointer
   .vld-parent
     min-height 15vh
   .content-wrapper

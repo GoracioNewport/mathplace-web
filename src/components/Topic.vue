@@ -167,7 +167,8 @@ export default {
     background-color #763DCA
 
   .content-wrapper
-    max-height 400px
+    height 300px
+    max-height 300px
 
   .circle
     margin 5%
@@ -180,6 +181,8 @@ export default {
     border-top-left-radius 30px
     border-top-right-radius 30px
 
+  .topic-item-wrapper
+    height 300px
   .topic-item-body
     height 45%
     padding 7%
@@ -195,8 +198,9 @@ export default {
     border-radius 20px
     box-sizing: border-box;
     margin 5%
+    margin-bottom 0px
     cursor pointer
-    max-width 400px
+    max-width 300px
     &:hover
       box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
   .topic-item-percentage
@@ -231,7 +235,7 @@ export default {
     font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     font-weight 400
     font-size 18px
-    margin 15px auto
+    margin 15px auto 0px
 
   .topic-item-solve
     position relative

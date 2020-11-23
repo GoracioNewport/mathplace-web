@@ -32,6 +32,7 @@
 
       .container
         .AllSection
+          button.designButtonLessonTop Присоединиться к уроку
           .title_topic2
             p Разделы
           .AllSections
@@ -65,7 +66,7 @@
                 p.text {{arraySchool.length}} урока
 
         .pesontedan
-          input(id='pesontedan-eight',type='checkbox', name='pesontedans')
+          input(v-id="this.arrayPopular.length > 4",id='pesontedan-eight',type='checkbox', name='pesontedans')
           label(for='pesontedan-eight')
             a.title_topic2
               span Популярные
@@ -229,7 +230,7 @@
                   v-bind:like='topic.like'
                 )
         .pesontedan
-          input(id='pesontedan-six',type='checkbox', name='pesontedans')
+          input(v-if="this.arrayKomba.length > 4", id='pesontedan-six',type='checkbox', name='pesontedans')
           label#komba(for='pesontedan-six')
             a.title_topic2(name='komba')
               span Комбинаторика
@@ -262,8 +263,8 @@
                   v-bind:like='topic.like'
                 )
         .pesontedan
-          input(id='pesontedan-seven',type='checkbox', name='pesontedans')
-          div#logic(for='pesontedan-seven')
+          input(v-if="this.arrayLogics.length > 4", id='pesontedan-seven',type='checkbox', name='pesontedans')
+          label#logic(for='pesontedan-seven')
             a.title_topic2(name='logic')
               span Логика
             //- p(:name='gggg').title_topic {{ array[0] }}
@@ -295,7 +296,7 @@
                   v-bind:like='topic.like'
                 )
         .pesontedan
-          input(id='pesontedan-nine',type='checkbox', name='pesontedans')
+          input(v-if="this.arrayGraphs.length > 4", id='pesontedan-nine',type='checkbox', name='pesontedans')
           label#graphs(for='pesontedan-nine')
             a.title_topic2(name='graphs')
               span Графы
@@ -503,6 +504,29 @@ export default {
     transition: 0.6s;
     color #FFFFFF !important
     background-color #763DCA
+  .designButtonLessonTop
+    padding-top 8px
+    position relative
+    width auto
+    height auto
+    border: 2px solid #763DCA;
+    border-radius 50px
+    font-weight 550
+    font-size 23px
+    margin 10px
+    margin-bottom 40px
+    opacity 0.85
+    margin-top 20px
+    color #763DCA !important
+    background-color #FFFFFF
+    transition: 0.6s;
+    display none
+    @media screen and (max-width: 480px)
+      display block
+  .designButtonLessonTop:hover
+    transition: 0.6s;
+    color #FFFFFF !important
+    background-color #763DCA
 
   // .AllSections::-webkit-scrollbar {width:0px;height:0px;}
   .AllSections
@@ -599,7 +623,7 @@ export default {
     bottom 30px
     right 20px
   .bottom-button
-    box-shadow 0px 0px 2px 0px
+    box-shadow 0px 0px 3px 0px
   .right_button
     position fixed
     bottom 20px
@@ -645,7 +669,8 @@ export default {
     padding-top 300px
 
   .topic-item-wrapper
-    height 400px
+    height auto
+    margin-bottom 30px
 
   .container
     align-items center
@@ -744,6 +769,7 @@ export default {
 
   .pesontedan label
     position: relative;
+    height auto
     display: block;
     background: #ffffff;
     line-height: 3;

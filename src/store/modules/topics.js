@@ -4,7 +4,7 @@ import 'firebase/firestore'
 import store from '@/store'
 
 // eslint-disable-next-line
-import { accountDb, tasksDb, olympiadDb, userTasksDb } from './global'
+import { accountDb, tasksDb, olympiadDb, userTasksDb, commentsDb, AllCommentsDb } from './global'
 
 export default {
   actions: {
@@ -215,6 +215,39 @@ export default {
         myTopics: topics
       }, { merge: true })
     },
+    async fetchComments (ctx, token) {
+      console.log(token)
+      const db = firebase.firestore()
+      var allComments = []
+      await db.collection(olympiadDb).doc(token).collection(commentsDb).doc(AllCommentsDb).get().then(doc => {
+        var data = doc.data()
+        allComments = data.messages
+        for (let i = 0; i < allComments.length; i++) {
+          console.log(allComments[i].userId)
+          db.collection(accountDb).doc(allComments[i].userId).get().then(doc => {
+            allComments[i]['userName'] = doc.data().name
+          })
+        }
+      })
+      console.log(allComments)
+      ctx.commit('updateAllComments', allComments)
+    },
+    async sendComments (ctx, {token, userId, text}) {
+      const db = firebase.firestore()
+      var allComments = []
+      console.log(token)
+      await db.collection(olympiadDb).doc(token).collection(commentsDb).doc(AllCommentsDb).get().then(doc => {
+        var data = doc.data()
+        allComments = data.messages
+      })
+
+      var newMessage = {}
+      newMessage['userId'] = userId
+      newMessage['text'] = text
+      allComments.push(newMessage)
+      console.log(allComments)
+      await db.collection(olympiadDb).doc(token).collection(commentsDb).doc(AllCommentsDb).update({ 'messages': allComments })
+    },
     async fetchMyTopicsDetailedInfo (ctx) {
       ctx.commit('updateMyTopicsDetailedInfo', {})
       const db = firebase.firestore()
@@ -327,6 +360,7 @@ export default {
         topic['tasks'] = rawTopic.tasks
         topic['time_start'] = rawTopic.time_start
         topic['time_end'] = rawTopic.time_end
+        topic['isHiddenResults'] = rawTopic.isHiddenResults
         for (let i = 0; i < rawTopic.tasks.length; i++) {
           var rawTask = topic.tasks[i]
           if (rawTask.difficulty === 1) rawTask.difficulty = 'Легкая'
@@ -503,6 +537,9 @@ export default {
     updateMyTopicsDetailedInfo (state, payload) {
       state.myTopicsDetailedInfo = payload
     },
+    updateAllComments (state, payload) {
+      state.allComments = payload
+    },
     updateTopicStats (state, payload) {
       state.myTopicsDetailedInfo[payload.id].stats = payload.data
     },
@@ -529,6 +566,7 @@ export default {
     customTopicTitle: '',
     myTopics: [],
     myTopic: {},
+    allComments: [],
     lessonStatistics: [],
     topicList: [],
     MembersSort: [],
@@ -553,6 +591,9 @@ export default {
     },
     getMyTopicsDetailedInfo (state) {
       return state.myTopicsDetailedInfo
+    },
+    getCommentsFromLesson (state) {
+      return state.allComments
     },
     getMyLessonstatistics (state) {
       console.log(state.lessonStatistics)

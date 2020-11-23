@@ -22,7 +22,8 @@
               strong(v-if = 'chat.type === "group"') {{ chat.name }}
               strong(v-else) {{ chatMembers[chat.name] }}
           .chat-modify(v-if = 'chat.type === "group"')
-            img.settingIcon(v-if ='chat.type === "group"' @click ='settingsMenuShow = true, showDialog=true' src='@/assets/images/settings.png')
+            md-icon.settingIcon.md-size-2x(v-if ='chat.type === "group"' @click ='settingsMenuShow = true, showDialog=true') settings
+            //- img.settingIcon(v-if ='chat.type === "group"' @click ='settingsMenuShow = true, showDialog=true' src='@/assets/images/settings.png')
       .chat-box(ref='scrollAnchor')
         .message(v-for = '(msg, i) in chat.msgs' v-if='msg.status !== "deleted"')
           //- Системные сообщения
@@ -407,6 +408,33 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  ::-webkit-scrollbar-button
+    background-image:url('');
+    background-repeat:no-repeat;
+    width:5px;
+    height:0px
+
+  ::-webkit-scrollbar-track
+    background-color:#FFFFFF
+
+  ::-webkit-scrollbar-thumb
+    -webkit-border-radius: 0px;
+    border-radius: 20px;
+    background-color #763DCA
+
+  ::-webkit-scrollbar-thumb:hover
+    background-color:#FFFFFF;
+
+  ::-webkit-resizer
+    background-image:url('');
+    background-repeat:no-repeat;
+    width:4px;
+    height:0px
+
+  ::-webkit-scrollbar
+    width: 4px;
+    height 4px;
+
   .designButtonLesson
     padding-top 12.5px
     position relative
@@ -541,7 +569,7 @@ export default {
     width 40px
     cursor pointer
     right 1%
-    margin 10px
+    margin-top 5px
     top -6.5vh
   .content-wrapper
     min-height 0

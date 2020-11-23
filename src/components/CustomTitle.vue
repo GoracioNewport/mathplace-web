@@ -9,7 +9,7 @@
     .editBox(v-else)
       .marginBox
        span.olympTitle {{ this.edit ? 'Обновить' : 'Создать' }} урок
-      md-steppers(md-vertical)
+      md-steppers(md-horizontal)
         md-step#first(md-label='Шаг №1' md-description='Основная информация')
           .titleInfo
             md-field.olympName
@@ -30,6 +30,9 @@
             .checkboxBox
               md-checkbox.olympPrivate(v-model='private') Приватная тема
               md-tooltip(md-direction='left') Приватная тема показывается только вашим ученикам
+            .checkboxBox
+              md-checkbox.olympPrivate(v-model='isHiddenResults') Не показывать результаты ученикам
+              md-tooltip(md-direction='left') Вердикт покажется только после окончания урока
             .checkboxBox
               md-checkbox.olympPrivate(v-model='timeStartOn') Ограничить время начала
               md-tooltip(md-direction='left') Урок начнется в установленное время
@@ -257,7 +260,8 @@
               p.md-text(style="position:relative;font-size:18px;margin-top:30px;") Поделитесь ключом со своими учениками, что бы они могли подключиться к вашему уроку!
             md-dialog-actions
               md-button.md-primary(@click='showDialog = false') Понятно
-              md-button.md-primary(:to="'/lesson/tasks=' + this.token",@click='showDialog = false') Перейти в урок
+              md-button.md-primary(@click='showDialog = false, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + this.token)') Скопировать ссылку на урок
+              md-button.md-primary(:to="'/lesson/olympiads=' + this.token",@click='showDialog = false') Перейти в урок
     .materialMenu(v-if = 'materialMenuShow')
       md-dialog(:md-active.sync='materialMenuShow')
         md-dialog-title Выберите тему
@@ -380,7 +384,8 @@ export default {
       timeStartOn: false,
       timeFinishOn: false,
       timeStart: '',
-      timeFinish: ''
+      timeFinish: '',
+      isHiddenResults: false
     }
   },
   validations: {
@@ -550,6 +555,7 @@ export default {
         like: 0,
         name: this.name,
         public: !this.private,
+        isHiddenResults: this.isHiddenResults,
         theme: this.theme,
         cnt_task: this.cnt_task,
         items: this.items,
@@ -635,7 +641,9 @@ export default {
       if (rawTask.type === 'block') {
         let self = this
         rawTask.allTask = rawTask.tasks.length
-        rawTask.tasks.forEach(async (blockTask, i) => { rawTask.tasks[i] = await self.parseTask(blockTask) })
+        for (let i = 0; i < rawTask.tasks.length; i++) {
+          rawTask.tasks[i] = await self.parseTask(rawTask.tasks[i])
+        }
       }
       // Обработка заготовленных заданий
       if (rawTask.type === 'preMade') task = rawTask.originData
@@ -659,6 +667,7 @@ export default {
         this.items = myTopic.cnt_items
         this.private = myTopic.private
         this.theme = myTopic.theme
+        this.isHiddenResults = myTopic.isHiddenResults
         if (myTopic.time_start !== undefined) {
           this.timeStartOn = true
           this.timeStart = myTopic.time_start.toDate()
