@@ -25,7 +25,7 @@
             md-tooltip Удалить пользователя из урока
     md-drawer(:md-active.sync='showNavigation' md-swipeable='')
       md-toolbar.md-transparent(md-elevation='0',style="height:auto;")
-        span.md-display-2(style="position:relative;height:auto;width:auto;margin-bottom:5px;margin-top:20px;") {{ tasksInfo.name }}<br>
+        span.md-display-2.lessonNavbar(style="position:relative;height:auto;width:auto;margin-bottom:5px;margin-top:20px;") {{ tasksInfo.name }}<br>
         span.md-title(v-if="tasksInfo.token !== null", style="position:relative;height:100%;display:block;margin-left:10px") Ключ: {{ tasksInfo.token }}
         span.nd-title(v-if = "tasksInfo.timeEnd !== null") Осталось {{ Days }} дней {{ Hours }} часов {{ Minutes }} минут {{ Seconds }} секунд
       md-list(style="margin-left:10px")
@@ -638,12 +638,13 @@ export default {
     // box-shadow 0px 5px 4px 4px
   .lessonNavbar
     position relative
+    display flex
     height 60px
     color #FFFFFF
     width auto
-    // md-button
-    //   widht 60px
-    //   display inline-block
+    text-overflow ellipsis
+    overflow hidden
+    white-space nowrap
     span
       position relative
       width auto
