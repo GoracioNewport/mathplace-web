@@ -113,6 +113,7 @@ export default {
                 task.taskId = taskCount
                 task.tries = userTopicDetails.grades[i]
                 task.userAnswer = userTopicDetails.lastAnswers[i]
+                task.uploadAnswer = []
                 tasksList.push(task)
               }
 

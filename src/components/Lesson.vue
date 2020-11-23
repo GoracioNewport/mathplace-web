@@ -1,6 +1,6 @@
 <template lang="pug">
   .content-wrapper
-    md-drawer(:md-active.sync='showSidepanel')
+    //- md-drawer(:md-active.sync='showSidepanel')
       md-toolbar.md-transparent(md-elevation='0')
         div(style="margin-top: 30px;margin-bottom: 20px;")
           strong(style="display:block; font-size: 25px;font-weight:500") Рейтинг
@@ -59,10 +59,10 @@
         //- md-list-item.md-button
         //-   md-icon create
         //-   span.md-list-item-text Черновик
-        md-list-item.md-button(@click="showComments(tasksInfo.token)")
+        //- md-list-item.md-button(@click="showComments(tasksInfo.token)")
           md-icon forum
           span.md-list-item-text Комментарии
-        md-list-item.md-button(v-if="tasksInfo.token !== null", @click="getDataMembers")
+        //- md-list-item.md-button(v-if="tasksInfo.token !== null", @click="getDataMembers")
           md-icon sort
           span.md-list-item-text Рейтинг
         md-list-item.md-button(v-if="tasksInfo.token !== null", @click ='showNavigation = false, showSnackbar=true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + tasksInfo.token)')
@@ -99,7 +99,7 @@
                     circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
               p.md-subheading(style="text-align:center;") Поставить лайк
               md-tooltip(md-direction='bottom') Поставить лайк уроку
-    md-snackbar(md-position='center' md-duration='4000' :md-active.sync='showSnackbar' md-persistent='')
+    md-snackbar(md-position='center' :md-duration="Number(4000)" :md-active.sync='showSnackbar' md-persistent='')
       span Ссылка скопирована. Отправьте её ученикам!
       md-button.md-primary(@click='showSnackbar = false') Скрыть
     div(v-if = 'showStats')
@@ -142,7 +142,7 @@
           .taskbar-list
             .taskbar-item(
               v-if ="taskList.length"
-              v-for ="task in this.taskList"
+              v-for ="task in taskList"
               @click ='changeActiveTask(task.id, task)'
               :key ="task.id")
               .taskbar-link
@@ -225,9 +225,27 @@
             .else(v-else)
               span(v-if ='Number(this.taskList[this.activeTask].tries) === 0') Ваш ответ оказался неправильным. Вы можете отправить решение заново
               //- input#img(type='file', name='img', accept='image/*', @click="onFileButtonClicked(this.tasks.indexOf(task), task.text.indexOf(component))")
-              md-field(name='img')
-                label Выберите картинку
-                md-file(v-model = 'answer' @md-change ='onFilePicked' accept="image/*")
+              label Добавить развернутый ответ
+              md-button.md-primary(@click='showUploadMenu = true') Добавить
+              md-dialog(:md-active.sync='showUploadMenu')
+                md-dialog-title Загрузка материала
+                .md-dialog-body
+                  .md-dialog-body-sections
+                    //- span {{ taskList[activeTask].uploadAnswer }}
+                    .md-dialog-body-section(v-for ='(component, componentId) in taskList[activeTask].uploadAnswer')
+                      .button.img.delete_button(@click='taskList[activeTask].uploadAnswer.splice(taskList[activeTask].uploadAnswer.indexOf(component), 1)')
+                      vue-editor.theoryText(v-if ='component.type === "text"' placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "video"], ["clean"]]')
+                      md-field(name='img' v-else)
+                        md-file(v-model = 'component.inner' @md-change ='onFilePicked' @click ='imageUploadIndex = [activeTask, componentId]' accept="image/*")
+                  .md-dialog-body-buttons
+                  md-button.md-primary.md-raised(@click='taskList[activeTask].uploadAnswer.push({type : "text", inner: ""})') Добавить текст
+                  md-button.md-primary.md-raised(@click='taskList[activeTask].uploadAnswer.push({type : "img", inner: ""})') Добавить картинку
+                md-dialog-actions
+                  md-button.md-primary(@click='showUploadMenu = false') Отмена
+                  md-button.md-primary(@click='uploadAnswer(activeTask)') Отправить
+
+              //- md-field(name='img')
+                //- md-file(v-model = 'answer' @md-change ='onFilePicked' accept="image/*")
           .multipleChoiceBox(v-else-if ='this.taskList[this.activeTask].type === "multipleChoice"')
             .choiceBox(v-for = "choice in this.taskList[this.activeTask].options")
               //- md-checkbox(v-if ='taskList[activeTask].tries')
@@ -329,6 +347,7 @@
 
 <script>
 import Loading from 'vue-loading-overlay'
+import { VueEditor } from 'vue2-editor'
 import theoryImage from '@/assets/images/theory.png'
 import taskImage from '@/assets/images/question.png'
 import proofImage from '@/assets/images/star_evidence.png'
@@ -338,6 +357,8 @@ import Wrong from 'vue-material-design-icons/Close.vue'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions, mapGetters } from 'vuex'
 import pdf from 'vue-pdf'
+import firebase from 'firebase/app'
+import 'firebase/storage'
 
 // import func from '../../vue-temp/vue-editor-bridge'
 // import { beforeRouteLeave } from 'vue-router'
@@ -354,6 +375,7 @@ export default {
   },
   components: {
     Loading,
+    VueEditor,
     pdf,
     Right,
     Dots,
@@ -378,7 +400,6 @@ export default {
     this.tasksInfo.blacklist = this.getTasksInfo.blacklist
     this.tasksInfo.isHiddenResults = this.getTasksInfo.isHiddenResults
     this.taskList = this.getTasks
-    console.log(this.taskList)
     // Проверка на ошибки
     if (this.tasksInfo.blacklist.includes(this.getUser.id)) this.error = 'banned'
     else if (this.taskList.length === 0 && this.tasksInfo.author === this.getUser.id) this.error = 'no_material_author'
@@ -475,7 +496,9 @@ export default {
       solutionShown: false,
       userId: null,
       solutionFile: null,
-      error: 'pending'
+      error: 'pending',
+      showUploadMenu: false,
+      imageUploadIndex: null
     }
   },
   methods: {
@@ -522,7 +545,6 @@ export default {
           } if (Array.isArray(this.answer)) {
             for (let i = 0; i < this.answer.length; i++) this.answer[i].replace(',', '.')
             this.answer.sort()
-            console.log(this.answer)
           } else this.answer = this.answer.replace(',', '.')
           var equals = (Array.isArray(this.answer) && this.answer.length === this.taskList[this.activeTask].answer.length && this.answer.every((value, index) => value === this.taskList[this.activeTask].answer[index]))
           if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof' || equals) {
@@ -566,7 +588,6 @@ export default {
       }
     },
     async showComments (id) {
-      console.log(id)
       this.showNavigation = false
       this.showComment = true
       this.isLoadingComment = true
@@ -574,12 +595,9 @@ export default {
       await this.fetchComments(id)
       this.arrayComments = this.getCommentsFromLesson
 
-      console.log(this.arrayComments)
       this.isLoadingComment = false
     },
     async sendComment (id) {
-      console.log(this.textNewComment)
-
       await this.sendComments({token: id, userId: this.userId, text: this.textNewComment})
       this.showComments(id)
       this.textNewComment = ''
@@ -624,7 +642,30 @@ export default {
       if (this.$router.history.length > 0) this.$router.go(-1)
       else this.$router.push('/main')
     },
-    onFilePicked (event) { this.solutionFile = event[0] }
+    onFilePicked (event) {
+      this.taskList[this.imageUploadIndex[0]].uploadAnswer[this.imageUploadIndex[1]] = event[0]
+    },
+    async uploadAnswer (i) {
+      this.Loading = true
+
+      for (let j = 0; j < this.taskList[i].userAnswer.length; j++) {
+        if (this.taskList[i].userAnswer[j].type === 'img') {
+          let file = this.taskList[i].userAnswer[j].inner
+          let fileName = file.name
+          const fileReader = new FileReader()
+          fileReader.readAsDataURL(file)
+          // Получение данных для имени файла
+          const ext = fileName.slice(fileName.lastIndexOf('.'))
+          let currentTime = new Date().getTime()
+          let imageUrl
+          let imageTimeName = 'uploads/' + currentTime + ext
+          // Загрузка в бд
+          await firebase.storage().ref(imageTimeName).put(file)
+          await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
+          this.taskList[i].userAnswer[j].inner = imageUrl.toString()
+        }
+      }
+    }
   },
   computed: {
     ...mapGetters(['getMyTopicsDetailedInfo', 'getCommentsFromLesson', 'getMyLessonstatistics', 'getCurrentTopic', 'getUser', 'getTopicLikes', 'getCollection', 'getTasks', 'getTasksInfo', 'getMembersStatistics', 'getMembersSort', 'getLoadedImageURL']),
@@ -644,6 +685,18 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .delete_button
+    position relative
+    display inline-block
+    width 32px
+    height 32px
+    float right
+    background-image url(images/clear.png)
+    background-size 100%
+  .md-dialog-body
+    padding 0 24px 0
+    max-height 70vh
+    overflow auto
   .sendComment
     float bottom
     width 90%

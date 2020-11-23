@@ -7,10 +7,10 @@
         color = "#763dca"
         :opacity = 0.5)
     .editBox(v-else)
-      .marginBox
-       span.olympTitle {{ this.edit ? 'Обновить' : 'Создать' }} урок
-      md-steppers(md-horizontal)
+      md-steppers(md-horizontal md-alternative)
         md-step#first(md-label='Шаг №1' md-description='Основная информация')
+          .marginBox
+            span.olympTitle {{ this.edit ? 'Обновить' : 'Создать' }} урок
           .titleInfo
             md-field.olympName
               label Введите название темы
@@ -865,6 +865,7 @@ export default {
   .marginBox
     position relative
     margin 3%
+    margin-left 0
 
   .olympName
     position relative
