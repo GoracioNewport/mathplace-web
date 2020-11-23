@@ -186,7 +186,7 @@
             size = "40",
             placeholder = "Введите ответ",
             class = "ans",
-            v-bind:disabled = "this.taskList[this.activeTask].tries === 2",
+            v-bind:disabled = "Number(this.taskList[this.activeTask].tries) === 2",
             v-model = 'answer',
             @keyup.enter = 'sendAnswer',
             v-bind:class = "{ 'unknownTask' : this.tasksInfo.isHiddenResults && Number(this.taskList[this.activeTask].tries) !== 1, 'solvedTask' : Number(this.taskList[this.activeTask].tries) == 2 || Number(this.taskList[this.activeTask].tries) == 3 , 'failedTask' : Number(this.taskList[this.activeTask].tries) == 0 }")

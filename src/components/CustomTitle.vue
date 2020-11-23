@@ -640,7 +640,9 @@ export default {
       if (rawTask.type === 'block') {
         let self = this
         rawTask.allTask = rawTask.tasks.length
-        rawTask.tasks.forEach(async (blockTask, i) => { rawTask.tasks[i] = await self.parseTask(blockTask) })
+        for (let i = 0; i < rawTask.tasks.length; i++) {
+          rawTask.tasks[i] = await self.parseTask(rawTask.tasks[i])
+        }
       }
       // Обработка заготовленных заданий
       if (rawTask.type === 'preMade') task = rawTask.originData

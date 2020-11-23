@@ -327,6 +327,7 @@ export default {
         topic['tasks'] = rawTopic.tasks
         topic['time_start'] = rawTopic.time_start
         topic['time_end'] = rawTopic.time_end
+        topic['isHiddenResults'] = rawTopic.isHiddenResults
         for (let i = 0; i < rawTopic.tasks.length; i++) {
           var rawTask = topic.tasks[i]
           if (rawTask.difficulty === 1) rawTask.difficulty = 'Легкая'
