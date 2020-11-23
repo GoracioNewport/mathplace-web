@@ -401,7 +401,6 @@ export default {
   },
   computed: mapGetters(['getTopics', 'isTopicsLoaded', 'getUser', 'getCustomTopic']),
   async mounted () {
-    if (this.getUser === null) this.$router.push('/login')
     try {
       await this.fetchTopics()
       this.arrayPopular = await this.$store.getters.getTopics.get('популярные')

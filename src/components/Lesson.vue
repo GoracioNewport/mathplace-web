@@ -525,8 +525,7 @@ export default {
     async sendAnswer () { // Боже, как тут много говна... хуй вообще разберешь какой пиздец тут творится
       if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
-        if (this.$store.getters.getUser === null) this.$router.push('/login')
-        else if (this.activeTask === (this.taskList.length - 1) && (Number(this.taskList[this.activeTask].tries) === 2 || Number(this.taskList[this.activeTask].tries) === 3)) this.$router.push('/main')
+        if (this.activeTask === (this.taskList.length - 1) && (Number(this.taskList[this.activeTask].tries) === 2 || Number(this.taskList[this.activeTask].tries) === 3)) this.$router.push('/main')
         else if (Number(this.taskList[this.activeTask].tries) !== 2 && Number(this.taskList[this.activeTask].tries) !== 3) { // Task complition
           let verdict = 1
 

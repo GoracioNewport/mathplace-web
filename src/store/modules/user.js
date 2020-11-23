@@ -105,6 +105,7 @@ export default {
       return state.user
     },
     checkUser (state) {
+      state.user = JSON.parse(localStorage.getItem('user'))
       return state.user !== null
     },
     getPreId (state) {
