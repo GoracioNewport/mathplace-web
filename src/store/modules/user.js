@@ -67,7 +67,7 @@ export default {
         })
         var usr = new User(name, user.user.uid, lastTheme, money, right, submit, like, image)
         commit('setUser', usr)
-        if (remember) localStorage.setItem('user', JSON.stringify(usr))
+        localStorage.setItem('user', JSON.stringify(usr))
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)
