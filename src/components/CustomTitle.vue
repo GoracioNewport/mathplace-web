@@ -595,7 +595,7 @@ export default {
     async isTokenValid (token) {
       const db = firebase.firestore()
       var result
-      await db.collection('tasks').doc(token)
+      await db.collection('olympiads').doc(token)
         .get().then(
           doc => {
             if (doc.data() !== undefined) {

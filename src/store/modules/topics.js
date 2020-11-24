@@ -169,7 +169,7 @@ export default {
     },
     sendTopic (ctx, payload) {
       const db = firebase.firestore()
-      db.collection(tasksDb).doc(payload.token).set(payload.title)
+      db.collection(olympiadDb).doc(payload.token).set(payload.title)
     },
     async fetchCustomTopic (ctx, payload) {
       const db = firebase.firestore()
