@@ -32,7 +32,7 @@
 
       .container
         .AllSection
-          button.designButtonLessonTop Присоединиться к уроку
+          button.designButtonLessonTop(@click="joinMenuShow = true, showDialog = true") Присоединиться к уроку
           .title_topic2
             p Разделы
           .AllSections
@@ -328,16 +328,16 @@
                   v-bind:theme='topic.theme'
                   v-bind:like='topic.like'
                 )
-    div(v-if = 'this.joinMenuShow')
+    div(v-if = 'joinMenuShow')
       md-dialog(:md-active.sync='showDialog')
         md-dialog-title Подключиться к уроку
-        p(style="margin:20px;margin-top:0px;") К каждого урока есть свой уникальный код.<br> Введите код урока или попросите учителя отправить его вам
+        p(style="margin:20px;margin-top:0px;") У каждого урока есть свой уникальный код.<br> Введите код урока или попросите учителя отправить его вам
         div(style="margin:20px;margin-top:0px;")
           md-field
             label Введите код урока...
             md-input(v-model="customTopicId" md-counter='6')
         md-dialog-actions
-          md-button.md-primary(@click='showDialog = false,settingsMenuShow = false') Отмена
+          md-button.md-primary(@click='showDialog = false,joinMenuShow = false') Отмена
           md-button.md-primary(@click ='joinCourse(customTopicId)') Подключиться
 
       //- md-dialog-prompt(@click ='joinCourse(customTopicId)', :md-active.sync='showDialog' v-model='customTopicId' md-title="Введите код урока" md-input-maxlength='6' md-input-placeholder='Код урока...' md-confirm-text='Подключиться' md-cancel-text="Отмена")
@@ -798,8 +798,9 @@ export default {
 
   .pesontedan label::after {
     position: absolute;
-    right: 0;
+    right: 20px;
     top: 0;
+    // float right
     display: block;
     width: 3em;
     height: 3em;
@@ -808,6 +809,10 @@ export default {
     -webkit-transition: all .40s;
     -o-transition: all .40s;
     transition: all .40s;
+    @media screen and (max-width: 700px) {
+      right: 0px;
+      top: 20px;
+    }
   }
   .pesontedan input[type=checkbox] + label::after {
     content: "+";

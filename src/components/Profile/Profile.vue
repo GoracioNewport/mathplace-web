@@ -259,6 +259,7 @@ export default {
     color #763DCA !important
     background-color #FFFFFF
     opacity 0.5
+    margin-bottom 15px
     transition: 0.6s;
   .designButtonMini:hover
     transition: 0.6s;
@@ -277,6 +278,9 @@ export default {
     background-color #FFFFFF
     opacity 0.5
     transition: 0.6s;
+    // @media screen and (max-width: 1000px)
+    //   margin-left 0px
+
   .designButtonMiniRed:hover
     transition: 0.6s;
     color #FFFFFF !important
@@ -383,6 +387,10 @@ export default {
     margin-top 20px
     margin-left 30px
     display inline-block
+    @media screen and (max-width: 1000px) {
+      margin-top 0px
+    }
+
   .userButton
     position relative
     height auto
@@ -390,6 +398,9 @@ export default {
     margin-left 30px
     margin-top 20px
     display block
+    @media screen and (max-width: 1000px)
+      margin-left 0px
+
   .textInf
     font-weight 450
     margin-right 40px
@@ -402,8 +413,9 @@ export default {
 
   .userName
     font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
-    font-weight 550
+    font-weight 500
     font-size 30pt
+    line-height 1.6
     margin-bottom 30px
 
   .content-block
@@ -460,6 +472,12 @@ export default {
     margin-right 1%
     margin-bottom 0%
     margin-top 2%
+    // @media screen and (max-width: 1000px) {
+    //   margin-left 5%
+    //   margin-right 1%
+    //   margin-bottom 0%
+    //   margin-top 4%
+    // }
 
   .achivText
     position relative
