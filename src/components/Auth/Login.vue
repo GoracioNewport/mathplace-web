@@ -61,8 +61,8 @@
                 p.errorMsg.error(v-else-if="submitStatus === 'ERROR'") Пожалуйста, проверьте правильность заполнения полей
                 p.errorMsg.error(v-else) {{submitStatus}}
               .buttons-list-reference
-                p Нет аккаунта?
-                  router-link(style="color: #763DCA" to='/registration')    Создайте его!
+                span Нет аккаунта?
+                router-link(style="color: #763DCA" to='/registration')  Создайте!
     div(v-if = 'submitStatus === "Validation Required"')
       md-dialog(:md-active.sync='showDialog')
         md-dialog-title Ваш аккаунт не подтвержден
@@ -187,20 +187,20 @@ export default {
 
 .auth-form
   position relative
-  width 45%
+  width 47%
   height auto
   min-width 300px
   float right
   // display inline-block
   box-shadow 0 0 3px 0px rgba(0,0,0,0.5)
   border-radius 10px
-  padding-left 20px
+  padding-left 15px
   margin-bottom 30px
   margin-top 0px
   top 0px
-  padding-right 20px
+  padding-right 15px
   @media screen and (max-width:775px)
-    width 90%
+    width 95%
     margin-left 0%
     float left
 
@@ -284,17 +284,28 @@ input
   font-weight bold
 
 .buttons-list-reference
+  text-decoration none
   color #525252
-  width 100%
+  // width 100%
   margin-bottom 10px
   text-align center
-  p
-    position relative
-    width 100%
-  @media screen and (max-width:400px)
-    font-size 5pt
+  // span
+  //   position relative
+  //   width 100%
+  //   font-size 15px
+  // @media screen and (max-width:400px)
+  //   font-size 5pt
 
 .error
   color #fc5c65
+
+@media screen and (max-width:500px)
+  .auth-title
+      display none
+  .auth-space
+    width 0%
+  .auth-form
+    width 100%
+
 
 </style>
