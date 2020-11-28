@@ -47,7 +47,7 @@
                   img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
                   img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
                 md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
-    md-snackbar(:md-position='Centered' :md-duration='4000' :md-active.sync='showSnackbar' md-persistent='')
+    md-snackbar(md-position='center' :md-duration='4000' :md-active.sync='showSnackbar' md-persistent='')
       span Ссылка скопирована. Отправьте её ученикам!
       md-button.md-primary(@click='showSnackbar = false') Скрыть
     .solutionMenu(v-if = 'solutionImageShown')

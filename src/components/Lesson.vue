@@ -684,6 +684,14 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .multipleChoiceBox
+    margin-left 2%
+    @media screen and (max-width: 800px)
+      margin-left 10%
+  .multipleAnswerBox
+    margin-left 2%
+    @media screen and (max-width: 800px)
+      margin-left 10%
   .delete_button
     position relative
     display inline-block
