@@ -1,5 +1,12 @@
 <template lang="pug">
   .content-wrapper
+    md-snackbar(md-position='center' :md-active.sync='this.showSnackbarSend' md-persistent='')
+      span Ответ сохранен
+      md-button.md-primary(@click='showSnackbarSend = false') Скрыть
+    .arrowRight(@click='changeActiveTask(activeTask+1, taskList[activeTask+1])')
+      md-icon keyboard_arrow_right
+    .arrowLeft(@click='changeActiveTask(activeTask-1, taskList[activeTask-1])')
+      md-icon.md-size-2 keyboard_arrow_left
     //- md-drawer(:md-active.sync='showSidepanel')
       md-toolbar.md-transparent(md-elevation='0')
         div(style="margin-top: 30px;margin-bottom: 20px;")
@@ -22,6 +29,7 @@
             md-icon.md-primary remove_circle
           md-button.md-icon-button.md-list-action(@click="openChatWithUser(userStatistics[i].id)")
             md-icon.md-primary chat_bubble
+
     md-drawer(:md-active.sync='showComment')
       md-toolbar.md-transparent(md-elevation='0')
         div(style="margin-top: 30px;margin-bottom: 20px;")
@@ -65,7 +73,7 @@
         //- md-list-item.md-button(v-if="tasksInfo.token !== null", @click="getDataMembers")
           md-icon sort
           span.md-list-item-text Рейтинг
-        md-list-item.md-button(v-if="tasksInfo.token !== null", @click ='showNavigation = false, showSnackbar=true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + tasksInfo.token)')
+        md-list-item.md-button(v-if="tasksInfo.token !== null", @click ='showNavigation = false, showSnackbar = true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + tasksInfo.token)')
           md-icon content_copy
           p.md-list-item-text(style="height:auto") Скопировать ссылку на урок
         md-list-item
@@ -99,9 +107,9 @@
                     circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
               p.md-subheading(style="text-align:center;") Поставить лайк
               md-tooltip(md-direction='bottom') Поставить лайк уроку
-    md-snackbar(md-position='center' :md-duration="Number(4000)" :md-active.sync='showSnackbar' md-persistent='')
-      span Ссылка скопирована. Отправьте её ученикам!
-      md-button.md-primary(@click='showSnackbar = false') Скрыть
+    //- md-snackbar(md-position='сenter' :md-duration='Number(4000)' :md-active.sync='this.showSnackbarSend' md-persistent='')
+    //-   span Задача отправлена
+    //-   md-button.md-primary(@click='showSnackbarSend = false') Скрыть
     div(v-if = 'showStats')
       md-dialog(:md-active.sync='showStats')
         md-dialog-title Статистика по уроку
@@ -110,7 +118,7 @@
         //- //- .errorBox(v-else-if = 'topic.')
         //- .loadedBox(v-else)
         md-table.statsTable(v-model='myTopics', md-sort='name', md-sort-order='asc', md-fixed-header='')
-          md-table-toolbar
+          md-table-to olbar
             .md-toolbar-section-start
               h1.md-title Ученики
             md-button.md-primary(@click ='toggleStats(tasksInfo.token)') Обновить статистику
@@ -127,13 +135,16 @@
             md-table-cell.nameSlot(md-label='Всего', md-sort-by='solveSum') {{ item.solveSum }}
         md-dialog-actions
           md-button.md-primary(@click='showStats = false') Закрыть
+    md-snackbar(md-position='center' :md-active.sync='this.showSnackbar' md-persistent='')
+      span Ссылка скопирована. Отправьте её ученикам!
+      md-button.md-primary(@click='showSnackbar = false') Скрыть
 
     .taskbar(v-if = "error === 'none' || error === 'too_late'")
       .lessonNavbar
         md-button.md-icon-button.burger(@click='showNavigation = true')
             md-icon.fa.fa-bars(style="height: 70px;width: 70px;color: #FFFFFF;").md-size-2x menu
 
-        span.md-display-2 {{ tasksInfo.name }}
+        span.md-display-2(style="margin-left: 15px") {{ tasksInfo.name }}
 
         md-button.hideStat.md-raised(v-if="tasksInfo.author === getUser.id", @click ='toggleStats(tasksInfo.token)') Статистика
         //- md-button.hideStat.md-raised(v-else-if="tasksInfo.token !== null", @click="getDataMembers") Рейтинг
@@ -281,7 +292,7 @@
               type = 'submit',
               :disabled = 'error === "too_late"'
               @click = 'sendAnswer')
-                span(v-if ='Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Ответить
+                span(v-if ='Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"', @click='showSnackbarSendWindow') Сохранить
                 span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
                 span(v-else) Завершить
     .placeholderScreen(v-else-if ='error === "no_material_author" || error === "no_material_member"')
@@ -469,13 +480,15 @@ export default {
       proofImage,
       activeTask: 0,
       taskList: [],
+      showSnackbar: false,
+      showSnackbarSend: false,
       MembersSort: [],
       tasksInfo: {},
       userStatistics: {},
+      thisNumberTask: 0,
       isLoading: true,
       rightAns: false,
       secondsLesson: 0,
-      showSnackbar: false,
       showComment: false,
       arrayComments: [],
       isLoadingComment: false,
@@ -495,6 +508,7 @@ export default {
       topicLiked: false,
       solutionShown: false,
       userId: null,
+      timeSnakbar: 4000,
       solutionFile: null,
       error: 'pending',
       showUploadMenu: false,
@@ -504,16 +518,25 @@ export default {
   methods: {
     ...mapActions(['fetchMyTopicsDetailedInfo', 'sendComments', 'fetchComments', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics', 'banLessonMember']),
     // ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics', 'banLessonMember']),
-    async toggleStats (id) {
-      await this.fetchLessonStatistics(id)
+    toggleStats (id) {
+      this.fetchLessonStatistics(id)
       // this.myTopics = this.fetchLessonStatistics
       this.myTopics = this.convertToArray(this.getMyLessonstatistics)
       this.showStats = true
     },
+    showSnackbarSendWindow () {
+      this.showSnackbarSend = true
+      setTimeout(() => {
+        this.showSnackbarSend = false
+      }, 3000)
+    },
     changeActiveTask (i, thisTask) {
+      console.log(i, thisTask)
       this.status = 'Idle'
       this.activeTask = i
+      // console.log(this.activeTask)
       thisTask.activeTask = i
+      this.thisNumberTask = i
       if (this.taskList[this.activeTask].userAnswer === 'null') {
         if (this.taskList[this.activeTask].type === 'multipleChoice' || this.taskList[this.activeTask].type === 'multipleAnswer') this.answer = []
         else this.answer = ''
@@ -646,6 +669,8 @@ export default {
     },
     async uploadAnswer (i) {
       this.Loading = true
+      this.showSnackbarSend = true
+      console.log(this.showSnackbarSend)
 
       for (let j = 0; j < this.taskList[i].userAnswer.length; j++) {
         if (this.taskList[i].userAnswer[j].type === 'img') {
@@ -684,6 +709,43 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .arrowRight
+    position fixed
+    width auto
+    height auto
+    padding 20px
+    background-color #FFFFFF
+    z-index 7
+    box-shadow 0 4px 8px rgba(0,0,0,.14)
+    border-radius 50%
+    cursor pointer
+    // border: 2px solid #763DCA;
+    // border-shadow 0px 5px 2px 2px #000000
+    right 30px
+    bottom 30px
+    @media screen and (max-width: 800px)
+      padding 11px
+      right 15px
+      bottom 15px
+
+  .arrowLeft
+    position fixed
+    width auto
+    height auto
+    padding 20px
+    box-shadow 0 4px 8px rgba(0,0,0,.14)
+    background-color #FFFFFF
+    z-index 7
+    border-radius 50%
+    cursor pointer
+    // border: 2px solid #763DCA;
+    // border-shadow 0px 5px 2px 2px #000000
+    left 30px
+    bottom 30px
+    @media screen and (max-width: 800px)
+      padding 11px
+      left 15px
+      bottom 15px
   .marginTopLesson
     height: 60px;
     @media screen and (max-width: 800px)
@@ -758,6 +820,12 @@ export default {
     left 40%
     top 30%
     border-radius 20px
+    @media screen and (max-width: 800px)
+      width 50%
+      height 50%
+      left 25%
+      top 20%
+
     // box-shadow 0px 5px 4px 4px
   .lessonNavbar
     position relative
@@ -968,6 +1036,7 @@ export default {
     position relative
     height 100%
     min-height 100%
+    margin-bottom 60px
     background #763DCA
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
   .content

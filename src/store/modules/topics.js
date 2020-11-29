@@ -252,52 +252,110 @@ export default {
       ctx.commit('updateMyTopicsDetailedInfo', {})
       const db = firebase.firestore()
       await store.dispatch('fetchMyTopics')
+
       var topicList = this.getters.getMyTopics
-      var topicInfo = {}
-      for (let i = 0; i < topicList.length; i++) {
-        var topicsData = {}
-        let brokenTopic = false
-        await db.collection(olympiadDb).doc(topicList[i]).get().then(doc => {
-          var data = doc.data()
-          if (data === undefined) brokenTopic = true
-          else {
-            topicsData['token'] = topicList[i]
-            topicsData['name'] = data.name
-            topicsData['members'] = data.members
-            topicsData['showStats'] = false
-            topicsData['statsLoaded'] = false
-            topicsData['stats'] = {}
-          }
+
+      // console.log(topicList)
+
+      const topicsPromArray = topicList.map( topicId => new Promise( async (resolve, reject) => {
+
+        const topicData = (await db.collection(olympiadDb).doc(topicId).get()).data()
+
+        // console.log(topicData)
+
+        if( !topicData ){
+          // console.log("brokenTopic")
+          return resolve();
+        }
+
+        const {name, members} = topicData
+
+
+        resolve ({
+          token: topicId,
+          name,
+          members,
+          showStats: false,
+          statsLoaded: false,
+          stats: {}
         })
-        if (!brokenTopic) topicInfo[topicList[i]] = topicsData
-        else console.log('Topic ', topicList[i], ' either deleted or corrupted')
-      }
-      ctx.commit('updateMyTopicsDetailedInfo', topicInfo)
+
+      }))
+
+      const topicInfo = await Promise.all(topicsPromArray)
+      // console.log(topicInfo)
+      const topicInfoObject = topicInfo.reduce((acc,value) => value ? ({...acc, [value.token]:value}) : acc, {})
+      // console.log(topicInfoObject)
+      // console.log(topicInfo)
+      ctx.commit('updateMyTopicsDetailedInfo', topicInfoObject)  
+      // var topicInfo = {}
+      // for (let i = 0; i < topicList.length; i++) {
+      //   var topicsData = {}
+      //   let brokenTopic = false
+      //   await db.collection(olympiadDb).doc(topicList[i]).get().then(doc => {
+      //     var data = doc.data()
+      //     if (data === undefined) brokenTopic = true
+      //     else {
+      //       topicsData['token'] = topicList[i]
+      //       topicsData['name'] = data.name
+      //       topicsData['members'] = data.members
+      //       topicsData['showStats'] = false
+      //       topicsData['statsLoaded'] = false
+      //       topicsData['stats'] = {}
+      //     }
+      //   })
+      //   if (!brokenTopic) topicInfo[topicList[i]] = topicsData
+      //   else console.log('Topic ', topicList[i], ' either deleted or corrupted')
+      // }
+
     },
     async fetchTopicStatistics (ctx, id) {
       const db = firebase.firestore()
       var members = this.getters.getMyTopicsDetailedInfo[id].members
-      var sendData = []
-      for (let i = 0; i < members.length; i++) {
-        var info = {}
-        await db.collection(accountDb).doc(members[i]).get().then(async doc => {
-          var data = doc.data()
-          info['id'] = members[i]
-          info['name'] = data.name
-          await db.collection(accountDb).doc(members[i]).collection(userTasksDb).doc(id).get().then(statDoc => {
-            var statData = statDoc.data()
-            info['solveStats'] = statData.grades
-            info['answers'] = statData.lastAnswers
-          })
-          info['solveSum'] = 0
+      var membersPromArray = members.map(memberId => new Promise( async (resolve, reject) => {
+        const memberDoc = (await db.collection(accountDb).doc(memberId).get()).data()
+
+        const {name} = memberDoc
+
+        const memberTaskDoc = (await db.collection(accountDb).doc(memberId).collection(userTasksDb).doc(id).get()).data()
+
+        const {grades: solveStats, lastAnswers: answers} = memberTaskDoc
+
+        const solveSum = solveStats.reduce((acc, value) => (+value === 3 || +value === 2) ? ++acc : acc, 0)
+
+        resolve ({
+          id: memberId,
+          name,
+          solveStats,
+          answers,
+          solveSum
         })
-        var cnt = 0
-        for (let i = 0; i < info.solveStats.length; i++) {
-          if (Number(info.solveStats[i]) === 3 || Number(info.solveStats[i]) === 2) cnt++
-        }
-        info.solveSum = cnt
-        sendData.push(info)
-      }
+
+       }))
+
+      const sendData = await Promise.all(membersPromArray)
+
+      // var sendData = []
+      // for (let i = 0; i < members.length; i++) {
+      //   var info = {}
+      //   await db.collection(accountDb).doc(members[i]).get().then(async doc => {
+      //     var data = doc.data()
+      //     info['id'] = members[i]
+      //     info['name'] = data.name
+      //     await db.collection(accountDb).doc(members[i]).collection(userTasksDb).doc(id).get().then(statDoc => {
+      //       var statData = statDoc.data()
+      //       info['solveStats'] = statData.grades
+      //       info['answers'] = statData.lastAnswers
+      //     })
+      //     info['solveSum'] = 0
+      //   })
+      //   var cnt = 0
+      //   for (let i = 0; i < info.solveStats.length; i++) {
+      //     if (Number(info.solveStats[i]) === 3 || Number(info.solveStats[i]) === 2) cnt++
+      //   }
+      //   info.solveSum = cnt
+      //   sendData.push(info)
+      // }
       var usrData = {
         id: id,
         data: sendData

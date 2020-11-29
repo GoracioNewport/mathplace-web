@@ -290,9 +290,10 @@ export default {
     font-weight 550
     font-size 23px
     margin-left 20px
+    margin-bottom 20px
     color #763DCA !important
     background-color #FFFFFF
-    opacity 0.5
+    opacity 0.95
     transition: 0.6s;
   .designButtonLesson:hover
     transition: 0.6s;
@@ -467,6 +468,7 @@ export default {
     position relative
     width auto
     height auto
+    line-height 1
     label
       font-size 2.0em
       color #763DCA
