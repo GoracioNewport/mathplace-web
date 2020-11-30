@@ -40,13 +40,12 @@
               md-table-empty-state(md-label='Пользователи не найдены', :md-description="`По запросу '${search}' ничего не нашлось. Попробуйте другое имя.`")
               md-table-row(slot='md-table-row', slot-scope='{ item }')
                 md-table-cell.nameSlot(md-label='Имя', md-sort-by='name') {{ item.name }}
-                md-table-cell.taskSlot(v-for = '(task, taskIndex) in item.solveStats' :key = 'taskIndex'
-                :md-label = '(taskIndex + 1).toString()')
+                md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
+                md-table-cell.taskSlot(v-for = '(task, taskIndex) in item.solveStats' :key = 'taskIndex' :md-label = '(taskIndex + 1).toString()')
                   Dots.answerNo.answerLabel(v-if = 'Number(task) === 1')
                   img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'Number(task) == 0')
                   img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
                   img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
-                md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
     md-snackbar(md-position='center' :md-duration='4000' :md-active.sync='showSnackbar' md-persistent='')
       span Ссылка скопирована. Отправьте её ученикам!
       md-button.md-primary(@click='showSnackbar = false') Скрыть
@@ -211,8 +210,8 @@ export default {
   .topicsBox
     position relative
     width auto
-    margin-left 25%
-    margin-right 25%
+    margin-left 15%
+    margin-right 15%
     @media screen and (max-width: 1300px)
       margin-left 18%
       margin-right 18%
