@@ -268,15 +268,14 @@ export default {
 
       // console.log(topicList)
 
-      const topicsPromArray = topicList.map( topicId => new Promise( async (resolve, reject) => {
-
+      const topicsPromArray = topicList.map(topicId => new Promise(async (resolve, reject) => {
         const topicData = (await db.collection(olympiadDb).doc(topicId).get()).data()
 
         // console.log(topicData)
 
-        if( !topicData ){
+        if (!topicData) {
           // console.log("brokenTopic")
-          return resolve();
+          return resolve()
         }
 
         const {name, members} = topicData
@@ -295,15 +294,14 @@ export default {
           grades,
           stats: {}
         })
-
       }))
 
       const topicInfo = await Promise.all(topicsPromArray)
       // console.log(topicInfo)
-      const topicInfoObject = topicInfo.reduce((acc,value) => value ? ({...acc, [value.token]:value}) : acc, {})
+      const topicInfoObject = topicInfo.reduce((acc, value) => value ? ({...acc, [value.token]: value}) : acc, {})
       // console.log(topicInfoObject)
       // console.log(topicInfo)
-      ctx.commit('updateMyTopicsDetailedInfo', topicInfoObject)  
+      ctx.commit('updateMyTopicsDetailedInfo', topicInfoObject)
       // var topicInfo = {}
       // for (let i = 0; i < topicList.length; i++) {
       //   var topicsData = {}
@@ -323,7 +321,6 @@ export default {
       //   if (!brokenTopic) topicInfo[topicList[i]] = topicsData
       //   else console.log('Topic ', topicList[i], ' either deleted or corrupted')
       // }
-
     },
     async fetchTopicStatistics (ctx, id) {
       const db = firebase.firestore()
@@ -363,8 +360,7 @@ export default {
           solveSum,
           grade: gradeUser,
         })
-
-       }))
+      }))
 
       const sendData = await Promise.all(membersPromArray)
 

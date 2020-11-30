@@ -34,85 +34,92 @@
     //-     //-     input#theory(type = 'radio', value = 'theory', v-model = "task.type")
     //-     //-   label(for='task') Задача
     //-     //-     input#task(type = 'radio', value = 'task', v-model = "task.type")
+    md-dialog(:md-active.sync='showCreateTask' v-if='currentEditTask !== undefined')
+      md-dialog-title(v-if = 'currentEditTask.type === "theory"') Теория
+      md-dialog-title(v-else) Задача
+      .componentBox
+        //- .taskType
+        //-   label(for='theory') Теория
+        //-     input#theory(type = 'radio', value = 'theory', v-model = "task.type")
+        //-   label(for='task') Задача
+        //-     input#task(type = 'radio', value = 'task', v-model = "task.type")
 
-    //-     .theoryEditBox
-    //-       .theoryComponent(
-    //-         v-for = 'component in task.statement'
-    //-       )
-    //-         .button.img.delete_button(@click='task.statement.splice(task.statement.indexOf(component), 1)')
-    //-         .theoryTextField(v-if ='component.type === "text"')
-    //-           vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "video"], ["clean"]]')
-    //-         .theoryText(v-if ='component.type === "img"')
-    //-           label(for='img') Выберите картинку
-    //-           input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.statement.indexOf(component))")
-    //-         .theoryTextFile(v-else-if ='component.type === "file"')
-    //-           label(for='file') Выберите PDF-Файл
-    //-           input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(task), task.statement.indexOf(component))")
+        md-tabs(md-dynamic-height)
+          md-tab(md-label='Условие')
+            .overflowBox
+              .theoryEditBox
+                .theoryComponent(
+                  v-for = 'component in currentEditTask.statement'
+                )
+                  .button.img.delete_button(@click='currentEditTask.statement.splice(currentEditTask.statement.indexOf(component), 1)')
+                  .theoryTextField(v-if ='component.type === "text"')
+                    vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "video"], ["clean"]]')
+                  .theoryText(v-if ='component.type === "img"')
+                    label(for='img') Выберите картинку
+                    input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(currentEditTask), currentEditTask.statement.indexOf(component))")
+                  .theoryTextFile(v-else-if ='component.type === "file"')
+                    label(for='file') Выберите PDF-Файл
+                    input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(currentEditTask), currentEditTask.statement.indexOf(component))")
 
-    //-       md-button.md-raised.md-primary(@click='addContent(tasks.indexOf(task), "text")') Добавить абзац
+                md-button.md-raised.md-primary(@click='addContent(tasks.indexOf(currentEditTask), "text")') Добавить абзац
+                md-button.md-raised.md-primary(@click='addContent(tasks.indexOf(currentEditTask), "img")') Добавить картинку
+                md-button.md-primary(@click='addContent(tasks.indexOf(currentEditTask), "file")') Загрузить PDF-файл
+          md-tab(md-label='Ответ и решение' v-if ="currentEditTask.type === 'task'")
+            .overflowBox
+              .taskEditBox(v-if ="currentEditTask.type === 'task'")
+                .taskAnswerBox
+                  md-field.taskTypeSelect
+                    label(for='taskType') Тип ответа
+                    md-select#taskType(v-model='currentEditTask.taskType' name='taskTypeText' @md-selected='changeAnswerType(currentEditTask.taskType, currentEditTask)')
+                      md-option(value='task') Единственный ответ
+                      md-option(value='multipleAnswer') Несколько ответов
+                      md-option(value='multipleChoice') Множественный выбор
+                      md-option(value='upload') Загрузка развернутого решения
+                      md-option(value='proof') Без ответа
+                  md-field(v-if='currentEditTask.taskType == "task"')
+                    md-input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "currentEditTask.answer")
+                  span.md-body-2(v-else-if='currentEditTask.taskType == "upload"') Вы сможете проверить ответ ученика в личном кабинете в разделе 'Мои темы'.
+                  span.md-body-2(v-else-if='currentEditTask.taskType == "proof"') Дополнительная задача не подразумевает проверку ответа. Пожалуйста, напишите развернутый ответ в секции 'Решение', что бы ученики могли проверить себя самостоятельно.
+                  md-chips(v-else-if='currentEditTask.taskType == "multipleAnswer"' v-model='currentEditTask.answer' md-placeholder='Введите ответ и нажмите Enter...')
+                  .checkboxesBox(v-else-if='currentEditTask.taskType == "multipleChoice"')
+                    md-field
+                      label Введите вариант ответа
+                      md-input(v-model='newCheckboxAnswer' placeholder='Добавить вариант ответа')
+                      md-button.addMemeberButton(@click ='addCheckBoxAnswer(newCheckboxAnswer, currentEditTask)') Добавить
+                    span.md-body-2(v-if='currentEditTask.options.length > 0') Отметьте правильные ответы
+                    br
+                    .checkboxesBoxCheckboxes(v-for ='(op, opI) in currentEditTask.options' :key="opI" )
+                      md-checkbox(v-model='currentEditTask.answer' :value='op') {{ op }}
+                      md-button.removeButton.md-accent.md-raised(@click ='currentEditTask.options.splice(opI, 1); if (currentEditTask.answer.findIndex(f => f === op) !== -1) currentEditTask.answer.splice(currentEditTask.answer.findIndex(f => f === op), 1);') X
+                    //- span {{ task.answer }}
 
-    //-       md-button.md-raised.md-primary(
-    //-         @click='addContent(tasks.indexOf(task), "img")'
-    //-         ) Добавить картинку
-    //-       md-button.md-primary(
-    //-         @click='addContent(tasks.indexOf(task), "file")'
-    //-         ) Загрузить PDF-файл
-    //-     .taskEditBox(v-if ="task.type === 'task'")
-    //-       .taskAnswerBox
-    //-         md-field.taskTypeSelect
-    //-           label(for='taskType') Тип ответа
-    //-           md-select#taskType(v-model='task.taskType' name='taskTypeText' @md-selected='changeAnswerType(task.taskType, taskId)')
-    //-             md-option(value='task') Единственный ответ
-    //-             md-option(value='multipleAnswer') Несколько ответов
-    //-             md-option(value='multipleChoice') Множественный выбор
-    //-             md-option(value='upload') Загрузка развернутого решения
-    //-             md-option(value='proof') Без ответа
-    //-         md-field(v-if='task.taskType == "task"')
-    //-           md-input.taskAnswer(placeholder = 'Введите ответ на задачу', v-model = "task.answer")
-    //-         span.md-body-2(v-else-if='task.taskType == "upload"') Вы сможете проверить ответ ученика в личном кабинете в разделе 'Мои темы'.
-    //-         span.md-body-2(v-else-if='task.taskType == "proof"') Дополнительная задача не подразумевает проверку ответа. Пожалуйста, напишите развернутый ответ в секции 'Решение', что бы ученики могли проверить себя самостоятельно.
-    //-         md-chips(v-else-if='task.taskType == "multipleAnswer"' v-model='task.answer' md-placeholder='Введите ответ и нажмите Enter...')
-    //-         .checkboxesBox(v-else-if='task.taskType == "multipleChoice"')
-    //-           md-field
-    //-             label Введите вариант ответа
-    //-             md-input(v-model='newCheckboxAnswer' placeholder='Добавить вариант ответа')
-    //-             md-button.addMemeberButton(@click ='addCheckBoxAnswer(newCheckboxAnswer, taskId)') Добавить
-    //-           span.md-body-2(v-if='task.options.length > 0') Отметьте правильные ответы
-    //-           br
-    //-           .checkboxesBoxCheckboxes(v-for ='(op, opI) in task.options' :key="opI" )
-    //-             md-checkbox(v-model='task.answer' :value='op') {{ op }}
-    //-             md-button.removeButton.md-accent.md-raised(@click ='task.options.splice(opI, 1); if (task.answer.findIndex(f => f === op) !== -1) task.answer.splice(task.answer.findIndex(f => f === op), 1);') X
-    //-           //- span {{ task.answer }}
+                .md-layout-item.olympTheme2
+                  md-field
+                    label Выберите сложность
+                    md-select.olympTheme2(v-model = "currentEditTask.difficulty" placeholder="Выберите сложность")
+                      md-option(v-for = '(diff, i) in difficultyList' :key="i" :value="diff") {{ diff }}
+                    md-tooltip(md-direction='left') Укажите, чтобы ученикам было проще ориентироваться
 
-    //-       .md-layout-item.olympTheme2
-    //-         md-field
-    //-           label Выберите сложность
-    //-           md-select.olympTheme2(v-model = "task.difficulty" placeholder="Выберите сложность")
-    //-             md-option(v-for = '(diff, i) in difficultyList' :key="i" :value="diff") {{ diff }}
-    //-           md-tooltip(md-direction='left') Укажите, чтобы ученикам было проще ориентироваться
+                //- label(for='difOne') Легкая
+                //-   input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
+                //- label(for='difTwo') Средняя
+                //-   input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
+                //- label(for='difThree') Трудная
+                //-   input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
 
-    //-       //- label(for='difOne') Легкая
-    //-       //-   input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
-    //-       //- label(for='difTwo') Средняя
-    //-       //-   input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
-    //-       //- label(for='difThree') Трудная
-    //-       //-   input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
-
-    //-       md-field
-    //-         label(for='solutionType') Тип решения
-    //-         md-select#solutionType(v-model='task.solutionType' name='solutionTypeText')
-    //-           md-option(value='hide') Без решения
-    //-           md-option(value='solution') Показывать решение
-    //-           md-option(v-if ='task.taskType != "proof" && task.taskType != "upload"' value='answer') Показывать ответ
-    //-         md-tooltip(md-direction='left') Решение показывается всем ученикам
-    //-       md-field(v-if ='task.solutionType !== "hide" && task.solutionType !== "answer"')
-    //-         label Решение
-    //-         md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
-    //-   md-dialog-actions
-    //-     md-button.md-primary(@click='showDialog = false,settingsMenuShow = false') Закрыть
-    //-     md-button.md-primary(@click='saveProfile') Сохранить
-
-
+                md-field
+                  label(for='solutionType') Тип решения
+                  md-select#solutionType(v-model='currentEditTask.solutionType' name='solutionTypeText')
+                    md-option(value='hide') Без решения
+                    md-option(value='solution') Показывать решение
+                    md-option(v-if ='currentEditTask.taskType != "proof" && currentEditTask.taskType != "upload"' value='answer') Показывать ответ
+                  md-tooltip(md-direction='left') Решение показывается всем ученикам
+                md-field(v-if ='currentEditTask.solutionType !== "hide" && currentEditTask.solutionType !== "answer"')
+                  label Решение
+                  md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "currentEditTask.solution")
+      md-dialog-actions
+        md-button.md-primary(@click='showCreateTask = false') Закрыть
+        md-button.md-primary(@click='showCreateTask = false') Сохранить
     .loading-indicator(v-if = 'myTopicLoading')
       loading(
         :active.sync = "myTopicLoading"
@@ -161,7 +168,13 @@
           .tasksInfo
             .tasksContent
               .task(v-for = '(task, taskId) in tasks')
-                .button.img.delete_button(@click='tasks.splice(tasks.indexOf(task), 1)')
+                .imageButtonBox
+                  img.imageButton(src = './images/clear.png' @click='tasks.splice(tasks.indexOf(task), 1)')
+                  md-tooltip(md-direction='right') Удалить
+                //- .imageButton.delete_button(@click='tasks.splice(tasks.indexOf(task), 1)')
+                .imageButtonBox(v-if = 'task.type === "theory" || task.type === "task"')
+                  img.imageButton(src ='@/assets/images/code3.png' @click ='editTask(task)')
+                  md-tooltip(md-direction='right') Редактировать
                 .preMadeBox(v-if ='task.type === "preMade"')
                   .componentName
                     strong(v-if = 'task.originData.type === "theory"') Теория из темы "{{ task.topicName }}"
@@ -175,15 +188,20 @@
                       md-input(v-model='task.choiceTask' type='number')
                       span.md-helper-text Число от 1 до {{ task.tasks.length }}
                     .task(v-for ='(blockTask, blockTaskId) in task.tasks')
-                      .button.img.delete_button(@click='task.tasks.splice(task.tasks.indexOf(blockTask), 1)')
+                      .imageButtonBox
+                        .button.img.delete_button(@click='task.tasks.splice(task.tasks.indexOf(blockTask), 1)')
+                        md-tooltip(md-direction='right') Удалить
+                      .imageButtonBox
+                        img.imageButton(src ='@/assets/images/code3.png' @click ='editTask(blockTask)')
+                        md-tooltip(md-direction='right') Редактировать
                       .preMadeBox(v-if ='blockTask.type === "preMade"')
                         .componentName
                           strong(v-if = 'blockTask.originData.type === "theory"') Теория из темы "{{ blockTask.topicName }}"
-                          strong(v-else) Задача №{{ blockTask.taskInd }} из темы "{{ blockTask.topicName }}"
+                          strong(v-else) Задача №{{ blockTask.taskId }} из темы "{{ blockTask.topicName }}"
                       .componentBox(v-else)
                         .componentName
-                          strong Задача
-                        .theoryEditBox
+                          strong Случайная Задача №{{blockTaskId + 1}}
+                        //- .theoryEditBox
                           .theoryComponent(
                             v-for = 'component in blockTask.statement'
                           )
@@ -205,7 +223,7 @@
                           md-button.md-primary(
                             @click='addContent([tasks.indexOf(task), task.tasks.indexOf(blockTask)], "file")'
                             ) Загрузить PDF-файл
-                        .taskEditBox
+                        //- .taskEditBox
                           .taskAnswerBox
                             //- span {{ typeof blockTask.answer }}
                             md-field.taskTypeSelect
@@ -271,7 +289,7 @@
                   //-   label(for='task') Задача
                   //-     input#task(type = 'radio', value = 'task', v-model = "task.type")
 
-                  .theoryEditBox
+                  //- .theoryEditBox
                     .theoryComponent(
                       v-for = 'component in task.statement'
                     )
@@ -293,7 +311,7 @@
                     md-button.md-primary(
                       @click='addContent(tasks.indexOf(task), "file")'
                       ) Загрузить PDF-файл
-                  .taskEditBox(v-if ="task.type === 'task'")
+                  //- .taskEditBox(v-if ="task.type === 'task'")
                     .taskAnswerBox
                       md-field.taskTypeSelect
                         label(for='taskType') Тип ответа
@@ -346,7 +364,7 @@
                       md-textarea.taskSolution(placeholder = 'Введите подробное решение вашей задачи (необязательно)', v-model = "task.solution")
             div(style="margin-top:20px")
               md-button.md-raised.md-primary(@click='addTask("theory")') Добавить теорию
-              md-button.md-raised.md-primary(@click='showCreateTask = true, addTask("task")') Добавить задачу
+              md-button.md-raised.md-primary(@click='addTask("task")') Добавить задачу
               md-button.md-primary(@click='addTask("material")') Добавить готовый материал
               md-button.md-primary(@click='addTask("block")') Добавить блок случайных задач
           md-button.md-primary(style="margin-top:20px" @click="setDone('third', 'fourth')") Следующий шаг
@@ -500,6 +518,7 @@ export default {
       falseVar: false,
       classCnt: '',
       showCreateTask: false,
+      currentEditTask: -1,
       showDialog: false,
       submitStatus: null,
       myTopicLoading: false,
@@ -566,12 +585,11 @@ export default {
     },
     addCheckBoxAnswer (ans, i) {
       this.newCheckboxAnswer = ''
-      if (typeof i === 'number' && this.tasks[i].options.findIndex(f => f === ans) === -1) this.tasks[i].options.push(ans)
-      else if (typeof i === 'object' && this.tasks[i[0]].tasks[i[1]].options.findIndex(f => f === ans) === -1) this.tasks[i[0]].tasks[i[1]].options.push(ans)
+      if (i.options.findIndex(f => f === ans) === -1) i.options.push(ans)
     },
     changeAnswerType (type, i) {
-      if (type === 'multipleChoice' || type === 'multipleAnswer') (typeof i === 'number') ? this.tasks[i].answer = [] : this.tasks[i[0]].tasks[i[1]].answer = []
-      else if (type === 'task') (typeof i === 'number') ? this.tasks[i].answer = '' : this.tasks[i[0]].tasks[i[1]].answer = ''
+      if (type === 'multipleChoice' || type === 'multipleAnswer') i.answer = []
+      else if (type === 'task') i.answer = ''
     },
     goToProfile () {
       this.$router.push('/profile')
@@ -637,8 +655,13 @@ export default {
           options: []
         }
         // Если индекс не передается, то пушим в конец, а если передается, то пушим в блок
-        if (ind !== undefined) this.tasks[ind].tasks.push(task)
-        else this.tasks.push(task)
+        if (ind !== undefined) {
+          this.tasks[ind].tasks.push(task)
+          this.currentEditTask = this.tasks[ind].tasks[this.tasks[ind].tasks.length - 1]
+        } else {
+          this.tasks.push(task)
+          this.currentEditTask = this.tasks[this.tasks.length - 1]
+        } this.showCreateTask = true
       }
     },
     addContent (id, type) {
@@ -649,6 +672,10 @@ export default {
       if (typeof id === 'number') this.tasks[id].statement.push(data)
       else this.tasks[id[0]].tasks[id[1]].statement.push(data)
     },
+    editTask (task) {
+      this.currentEditTask = task
+      this.showCreateTask = true
+    },
     nullifyContent (id) {
       this.tasks[id].statement = []
     },
@@ -657,8 +684,7 @@ export default {
       this.currComponentId = componentId
     },
     onFileSelected (event) {
-      if (typeof this.currTaskId === 'number') this.tasks[this.currTaskId].statement[this.currComponentId].inner = event.target.files[0]
-      else this.tasks[this.currTaskId[0]].tasks[this.currTaskId[1]].statement[this.currComponentId].inner = event.target.files[0]
+      this.currentEditTask.statement[this.currComponentId].inner = event.target.files[0]
     },
     async generateToken (length) {
       var a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('')
@@ -865,6 +891,18 @@ export default {
   .buttonNext
     margin-top:20px; 
     margin-left: 0px;
+  .overflowBox
+    max-height 60vh
+    overflow auto
+  .img-tooltip
+    position relative
+    height auto
+    width auto
+  .imageButton
+    width 25px
+    float right
+    // &:hover
+    //   cursor pointer
   .checkboxBox
     position relative
     width 300px
@@ -946,7 +984,7 @@ export default {
     margin-bottom 1%
   .componentName
     font-size 2em
-    padding 3%
+    padding 1%
     padding-left 0
     padding-top 0
   .taskAnswer
@@ -1117,7 +1155,7 @@ export default {
     position relative
     border 1px solid #999
     border-radius 10px
-    margin-top 50px
+    margin-top 20px
     padding 3%
   .taskName
     margin 1%

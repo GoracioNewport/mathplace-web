@@ -230,6 +230,22 @@
             @keyup.enter = 'sendAnswer',
             v-bind:class = "{ 'unknownTask' : this.tasksInfo.isHiddenResults && Number(this.taskList[this.activeTask].tries) !== 1, 'solvedTask' : Number(this.taskList[this.activeTask].tries) == 2 || Number(this.taskList[this.activeTask].tries) == 3 , 'failedTask' : Number(this.taskList[this.activeTask].tries) == 0 }")
           label(for='img' v-else-if ='this.taskList[this.activeTask].type === "upload"')
+            md-dialog(:md-active.sync='showUploadMenu')
+                md-dialog-title Загрузка материала
+                .md-dialog-body
+                  .md-dialog-body-sections
+                    //- span {{ taskList[activeTask].uploadAnswer }}
+                    .md-dialog-body-section(style="margin-bottom:  20px;" v-for ='(component, componentId) in taskList[activeTask].uploadAnswer')
+                      .button.img.delete_button(@click='taskList[activeTask].uploadAnswer.splice(taskList[activeTask].uploadAnswer.indexOf(component), 1)')
+                      vue-editor.theoryText(v-if ='component.type === "text"' placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"]]')
+                      md-field(name='img' v-else)
+                        md-file(v-model = 'component.fileName' @md-change ='onFilePicked' @click ='imageUploadIndex = [activeTask, componentId]' accept="image/*")
+                  .md-dialog-body-buttons
+                  md-button.md-primary.md-raised(@click='taskList[activeTask].uploadAnswer.push({type : "text", inner: ""})') Добавить текст
+                  md-button.md-primary.md-raised(@click='taskList[activeTask].uploadAnswer.push({type : "img", inner: "", fileName: ""})') Добавить картинку
+                md-dialog-actions
+                  md-button.md-primary(@click='showUploadMenu = false') Отмена
+                  md-button.md-primary(@click='uploadAnswer(activeTask)') Отправить
             .pendingBox(v-if ='Number(this.taskList[this.activeTask].tries) !== 0 && Number(this.taskList[this.activeTask].tries) !== 1 && Number(this.taskList[this.activeTask].tries) !== 2 && Number(this.taskList[this.activeTask].tries) !== 3')
               span Преподователь еще не проверил ваш ответ
             .rightBox(v-else-if ='Number(this.taskList[this.activeTask].tries) === 2')
@@ -237,24 +253,6 @@
             .else(v-else)
               span(v-if ='Number(this.taskList[this.activeTask].tries) === 0') Ваш ответ оказался неправильным. Вы можете отправить решение заново
               //- input#img(type='file', name='img', accept='image/*', @click="onFileButtonClicked(this.tasks.indexOf(task), task.text.indexOf(component))")
-              label Добавить развернутый ответ
-              md-button.md-primary(@click='showUploadMenu = true') Добавить
-              md-dialog(:md-active.sync='showUploadMenu')
-                md-dialog-title Загрузка материала
-                .md-dialog-body
-                  .md-dialog-body-sections
-                    //- span {{ taskList[activeTask].uploadAnswer }}
-                    .md-dialog-body-section(v-for ='(component, componentId) in taskList[activeTask].uploadAnswer')
-                      .button.img.delete_button(@click='taskList[activeTask].uploadAnswer.splice(taskList[activeTask].uploadAnswer.indexOf(component), 1)')
-                      vue-editor.theoryText(v-if ='component.type === "text"' placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "video"], ["clean"]]')
-                      md-field(name='img' v-else)
-                        md-file(v-model = 'component.inner' @md-change ='onFilePicked' @click ='imageUploadIndex = [activeTask, componentId]' accept="image/*")
-                  .md-dialog-body-buttons
-                  md-button.md-primary.md-raised(@click='taskList[activeTask].uploadAnswer.push({type : "text", inner: ""})') Добавить текст
-                  md-button.md-primary.md-raised(@click='taskList[activeTask].uploadAnswer.push({type : "img", inner: ""})') Добавить картинку
-                md-dialog-actions
-                  md-button.md-primary(@click='showUploadMenu = false') Отмена
-                  md-button.md-primary(@click='uploadAnswer(activeTask)') Отправить
 
               //- md-field(name='img')
                 //- md-file(v-model = 'answer' @md-change ='onFilePicked' accept="image/*")
@@ -293,7 +291,8 @@
               type = 'submit',
               :disabled = 'error === "too_late"'
               @click = 'sendAnswer')
-                span(v-if ='Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"', @click='showSnackbarSendWindow') Сохранить
+                span(v-if ='this.taskList[this.activeTask].type === "upload"') Загрузить ответ
+                span(v-else-if ='Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"', @click='showSnackbarSendWindow') Сохранить
                 span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
                 span(v-else) Завершить
     .placeholderScreen(v-else-if ='error === "no_material_author" || error === "no_material_member"')
@@ -553,7 +552,10 @@ export default {
       }
     },
     async sendAnswer () { // Боже, как тут много говна... хуй вообще разберешь какой пиздец тут творится
-      if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
+      if (this.taskList[this.activeTask].type === 'upload') {
+        if (typeof this.taskList[this.activeTask].userAnswer === 'object') this.taskList[this.activeTask].uploadAnswer = this.taskList[this.activeTask].userAnswer
+        this.showUploadMenu = true
+      } else if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
         if (this.activeTask === (this.taskList.length - 1) && (Number(this.taskList[this.activeTask].tries) === 2 || Number(this.taskList[this.activeTask].tries) === 3)) this.$router.push('/main')
         else if (Number(this.taskList[this.activeTask].tries) !== 2 && Number(this.taskList[this.activeTask].tries) !== 3) { // Task complition
@@ -597,12 +599,12 @@ export default {
           if (this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') this.updateUser(['submit', this.getUser.submit + 1])
           // Обновляем значения оценок
           let newStatus = []
-          for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
+          for (let i = 0; i < this.taskList.length; i++) newStatus.push(this.taskList[i].tries)
           newStatus[this.activeTask] = String(verdict)
           this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
           this.taskList[this.activeTask].tries = Number(verdict)
           // Обновляем значения последних ответов
-          for (let i = 0; i < this.taskList.length; i++) newStatus[i] = String(this.taskList[i].userAnswer)
+          for (let i = 0; i < this.taskList.length; i++) (typeof this.taskList[i].userAnswer === 'object') ? newStatus[i] = this.taskList[i].userAnswer : newStatus[i] = String(this.taskList[i].userAnswer)
           newStatus[this.activeTask] = String(this.answer)
           this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'lastAnswers'})
           this.taskList[this.activeTask].userAnswer = String(this.answer)
@@ -672,16 +674,14 @@ export default {
       else this.$router.push('/main')
     },
     onFilePicked (event) {
-      this.taskList[this.imageUploadIndex[0]].uploadAnswer[this.imageUploadIndex[1]] = event[0]
+      this.taskList[this.imageUploadIndex[0]].uploadAnswer[this.imageUploadIndex[1]].inner = event[0]
     },
     async uploadAnswer (i) {
-      this.Loading = true
-      this.showSnackbarSend = true
-      console.log(this.showSnackbarSend)
+      this.isLoading = true
 
-      for (let j = 0; j < this.taskList[i].userAnswer.length; j++) {
-        if (this.taskList[i].userAnswer[j].type === 'img') {
-          let file = this.taskList[i].userAnswer[j].inner
+      for (let j = 0; j < this.taskList[i].uploadAnswer.length; j++) {
+        if (this.taskList[i].uploadAnswer[j].type === 'img') {
+          let file = this.taskList[i].uploadAnswer[j].inner
           let fileName = file.name
           const fileReader = new FileReader()
           fileReader.readAsDataURL(file)
@@ -693,9 +693,20 @@ export default {
           // Загрузка в бд
           await firebase.storage().ref(imageTimeName).put(file)
           await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
-          this.taskList[i].userAnswer[j].inner = imageUrl.toString()
+          this.taskList[i].uploadAnswer[j].inner = imageUrl.toString()
         }
-      }
+      } let newStatus = []
+      for (let i = 0; i < this.taskList.length; i++) (typeof this.taskList[i] === 'object') ? newStatus[i] = this.taskList[i].userAnswer : newStatus[i] = String(this.taskList[i].userAnswer)
+      newStatus = {...newStatus}
+      newStatus[this.activeTask] = this.taskList[i].uploadAnswer
+      this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'lastAnswers'})
+      newStatus = []
+      for (let i = 0; i < this.taskList.length; i++) newStatus.push(this.taskList[i].tries)
+      newStatus[this.activeTask] = '4'
+      this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
+      this.taskList[this.activeTask].tries = 4
+      this.showUploadMenu = false
+      this.isLoading = false
     }
   },
   computed: {
