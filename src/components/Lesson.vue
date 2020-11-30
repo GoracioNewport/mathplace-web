@@ -3,9 +3,9 @@
     md-snackbar(md-position='center' :md-active.sync='this.showSnackbarSend' md-persistent='')
       span Ответ сохранен
       md-button.md-primary(@click='showSnackbarSend = false') Скрыть
-    .arrowRight(@click='changeActiveTask(activeTask+1, taskList[activeTask+1])')
+    .arrowRight(v-if='activeTask !== (this.taskList.length - 1)' @click='changeActiveTask(activeTask+1, taskList[activeTask+1])')
       md-icon keyboard_arrow_right
-    .arrowLeft(@click='changeActiveTask(activeTask-1, taskList[activeTask-1])')
+    .arrowLeft(v-if='activeTask !== 0' @click='changeActiveTask(activeTask-1, taskList[activeTask-1])')
       md-icon.md-size-2 keyboard_arrow_left
     //- md-drawer(:md-active.sync='showSidepanel')
       md-toolbar.md-transparent(md-elevation='0')
