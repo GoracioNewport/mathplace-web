@@ -257,21 +257,19 @@ export default {
 
       // console.log(topicList)
 
-      const topicsPromArray = topicList.map( topicId => new Promise( async (resolve, reject) => {
-
+      const topicsPromArray = topicList.map(topicId => new Promise(async (resolve, reject) => {
         const topicData = (await db.collection(olympiadDb).doc(topicId).get()).data()
 
         // console.log(topicData)
 
-        if( !topicData ){
+        if (!topicData) {
           // console.log("brokenTopic")
-          return resolve();
+          return resolve()
         }
 
         const {name, members} = topicData
 
-
-        resolve ({
+        resolve({
           token: topicId,
           name,
           members,
@@ -279,15 +277,14 @@ export default {
           statsLoaded: false,
           stats: {}
         })
-
       }))
 
       const topicInfo = await Promise.all(topicsPromArray)
       // console.log(topicInfo)
-      const topicInfoObject = topicInfo.reduce((acc,value) => value ? ({...acc, [value.token]:value}) : acc, {})
+      const topicInfoObject = topicInfo.reduce((acc, value) => value ? ({...acc, [value.token]: value}) : acc, {})
       // console.log(topicInfoObject)
       // console.log(topicInfo)
-      ctx.commit('updateMyTopicsDetailedInfo', topicInfoObject)  
+      ctx.commit('updateMyTopicsDetailedInfo', topicInfoObject)
       // var topicInfo = {}
       // for (let i = 0; i < topicList.length; i++) {
       //   var topicsData = {}
@@ -307,12 +304,11 @@ export default {
       //   if (!brokenTopic) topicInfo[topicList[i]] = topicsData
       //   else console.log('Topic ', topicList[i], ' either deleted or corrupted')
       // }
-
     },
     async fetchTopicStatistics (ctx, id) {
       const db = firebase.firestore()
       var members = this.getters.getMyTopicsDetailedInfo[id].members
-      var membersPromArray = members.map(memberId => new Promise( async (resolve, reject) => {
+      var membersPromArray = members.map(memberId => new Promise(async (resolve, reject) => {
         const memberDoc = (await db.collection(accountDb).doc(memberId).get()).data()
 
         const {name} = memberDoc
@@ -323,15 +319,14 @@ export default {
 
         const solveSum = solveStats.reduce((acc, value) => (+value === 3 || +value === 2) ? ++acc : acc, 0)
 
-        resolve ({
+        resolve({
           id: memberId,
           name,
           solveStats,
           answers,
           solveSum
         })
-
-       }))
+      }))
 
       const sendData = await Promise.all(membersPromArray)
 

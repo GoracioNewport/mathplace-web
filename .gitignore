@@ -17,3 +17,4 @@ selenium-debug.log
 *.njsproj
 *.sln
 .firebase/hosting.ZGlzdA.cache
+.firebase/hosting*

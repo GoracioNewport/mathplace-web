@@ -88,8 +88,6 @@
     //-   md-dialog-actions
     //-     md-button.md-primary(@click='showDialog = false,settingsMenuShow = false') Закрыть
     //-     md-button.md-primary(@click='saveProfile') Сохранить
-
-
     .loading-indicator(v-if = 'myTopicLoading')
       loading(
         :active.sync = "myTopicLoading"

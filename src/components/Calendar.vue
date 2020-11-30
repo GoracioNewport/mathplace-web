@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { required, minLength, maxLength, between, requiredUnless } from 'vuelidate/lib/validators'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import 'firebase/storage'
 
@@ -72,12 +71,10 @@ export default {
     this.chatList.push({date: '21 Февраля', name: 'Физтех по физике, заключительный этап'})
   },
   methods: {
-      onSelected (link) {
-          console.log(link)
-        //   this.$router.hr
-        if ( link != null)
-            window.location.href = link
-      }
+    onSelected (link) {
+      console.log(link)
+      if (link != null) window.location.href = link
+    }
   }
 
 }

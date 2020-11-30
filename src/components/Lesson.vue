@@ -3,9 +3,9 @@
     md-snackbar(md-position='center' :md-active.sync='this.showSnackbarSend' md-persistent='')
       span Ответ сохранен
       md-button.md-primary(@click='showSnackbarSend = false') Скрыть
-    .arrowRight(@click='changeActiveTask(activeTask+1, taskList[activeTask+1])')
+    .arrowRight(@click='changeActiveTask(activeTask + 1, taskList[activeTask + 1])')
       md-icon keyboard_arrow_right
-    .arrowLeft(@click='changeActiveTask(activeTask-1, taskList[activeTask-1])')
+    .arrowLeft(@click='changeActiveTask(activeTask - 1, taskList[activeTask - 1])')
       md-icon.md-size-2 keyboard_arrow_left
     //- md-drawer(:md-active.sync='showSidepanel')
       md-toolbar.md-transparent(md-elevation='0')
@@ -243,9 +243,9 @@
                 .md-dialog-body
                   .md-dialog-body-sections
                     //- span {{ taskList[activeTask].uploadAnswer }}
-                    .md-dialog-body-section(v-for ='(component, componentId) in taskList[activeTask].uploadAnswer')
+                    .md-dialog-body-section(style="margin-bottom:  20px;" v-for ='(component, componentId) in taskList[activeTask].uploadAnswer')
                       .button.img.delete_button(@click='taskList[activeTask].uploadAnswer.splice(taskList[activeTask].uploadAnswer.indexOf(component), 1)')
-                      vue-editor.theoryText(v-if ='component.type === "text"' placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "video"], ["clean"]]')
+                      vue-editor.theoryText(v-if ='component.type === "text"' placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"]]')
                       md-field(name='img' v-else)
                         md-file(v-model = 'component.inner' @md-change ='onFilePicked' @click ='imageUploadIndex = [activeTask, componentId]' accept="image/*")
                   .md-dialog-body-buttons
