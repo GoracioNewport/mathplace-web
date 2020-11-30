@@ -6,6 +6,7 @@ import Store from '../store'
 
 import Home from '@/components/Home'
 import Main from '@/components/Main'
+import Calendar from '@/components/Calendar'
 import Lesson from '@/components/Lesson'
 import Registration from '@/components/Auth/Registration'
 import Login from '@/components/Auth/Login'
@@ -37,6 +38,11 @@ export default new Router({
       path: '/main',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/calendar',
+      name: 'calendar',
+      component: Calendar
     },
     {
       path: '/lesson/:collectionId=:taskId',
