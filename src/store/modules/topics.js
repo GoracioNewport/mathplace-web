@@ -338,10 +338,10 @@ export default {
 
         const solveSum = solveStats.reduce((acc, value) => (+value === 3 || +value === 2) ? ++acc : acc, 0)
 
-        let gradeUser = 0
+        let gradeUser = null
         if ( lessonGrade !== null && lessonGrade !== undefined ) {
           // console.log(lessonGrade)
-          gradeUser = 0
+          gradeUser = 1
           for( let grade of Object.keys(lessonGrade) ) {
             console.log(lessonGrade[grade], solveSum)
             if( lessonGrade[grade] <= solveSum ) {

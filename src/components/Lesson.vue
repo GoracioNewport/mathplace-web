@@ -133,7 +133,7 @@
               img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
               img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
             md-table-cell.nameSlot(md-label='Всего', md-sort-by='solveSum') {{ item.solveSum }}
-            //- md-table-cell.nameSlot(v-if="item.grade !== null" md-label='Оценка', md-sort-by='grade') {{ item.grade }}
+            md-table-cell.nameSlot(v-if="item.grade != null && item.grade != undefined" md-label='Оценка', md-sort-by='grade') {{ item.grade }}
         md-dialog-actions
           md-button.md-primary(@click='showStats = false') Закрыть
     md-snackbar(md-position='center' :md-active.sync='this.showSnackbar' md-persistent='')
