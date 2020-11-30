@@ -50,14 +50,16 @@
     md-snackbar(md-position='center' :md-duration='4000' :md-active.sync='showSnackbar' md-persistent='')
       span Ссылка скопирована. Отправьте её ученикам!
       md-button.md-primary(@click='showSnackbar = false') Скрыть
-    .solutionMenu(v-if = 'solutionImageShown')
-      .solutionMenuBox
-        .solutionInner
-          img.solutionImage(:src = "myTopics[imageTopic].stats[imageUser].answers[imageTask]")
-        .solutionMenuButtons
-          md-button.md-raised(@click ='markSolutionAs("right")').md-primary Правильно
-          md-button.md-raised(@click ='markSolutionAs("wrong")').md-accent Неправильно
-          md-button.md-raised(@click ='solutionImageShown = !solutionImageShown') Отмена
+    md-dialog(:md-active.sync='solutionImageShown' v-if ='solutionImageShown')
+      .solutionBox
+        span.md-header Ответ ученика:
+        .solutionComponent(v-for='component in myTopics[imageTopic].stats[imageUser].answers[imageTask]')
+          span(v-if ='component.type === "text"') {{ component.inner }}
+          img(v-else :src ='component.inner')
+      md-dialog-actions
+        md-button.md-raised(@click ='markSolutionAs("right")').md-primary Правильно
+        md-button.md-raised(@click ='markSolutionAs("wrong")').md-accent Неправильно
+        md-button.md-raised(@click ='solutionImageShown = !solutionImageShown') Отмена
 
 </template>
 
