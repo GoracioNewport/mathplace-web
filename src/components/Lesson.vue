@@ -709,6 +709,14 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .multipleChoiceBox
+    margin-left 2%
+    @media screen and (max-width: 800px)
+      margin-left 10%
+  .multipleAnswerBox
+    margin-left 2%
+    @media screen and (max-width: 800px)
+      margin-left 10%
   .arrowRight
     position fixed
     width auto
