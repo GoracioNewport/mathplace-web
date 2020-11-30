@@ -124,6 +124,8 @@ export default {
       if (this.myTopics[index].showStats) {
         await this.fetchTopicStatistics(id)
         this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
+        console.log(this.myTopics)
+        console.log(this.getMyTopicsDetailedInfo)
       }
     },
     // async getUserStatisctics(){

@@ -1,5 +1,28 @@
 <template lang="pug">
   .content-wrapper
+
+    md-snackbar(md-position='center' :md-active.sync='showSnackbarCopy' md-persistent='')
+      span Ссылка на урок скопирована
+      md-button.md-primary(@click='showSnackbarCopy = false') Скрыть
+    md-dialog(:md-active.sync='showDrawerGrades')
+      md-dialog-title Добавить оценку
+      .settingsMenuBox
+        //- .settingsMenuText
+        //-   p Введите имя
+        .settingsMenuField(style="margin:10px")
+          md-field(md-inline='')
+            label Введите оценку
+            md-input(v-model='newNameGrade')
+
+        //- .settingsMenuText
+        //-   p Добавьте иконку профиля
+        .settingsMenuField(style="margin:10px")
+          md-field(md-inline='')
+            label Введите количество баллов
+            md-input(v-model='newPoint')
+      md-dialog-actions
+        md-button.md-primary(@click='showDrawerGrades=false') Закрыть
+        md-button.md-primary(@click='addGrade') Сохранить
     //- md-dialog(:md-active.sync='showCreateTask')
     //-   md-dialog-title Изменить профиль
     //-   .componentBox
@@ -97,8 +120,8 @@
         color = "#763dca"
         :opacity = 0.5)
     .editBox(v-else)
-      md-steppers(md-horizontal md-alternative)
-        md-step#first(md-label='Шаг №1' md-description='Основная информация')
+      md-steppers(md-horizontal md-alternative :md-active-step.sync='active')
+        md-step#first(md-label='Шаг №1' md-description='Основная информация' :md-done.sync='first')
           .marginBox
             span.olympTitle {{ this.edit ? 'Обновить' : 'Создать' }} урок
           .titleInfo
@@ -115,7 +138,8 @@
               label Введите класс
               md-input(v-model='classCnt' type='number')
               span.md-helper-text Число от 1 до 11
-        md-step#second(md-label='Шаг №2' md-description='Настройка доступа')
+          md-button.md-primary.buttonNext(@click="setDone('first', 'second')") Следующий шаг
+        md-step#second(md-label='Шаг №2' md-description='Настройка доступа' :md-done.sync='second')
           .titleInfo
             .checkboxBox
               md-checkbox.olympPrivate(v-model='private') Приватная тема
@@ -131,8 +155,9 @@
               md-tooltip(md-direction='left') Урок закончится в установленое время
             el-date-picker(v-if = 'timeStartOn' v-model='timeStart' type='datetime' placeholder='Дата начала' style='margin: 1%')
             el-date-picker(v-if = 'timeFinishOn' v-model='timeFinish' type='datetime' placeholder='Дата конца' style='margin: 1%')
+          md-button.md-primary.buttonNext(@click="setDone('second', 'third')") Следующий шаг
 
-        md-step#third(md-label='Шаг №3' md-description='Материал')
+        md-step#third(md-label='Шаг №3' md-description='Материал' :md-done.sync='third')
           .tasksInfo
             .tasksContent
               .task(v-for = '(task, taskId) in tasks')
@@ -324,8 +349,15 @@
               md-button.md-raised.md-primary(@click='showCreateTask = true, addTask("task")') Добавить задачу
               md-button.md-primary(@click='addTask("material")') Добавить готовый материал
               md-button.md-primary(@click='addTask("block")') Добавить блок случайных задач
-            .button.button--round.button-success.buttonPost(@click='sendTitle()')
-              span {{ this.edit ? 'Обновить' : 'Опубликовать' }} тему
+          md-button.md-primary(style="margin-top:20px" @click="setDone('third', 'fourth')") Следующий шаг
+        md-step#fourth(md-label='Шаг №4' md-description='Оценка' :md-done.sync='fourth')
+          .theoryComponent(
+              v-for = '(grade, i) in grades' :key='i'
+            )
+              p Оценка {{i}} за {{grade}} баллов
+          md-button.md-raised.md-primary(@click='showDrawerGrades=true') Добавить оценку
+          .button.button--round.button-success.buttonPost(@click='sendTitle()')
+            span {{ this.edit ? 'Обновить' : 'Опубликовать' }} тему
     .successMenu(v-if = 'this.success')
       .successMenuBox
         .successText(v-if = 'this.loading')
@@ -350,7 +382,7 @@
               p.md-text(style="position:relative;font-size:18px;margin-top:30px;") Поделитесь ключом со своими учениками, что бы они могли подключиться к вашему уроку!
             md-dialog-actions
               md-button.md-primary(@click='showDialog = false') Понятно
-              md-button.md-primary(@click='showDialog = false, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + this.token)') Скопировать ссылку на урок
+              md-button.md-primary(@click='showSnackbarCopy = true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + this.token)') Скопировать ссылку на урок
               md-button.md-primary(:to="'/lesson/olympiads=' + this.token",@click='showDialog = false') Перейти в урок
     .materialMenu(v-if = 'materialMenuShow')
       md-dialog(:md-active.sync='materialMenuShow')
@@ -379,7 +411,7 @@
                   md-card-actions
                     md-button(@click ='addTask("preMadeMaterial", taskIndex)') Добавить
         md-dialog-actions
-          md-button.md-primary(@click='materialMenuShow = false') Отмена
+          md-button.md-primary.buttonNext(@click='materialMenuShow = false') Отмена
       //- .materialMenuBox
       //-   .materialMenuText
       //-     span.md-headline Выберите тему
@@ -437,6 +469,7 @@ export default {
       like: 0,
       private: true,
       tasks: [],
+      grades: {},
       theme: 'Школа',
       themeList: [
         'Школа',
@@ -456,6 +489,13 @@ export default {
       currComponentId: 0,
       success: false,
       token: 'null',
+      newNameGrade: '',
+      newPoint: '',
+      active: 'first',
+      first: false,
+      second: false,
+      third: false,
+      fourth: false,
       loading: false,
       falseVar: false,
       classCnt: '',
@@ -465,6 +505,8 @@ export default {
       myTopicLoading: false,
       edit: false,
       topicList: [],
+      showDrawerGrades: false,
+      showSnackbarCopy: false,
       topicListLoading: false,
       materialMenuShow: false,
       materialMenuTaskSectionShow: false,
@@ -504,6 +546,24 @@ export default {
   },
   methods: {
     ...mapActions(['sendTopic', 'addMyTopicsToList', 'fetchMyTopic', 'fetchTopicList', 'fetchCustomTopic']),
+    setDone (id, index) {
+      this[id] = true
+
+      console.log('setDone')
+      // this.secondStepError = null
+
+      if (index) {
+        this.active = index
+      }
+    },
+    addGrade () {
+      if(this.grades[this.newNameGrade] !== ''){
+        this.grades[this.newNameGrade] = this.newPoint
+        this.showDrawerGrades = false
+      }else{
+        alert("Такая оценка уже есть")
+      }
+    },
     addCheckBoxAnswer (ans, i) {
       this.newCheckboxAnswer = ''
       if (typeof i === 'number' && this.tasks[i].options.findIndex(f => f === ans) === -1) this.tasks[i].options.push(ans)
@@ -654,7 +714,7 @@ export default {
         class: this.classCnt,
         tasks: [],
         created: firebase.firestore.Timestamp.now()
-      }
+      } 
       // Время начала и конца
       if (this.timeStartOn && this.timeStart !== null) data.time_start = firebase.firestore.Timestamp.fromDate(this.timeStart)
       if (this.timeFinishOn && this.timeFinish !== null) data.time_end = firebase.firestore.Timestamp.fromDate(this.timeFinish)
@@ -663,6 +723,16 @@ export default {
       for (let i = 0; i < this.tasks.length; i++) {
         var task = await this.parseTask(this.tasks[i])
         data.tasks.push(task)
+      }
+
+      console.log(this.grades)
+
+      if(Object.keys(this.grades).length>0){
+        var sendGrades = {
+          grades: this.grades,
+        }
+        console.log(sendGrades)
+        data.grades = this.grades
       }
 
       var token
@@ -792,6 +862,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .buttonNext
+    margin-top:20px; 
+    margin-left: 0px;
   .checkboxBox
     position relative
     width 300px

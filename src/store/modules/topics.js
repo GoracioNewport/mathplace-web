@@ -204,6 +204,17 @@ export default {
       })
       ctx.commit('updateMyTopics', topics)
     },
+    async fetchMyTopicForLesson (ctx, token) {
+      // ctx.commit('updateMyTopics', [])
+      const db = firebase.firestore()
+      var topics = [token]
+      // await db.collection(accountDb).doc(this.getters.getUser.id).get().then(doc => {
+      //   var data = doc.data()
+      //   if (data.myTopics === undefined) topics = undefined
+      //   else topics = data.myTopics
+      // })
+      ctx.commit('updateMyTopics', topics)
+    },
     async addMyTopicsToList (ctx, payload) {
       const db = firebase.firestore()
       await store.dispatch('fetchMyTopics')
@@ -270,6 +281,10 @@ export default {
 
         const {name, members} = topicData
 
+        // if(topicData.grades !== null){
+        const {grades} = topicData
+        // }
+
 
         resolve ({
           token: topicId,
@@ -277,6 +292,7 @@ export default {
           members,
           showStats: false,
           statsLoaded: false,
+          grades,
           stats: {}
         })
 
@@ -312,6 +328,8 @@ export default {
     async fetchTopicStatistics (ctx, id) {
       const db = firebase.firestore()
       var members = this.getters.getMyTopicsDetailedInfo[id].members
+      console.log(this.getters.getMyTopicsDetailedInfo[id])
+      var lessonGrade = this.getters.getMyTopicsDetailedInfo[id].grades
       var membersPromArray = members.map(memberId => new Promise( async (resolve, reject) => {
         const memberDoc = (await db.collection(accountDb).doc(memberId).get()).data()
 
@@ -323,12 +341,27 @@ export default {
 
         const solveSum = solveStats.reduce((acc, value) => (+value === 3 || +value === 2) ? ++acc : acc, 0)
 
+        let gradeUser = 0
+        if ( lessonGrade !== null && lessonGrade !== undefined ) {
+          // console.log(lessonGrade)
+          gradeUser = 0
+          for( let grade of Object.keys(lessonGrade) ) {
+            console.log(lessonGrade[grade], solveSum)
+            if( lessonGrade[grade] <= solveSum ) {
+              gradeUser = grade
+            }
+          }
+        }
+
+        console.log(gradeUser, lessonGrade)
+
         resolve ({
           id: memberId,
           name,
           solveStats,
           answers,
-          solveSum
+          solveSum,
+          grade: gradeUser,
         })
 
        }))
@@ -599,7 +632,9 @@ export default {
       state.allComments = payload
     },
     updateTopicStats (state, payload) {
+      console.log('UPDATE')
       state.myTopicsDetailedInfo[payload.id].stats = payload.data
+      // console.log(state.myTopicsDetailedInfo[payload.id])
     },
     updateLessonStatistic (state, payload) {
       state.lessonStatistics = payload

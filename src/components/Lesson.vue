@@ -118,7 +118,7 @@
         //- //- .errorBox(v-else-if = 'topic.')
         //- .loadedBox(v-else)
         md-table.statsTable(v-model='myTopics', md-sort='name', md-sort-order='asc', md-fixed-header='')
-          md-table-to olbar
+          md-table-to
             .md-toolbar-section-start
               h1.md-title Ученики
             md-button.md-primary(@click ='toggleStats(tasksInfo.token)') Обновить статистику
@@ -129,10 +129,11 @@
             md-table-cell.taskSlot(v-for = '(task, taskIndex) in item.solveStats' :key = 'taskIndex'
             :md-label = '(taskIndex + 1).toString()')
               Dots.answerNo.answerLabel(v-if = 'Number(task) === 1')
-              img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'Number(task) == 0')
+              img.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'Number(task) == 0')
               img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
               img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
             md-table-cell.nameSlot(md-label='Всего', md-sort-by='solveSum') {{ item.solveSum }}
+            //- md-table-cell.nameSlot(v-if="item.grade !== null" md-label='Оценка', md-sort-by='grade') {{ item.grade }}
         md-dialog-actions
           md-button.md-primary(@click='showStats = false') Закрыть
     md-snackbar(md-position='center' :md-active.sync='this.showSnackbar' md-persistent='')
@@ -402,6 +403,8 @@ export default {
     this.userId = this.getUser.id
     await this.fetchLikes(this.collection)
     await this.fetchTasks(this.collection)
+    await this.fetchMyTopicForLesson(this.taskId)
+    await this.fetchMyTopicsDetailedInfo()
     // Зафетчили, получаем и обрабатываем
     this.tasksInfo.name = this.getTasksInfo.name
     this.tasksInfo.author = this.getTasksInfo.author
@@ -516,12 +519,16 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchMyTopicsDetailedInfo', 'sendComments', 'fetchComments', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics', 'banLessonMember']),
+    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchMyTopicForLesson', 'sendComments', 'fetchComments', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics', 'banLessonMember']),
     // ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics', 'banLessonMember']),
-    toggleStats (id) {
-      this.fetchLessonStatistics(id)
+    async toggleStats (id) {
+      console.log('GET_DATA')
+      await this.fetchTopicStatistics(id)
+      console.log(this.convertToArray(this.getMyTopicsDetailedInfo) )
       // this.myTopics = this.fetchLessonStatistics
-      this.myTopics = this.convertToArray(this.getMyLessonstatistics)
+      // this.myTopics = this.fetchTopicStatistics(id)
+      this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo[id].stats)
+      console.log(this.myTopics)
       this.showStats = true
     },
     showSnackbarSendWindow () {
@@ -709,6 +716,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .answerLabel
+    // position relative
+    // height auto !important
+    width 20px !important
   .multipleChoiceBox
     margin-left 2%
     @media screen and (max-width: 800px)
@@ -723,7 +734,7 @@ export default {
     height auto
     padding 20px
     background-color #FFFFFF
-    z-index 7
+    z-index 5
     box-shadow 0 4px 8px rgba(0,0,0,.14)
     border-radius 50%
     cursor pointer
@@ -743,7 +754,7 @@ export default {
     padding 20px
     box-shadow 0 4px 8px rgba(0,0,0,.14)
     background-color #FFFFFF
-    z-index 7
+    z-index 5
     border-radius 50%
     cursor pointer
     // border: 2px solid #763DCA;
@@ -799,9 +810,14 @@ export default {
       margin-left 5px;
       margin-right 0px
   .hideStat
+    position absolute
     float:right;
+    align-items flex-end
+    justify-content flex-end
     margin-right:20px;
     margin-top:15px;
+    right:10px;
+    top:10px;
     @media screen and (max-width: 800px)
       display none
   .tooEarly
