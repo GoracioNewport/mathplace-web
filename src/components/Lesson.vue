@@ -1098,6 +1098,11 @@ export default {
     border-radius 20px 20px 0px 0px
     background #FFFFFF
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    -webkit-user-select none
+    -moz-user-select none
+    -ms-user-select none
+    -o-user-select none
+    user-select none
   .name
     height 60px
     vertical-align center
