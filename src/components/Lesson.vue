@@ -7,6 +7,12 @@
       md-icon keyboard_arrow_right
     .arrowLeft(v-if='activeTask !== 0' @click='changeActiveTask(activeTask-1, taskList[activeTask-1])')
       md-icon.md-size-2 keyboard_arrow_left
+    md-dialog(:md-active.sync='showDialogBigImage')
+      img.condition-imageLesson(
+        style="height:120%; width:120%"
+        :src = 'bigImage')
+      md-dialog-actions
+        md-button.md-primary(@click='showDialogBigImage = false') Закрыть
     //- md-drawer(:md-active.sync='showSidepanel')
       md-toolbar.md-transparent(md-elevation='0')
         div(style="margin-top: 30px;margin-bottom: 20px;")
@@ -213,7 +219,9 @@
 
             img.condition-image(
               v-else-if = 'part.type == "img"'
-              :src = 'part.inner')
+              :src = 'part.inner'
+              @click='showBigImage(part.inner)'
+              style="cursor:pointer;")
 
             pdf(
               v-else-if = 'part.type == "file"'
@@ -481,6 +489,8 @@ export default {
       taskImage,
       proofImage,
       activeTask: 0,
+      showDialogBigImage: false,
+      bigImage: null,
       taskList: [],
       showSnackbar: false,
       showSnackbarSend: false,
@@ -535,6 +545,10 @@ export default {
       setTimeout(() => {
         this.showSnackbarSend = false
       }, 3000)
+    },
+    showBigImage (image) {
+      this.showDialogBigImage = true
+      this.bigImage = image
     },
     changeActiveTask (i, thisTask) {
       console.log(i, thisTask)
@@ -1049,6 +1063,9 @@ export default {
     display block
     float none
     margin-top 20px
+  .condition-imageLesson
+    display block
+    float none
   .star
     positine relative
     height 30px

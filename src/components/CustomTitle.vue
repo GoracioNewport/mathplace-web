@@ -167,14 +167,14 @@
         md-step#third(md-label='Шаг №3' md-description='Материал' :md-done.sync='third')
           .tasksInfo
             .tasksContent
-              .task(v-for = '(task, taskId) in tasks')
+              .task(v-for = '(task, taskId) in tasks' @click='editTask(task)')
                 .imageButtonBox
                   img.imageButton(src = './images/clear.png' @click='tasks.splice(tasks.indexOf(task), 1)')
                   md-tooltip(md-direction='right') Удалить
                 //- .imageButton.delete_button(@click='tasks.splice(tasks.indexOf(task), 1)')
-                .imageButtonBox(v-if = 'task.type === "theory" || task.type === "task"')
-                  img.imageButton(src ='@/assets/images/code3.png' @click ='editTask(task)')
-                  md-tooltip(md-direction='right') Редактировать
+                //- .imageButtonBox(v-if = 'task.type === "theory" || task.type === "task"')
+                //-   img.imageButton(src ='@/assets/images/code3.png' @click ='editTask(task)')
+                //-   md-tooltip(md-direction='right') Редактировать
                 .preMadeBox(v-if ='task.type === "preMade"')
                   .componentName
                     strong(v-if = 'task.originData.type === "theory"') Теория из темы "{{ task.topicName }}"
@@ -369,10 +369,12 @@
               md-button.md-primary(@click='addTask("block")') Добавить блок случайных задач
           md-button.md-primary(style="margin-top:20px" @click="setDone('third', 'fourth')") Следующий шаг
         md-step#fourth(md-label='Шаг №4' md-description='Оценка' :md-done.sync='fourth')
-          .theoryComponent(
-              v-for = '(grade, i) in grades' :key='i'
+          p(style="margin-bottom: 20px") Здесь будут показываться оценки
+          div(
+              v-for = '(grade, i) in this.grades' :key='i'
             )
-              p Оценка {{i}} за {{grade}} баллов
+              p(style="display: inline-block; position: relative ") Оценка {{i}} за {{grade}} баллов
+              img.imageButtonGrade(src = './images/clear.png' @click='gradesDelete(grade)')
           md-button.md-raised.md-primary(@click='showDrawerGrades=true') Добавить оценку
           .button.button--round.button-success.buttonPost(@click='sendTitle()')
             span {{ this.edit ? 'Обновить' : 'Опубликовать' }} тему
@@ -575,6 +577,13 @@ export default {
         this.active = index
       }
     },
+    gradesDelete (grade) {
+      console.log('DeleteGrade')
+      this.grades[grade] = 0
+      // this.grades.delete(grade
+      delete this.grades[grade]
+      console.log(this.grades)
+    },
     addGrade () {
       if(this.grades[this.newNameGrade] !== ''){
         this.grades[this.newNameGrade] = this.newPoint
@@ -582,6 +591,8 @@ export default {
       }else{
         alert("Такая оценка уже есть")
       }
+      this.newPoint = ''
+      this.newNameGrade = ''
     },
     addCheckBoxAnswer (ans, i) {
       this.newCheckboxAnswer = ''
@@ -888,6 +899,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .task 
+    cursor pointer
   .buttonNext
     margin-top:20px; 
     margin-left: 0px;
@@ -901,9 +914,12 @@ export default {
   .imageButton
     width 25px
     float right
-    // &:hover
-    //   cursor pointer
-  .checkboxBox
+  .imageButtonGrade
+    position relative
+    width 25px
+    display inline-block
+    // float right
+ .checkboxBox
     position relative
     width 300px
     height auto

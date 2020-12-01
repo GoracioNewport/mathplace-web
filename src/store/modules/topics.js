@@ -343,14 +343,14 @@ export default {
           // console.log(lessonGrade)
           gradeUser = 1
           for( let grade of Object.keys(lessonGrade) ) {
-            console.log(lessonGrade[grade], solveSum)
+            // console.log(lessonGrade[grade], solveSum)
             if( lessonGrade[grade] <= solveSum ) {
               gradeUser = grade
             }
           }
         }
 
-        console.log(gradeUser, lessonGrade)
+        // console.log(gradeUser, lessonGrade)
 
         resolve ({
           id: memberId,
