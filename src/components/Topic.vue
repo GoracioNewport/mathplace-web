@@ -150,6 +150,9 @@ export default {
     text-decoration none !important
     position relative
     padding-top 8px
+    padding-bottom 8px
+    padding-left 20px
+    padding-right 20px
     height auto
     border: 2px solid #763DCA;
     border-radius 50px
