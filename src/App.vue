@@ -180,7 +180,10 @@ export default {
     :hover
       color #763DCA /* Цвет текста активного пункта */
   .designButtonLesson
-    padding-top 12.5px
+    padding-top 12px
+    padding-bottom 12px
+    padding-left 25px
+    padding-right 25px
     position relative
     height auto
     border: 2px solid #763DCA;
@@ -190,7 +193,7 @@ export default {
     margin-left 20px
     color #763DCA !important
     background-color #FFFFFF
-    opacity 0.5
+    opacity 0.7
     transition: 0.6s;
     text-align center
     vertical-align middle

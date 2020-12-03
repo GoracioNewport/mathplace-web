@@ -425,7 +425,7 @@ export default {
       ctx.commit('updateLessonStatistic', sendDataLesson)
     },
     markDBSolutionAs (ctx, payload) {
-      // console.log(payload)
+      // console.log(payload) 
       const db = firebase.firestore()
       db.collection(accountDb).doc(payload.userId).collection(userTasksDb).doc(payload.topicName).update({
         grades: payload.newStats

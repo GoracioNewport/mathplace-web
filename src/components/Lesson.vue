@@ -206,7 +206,9 @@
 
             img.condition-image(
               v-else-if = 'part.type == "img"'
-              :src = 'part.inner')
+              :src = 'part.inner'
+              @click='showBigImage(part.inner)'
+              style="cursor:pointer;")
 
             pdf(
               v-else-if = 'part.type == "file"'
