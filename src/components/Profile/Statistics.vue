@@ -42,22 +42,43 @@
                 md-table-cell.nameSlot(md-label='Имя', md-sort-by='name') {{ item.name }}
                 md-table-cell.nameSlot(md-label='Решено всего', md-sort-by='solveSum') {{ item.solveSum }}
                 md-table-cell.taskSlot(v-for = '(task, taskIndex) in item.solveStats' :key = 'taskIndex' :md-label = '(taskIndex + 1).toString()')
-                  Dots.answerNo.answerLabel(v-if = 'Number(task) === 1')
-                  img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'Number(task) == 0')
-                  img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
-                  img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
+                  .answerImageWrapper(@click ='showSolution(topicIndex, taskIndex, item.id)')
+                    Dots.answerNo.answerLabel(v-if = 'Number(task) === 1')
+                    img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'Number(task) == 0')
+                    img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
+                    img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else)
     md-snackbar(md-position='center' :md-duration='4000' :md-active.sync='showSnackbar' md-persistent='')
       span Ссылка скопирована. Отправьте её ученикам!
       md-button.md-primary(@click='showSnackbar = false') Скрыть
     md-dialog(:md-active.sync='solutionImageShown' v-if ='solutionImageShown')
-      .solutionBox
-        span.md-header Ответ ученика:
-        .solutionComponent(v-for='component in myTopics[imageTopic].stats[imageUser].answers[imageTask]')
-          span(v-if ='component.type === "text"') {{ component.inner }}
-          img(v-else :src ='component.inner')
+      md-dialog-title Информация по задаче
+      md-tabs
+        md-tab(md-label='Условие')
+          .solutionBox
+            .solutionComponent(v-for='component in myTopics[imageTopic].stats[imageUser].userTasks[imageTask].statement')
+              span.solutionText(v-if ='component.type === "text"' v-html = "component.inner") {{ component.inner }}
+              img.solutionImage(v-else :src ='component.inner')
+        md-tab(md-label='Ответ ученика' v-if ='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type !== "theory" && myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer !== "proof"')
+          .solutionBox
+            .solutionComponent(v-if='myTopics[imageTopic].stats[imageUser].solveStats[imageTask] === Number(1)')
+              span.solutionText Ученик пока не решил эту задачу
+            .solutionWrapper(v-else)
+              .solutionComponent(v-if='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type === "upload"' v-for='component in myTopics[imageTopic].stats[imageUser].answers[imageTask]')
+                span.solutionText(v-if ='component.type === "text"' v-html = "component.inner") {{ component.inner }}
+                img.solutionImage(v-else :src ='component.inner')
+              .solutionComponent(v-else)
+                span.solutionText {{ (typeof myTopics[imageTopic].stats[imageUser].answers[imageTask] === "string") ? myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer : myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer.join(" ") }}
+          .buttonJudgeBox(v-if ='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type === "upload"')
+            md-button.md-raised(@click ='markSolutionAs("right")').md-primary Правильно
+            md-button.md-raised(@click ='markSolutionAs("wrong")').md-accent Неправильно
+        md-tab(md-label='Правильный ответ' v-if ='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type !== "upload" && myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type !== "theory" && myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer !== "proof"')
+          .solutionBox
+            .solutionComponent
+              span.solutionText {{ (typeof myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer === "string") ? myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer : myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer.join(" ") }}
+        md-tab(md-label='Решение' v-if ='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].solutionType === "solution"')
+          .solutionBox
+            span.solutionText {{ myTopics[imageTopic].stats[imageUser].userTasks[imageTask].solution }}
       md-dialog-actions
-        md-button.md-raised(@click ='markSolutionAs("right")').md-primary Правильно
-        md-button.md-raised(@click ='markSolutionAs("wrong")').md-accent Неправильно
         md-button.md-raised(@click ='solutionImageShown = !solutionImageShown') Отмена
 
 </template>
@@ -125,8 +146,6 @@ export default {
       if (this.myTopics[index].showStats) {
         await this.fetchTopicStatistics(id)
         this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo)
-        console.log(this.myTopics)
-        console.log(this.getMyTopicsDetailedInfo)
       }
     },
     // async getUserStatisctics(){
@@ -180,6 +199,25 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .solutionComponent
+    margin 5px
+  .solutionText
+    font-size 16pt
+  .buttonJudgeBox
+    display flex
+    justify-content space-around
+  .solutionBox
+    margin 24px
+    margin-top 10px
+    border solid #7e7e7e
+    border-width 1px
+    border-radius 5px
+    padding 1%
+    max-height 50vh
+    overflow auto
+  .solutionImage
+    max-width 60vw
+    max-height 60vh
   .sdnds
     position relative
     height auto
@@ -197,8 +235,6 @@ export default {
     min-height 15vh
   .content-wrapper
     min-height 0
-  .solutionImage
-    height 50vh
   .solutionMenuBox
     padding 5%
     padding-left 10%
