@@ -1,5 +1,18 @@
 <template lang="pug">
   .content-wrapper
+    md-snackbar(md-position='center' :md-active.sync='this.showSnackbarSend' :md-duration='4000')
+      span Ответ сохранен
+      md-button.md-primary(@click='showSnackbarSend = false') Ок!
+    .arrowRight(v-if='activeTask !== (this.taskList.length - 1)' @click='changeActiveTask(activeTask+1, taskList[activeTask+1])')
+      md-icon keyboard_arrow_right
+    .arrowLeft(v-if='activeTask !== 0' @click='changeActiveTask(activeTask-1, taskList[activeTask-1])')
+      md-icon.md-size-2 keyboard_arrow_left
+    md-dialog(:md-active.sync='showDialogBigImage')
+      img.condition-imageLesson(
+        style="height:120%; width:120%"
+        :src = 'bigImage')
+      md-dialog-actions
+        md-button.md-primary(@click='showDialogBigImage = false') Закрыть
     //- md-drawer(:md-active.sync='showSidepanel')
       md-toolbar.md-transparent(md-elevation='0')
         div(style="margin-top: 30px;margin-bottom: 20px;")
@@ -22,6 +35,7 @@
             md-icon.md-primary remove_circle
           md-button.md-icon-button.md-list-action(@click="openChatWithUser(userStatistics[i].id)")
             md-icon.md-primary chat_bubble
+
     md-drawer(:md-active.sync='showComment')
       md-toolbar.md-transparent(md-elevation='0')
         div(style="margin-top: 30px;margin-bottom: 20px;")
@@ -65,7 +79,7 @@
         //- md-list-item.md-button(v-if="tasksInfo.token !== null", @click="getDataMembers")
           md-icon sort
           span.md-list-item-text Рейтинг
-        md-list-item.md-button(v-if="tasksInfo.token !== null", @click ='showNavigation = false, showSnackbar=true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + tasksInfo.token)')
+        md-list-item.md-button(v-if="tasksInfo.token !== null", @click ='showNavigation = false, showSnackbar = true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + tasksInfo.token)')
           md-icon content_copy
           p.md-list-item-text(style="height:auto") Скопировать ссылку на урок
         md-list-item
@@ -99,9 +113,9 @@
                     circle#oval2(fill='#9FC7FA', cx='7.5', cy='2', r='2')
               p.md-subheading(style="text-align:center;") Поставить лайк
               md-tooltip(md-direction='bottom') Поставить лайк уроку
-    md-snackbar(md-position='center' :md-duration="Number(4000)" :md-active.sync='showSnackbar' md-persistent='')
-      span Ссылка скопирована. Отправьте её ученикам!
-      md-button.md-primary(@click='showSnackbar = false') Скрыть
+    //- md-snackbar(md-position='сenter' :md-duration='Number(4000)' :md-active.sync='this.showSnackbarSend' md-persistent='')
+    //-   span Задача отправлена
+    //-   md-button.md-primary(@click='showSnackbarSend = false') Скрыть
     div(v-if = 'showStats')
       md-dialog(:md-active.sync='showStats')
         md-dialog-title Статистика по уроку
@@ -110,7 +124,7 @@
         //- //- .errorBox(v-else-if = 'topic.')
         //- .loadedBox(v-else)
         md-table.statsTable(v-model='myTopics', md-sort='name', md-sort-order='asc', md-fixed-header='')
-          md-table-toolbar
+          md-table-to
             .md-toolbar-section-start
               h1.md-title Ученики
             md-button.md-primary(@click ='toggleStats(tasksInfo.token)') Обновить статистику
@@ -121,19 +135,23 @@
             md-table-cell.taskSlot(v-for = '(task, taskIndex) in item.solveStats' :key = 'taskIndex'
             :md-label = '(taskIndex + 1).toString()')
               Dots.answerNo.answerLabel(v-if = 'Number(task) === 1')
-              img.answerWrong.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'Number(task) == 0')
+              img.answerLabel(src = '@/assets/images/wrong.png' v-else-if = 'Number(task) == 0')
               img.answerRight.answerLabel(src = '@/assets/images/right.png' v-else-if = 'Number(task) == 3 || Number(task) == 2')
               img.answerUnknown.answerLabel(src = '@/assets/images/unknown.png' v-else @click ='showSolution(topicIndex, taskIndex, item.id)')
             md-table-cell.nameSlot(md-label='Всего', md-sort-by='solveSum') {{ item.solveSum }}
+            md-table-cell.nameSlot(v-if="item.grade != null && item.grade != undefined" md-label='Оценка', md-sort-by='grade') {{ item.grade }}
         md-dialog-actions
           md-button.md-primary(@click='showStats = false') Закрыть
+    md-snackbar(md-position='center' :md-active.sync='this.showSnackbar' :md-duration='4000')
+      span Ссылка скопирована. Отправьте её ученикам!
+      md-button.md-primary(@click='showSnackbar = false') Ок!
 
     .taskbar(v-if = "error === 'none' || error === 'too_late'")
       .lessonNavbar
         md-button.md-icon-button.burger(@click='showNavigation = true')
             md-icon.fa.fa-bars(style="height: 70px;width: 70px;color: #FFFFFF;").md-size-2x menu
 
-        span.md-display-2(style="margin-left:10px;") {{ tasksInfo.name }}
+        span.md-display-2(style="margin-left: 15px") {{ tasksInfo.name }}
 
         md-button.hideStat.md-raised(v-if="tasksInfo.author === getUser.id", @click ='toggleStats(tasksInfo.token)') Статистика
         //- md-button.hideStat.md-raised(v-else-if="tasksInfo.token !== null", @click="getDataMembers") Рейтинг
@@ -188,7 +206,9 @@
 
             img.condition-image(
               v-else-if = 'part.type == "img"'
-              :src = 'part.inner')
+              :src = 'part.inner'
+              @click='showBigImage(part.inner)'
+              style="cursor:pointer;")
 
             pdf(
               v-else-if = 'part.type == "file"'
@@ -201,7 +221,9 @@
 
             img.condition-image(
               v-else-if = 'part.type == "img"'
-              :src = 'part.inner')
+              :src = 'part.inner'
+              @click='showBigImage(part.inner)'
+              style="cursor:pointer;")
 
             pdf(
               v-else-if = 'part.type == "file"'
@@ -218,6 +240,22 @@
             @keyup.enter = 'sendAnswer',
             v-bind:class = "{ 'unknownTask' : this.tasksInfo.isHiddenResults && Number(this.taskList[this.activeTask].tries) !== 1, 'solvedTask' : Number(this.taskList[this.activeTask].tries) == 2 || Number(this.taskList[this.activeTask].tries) == 3 , 'failedTask' : Number(this.taskList[this.activeTask].tries) == 0 }")
           label(for='img' v-else-if ='this.taskList[this.activeTask].type === "upload"')
+            md-dialog(:md-active.sync='showUploadMenu')
+                md-dialog-title Загрузка материала
+                .md-dialog-body
+                  .md-dialog-body-sections
+                    //- span {{ taskList[activeTask].uploadAnswer }}
+                    .md-dialog-body-section(style="margin-bottom:  20px;" v-for ='(component, componentId) in taskList[activeTask].uploadAnswer')
+                      .button.img.delete_button(@click='taskList[activeTask].uploadAnswer.splice(taskList[activeTask].uploadAnswer.indexOf(component), 1)')
+                      vue-editor.theoryText(v-if ='component.type === "text"' placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"]]')
+                      md-field(name='img' v-else)
+                        md-file(v-model = 'component.fileName' @md-change ='onFilePicked' @click ='imageUploadIndex = [activeTask, componentId]' accept="image/*")
+                  .md-dialog-body-buttons
+                  md-button.md-primary.md-raised(@click='taskList[activeTask].uploadAnswer.push({type : "text", inner: ""})') Добавить текст
+                  md-button.md-primary.md-raised(@click='taskList[activeTask].uploadAnswer.push({type : "img", inner: "", fileName: ""})') Добавить картинку
+                md-dialog-actions
+                  md-button.md-primary(@click='showUploadMenu = false') Отмена
+                  md-button.md-primary(@click='uploadAnswer(activeTask)') Отправить
             .pendingBox(v-if ='Number(this.taskList[this.activeTask].tries) !== 0 && Number(this.taskList[this.activeTask].tries) !== 1 && Number(this.taskList[this.activeTask].tries) !== 2 && Number(this.taskList[this.activeTask].tries) !== 3')
               span Преподователь еще не проверил ваш ответ
             .rightBox(v-else-if ='Number(this.taskList[this.activeTask].tries) === 2')
@@ -225,24 +263,6 @@
             .else(v-else)
               span(v-if ='Number(this.taskList[this.activeTask].tries) === 0') Ваш ответ оказался неправильным. Вы можете отправить решение заново
               //- input#img(type='file', name='img', accept='image/*', @click="onFileButtonClicked(this.tasks.indexOf(task), task.text.indexOf(component))")
-              label Добавить развернутый ответ
-              md-button.md-primary(@click='showUploadMenu = true') Добавить
-              md-dialog(:md-active.sync='showUploadMenu')
-                md-dialog-title Загрузка материала
-                .md-dialog-body
-                  .md-dialog-body-sections
-                    //- span {{ taskList[activeTask].uploadAnswer }}
-                    .md-dialog-body-section(v-for ='(component, componentId) in taskList[activeTask].uploadAnswer')
-                      .button.img.delete_button(@click='taskList[activeTask].uploadAnswer.splice(taskList[activeTask].uploadAnswer.indexOf(component), 1)')
-                      vue-editor.theoryText(v-if ='component.type === "text"' placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "video"], ["clean"]]')
-                      md-field(name='img' v-else)
-                        md-file(v-model = 'component.inner' @md-change ='onFilePicked' @click ='imageUploadIndex = [activeTask, componentId]' accept="image/*")
-                  .md-dialog-body-buttons
-                  md-button.md-primary.md-raised(@click='taskList[activeTask].uploadAnswer.push({type : "text", inner: ""})') Добавить текст
-                  md-button.md-primary.md-raised(@click='taskList[activeTask].uploadAnswer.push({type : "img", inner: ""})') Добавить картинку
-                md-dialog-actions
-                  md-button.md-primary(@click='showUploadMenu = false') Отмена
-                  md-button.md-primary(@click='uploadAnswer(activeTask)') Отправить
 
               //- md-field(name='img')
                 //- md-file(v-model = 'answer' @md-change ='onFilePicked' accept="image/*")
@@ -281,7 +301,8 @@
               type = 'submit',
               :disabled = 'error === "too_late"'
               @click = 'sendAnswer')
-                span(v-if ='Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Ответить
+                span(v-if ='this.taskList[this.activeTask].type === "upload"') Загрузить ответ
+                span(v-else-if ='Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"', @click='showSnackbarSendWindow') Сохранить
                 span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
                 span(v-else) Завершить
     .placeholderScreen(v-else-if ='error === "no_material_author" || error === "no_material_member"')
@@ -391,6 +412,8 @@ export default {
     this.userId = this.getUser.id
     await this.fetchLikes(this.collection)
     await this.fetchTasks(this.collection)
+    await this.fetchMyTopicForLesson(this.taskId)
+    await this.fetchMyTopicsDetailedInfo()
     // Зафетчили, получаем и обрабатываем
     this.tasksInfo.name = this.getTasksInfo.name
     this.tasksInfo.author = this.getTasksInfo.author
@@ -468,14 +491,18 @@ export default {
       taskImage,
       proofImage,
       activeTask: 0,
+      showDialogBigImage: false,
+      bigImage: null,
       taskList: [],
+      showSnackbar: false,
+      showSnackbarSend: false,
       MembersSort: [],
       tasksInfo: {},
       userStatistics: {},
+      thisNumberTask: 0,
       isLoading: true,
       rightAns: false,
       secondsLesson: 0,
-      showSnackbar: false,
       showComment: false,
       arrayComments: [],
       isLoadingComment: false,
@@ -495,6 +522,7 @@ export default {
       topicLiked: false,
       solutionShown: false,
       userId: null,
+      timeSnakbar: 4000,
       solutionFile: null,
       error: 'pending',
       showUploadMenu: false,
@@ -502,18 +530,35 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchMyTopicsDetailedInfo', 'sendComments', 'fetchComments', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics', 'banLessonMember']),
+    ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchMyTopicForLesson', 'sendComments', 'fetchComments', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics', 'banLessonMember']),
     // ...mapActions(['fetchMyTopicsDetailedInfo', 'fetchLessonStatistics', 'fetchTasks', 'updateUser', 'like', 'fetchLikes', 'changeCurrentLogo', 'addUserToTopicList', 'updateUserTopicStatus', 'sendImageSolution', 'fetchMembersStatistics', 'fetchTopicStatistics', 'banLessonMember']),
     async toggleStats (id) {
-      await this.fetchLessonStatistics(id)
+      console.log('GET_DATA')
+      await this.fetchTopicStatistics(id)
+      console.log(this.convertToArray(this.getMyTopicsDetailedInfo))
       // this.myTopics = this.fetchLessonStatistics
-      this.myTopics = this.convertToArray(this.getMyLessonstatistics)
+      // this.myTopics = this.fetchTopicStatistics(id)
+      this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo[id].stats)
+      console.log(this.myTopics)
       this.showStats = true
     },
+    showSnackbarSendWindow () {
+      this.showSnackbarSend = true
+      setTimeout(() => {
+        this.showSnackbarSend = false
+      }, 3000)
+    },
+    showBigImage (image) {
+      this.showDialogBigImage = true
+      this.bigImage = image
+    },
     changeActiveTask (i, thisTask) {
+      console.log(i, thisTask)
       this.status = 'Idle'
       this.activeTask = i
+      // console.log(this.activeTask)
       thisTask.activeTask = i
+      this.thisNumberTask = i
       if (this.taskList[this.activeTask].userAnswer === 'null') {
         if (this.taskList[this.activeTask].type === 'multipleChoice' || this.taskList[this.activeTask].type === 'multipleAnswer') this.answer = []
         else this.answer = ''
@@ -523,7 +568,10 @@ export default {
       }
     },
     async sendAnswer () { // Боже, как тут много говна... хуй вообще разберешь какой пиздец тут творится
-      if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
+      if (this.taskList[this.activeTask].type === 'upload') {
+        if (typeof this.taskList[this.activeTask].userAnswer === 'object') this.taskList[this.activeTask].uploadAnswer = this.taskList[this.activeTask].userAnswer
+        this.showUploadMenu = true
+      } else if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
         if (this.activeTask === (this.taskList.length - 1) && (Number(this.taskList[this.activeTask].tries) === 2 || Number(this.taskList[this.activeTask].tries) === 3)) this.$router.push('/main')
         else if (Number(this.taskList[this.activeTask].tries) !== 2 && Number(this.taskList[this.activeTask].tries) !== 3) { // Task complition
@@ -567,12 +615,12 @@ export default {
           if (this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') this.updateUser(['submit', this.getUser.submit + 1])
           // Обновляем значения оценок
           let newStatus = []
-          for (let i = 0; i < this.taskList.length; i++) newStatus[i] = this.taskList[i].tries
+          for (let i = 0; i < this.taskList.length; i++) newStatus.push(this.taskList[i].tries)
           newStatus[this.activeTask] = String(verdict)
           this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
           this.taskList[this.activeTask].tries = Number(verdict)
           // Обновляем значения последних ответов
-          for (let i = 0; i < this.taskList.length; i++) newStatus[i] = String(this.taskList[i].userAnswer)
+          for (let i = 0; i < this.taskList.length; i++) (typeof this.taskList[i].userAnswer === 'object') ? newStatus[i] = this.taskList[i].userAnswer : newStatus[i] = String(this.taskList[i].userAnswer)
           newStatus[this.activeTask] = String(this.answer)
           this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'lastAnswers'})
           this.taskList[this.activeTask].userAnswer = String(this.answer)
@@ -642,14 +690,15 @@ export default {
       else this.$router.push('/main')
     },
     onFilePicked (event) {
-      this.taskList[this.imageUploadIndex[0]].uploadAnswer[this.imageUploadIndex[1]] = event[0]
+      this.taskList[this.imageUploadIndex[0]].uploadAnswer[this.imageUploadIndex[1]].inner = event[0]
     },
     async uploadAnswer (i) {
-      this.Loading = true
+      this.isLoading = true
 
-      for (let j = 0; j < this.taskList[i].userAnswer.length; j++) {
-        if (this.taskList[i].userAnswer[j].type === 'img') {
-          let file = this.taskList[i].userAnswer[j].inner
+      for (let j = 0; j < this.taskList[i].uploadAnswer.length; j++) {
+        if (this.taskList[i].uploadAnswer[j].type === 'img') {
+          if (typeof this.taskList[i].uploadAnswer[j].inner === 'string') continue
+          let file = this.taskList[i].uploadAnswer[j].inner
           let fileName = file.name
           const fileReader = new FileReader()
           fileReader.readAsDataURL(file)
@@ -661,9 +710,21 @@ export default {
           // Загрузка в бд
           await firebase.storage().ref(imageTimeName).put(file)
           await firebase.storage().ref(imageTimeName).getDownloadURL().then(function (url) { imageUrl = url })
-          this.taskList[i].userAnswer[j].inner = imageUrl.toString()
+          this.taskList[i].uploadAnswer[j].inner = imageUrl.toString()
         }
-      }
+      } let newStatus = []
+      for (let i = 0; i < this.taskList.length; i++) (typeof this.taskList[i] === 'object') ? newStatus[i] = this.taskList[i].userAnswer : newStatus[i] = String(this.taskList[i].userAnswer)
+      newStatus = {...newStatus}
+      newStatus[this.activeTask] = this.taskList[i].uploadAnswer
+      this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'lastAnswers'})
+      newStatus = []
+      for (let i = 0; i < this.taskList.length; i++) newStatus.push(this.taskList[i].tries)
+      newStatus[this.activeTask] = '4'
+      this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
+      this.taskList[this.activeTask].tries = 4
+      this.showUploadMenu = false
+      this.showSnackbarSend = true
+      this.isLoading = false
     }
   },
   computed: {
@@ -684,8 +745,55 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .answerLabel
+    // position relative
+    // height auto !important
+    width 20px !important
   .multipleChoiceBox
-    margin-left 20px
+    margin-left 2%
+    @media screen and (max-width: 800px)
+      margin-left 10%
+  .multipleAnswerBox
+    margin-left 2%
+    @media screen and (max-width: 800px)
+      margin-left 10%
+  .arrowRight
+    position fixed
+    width auto
+    height auto
+    padding 20px
+    background-color #FFFFFF
+    z-index 5
+    box-shadow 0 4px 8px rgba(0,0,0,.14)
+    border-radius 50%
+    cursor pointer
+    // border: 2px solid #763DCA;
+    // border-shadow 0px 5px 2px 2px #000000
+    right 30px
+    bottom 30px
+    @media screen and (max-width: 800px)
+      padding 11px
+      right 15px
+      bottom 15px
+
+  .arrowLeft
+    position fixed
+    width auto
+    height auto
+    padding 20px
+    box-shadow 0 4px 8px rgba(0,0,0,.14)
+    background-color #FFFFFF
+    z-index 5
+    border-radius 50%
+    cursor pointer
+    // border: 2px solid #763DCA;
+    // border-shadow 0px 5px 2px 2px #000000
+    left 30px
+    bottom 30px
+    @media screen and (max-width: 800px)
+      padding 11px
+      left 15px
+      bottom 15px
   .marginTopLesson
     height: 60px;
     @media screen and (max-width: 800px)
@@ -731,9 +839,14 @@ export default {
       margin-left 5px;
       margin-right 0px
   .hideStat
+    position absolute
     float:right;
+    align-items flex-end
+    justify-content flex-end
     margin-right:20px;
     margin-top:15px;
+    right:10px;
+    top:10px;
     @media screen and (max-width: 800px)
       display none
   .tooEarly
@@ -760,6 +873,12 @@ export default {
     left 40%
     top 30%
     border-radius 20px
+    @media screen and (max-width: 800px)
+      width 50%
+      height 50%
+      left 25%
+      top 20%
+
     // box-shadow 0px 5px 4px 4px
   .lessonNavbar
     position relative
@@ -948,6 +1067,9 @@ export default {
     display block
     float none
     margin-top 20px
+  .condition-imageLesson
+    display block
+    float none
   .star
     positine relative
     height 30px
@@ -970,6 +1092,7 @@ export default {
     position relative
     height 100%
     min-height 100%
+    margin-bottom 60px
     background #763DCA
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
   .content
@@ -979,6 +1102,11 @@ export default {
     border-radius 20px 20px 0px 0px
     background #FFFFFF
     font-family Roboto, Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif
+    -webkit-user-select none
+    -moz-user-select none
+    -ms-user-select none
+    -o-user-select none
+    user-select none
   .name
     height 60px
     vertical-align center

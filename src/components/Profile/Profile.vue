@@ -98,21 +98,20 @@
       div(v-if = 'settingsMenuShow')
         md-dialog(:md-active.sync='showDialog')
           md-dialog-title Изменить профиль
-          md-tab(md-label='Участники')
-            .settingsMenuBox
-              .settingsMenuText
-                p Введите имя
-              .settingsMenuField
-                md-field(md-inline='')
-                  label Введите имя
-                  md-input(v-model='newName')
+          .settingsMenuBox
+            .settingsMenuText
+              p Введите имя
+            .settingsMenuField
+              md-field(md-inline='')
+                label Введите имя
+                md-input(v-model='newName')
 
-              .settingsMenuText
-                p Добавьте иконку профиля
-              .settingsMenuField
-                md-field
-                  label Выберите картинку
-                  md-file(v-model='newAvatarName' @md-change ='onFilePicked' accept ="image/*")
+            .settingsMenuText
+              p Добавьте иконку профиля
+            .settingsMenuField
+              md-field
+                label Выберите картинку
+                md-file(v-model='newAvatarName' @md-change ='onFilePicked' accept ="image/*")
           md-dialog-actions
             md-button.md-primary(@click='showDialog = false,settingsMenuShow = false') Закрыть
             md-button.md-primary(@click='saveProfile') Сохранить
@@ -309,13 +308,14 @@ export default {
     border-radius 50%
     vertical-align top
   .createTopicButton
-    z-index 10
+    z-index 7
   .settingsMenuBox
     padding 10px
   .settingsMenuText
     font-weight 400
     font-family -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     font-size 24pt
+    line-height 1.0
     margin-top 10px
     margin-bottom 40px
 

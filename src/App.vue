@@ -8,13 +8,14 @@
               router-link(to = '/')
                 img.mathplace-img-logo.md-display-3(src="@/components/images/logo_purple.png")
               //- router-link(to = '/main').mathplace-logo.md-display-3 MathPlace
-            .button-burger(
-              @click ="menuShow = !menuShow"
-              :class="{ active: menuShow}"
-            )
-              span.line.line-1
-              span.line.line-2
-              span.line.line-3
+            md-button.joinLesson(:class="{ active: menuShow}", @click="joinMenuShow = true") Присоединиться
+            //- .button-burger(
+            //-   @click ="menuShow = !menuShow"
+            //-   :class="{ active: menuShow}"
+            //- )
+            //-   span.line.line-1
+            //-   span.line.line-2
+            //-   span.line.line-3
 
             .navbar-list__wrapper(
               :class="{ active: menuShow}"
@@ -34,14 +35,36 @@
               router-link.button.button--round.designButtonLesson(v-if ='this.$store.getters.checkUser' to='/customTitle') Создать урок
               router-link.button.button--round.designButtonLesson(v-else to='/teacher') Стать автором
     .margin_bottom
+    div(v-if = 'joinMenuShow')
+      md-dialog(:md-active.sync='joinMenuShow')
+        md-dialog-title Подключиться к уроку
+        p(style="margin:20px;margin-top:0px;") У каждого урока есть свой уникальный код.<br> Введите код урока или попросите учителя отправить его вам
+        div(style="margin:20px;margin-top:0px;")
+          md-field
+            label Введите код урока...
+            md-input(v-model="customTopicId" md-counter='6')
+        md-dialog-actions
+          md-button.md-primary(@click='showDialog = false,joinMenuShow = false') Отмена
+          md-button.md-primary(@click ='joinCourse(customTopicId), joinMenuShow = false') Подключиться
+
+    div.bottomSheet(v-if='!(this.$route.path.length > 7 && this.$route.path.substr(0, 7) === "/lesson")')
+      .phone-viewport
+        md-bottom-bar(md-sync-route='', style="color: #763DCA")
+          md-bottom-bar-item(to='/main' exact='' md-label='Главная' md-icon='home')
+          md-bottom-bar-item(to='/profile' md-label='Профиль' md-icon='face')
+          md-bottom-bar-item(to='/chat' md-label='Чаты' md-icon='chat')
     router-view
 </template>
 
 <script>
+
+import { mapActions } from 'vuex'
+
 export default {
   data () {
     return {
-      menuShow: false
+      menuShow: false,
+      joinMenuShow: false
     }
   },
   mounted () {
@@ -64,11 +87,49 @@ export default {
         ]
       }
     }
+  },
+  methods: {
+    ...mapActions(['fetchTopics', 'fetchCustomTopic']),
+    async joinCourse (id) {
+      await this.fetchCustomTopic(id)
+      var res = this.getCustomTopic
+      if (res !== null) {
+        this.$router.push('/lesson/olympiads=' + id)
+      } else {
+        this.customTopicId = ''
+        this.placeholder = 'Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа'
+        alert('Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа')
+      }
+    }
   }
+
 }
 </script>
 
 <style scoped lang="stylus">
+  .phone-viewport
+    position fixed
+    bottom -1px
+    right 0px
+    z-index 10
+    width: 100%;
+    height auto
+    // height: 200px;
+    display: inline-flex;
+    color #763DCA
+    text-color #763DCA
+    font-color #763DCA
+    background-color #763DCA
+    align-items: flex-end;
+    overflow: hidden;
+    border: 1px solid rgba(#000, .26);
+    borde-right 0px
+    background: rgba(#763DCA, .06);
+    @media screen and (min-width: 500px)
+      display none
+
+  // .bottomSheet
+  //   position fixed
   .button-burger
     position relative
     margin-rigth 0px
@@ -103,6 +164,7 @@ export default {
   .navbar-content
     position relative
     left 0px
+    right 0px
     margin-left 0px
   .navbar-item
     padding 0
@@ -118,7 +180,10 @@ export default {
     :hover
       color #763DCA /* Цвет текста активного пункта */
   .designButtonLesson
-    padding-top 12.5px
+    padding-top 12px
+    padding-bottom 12px
+    padding-left 25px
+    padding-right 25px
     position relative
     height auto
     border: 2px solid #763DCA;
@@ -128,13 +193,37 @@ export default {
     margin-left 20px
     color #763DCA !important
     background-color #FFFFFF
-    opacity 0.5
+    opacity 0.7
     transition: 0.6s;
     text-align center
     vertical-align middle
-    @media screen and (max-width: 480px)
+    @media screen and (max-width: 500px)
       display none
   .designButtonLesson:hover
+    transition: 0.6s;
+    color #FFFFFF !important
+    background-color #763DCA
+  .joinLesson
+    position relative
+    padding 8px
+    height auto
+    border: 2px solid #763DCA;
+    border-radius 50px
+    font-weight 550
+    font-size 16px
+    float right
+    right 0px
+    margin-right 0px
+    margin-left 40px
+    color #763DCA !important
+    background-color #FFFFFF
+    opacity 0.9
+    transition: 0.6s;
+    text-align center
+    vertical-align middle
+    @media screen and (min-width: 500px)
+      display none
+  .joinLesson:hover
     transition: 0.6s;
     color #FFFFFF !important
     background-color #763DCA
@@ -173,6 +262,6 @@ export default {
     font-size 16px
     margin-left 10px
     color #000000
-    @media screen and (max-width: 480px)
+    @media screen and (max-width: 500px)
       color #000000
 </style>

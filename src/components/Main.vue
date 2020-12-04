@@ -22,17 +22,17 @@
                 div.AllAdvantages
                     div.Advantage
                         .Advantages
-                            img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                            md-icon.md-size-3x.my-icon people
                             strong Большая аудитория
                             p Больше 2000 пользователей используют MathPlace для обучения
                     div.Advantage
                         .Advantages
-                            img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                            md-icon.md-size-3x.iconAdvantege smartphone
                             strong Мобильное приложение
                             p Ученики могут обучаться в удобном приложение MathPlace для Android или на
                     div.Advantage
                         .Advantages
-                            img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                            md-icon.md-size-3x.iconAdvantege edit
                             strong Удобный конструктор
                             p Разработали удобный конструктор для организации дистанционного образования
 
@@ -89,18 +89,18 @@
             div.AllAdvantages
                 div.Advantage
                     .Advantages
-                        img(src="https://static.tildacdn.com/tild3339-3666-4063-a631-653166336266/A16.svg")
+                        md-icon.md-size-3x.my-icon class
                         strong Классы
                         p Доступ к результатм и полной статистике своих учеников в своих курсах
 
                 div.Advantage
                     .Advantages
-                        img(src="./images/messenger.png")
+                        md-icon.md-size-3x.my-icon chat
                         strong Общение
                         p Общайтесь при помощи чата и создавайте группы класса
                 div.Advantage
                     .Advantages
-                        img(src="https://static.tildacdn.com/tild3734-6437-4536-b834-653137303264/A17.svg")
+                        md-icon.md-size-3x.my-icon verified_users
                         strong Приватные курсы
                         p Закрытые курсы, доступ к которым предоставляет только их автор
         </div>
@@ -174,7 +174,7 @@ export default {
 
 #TitlePlatform
     position relative
-    color:#000000;
+    color: #525252;
     font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size: 1.5em;
     font-weight: bold;
@@ -193,13 +193,14 @@ p
   padding-top 12.5px
   position relative
   height 50px
+  width 300px
   border: 2px solid #763DCA;
   border-radius 50px
   font-weight 550
   margin-left 20px
   color #763DCA !important
   background-color #FFFFFF
-  opacity 0.5
+  opacity 0.8
   transition: 0.6s;
   text-align center
   vertical-align middle
@@ -307,8 +308,9 @@ p
     position relative
     width auto
     height auto
+    color #525252
     text-align left
-    font-family 'Roboto'
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size 27pt
     font-weight 400
 .halfRegularTextVertical
@@ -316,13 +318,14 @@ p
     width auto
     height auto
     text-align left
-    font-family 'Roboto'
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size 15pt
     margin-top 20px
     font-weight 300
 .goButton
     position relative
     height auto
+    widht 1000px
     border: 2px solid #763DCA !important
     border-radius 50px
     font-weight 550
@@ -361,7 +364,7 @@ p
 
 div
     line-height normal !important
-    font-family Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif !important
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
 
 .answerCorrect
   background rgba(0, 255, 0, .5)
@@ -409,7 +412,7 @@ div
     p
         width auto
         text-align center
-        font-family 'Roboto'
+        font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
         font-size 27pt
         font-weight 400
         margin-top 50px
@@ -427,6 +430,9 @@ div
     margin-top 10%
     margin-bottom 0px
     text-align center
+    color #525252
+    font-color #525252
+    text-color #525252
     font-family "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size 44px
     font-weight 400
@@ -434,6 +440,7 @@ div
     width 100%
     height auto
     margin-top 10%
+    // color #525252
     margin-bottom 0px
     text-align center
     font-family "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
@@ -522,7 +529,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     width 28%
     min-width 300px
     color #919191
-    font-family 'Roboto', sans-serif
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     margin-top 15px
     font-size 1.22em
     @media screen and (max-width: 600px)
@@ -579,7 +586,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     vertical-align middle
     color #FFFFFF
     font-size 2em
-    font-family 'Roboto', sans-serif
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-weight bold
 
 #TextBlock
@@ -587,7 +594,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     margin-top 0%
     text-align center
     color #ffffff
-    font-family 'Roboto', sans-serif
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size 3.5em
     font-weight bold
     z-index 10000000
@@ -609,7 +616,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     margin-top 50px
     color #525252
     font-weight 300
-    font-family  'Roboto'
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size  2em
     @media screen and (max-width: 450px) {
         // display inline-block
@@ -645,18 +652,35 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     display inline-block
     img
         height 80px
+        width 0px auto 20px
+        margin-bottom 40px
+    md-icon
+        posititon relative
+        height 80px
         width auto
-        margin-bottom 30px
+        margin-bottom 50px
     strong
         width 100%
         display block
-        font-family 'Roboto',Arial,sans-serif
+        font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
         font-weight 600
         font-size 22px
     p
         margin-top 20px
-        font-family 'Roboto',Arial,sans-serif
+        font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
         font-size 18px
+md-icon svg
+    fill: inherit
+.my-icon svg
+{
+   fill : #fff;
+}
+.iconAdvantege
+    posititon relative
+    height 80px
+    width auto
+    color #763DCA
+    margin-bottom 20px
 // .Advantage:hover
 //     border-radius 20px
 //     box-shadow 0px 0px 12px 3px #aaaaaa
@@ -693,7 +717,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     text-align center
     margin-top 10%
     color #763DCA
-    font-family 'Roboto', sans-serif
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size 25pt
     font-weight bold
 .TextBox
@@ -705,7 +729,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     margin-left 10%
     margin-right 10%
     color #525252
-    font-family 'Roboto', sans-serif
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size 20pt
     display inline-block
 .TopicBox
@@ -772,7 +796,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     margin-top 10px
     margin-bottom 10px
     text-align center
-    font-family 'Roboto', sans-serif
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size 25pt
     font-weight bold
 
@@ -834,7 +858,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     padding-bottom 100px
     font-weight 800
     color #525252
-    font-family 'Roboto', sans-serif
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     text-align center
     font-size 20pt
     @media screen and (max-width: 1100px) {
@@ -946,7 +970,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     margin-top 8px
     margin-bottom 8px
     font-size 2em
-    font-family: 'Roboto', sans-serif
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-weight: bold
 
 #GooglePlayBox
@@ -1088,7 +1112,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     width auto
     color #763DCA
     font-weight 700
-    font-family 'Roboto', sans-serif
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size 25pt
     @media screen and (max-width: 1010px) {
         width 100%
@@ -1101,7 +1125,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     margin-top 15px
     color #919191
     font-weight:500
-    font-family 'Roboto', sans-serif
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-size 17pt
     @media screen and (max-width: 1020px) {
         width 100%
@@ -1127,7 +1151,7 @@ Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
     vertical-align middle
     color:#FFFFFF
     font-size 3.6em
-    font-family: 'Roboto', sans-serif
+    font-family: "Euclid Circular A",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,"Apple Color Emoji",sans-serif
     font-weight: bold
 
 #Media

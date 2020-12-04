@@ -32,7 +32,7 @@
 
       .container
         .AllSection
-          button.designButtonLessonTop(@click="joinMenuShow = true, showDialog = true") Присоединиться к уроку
+          //- button.designButtonLessonTop(@click="joinMenuShow = true, showDialog = true") Присоединиться к уроку
           .title_topic2
             p Разделы
           .AllSections
@@ -621,6 +621,9 @@ export default {
     position fixed
     bottom 30px
     right 20px
+    @media screen and (max-width: 480px)
+      display none
+
   .bottom-button
     box-shadow 0px 0px 3px 0px
   .right_button
