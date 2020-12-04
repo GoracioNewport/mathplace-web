@@ -585,11 +585,11 @@ export default {
       console.log(this.grades)
     },
     addGrade () {
-      if(this.grades[this.newNameGrade] !== ''){
+      if (this.grades[this.newNameGrade] !== '') {
         this.grades[this.newNameGrade] = this.newPoint
         this.showDrawerGrades = false
-      }else{
-        alert("Такая оценка уже есть")
+      } else {
+        alert('Такая оценка уже есть')
       }
       this.newPoint = ''
       this.newNameGrade = ''
@@ -751,7 +751,7 @@ export default {
         class: this.classCnt,
         tasks: [],
         created: firebase.firestore.Timestamp.now()
-      } 
+      }
       // Время начала и конца
       if (this.timeStartOn && this.timeStart !== null) data.time_start = firebase.firestore.Timestamp.fromDate(this.timeStart)
       if (this.timeFinishOn && this.timeFinish !== null) data.time_end = firebase.firestore.Timestamp.fromDate(this.timeFinish)
@@ -764,9 +764,9 @@ export default {
 
       console.log(this.grades)
 
-      if(Object.keys(this.grades).length>0){
+      if (Object.keys(this.grades).length > 0) {
         var sendGrades = {
-          grades: this.grades,
+          grades: this.grades
         }
         console.log(sendGrades)
         data.grades = this.grades
@@ -902,8 +902,8 @@ export default {
   .task 
     cursor pointer
   .buttonNext
-    margin-top:20px; 
-    margin-left: 0px;
+    margin-top:20px
+    margin-left: 0px
   .overflowBox
     max-height 60vh
     overflow auto

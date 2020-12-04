@@ -155,10 +155,8 @@ export default {
       else n = -1
       let likes = this.getters.getTopicLikes
       let userLikes = this.getters.getUser.like
-      console.log(userLikes.length)
       userLikes.push(this.getters.getCurrentTopic)
       ctx.commit('updateUser', ['like', userLikes])
-      console.log(userLikes.length)
       ctx.commit('updateTopicDetailsDB', ['like', likes + n])
     },
     async fetchLikes (ctx, taskCollection) {
@@ -206,7 +204,6 @@ export default {
     },
     async fetchMyTopicForLesson (ctx, token) {
       // ctx.commit('updateMyTopics', [])
-      const db = firebase.firestore()
       var topics = [token]
       // await db.collection(accountDb).doc(this.getters.getUser.id).get().then(doc => {
       //   var data = doc.data()
@@ -227,26 +224,22 @@ export default {
       }, { merge: true })
     },
     async fetchComments (ctx, token) {
-      console.log(token)
       const db = firebase.firestore()
       var allComments = []
       await db.collection(olympiadDb).doc(token).collection(commentsDb).doc(AllCommentsDb).get().then(doc => {
         var data = doc.data()
         allComments = data.messages
         for (let i = 0; i < allComments.length; i++) {
-          console.log(allComments[i].userId)
           db.collection(accountDb).doc(allComments[i].userId).get().then(doc => {
             allComments[i]['userName'] = doc.data().name
           })
         }
       })
-      console.log(allComments)
       ctx.commit('updateAllComments', allComments)
     },
     async sendComments (ctx, {token, userId, text}) {
       const db = firebase.firestore()
       var allComments = []
-      console.log(token)
       await db.collection(olympiadDb).doc(token).collection(commentsDb).doc(AllCommentsDb).get().then(doc => {
         var data = doc.data()
         allComments = data.messages
@@ -256,7 +249,6 @@ export default {
       newMessage['userId'] = userId
       newMessage['text'] = text
       allComments.push(newMessage)
-      console.log(allComments)
       await db.collection(olympiadDb).doc(token).collection(commentsDb).doc(AllCommentsDb).update({ 'messages': allComments })
     },
     async fetchMyTopicsDetailedInfo (ctx) {
@@ -266,41 +258,31 @@ export default {
 
       var topicList = this.getters.getMyTopics
 
-      // console.log(topicList)
-
       const topicsPromArray = topicList.map(topicId => new Promise(async (resolve, reject) => {
         const topicData = (await db.collection(olympiadDb).doc(topicId).get()).data()
 
-        // console.log(topicData)
-
         if (!topicData) {
-          // console.log("brokenTopic")
           return resolve()
         }
 
-        const {name, members} = topicData
+        const {name, members, tasks} = topicData
 
-        // if(topicData.grades !== null){
         const {grades} = topicData
-        // }
 
-
-        resolve ({
+        resolve({
           token: topicId,
           name,
           members,
           showStats: false,
           statsLoaded: false,
           grades,
+          tasks,
           stats: {}
         })
       }))
 
       const topicInfo = await Promise.all(topicsPromArray)
-      // console.log(topicInfo)
       const topicInfoObject = topicInfo.reduce((acc, value) => value ? ({...acc, [value.token]: value}) : acc, {})
-      // console.log(topicInfoObject)
-      // console.log(topicInfo)
       ctx.commit('updateMyTopicsDetailedInfo', topicInfoObject)
       // var topicInfo = {}
       // for (let i = 0; i < topicList.length; i++) {
@@ -324,41 +306,59 @@ export default {
     },
     async fetchTopicStatistics (ctx, id) {
       const db = firebase.firestore()
-      var members = this.getters.getMyTopicsDetailedInfo[id].members
-      console.log(this.getters.getMyTopicsDetailedInfo[id])
+      const members = this.getters.getMyTopicsDetailedInfo[id].members
+      const tasks = this.getters.getMyTopicsDetailedInfo[id].tasks
       var lessonGrade = this.getters.getMyTopicsDetailedInfo[id].grades
-      var membersPromArray = members.map(memberId => new Promise( async (resolve, reject) => {
+      var membersPromArray = members.map(memberId => new Promise(async (resolve, reject) => {
         const memberDoc = (await db.collection(accountDb).doc(memberId).get()).data()
 
         const {name} = memberDoc
 
         const memberTaskDoc = (await db.collection(accountDb).doc(memberId).collection(userTasksDb).doc(id).get()).data()
 
-        const {grades: solveStats, lastAnswers: answers} = memberTaskDoc
+        const {grades: solveStats, lastAnswers: answers, generatePattern} = memberTaskDoc
 
         const solveSum = solveStats.reduce((acc, value) => (+value === 3 || +value === 2) ? ++acc : acc, 0)
 
+        // Обработка оценки
         let gradeUser = null
-        if ( lessonGrade !== null && lessonGrade !== undefined ) {
-          // console.log(lessonGrade)
+        if (lessonGrade !== null && lessonGrade !== undefined) {
           gradeUser = 1
-          for( let grade of Object.keys(lessonGrade) ) {
-            // console.log(lessonGrade[grade], solveSum)
-            if( lessonGrade[grade] <= solveSum ) {
+          for (let grade of Object.keys(lessonGrade)) {
+            if (lessonGrade[grade] <= solveSum) {
               gradeUser = grade
             }
           }
+        } // Обработка заданий ученика
+        let userTasks = []
+        let blockCnt = 0
+
+        function parseTask (task) {
+          if (task.type === 'block') {
+            let blockArray = []
+            for (let blockTask of task.tasks) {
+              blockArray.push(blockTask)
+            } for (let taskInd of generatePattern[blockCnt]) {
+              parseTask(task.tasks[taskInd])
+            } blockCnt++
+          } else {
+            userTasks.push(task)
+          }
         }
 
-        // console.log(gradeUser, lessonGrade)
+        for (let task of tasks) {
+          parseTask(task)
+        }
 
-        resolve ({
+        resolve({
           id: memberId,
           name,
           solveStats,
           answers,
+          generatePattern,
           solveSum,
           grade: gradeUser,
+          userTasks
         })
       }))
 
@@ -393,12 +393,10 @@ export default {
     },
     async fetchLessonStatistics (ctx, id) {
       const db = firebase.firestore()
-      console.log(id)
       var sendDataLesson = []
 
       await db.collection(olympiadDb).doc(id).get().then(async doc => {
         var lesson = doc.data()
-        console.log(lesson)
         var members = lesson.members
         for (let i = 0; i < members.length; i++) {
           var info = {}
@@ -421,16 +419,13 @@ export default {
           info.solveSum = cnt
         }
       })
-      console.log(sendDataLesson)
       ctx.commit('updateLessonStatistic', sendDataLesson)
     },
     markDBSolutionAs (ctx, payload) {
-      // console.log(payload) 
       const db = firebase.firestore()
       db.collection(accountDb).doc(payload.userId).collection(userTasksDb).doc(payload.topicName).update({
         grades: payload.newStats
       })
-      // console.log(payload.topicName, payload.newStats)
     },
     async fetchMyTopic (ctx, id) {
       const db = firebase.firestore()
@@ -473,10 +468,7 @@ export default {
         let data = doc.data()
         userTopicList = data.myTopics
       })
-      console.log(userTopicList, userTopicList.length)
       userTopicList.splice(userTopicList.findIndex(e => e === payload), 1)
-      console.log(userTopicList, userTopicList.length)
-      console.log(payload)
       docRef.update({
         myTopics: userTopicList
       })
@@ -542,7 +534,6 @@ export default {
     async fetchMembersStatistics (ctx, id) {
       ctx.commit('updateMembersSort', [])
       const db = firebase.firestore()
-      console.log(id)
       var members = this.getters.getMyTopicsDetailedInfo[id].members
       var sendData = {}
       var membersSort = []
@@ -552,7 +543,6 @@ export default {
         await db.collection(accountDb).doc(members[i]).get().then(async doc => {
           var data = doc.data()
           info['id'] = members[i]
-          console.log(data)
           info['name'] = data.name
           await db.collection(accountDb).doc(members[i]).collection(userTasksDb).doc(id).get().then(statDoc => {
             var statData = statDoc.data()
@@ -578,7 +568,6 @@ export default {
           return -1
         }
       })
-      console.log(sendData)
       ctx.commit('updateMembersSort', membersSort)
       ctx.commit('updateMembersStats', sendData)
     },
@@ -628,7 +617,6 @@ export default {
       state.allComments = payload
     },
     updateTopicStats (state, payload) {
-      console.log('UPDATE')
       state.myTopicsDetailedInfo[payload.id].stats = payload.data
       // console.log(state.myTopicsDetailedInfo[payload.id])
     },
@@ -685,7 +673,6 @@ export default {
       return state.allComments
     },
     getMyLessonstatistics (state) {
-      console.log(state.lessonStatistics)
       return state.lessonStatistics
     },
     getMyTopic (state) {

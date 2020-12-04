@@ -1,8 +1,8 @@
 <template lang="pug">
   .content-wrapper
-    md-snackbar(md-position='center' :md-active.sync='showSnackbarSend' md-persistent='')
+    md-snackbar(md-position='center' :md-active.sync='this.showSnackbarSend' :md-duration='4000')
       span Ответ сохранен
-      md-button.md-primary(@click='showSnackbarSend = false') Скрыть
+      md-button.md-primary(@click='showSnackbarSend = false') Ок!
     .arrowRight(v-if='activeTask !== (this.taskList.length - 1)' @click='changeActiveTask(activeTask+1, taskList[activeTask+1])')
       md-icon keyboard_arrow_right
     .arrowLeft(v-if='activeTask !== 0' @click='changeActiveTask(activeTask-1, taskList[activeTask-1])')
@@ -142,9 +142,9 @@
             md-table-cell.nameSlot(v-if="item.grade != null && item.grade != undefined" md-label='Оценка', md-sort-by='grade') {{ item.grade }}
         md-dialog-actions
           md-button.md-primary(@click='showStats = false') Закрыть
-    md-snackbar(md-position='center' :md-active.sync='this.showSnackbar' md-persistent='')
+    md-snackbar(md-position='center' :md-active.sync='this.showSnackbar' :md-duration='4000')
       span Ссылка скопирована. Отправьте её ученикам!
-      md-button.md-primary(@click='showSnackbar = false') Скрыть
+      md-button.md-primary(@click='showSnackbar = false') Ок!
 
     .taskbar(v-if = "error === 'none' || error === 'too_late'")
       .lessonNavbar
@@ -535,7 +535,7 @@ export default {
     async toggleStats (id) {
       console.log('GET_DATA')
       await this.fetchTopicStatistics(id)
-      console.log(this.convertToArray(this.getMyTopicsDetailedInfo) )
+      console.log(this.convertToArray(this.getMyTopicsDetailedInfo))
       // this.myTopics = this.fetchLessonStatistics
       // this.myTopics = this.fetchTopicStatistics(id)
       this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo[id].stats)
@@ -697,6 +697,7 @@ export default {
 
       for (let j = 0; j < this.taskList[i].uploadAnswer.length; j++) {
         if (this.taskList[i].uploadAnswer[j].type === 'img') {
+          if (typeof this.taskList[i].uploadAnswer[j].inner === 'string') continue
           let file = this.taskList[i].uploadAnswer[j].inner
           let fileName = file.name
           const fileReader = new FileReader()
@@ -722,6 +723,7 @@ export default {
       this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
       this.taskList[this.activeTask].tries = 4
       this.showUploadMenu = false
+      this.showSnackbarSend = true
       this.isLoading = false
     }
   },
