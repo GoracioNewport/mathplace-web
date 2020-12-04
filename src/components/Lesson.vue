@@ -1,6 +1,6 @@
 <template lang="pug">
   .content-wrapper
-    md-snackbar(md-position='center' :md-active.sync='this.showSnackbarSend' md-persistent='')
+    md-snackbar(md-position='center' :md-active.sync='showSnackbarSend' md-persistent='')
       span Ответ сохранен
       md-button.md-primary(@click='showSnackbarSend = false') Скрыть
     .arrowRight(v-if='activeTask !== (this.taskList.length - 1)' @click='changeActiveTask(activeTask+1, taskList[activeTask+1])')
@@ -544,9 +544,9 @@ export default {
     },
     showSnackbarSendWindow () {
       this.showSnackbarSend = true
-      setTimeout(() => {
-        this.showSnackbarSend = false
-      }, 3000)
+      // setTimeout(() => {
+      //   this.showSnackbarSend = false
+      // }, 3000)
     },
     showBigImage (image) {
       this.showDialogBigImage = true
