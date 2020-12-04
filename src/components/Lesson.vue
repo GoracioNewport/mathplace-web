@@ -133,7 +133,7 @@
         md-button.md-icon-button.burger(@click='showNavigation = true')
             md-icon.fa.fa-bars(style="height: 70px;width: 70px;color: #FFFFFF;").md-size-2x menu
 
-        span.md-display-2 {{ tasksInfo.name }}
+        span.md-display-2(style="margin-left:10px;") {{ tasksInfo.name }}
 
         md-button.hideStat.md-raised(v-if="tasksInfo.author === getUser.id", @click ='toggleStats(tasksInfo.token)') Статистика
         //- md-button.hideStat.md-raised(v-else-if="tasksInfo.token !== null", @click="getDataMembers") Рейтинг
@@ -684,6 +684,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .multipleChoiceBox
+    margin-left 20px
   .marginTopLesson
     height: 60px;
     @media screen and (max-width: 800px)

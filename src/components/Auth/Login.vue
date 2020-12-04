@@ -307,5 +307,4 @@ input
   .auth-form
     width 100%
 
-
 </style>
