@@ -899,7 +899,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .task 
+  .task
     cursor pointer
   .buttonNext
     margin-top:20px
