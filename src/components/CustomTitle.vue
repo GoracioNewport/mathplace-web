@@ -618,7 +618,7 @@ export default {
       await this.fetchCustomTopic(id)
       var res = this.getCustomTopic
       if (res !== null) {
-        this.$router.push('/lesson/tasks=' + id)
+        this.$router.push('/lesson/olympiads=' + id)
       } else {
         this.customTopicId = ''
         this.placeholder = 'Тема не найдена! Пожалуйста, убедитесь в правильности написании ключа'
