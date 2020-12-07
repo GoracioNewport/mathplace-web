@@ -79,7 +79,7 @@
         //- md-list-item.md-button(v-if="tasksInfo.token !== null", @click="getDataMembers")
           md-icon sort
           span.md-list-item-text Рейтинг
-        md-list-item.md-button(v-if="tasksInfo.token !== null", @click ='showNavigation = false, showSnackbar = true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + tasksInfo.token)')
+        md-list-item.md-button(v-if="tasksInfo.token !== null", @click ='showNavigation = false, showSnackbar = true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiads%3D" + tasksInfo.token)')
           md-icon content_copy
           p.md-list-item-text(style="height:auto") Скопировать ссылку на урок
         md-list-item
@@ -290,7 +290,7 @@
             button.submit-button.sub(
               type = 'submit',
               @click = 'sendAnswer')
-                span(v-if ='Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Ответить
+                span(v-if ='(Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof")') Ответить
                 span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
                 span(v-else) Завершить
           .sendNotSolve(v-else)

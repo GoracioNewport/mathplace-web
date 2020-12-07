@@ -50,9 +50,10 @@
     div.bottomSheet(v-if='!(this.$route.path.length > 7 && this.$route.path.substr(0, 7) === "/lesson")')
       .phone-viewport
         md-bottom-bar(md-sync-route='', style="color: #763DCA")
-          md-bottom-bar-item(to='/main' exact='' md-label='Главная' md-icon='home')
-          md-bottom-bar-item(to='/profile' md-label='Профиль' md-icon='face')
-          md-bottom-bar-item(to='/chat' md-label='Чаты' md-icon='chat')
+          md-bottom-bar-item(v-for ='link in linkMenu' :key='link.url' :to ="`${link.url}`" :md-label='link.title' :md-icon='link.icon')
+          //- md-bottom-bar-item(to='/main' exact='' md-label='Главная' md-icon='home')
+          //- md-bottom-bar-item(to='/profile' md-label='Профиль' md-icon='face')
+          //- md-bottom-bar-item(to='/chat' md-label='Чаты' md-icon='chat')
     router-view
 </template>
 
@@ -75,15 +76,15 @@ export default {
       if (this.$store.getters.checkUser) {
         return [
           // {title: 'Главная', url: '/main'},
-          {title: 'Главная', url: '/main'},
-          {title: 'Профиль', url: '/profile'},
-          {title: 'Чаты', url: '/chat'}
+          {title: 'Главная', url: '/main', icon: 'home'},
+          {title: 'Профиль', url: '/profile', icon: 'face'},
+          {title: 'Чаты', url: '/chat', icon: 'chat'}
         ]
       } else {
         return [
           // {title: 'Главная', url: '/Main'},
-          {title: 'Войти', url: '/login'},
-          {title: 'Регистрация', url: '/registration'}
+          {title: 'Войти', url: '/login', icon: 'login'},
+          {title: 'Регистрация', url: '/registration', icon: 'how_to_reg'}
         ]
       }
     }

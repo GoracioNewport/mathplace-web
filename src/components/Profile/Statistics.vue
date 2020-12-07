@@ -17,7 +17,7 @@
           img.imageButton(src ='@/assets/images/code3.png' @click ='$router.push("/customTitle/" + topic.token)')
           md-tooltip(md-direction='right') Редактировать урок
         .img-tooltip(@click='showSnack = true')
-          img.imageButton(src ='@/assets/images/share_24px.png' @click ='showSnackbar=true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + topic.token)')
+          img.imageButton(src ='@/assets/images/share_24px.png' @click ='showSnackbar=true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiads%3D" + topic.token)')
           md-tooltip(md-direction='right') Скопировать ссылку на урок
         span.md-title.topicName {{ topic.name }}
         span.md-body-1.topicToken Ключ: {{ topic.token }}
