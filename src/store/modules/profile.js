@@ -99,14 +99,13 @@ export default {
             var userId = this.getters.getUser.id
             // Получаем список чатов
             db.collection('account').doc(this.getters.getUser.id).onSnapshot(async function(doc) { 
-                doc.data().myChats !== undefined ? nameList = doc.data().myChats : nameList = [] 
+                doc.data().myChats !== undefined ? nameList = doc.data().myChats : nameList = []
                 var limit = nameList.length
                 // console.log('Got chatlist update! ', nameList)
                 for (let name of nameList) {
                     var chatList = {}
                     db.collection('chat').doc(name).onSnapshot(async function(chatDoc) {
                         // chatList - это мепчик, если что-то меняется в одном чате, то мы просто это перезаписываем, если добавляется новый или убирается старый, то все читается заново
-                        // console.log('Reading Chat Data from ', name)
                         // if (!chatDoc.exists) return
                         var data = chatDoc.data()
                         if (data === undefined) console.log('Chat deleted or corrupted')
@@ -118,7 +117,7 @@ export default {
                         info['name'] = data.name
                         info['members'] = {}
                         var rawMemb = data.members
-                        for (let i = 0; i < rawMemb.length; i++) memb.push(rawMemb[i].userId)
+                        for (let i = 0; i < Object.keys(rawMemb).length; i++) memb.push(rawMemb[i].userId)
                         info['id'] = name
                         if (data.chat_type === 'group') info['image'] = data.image
                         else {
@@ -168,7 +167,6 @@ export default {
                             }
                         }
                         for await (let mem of memb) {
-                            // console.log(globalNameList)
                             if (vueInstance.globalNameList[mem] === undefined) await db.collection('account').doc(mem).get().then(doc => { doc.exists ? vueInstance.globalNameList[mem] = doc.data().name : vueInstance.globalNameList[mem] = 'Deleted User' })
                             info.members[mem] = vueInstance.globalNameList[mem]
                         }
