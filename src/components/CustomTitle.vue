@@ -55,11 +55,13 @@
                   .theoryTextField(v-if ='component.type === "text"')
                     vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "video"], ["clean"]]')
                   .theoryText(v-if ='component.type === "img"')
-                    label(for='img') Выберите картинку
-                    input#img(type='file', name='img', accept='image/*', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(currentEditTask), currentEditTask.statement.indexOf(component))")
+                    md-field
+                      label Выберите картинку
+                      md-file(name='img', accept='image/*', @md-change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(currentEditTask), currentEditTask.statement.indexOf(component))")
                   .theoryTextFile(v-else-if ='component.type === "file"')
-                    label(for='file') Выберите PDF-Файл
-                    input#img(type='file', name='file', accept='application/pdf', @change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(currentEditTask), currentEditTask.statement.indexOf(component))")
+                    md-field
+                      label Выберите PDF-Файл
+                      md-file(name='file', accept='application/pdf', @md-change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(currentEditTask), currentEditTask.statement.indexOf(component))")
 
                 md-button.md-raised.md-primary(@click='addContent(tasks.indexOf(currentEditTask), "text")') Добавить абзац
                 md-button.md-raised.md-primary(@click='addContent(tasks.indexOf(currentEditTask), "img")') Добавить картинку
@@ -167,14 +169,14 @@
         md-step#third(md-label='Шаг №3' md-description='Материал' :md-done.sync='third')
           .tasksInfo
             .tasksContent
-              .task(v-for = '(task, taskId) in tasks' @click='editTask(task)')
+              .task(v-for = '(task, taskId) in tasks')
                 .imageButtonBox
                   img.imageButton(src = './images/clear.png' @click='tasks.splice(tasks.indexOf(task), 1)')
                   md-tooltip(md-direction='right') Удалить
                 //- .imageButton.delete_button(@click='tasks.splice(tasks.indexOf(task), 1)')
-                //- .imageButtonBox(v-if = 'task.type === "theory" || task.type === "task"')
-                //-   img.imageButton(src ='@/assets/images/code3.png' @click ='editTask(task)')
-                //-   md-tooltip(md-direction='right') Редактировать
+                .imageButtonBox(v-if = 'task.type === "theory" || task.type === "task"')
+                  img.imageButton(src ='@/assets/images/code3.png' @click ='editTask(task)')
+                  md-tooltip(md-direction='right') Редактировать
                 .preMadeBox(v-if ='task.type === "preMade"')
                   .componentName
                     strong(v-if = 'task.originData.type === "theory"') Теория из темы "{{ task.topicName }}"
@@ -695,7 +697,7 @@ export default {
       this.currComponentId = componentId
     },
     onFileSelected (event) {
-      this.currentEditTask.statement[this.currComponentId].inner = event.target.files[0]
+      this.currentEditTask.statement[this.currComponentId].inner = event[0]
     },
     async generateToken (length) {
       var a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('')
