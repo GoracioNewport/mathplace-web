@@ -51,6 +51,7 @@
                 .theoryComponent(
                   v-for = 'component in currentEditTask.statement'
                 )
+                  p {{currentEditTask}}
                   .button.img.delete_button(@click='currentEditTask.statement.splice(currentEditTask.statement.indexOf(component), 1)')
                   .theoryTextField(v-if ='component.type === "text"')
                     vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "video"], ["clean"]]')
@@ -672,7 +673,9 @@ export default {
         } else {
           this.tasks.push(task)
           this.currentEditTask = this.tasks[this.tasks.length - 1]
-        } this.showCreateTask = true
+        }
+        console.log(this.currentEditTask)
+        this.showCreateTask = true
       }
     },
     addContent (id, type) {
@@ -899,11 +902,11 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .task 
+  .task
     cursor pointer
   .buttonNext
-    margin-top:20px
-    margin-left: 0px
+    margin-top 20px
+    margin-left  0px
   .overflowBox
     max-height 60vh
     overflow auto

@@ -1,5 +1,8 @@
 <template lang="pug">
   .content-wrapper
+    //- p(style="height:400px;") dsds
+    Editor(:canvasWidth='Number(400)' :canvasHeight='Number(400)' ref='editor' :editorId='Number(1)')
+
     md-snackbar(md-position='center' :md-active.sync='this.showSnackbarSend' :md-duration='4000')
       span Ответ сохранен
       md-button.md-primary(@click='showSnackbarSend = false') Ок!
@@ -377,6 +380,7 @@ import Dots from 'vue-material-design-icons/DotsHorizontal.vue'
 import Wrong from 'vue-material-design-icons/Close.vue'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions, mapGetters } from 'vuex'
+import Editor from 'vue-image-markup'
 import pdf from 'vue-pdf'
 import firebase from 'firebase/app'
 import 'firebase/storage'
@@ -398,6 +402,7 @@ export default {
     Loading,
     VueEditor,
     pdf,
+    Editor,
     Right,
     Dots,
     Wrong
@@ -480,6 +485,10 @@ export default {
     if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
     // Отключаем загрузочный оверлей и обновляем все на всякий случай
     this.isLoading = false
+    console.log(this.$refs.editor)
+    // let textModeOptions = { id: 'title', fill: 'red', fontFamily: 'Verdana',fontSize: 16, placeholder: 'Type something'}
+    // this.$refs.editor.set('text',textModeOptions)
+    this.$refs.editor.set('freeDrawing') // устанавливаем опции для черновика
     this.$forceUpdate()
   },
   data () {
@@ -1276,9 +1285,10 @@ export default {
     vertical-align middle
     &:hover
       transition: 0.8s;
-      background-color #ffffff
-      color #763DCA
-      border: 2px solid #763DCA;
+      opacity 0.75
+      // background-color #ffffff
+      // color #763DCA
+      // border: 2px solid #763DCA;
 
   .but
     position relative

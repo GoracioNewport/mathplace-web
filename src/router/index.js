@@ -13,6 +13,7 @@ import Login from '@/components/Auth/Login'
 import Logout from '@/components/Auth/Logout'
 // import Draft from '@/components/Draft'
 import Profile from '@/components/Profile/Profile'
+import Class from '@/components/Class'
 import CustomTitle from '@/components/CustomTitle'
 import Statistics from '@/components/Profile/Statistics'
 import ChatList from '@/components/Profile/ChatList'
@@ -33,6 +34,11 @@ export default new Router({
       path: '/',
       name: 'main',
       component: Main
+    },
+    {
+      path: '/class',
+      name: 'class',
+      component: Class
     },
     {
       path: '/main',

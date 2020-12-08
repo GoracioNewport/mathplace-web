@@ -110,26 +110,13 @@ export default {
   .phone-viewport
     position fixed
     bottom -1px
-    right 0px
     z-index 10
     width: 100%;
-    height auto
-    // height: 200px;
-    display: inline-flex;
-    color #763DCA
-    text-color #763DCA
-    font-color #763DCA
-    background-color #763DCA
-    align-items: flex-end;
-    overflow: hidden;
     border: 1px solid rgba(#000, .26);
-    borde-right 0px
     background: rgba(#763DCA, .06);
     @media screen and (min-width: 500px)
       display none
 
-  // .bottomSheet
-  //   position fixed
   .button-burger
     position relative
     margin-rigth 0px
