@@ -82,7 +82,7 @@
         //- md-list-item.md-button(v-if="tasksInfo.token !== null", @click="getDataMembers")
           md-icon sort
           span.md-list-item-text Рейтинг
-        md-list-item.md-button(v-if="tasksInfo.token !== null", @click ='showNavigation = false, showSnackbar = true, $clipboard("https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiad%3D" + tasksInfo.token)')
+        md-list-item.md-button(v-if="tasksInfo.token !== null", @click ='showNavigation = false, showSnackbar = true, $clipboard("Чтобы присоединиться к уроку, нажмите на эту ссылку: https://mathplace.page.link?apn=com.math4.user.mathplace&ibi=com.example.ios&link=https%3A%2F%2Fmathplace.ru%2Flesson%2Folympiads%3D" + tasksInfo.token)')
           md-icon content_copy
           p.md-list-item-text(style="height:auto") Скопировать ссылку на урок
         md-list-item
@@ -274,27 +274,17 @@
               //- md-checkbox(v-if ='taskList[activeTask].tries')
               md-checkbox(v-model = 'answer', :value = "choice") {{ choice }}
           .multipleAnswerBox(v-else-if ='this.taskList[this.activeTask].type === "multipleAnswer"')
+            md-field
+              label Введите вариант ответа
+              md-input(v-model='currentAnswer')
+              md-button.md-primary.buttonAdd(@click='answer.push(currentAnswer)') Добавить
             .answerBox(v-for = "(answers, i) in answer")
-              md-field
-                label Введите ответ
-                //- md-input(v-model = "answer[i]" disabled = '')
-                md-input.answerField(v-model = "answer[i]")
-                .button.button-round.button-warning.deleteButton(@click='answer.splice(answer.indexOf(answers), 1)') X
-            .button.button--round.button-success.buttonAdd(@click='answer.push("")') Добавить вариант ответа
+                span {{ answers }}
+                .deleteButton
+                  img(src ='@/assets/images/bin2.png' @click='answer.splice(answer.indexOf(answers), 1)')
+                  md-tooltip(md-direction='right') Удалить вариант ответа
         .enter
-          .send(v-if = 'this.taskList[this.activeTask].type ==="task" && this.taskList[this.activeTask].solution !=="hide" ')
-            a.solutionButton.but(@click='solutionShown = true')
-              md-tooltip(md-direction='right') Посмотреть решение
-              img(src='@/assets/images/lock.png' alt='Решения')
-                      //- .but
-            //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
-            button.submit-button.sub(
-              type = 'submit',
-              @click = 'sendAnswer')
-                span(v-if ='Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Ответить
-                span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
-                span(v-else) Завершить
-          .sendNotSolve(v-else)
+          .send
             a.solutionButton.but(@click='solutionShown = true')
               md-tooltip(md-direction='right') Посмотреть решение
               img(src='@/assets/images/lock.png' alt='Решения')
@@ -535,7 +525,8 @@ export default {
       solutionFile: null,
       error: 'pending',
       showUploadMenu: false,
-      imageUploadIndex: null
+      imageUploadIndex: null,
+      currentAnswer: ''
     }
   },
   methods: {
@@ -598,9 +589,8 @@ export default {
             this.answer = this.getLoadedImageURL
             this.isLoading = false
             verdict = '4'
-          } if (Array.isArray(this.answer)) {
-            for (let i = 0; i < this.answer.length; i++) this.answer[i].replace(',', '.')
-            this.answer.sort()
+          } if (Array.isArray(this.answer)) { // Заменяем все запятые на точки
+            for (let i = 0; i < this.answer.length; i++) this.answer[i] = this.answer[i].replace(',', '.')
           } else this.answer = this.answer.replace(',', '.')
           var equals = (Array.isArray(this.answer) && this.answer.length === this.taskList[this.activeTask].answer.length && this.answer.every((value, index) => value === this.taskList[this.activeTask].answer[index]))
           if (this.answer === this.taskList[this.activeTask].answer || this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof' || equals) {
@@ -754,6 +744,15 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .answerBox
+    display flex
+    justify-content space-between
+    margin 1%
+    margin-left 0
+    span
+      font-size 18pt
+  .deleteButton
+    width 24px
   .answerLabel
     // position relative
     // height auto !important
@@ -876,7 +875,7 @@ export default {
   .md-content
     padding: 16px;
   .rightAns
-    position absolute
+    position fixed
     width 300px
     height 300px
     left 40%

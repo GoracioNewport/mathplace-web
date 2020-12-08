@@ -348,7 +348,7 @@
         div(style="margin:20px;margin-top:0px;")
           md-field
             label Введите код урока...
-            md-input(v-model="customTopicId" md-counter='6')
+            md-input(v-model="customTopicId" md-counter='5')
         md-dialog-actions
           md-button.md-primary(@click='showDialog = false,joinMenuShow = false') Отмена
           md-button.md-primary(@click ='joinCourse(customTopicId)') Подключиться

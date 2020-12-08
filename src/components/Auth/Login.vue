@@ -63,25 +63,27 @@
               .buttons-list-reference
                 span Нет аккаунта?
                 router-link(style="color: #763DCA" to='/registration')  Создайте!
+              .buttons-list-reference
+                span Забыли пароль?
+                span.link(style="color: #763DCA" @click='showResetDialog = true')  Восстановите!
     div(v-if = 'submitStatus === "Validation Required"')
-      md-dialog(:md-active.sync='showDialog')
+      md-dialog(:md-active.sync='showVerificationDialog')
         md-dialog-title Ваш аккаунт не подтвержден
         .successText
           span.md-headline Пожалуйста, перейдите по ссылке, которую мы прислали вам на почту
         md-dialog-actions
-          md-button.md-primary(@click ='sendEmailConfirmationMessage, submitStatus = null') Отправить письмо повторно
+          md-button.md-primary(@click ='sendEmailConfirmationMessage, submitStatus = null') Отправить повторно
           md-button.md-primary(@click ='submitStatus = null') Окей
-
-      //- .successMenuBox
-      //-   .successText
-      //-     strong.md-title.titleTokenText.md-display-3 Внимание!
-      //-     br
-      //-     span.titleTokenText.md-display-1 Ваш аккаунт не подтвержден
-      //-     br
-      //-     span.titleTokenText.md-display-1 Пожалуйста, перейдите по ссылке, которую мы прислали вам на почту
-      //-     .successGoButton
-      //-       .md-button.md-raised.successButton(@click = 'sendEmailConfirmationMessage') Отправить письмо повторно
-      //-       .md-button.md-raised.successButton(@click ='submitStatus = null') Сделано
+    md-dialog(:md-active.sync='showResetDialog')
+      md-dialog-title Восстановление пароля
+      .successText
+        span.md-headline Введите Email. Если такой аккуант существует, то мы вышлем вам письмо с подтверждением
+        md-field
+          label Email
+          md-input(v-model='resetEmail')
+      md-dialog-actions
+        md-button.md-primary(@click ='showResetDialog = false') Отмена
+        md-button.md-primary(@click ='sendPasswordResetEmail(resetEmail), showResetDialog = false') Восстановить
 </template>
 
 <script>
@@ -93,9 +95,11 @@ export default {
       email: '',
       password: '',
       repeatPassword: '',
-      showDialog: false,
+      showVerificationDialog: false,
+      showResetDialog: false,
       staySigned: false,
-      submitStatus: null
+      submitStatus: null,
+      resetEmail: ''
     }
   },
   validations: {
@@ -114,7 +118,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['sendEmailConfirmationMessage']),
+    ...mapActions(['sendEmailConfirmationMessage', 'sendPasswordResetEmail']),
     onSubmit () {
       this.$v.$touch()
       if (this.$v.$invalid) {
@@ -129,7 +133,7 @@ export default {
           .then(() => {
             this.submitStatus = this.$store.getters.getErrors
             if (this.submitStatus === 'Validation Required') {
-              this.showDialog = true
+              this.showVerificationDialog = true
             }
             if (this.submitStatus === null) this.$router.push(this.$route.query.redirect || '/main')
           })
@@ -284,10 +288,17 @@ input
   font-weight bold
 
 .buttons-list-reference
+  width 100%
   text-decoration none
+  display flex
+  justify-content center
   color #525252
-  // width 100%
+  margin auto
   margin-bottom 10px
+  .link
+    &:hover
+      cursor pointer
+      text-decoration underline
   text-align center
   // span
   //   position relative

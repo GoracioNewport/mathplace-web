@@ -97,7 +97,7 @@
         md-dialog-title Подтвердите, пожалуйста, вашу почту
         span.md-headline(style="margin:20px;") На вашу почту было направлено письмо. Пожалуйста, перейдите по ссылке в нем для завершения регистрации.
         md-dialog-actions
-          md-button.md-primary(@click = '$router.push("/login")') Подтвердил
+          md-button.md-primary(@click = '$router.push("/login")') ОК
 
       //- .successMenuBox
       //-   .successText

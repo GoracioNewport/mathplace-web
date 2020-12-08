@@ -79,6 +79,13 @@ export default {
     sendEmailConfirmationMessage (ctx) {
       firebase.auth().currentUser.sendEmailVerification()
     },
+    sendPasswordResetEmail (ctx, payload) {
+      firebase.auth().sendPasswordResetEmail(payload).then(function () {
+        console.log('Password reset')
+      }).catch(function (error) {
+        console.log(error)
+      })
+    },
     loggedUser ({commit}, payload) {
       commit('setUser', new User(payload.uid))
     },

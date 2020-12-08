@@ -234,8 +234,6 @@ export default {
             // Если это первая загрузка или мы сами отправили сообщение, скролим в самый низ
             if (first || (Object.keys(vueInstance.chat.msgs).length > 0 && vueInstance.chat.msgs[Object.keys(vueInstance.chat.msgs).length - 1].sender === vueInstance.getUser.id)) {
               const el = await vueInstance.$el.getElementsByClassName('message-fragment')[vueInstance.$el.getElementsByClassName('message-fragment').length - 1]
-              console.log(vueInstance.$el.getElementsByClassName('message-fragment').length - 1, vueInstance.$el.getElementsByClassName('message-fragment'))
-              console.log('Scrolling to ', el)
               if (el !== undefined) el.scrollIntoView()
               first = false
             }
@@ -299,12 +297,28 @@ export default {
       if (this.messageField === '' || this.messageField === null) return
       if (!this.chatCreated) {
         var chatId = this.id
+        var membersMap = {}
+        for (let i = 0; i < this.chat.members.length; i++) {
+          membersMap[i] = {
+            userId: this.chat.members[i],
+            last_message: 1
+          }
+        }
         var chatInfo = {
           all_message: 0,
-          members: this.getPreChatInfo.members,
-          chat_type: this.getPreChatInfo.chat_type
+          members: membersMap,
+          chat_type: 'personal'
         }
+        // Создаем чат
         await db.collection('chat').doc(chatId).set(chatInfo)
+        // Запихиваем каждому юзеру чат
+        for (let memb of this.chat.members) {
+          var chatList = []
+          await db.collection('account').doc(memb).get().then(doc => { chatList = doc.data().myChats })
+          if (chatList === undefined) chatList = []
+          chatList.push(this.id)
+          await db.collection('account').doc(memb).update({ myChats: chatList })
+        }
         this.fetchChatById(this.id)
       }
       var data = {
@@ -340,7 +354,7 @@ export default {
     },
     async parseMembers (membersArray) {
       var membersArrayReturn = []
-      for (let i = 0; i < membersArray.length; i++) {
+      for (let i = 0; i < Object.keys(membersArray).length; i++) {
         membersArrayReturn.push(membersArray[i].userId)
         if (membersArray[i].userId === this.getUser.id) this.lastReadMessage = membersArray[i].last_message
       }
@@ -373,7 +387,11 @@ export default {
     async fetchEmptyChat () {
       const db = firebase.firestore()
       this.chat = this.getPreChatInfo
+      this.chat.all_message = 0
+      this.chat.messages = {}
+      this.chat.chat_type = 'personal'
       var chatMembersArray = this.id.split('_')
+      this.chat.members = chatMembersArray
       var ind
       chatMembersArray[0] === this.getUser.id ? ind = 1 : ind = 0
       this.chatMembers[this.getUser.id] = this.getUser.name
