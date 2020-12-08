@@ -281,19 +281,7 @@
                   img(src ='@/assets/images/bin2.png' @click='answer.splice(answer.indexOf(answers), 1)')
                   md-tooltip(md-direction='right') Удалить вариант ответа
         .enter
-          .send(v-if = 'this.taskList[this.activeTask].type ==="task" && this.taskList[this.activeTask].solution !=="hide" ')
-            a.solutionButton.but(@click='solutionShown = true')
-              md-tooltip(md-direction='right') Посмотреть решение
-              img(src='@/assets/images/lock.png' alt='Решения')
-                      //- .but
-            //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
-            button.submit-button.sub(
-              type = 'submit',
-              @click = 'sendAnswer')
-                span(v-if ='(Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof")') Ответить
-                span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
-                span(v-else) Завершить
-          .sendNotSolve(v-else)
+          .send
             a.solutionButton.but(@click='solutionShown = true')
               md-tooltip(md-direction='right') Посмотреть решение
               img(src='@/assets/images/lock.png' alt='Решения')

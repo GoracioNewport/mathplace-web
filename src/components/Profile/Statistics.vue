@@ -60,21 +60,23 @@
               img.solutionImage(v-else :src ='component.inner')
         md-tab(md-label='Ответ ученика' v-if ='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type !== "theory" && myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer !== "proof"')
           .solutionBox
-            .solutionComponent(v-if='myTopics[imageTopic].stats[imageUser].solveStats[imageTask] === Number(1)')
+            //- span {{ myTopics[imageTopic].stats[imageUser] }}
+            .solutionComponent(v-if='Number(myTopics[imageTopic].stats[imageUser].solveStats[imageTask]) === 1')
               span.solutionText Ученик пока не решил эту задачу
             .solutionWrapper(v-else)
-              .solutionComponent(v-if='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type === "upload"' v-for='component in myTopics[imageTopic].stats[imageUser].answers[imageTask]')
-                span.solutionText(v-if ='component.type === "text"' v-html = "component.inner") {{ component.inner }}
-                img.solutionImage(v-else :src ='component.inner')
+              .solutionComponent(v-if='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type === "upload"')
+                .wrap(v-for='component in myTopics[imageTopic].stats[imageUser].answers[imageTask]')
+                  span.solutionText(v-if ='component.type === "text"' v-html = "component.inner") {{ component.inner }}
+                  img.solutionImage(v-else :src ='component.inner')
               .solutionComponent(v-else)
-                span.solutionText {{ (typeof myTopics[imageTopic].stats[imageUser].answers[imageTask] === "string") ? myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer : myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer.join(" ") }}
+                span.solutionText {{ (typeof myTopics[imageTopic].stats[imageUser].answers[imageTask] === "string") ? myTopics[imageTopic].stats[imageUser].answers[imageTask] : myTopics[imageTopic].stats[imageUser].answers[imageTask].join(", ") }}
           .buttonJudgeBox(v-if ='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type === "upload"')
             md-button.md-raised(@click ='markSolutionAs("right")').md-primary Правильно
             md-button.md-raised(@click ='markSolutionAs("wrong")').md-accent Неправильно
         md-tab(md-label='Правильный ответ' v-if ='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type !== "upload" && myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type !== "theory" && myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer !== "proof"')
           .solutionBox
             .solutionComponent
-              span.solutionText {{ (typeof myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer === "string") ? myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer : myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer.join(" ") }}
+              span.solutionText {{ (typeof myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer === "string") ? myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer : myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer.join(", ") }}
         md-tab(md-label='Решение' v-if ='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].solutionType === "solution"')
           .solutionBox
             span.solutionText {{ myTopics[imageTopic].stats[imageUser].userTasks[imageTask].solution }}
