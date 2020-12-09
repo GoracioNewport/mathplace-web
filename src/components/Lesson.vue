@@ -7,7 +7,7 @@
       md-icon keyboard_arrow_right
     .arrowLeft(v-if='activeTask !== 0' @click='changeActiveTask(activeTask-1, taskList[activeTask-1])')
       md-icon.md-size-2 keyboard_arrow_left
-    md-dialog(:md-active.sync='showDialogBigImage')
+    md-dialog(v-if = 'bigImage !== null' :md-active.sync='showDialogBigImage')
       img.condition-imageLesson(
         style="height:120%; width:120%"
         :src = 'bigImage')
