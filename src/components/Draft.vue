@@ -1,857 +1,545 @@
-// <template lang="pug">
-// <div id="draw">
-//     <div class="welcome-bg" v-if="popups.showWelcome">
-//         <div class="welcome">
-//             <h1 class="fade-up">Vue JS draw</h1>
-//             <h2 class="fade-up">
-//                 By Lewi Hussey
-//             </h2>
-//             <a href="//twitter.com/lewitje" target="blank" title="Lewi Hussey on Twitter" class="fade-up">@lewitje</a>
-//             <span class="btn fade-up", title="Close", v-on:click="popups.showWelcome = false">
-//                 Lets go
-//             </span>
-//         </div>
-//     </div>
-//     <div class="app-wrapper">
-//         <canvas id="canvas">
-//         </canvas>
-//         <div class="cursor" id="cursor"></div>
-//         <div class="controls">
-//             <div class="btn-row">
-//                 //- div.history(title="history") {{ history.length }}
-//             </div>
-//             <div class="btn-row">
-//                 <button type="button", v-on:click="removeHistoryItem", v-bind:class="{ disabled: !history.length }" title="Undo">
-//                     <i class="ion ion-reply"></i>
-//                 </button>
-//                 <button type="button", v-on:click="removeAllHistory", v-bind:class="{ disabled: !history.length }" title="Clear all">
-//                     <i class="ion ion-trash-a"></i>
-//                 </button>
-//             </div>
-            
-//             <div class="btn-row">
-//                 <button title="Brush options", v-on:click="popups.showOptions = !popups.showOptions">
-//                     <i class="ion ion-android-create"></i>
-//                 </button>
-                
-//                 <div class="popup" v-if="popups.showOptions">
-//                     <div class="popup-title">
-//                         Options
-//                     </div>
-//                     <button title="Restrict movement vertical", v-on:click="options.restrictY = !options.restrictY; options.restrictX = false", v-bind:class="{ active: options.restrictY }", title="Restrict vertical">
-//                         <i class="ion ion-arrow-right-c"></i>
-//                         Restrict vertical
-//                     </button>
-//                     <button title="Restrict movement horizontal", v-on:click="options.restrictX = !options.restrictX; options.restrictY = false", v-bind:class="{ active: options.restrictX }", title="Restrict horizontal">
-//                         <i class="ion ion-arrow-up-c"></i>
-//                         Restrict horizontal
-//                     </button>
-//                     <button type="button", v-on:click="simplify", v-bind:class="{ disabled: !history.length }" title="Simplify paths">
-//                         <i class="ion ion-wand"></i>
-//                         Simplify paths
-//                     </button>
-//                     <button type="button", v-on:click="jumble", v-bind:class="{ disabled: !history.length }" title="Go nutz">
-//                         <i class="ion ion-shuffle"></i>
-//                         Go nutz
-//                     </button>
-//                 </div>
-                
-//             </div>
+<template lang="pug">
+    //- div.custom-editor
+        //- p dskjdskjdbkj
+    Editor(style="position:relative;width:80%;margin: 0 auto;margin-left:20%;margin-top:100px;text-align: center;" :canvasWidth='Number(400)' :canvasHeight='Number(400)' ref='editor')
+</template>
 
-//             <div class="btn-row">
-//                 <button title="Pick a brush size", v-on:click="popups.showSize = !popups.showSize", v-bind:class="{ active: popups.showSize }">
-//                     <i class="ion ion-android-radio-button-on"></i>
-//                     <span class="size-icon">
-//                         //- {{ size }}
-//                     </span>
-//                 </button>
-                
-//                 <div class="popup" v-if="popups.showSize">
-//                     <div class="popup-title">
-//                         Brush size
-//                     </div>
-//                     <label v-for="sizeItem in sizes" class="size-item">
-//                         <input type="radio" name="size" v-model="size" v-bind:value="sizeItem">
-//                         <span class="size", v-bind:style="{width: sizeItem + 'px', height: sizeItem + 'px'}", v-on:click="popups.showSize = !popups.showSize"></span>
-//                     </label>
-//                 </div>
-//             </div>
-            
-//             <div class="btn-row">
-//                 <button title="Pick a color", v-on:click="popups.showColor = !popups.showColor", v-bind:class="{ active: popups.showColor }">
-//                     <i class="ion ion-android-color-palette"></i>
-//                     <span class="color-icon", v-bind:style="{backgroundColor: color}">
-//                     </span>
-//                 </button>
-                
-//                 <div class="popup" v-if="popups.showColor">
-//                     <div class="popup-title">
-//                         Brush color
-//                     </div>
-//                     <label v-for="colorItem in colors" class="color-item">
-//                         <input type="radio", name="color", v-model="color", v-bind:value="colorItem">
-//                         <span v-bind:class="'color color-' + colorItem", v-bind:style="{backgroundColor: colorItem}", v-on:click="popups.showColor = !popups.showColor"></span>
-//                     </label>
-//                 </div>
-//             </div>
-            
-//             <div class="btn-row">
-//                 <button title="Save", v-on:click="popups.showSave = !popups.showSave">
-//                     <i class="ion ion-android-cloud-outline"></i>
-//                 </button>
-                
-//                 <div class="popup" v-if="popups.showSave">
-//                     <div class="popup-title">
-//                         Save your design
-//                     </div>
-//                     <div class="form">
-//                         <input type="text", placeholder="Save name", v-model="save.name">
-//                         <div v-if="save.name.length < 3" class="text-faded">
-//                             <i>
-//                                 Min 3 characters
-//                             </i>
-//                         </div>
-//                         <span class="btn", v-on:click="saveItem">
-//                             Save as
-//                             <span class="text-faded"> 
-//                                 //- {{ save.name }}
-//                             </span>
-//                         </span>
-//                     </div>
-                    
-//                     <div class="saves" v-if="save.saveItems.length">
-//                         <div class="popup-title">
-//                             Load a save
-//                         </div>
-
-//                         <div class="save-item", v-for="item in save.saveItems">
-//                             //- <h3>{{ item.name }}</h3>
-//                             <span class="btn", v-on:click="loadSave(item)">load</span>
-//                         </div>
-//                     </div>
-//                 </div>
-                
-//             </div>
-            
-//             <div class="btn-row">
-//                 <button v-on:click="popups.showWelcome = true" title="Made by Lewi">
-//                     <i class="ion ion-heart"></i>
-//                 </button>
-//             </div>
-//         </div>
-//     </div>
-// </div>
-// </template>
-
-// <script>
-
-// export default {
-//   el: '#draw',
-//   data: {
-//     history: [],
-// 		color: '#13c5f7',
-// 		popups: {
-// 			showColor: false,
-// 			showSize: false,
-// 			showWelcome: true,
-// 			showSave: false,
-// 			showOptions: false
-// 		},
-// 		options: {
-// 			restrictY: false,
-// 			restrictX: false
-// 		},
-// 		save: {
-// 			name: '',
-// 			saveItems: []
-// 		},
-// 		size: 12,
-// 		colors: [
-// 			'#d4f713',
-// 			'#13f7ab',
-// 			'#13f3f7',
-// 			'#13c5f7',
-// 			'#138cf7',
-// 			'#1353f7',
-// 			'#2d13f7',
-// 			'#7513f7',
-// 			'#a713f7',
-// 			'#d413f7',
-// 			'#f713e0',
-// 			'#f71397',
-// 			'#f7135b',
-// 			'#f71313',
-// 			'#f76213',
-// 			'#f79413',
-// 			'#f7e013'],
-// 		sizes: [6, 12, 24, 48],
-// 		weights: [ 2, 4, 6 ]
-//   },
-// 	methods: {
-// 		removeHistoryItem: ()=>{
-// 			app.history.splice(app.history.length-2, 1);
-// 			draw.redraw();
-// 		},
-// 		removeAllHistory: ()=>{
-// 			app.history = [];
-// 			draw.redraw();
-// 		},
-// 		simplify: ()=>{
-// 			var simpleHistory = [];
-// 			app.history.forEach((item, i)=>{
-// 				if(i % 6 !== 1 || item.isDummy){
-// 					simpleHistory.push(item);
-// 				}
-// 			});
-// 			app.history = simpleHistory;
-// 			draw.redraw();
-// 		},
-// 		jumble: ()=>{
-// 			var simpleHistory = [];
-// 			app.history.forEach((item, i)=>{
-// 				item.r += Math.sin(i * 20) * 5;
-// 			});
-// 			app.history = app.shuffle(app.history);
-// 			draw.redraw();
-// 		},
-// 		shuffle: (a)=>{
-// 			var b = [];
-			
-// 			a.forEach((item, i)=>{
-// 				if(!item.isDummy){
-// 					var l = b.length;
-// 					var r = Math.floor(l * Math.random());
-// 					b.splice(r, 0, item);
-// 				}
-// 			});
-			
-// 			for(var i = 0; i < b.length; i++){
-// 				if(i % 20 === 1){
-// 					b.push(draw.getDummyItem());	
-// 				}
-// 			}
-			
-// 			return b;
-// 		},
-// 		saveItem: ()=>{
-// 			if(app.save.name.length > 2){
-// 				var historyItem = {
-// 					history: app.history.slice(),
-// 					name: app.save.name
-// 				};
-
-// 				app.save.saveItems.push(historyItem);
-// 				app.save.name = "";
-// 			}
-// 		},
-// 		loadSave: (item)=>{
-// 			app.history = item.history.slice();
-// 			draw.redraw();
-// 		}
-// 	}
-// }
-
-// // class Draw {
-// // 	constructor(){
-// // 		this.c = document.getElementById('canvas');
-// // 		this.ctx = this.c.getContext('2d');
-		
-// // 		this.mouseDown = false;
-// // 		this.mouseX = 0;
-// // 		this.mouseY = 0;
-		
-// // 		this.tempHistory = [];
-		
-// // 		this.setSize();
-		
-// // 		this.listen();
-		
-// // 		this.redraw();
-// // 	}
-	
-// // 	listen(){
-// // 		this.c.addEventListener('mousedown', (e)=>{
-// // 			this.mouseDown = true;
-// // 			this.mouseX = e.offsetX;
-// // 			this.mouseY = e.offsetY;
-// // 			this.setDummyPoint();
-// // 		});
-		
-// // 		this.c.addEventListener('mouseup', ()=>{
-// // 			if(this.mouseDown){
-// // 				this.setDummyPoint();
-// // 			}
-// // 			this.mouseDown = false;
-// // 		});
-		
-// // 		this.c.addEventListener('mouseleave', ()=>{
-// // 			if(this.mouseDown){
-// // 				this.setDummyPoint();
-// // 			}
-// // 			this.mouseDown = false;
-// // 		});
-		
-// // 		this.c.addEventListener('mousemove', (e)=>{
-// // 			this.moveMouse(e);
-			
-// // 			if(this.mouseDown){
-// // 				this.mouseX = this.mouseX;
-// // 				this.mouseY = this.mouseY;
-				
-// // 				if(!app.options.restrictX){
-// // 					this.mouseX = e.offsetX;
-// // 				}
-				
-// // 				if(!app.options.restrictY){
-// // 					this.mouseY = e.offsetY;
-// // 				}
-								
-// // 				var item = {
-// // 					isDummy: false,
-// // 					x: this.mouseX,
-// // 					y: this.mouseY,
-// // 					c: app.color,
-// // 					r: app.size
-// // 				};
-				
-// // 				app.history.push(item);
-// // 				this.draw(item, app.history.length);
-// // 			}
-// // 		});
-		
-// // 		window.addEventListener('resize', ()=>{
-// // 			this.setSize();
-// // 			this.redraw();
-// // 		});
-// // 	}
-	
-// // 	setSize(){
-// // 		this.c.width = window.innerWidth;
-// // 		this.c.height = window.innerHeight - 60;
-// // 	}
-	
-// // 	moveMouse(e){
-// // 		let x = e.offsetX;
-// // 		let y = e.offsetY;
-		
-// // 		var cursor = document.getElementById('cursor');
-		
-// // 		cursor.style.transform = `translate(${x - 10}px, ${y - 10}px)`;
-// // 	}
-	
-// // 	getDummyItem(){
-// // 		var lastPoint = app.history[app.history.length-1];
-		
-// // 		return {
-// // 			isDummy: true,
-// // 			x: lastPoint.x,
-// // 			y: lastPoint.y,
-// // 			c: null,
-// // 			r: null
-// // 		};
-// // 	}
-	
-// // 	setDummyPoint(){
-// // 		var item = this.getDummyItem();
-// // 		app.history.push(item);
-// // 		this.draw(item, app.history.length);
-// // 	}
-	
-// // 	redraw(){
-// // 		this.ctx.clearRect(0, 0, this.c.width, this.c.height);
-// // 		this.drawBgDots();
-		
-// // 		if(!app.history.length){
-// // 			return true;
-// // 		}
-		
-// // 		app.history.forEach((item, i)=>{
-// // 			this.draw(item, i);
-// // 		});
-// // 	}
-	
-// // 	drawBgDots(){
-// // 		var gridSize = 50;
-// // 		this.ctx.fillStyle = 'rgba(0, 0, 0, .2)';
-		
-// // 		for(var i = 0; i*gridSize < this.c.width; i++){
-// // 			for(var j = 0; j*gridSize < this.c.height; j++){
-// // 				if(i > 0 && j > 0){
-// // 					this.ctx.beginPath();
-// // 					this.ctx.rect(i * gridSize, j * gridSize, 2, 2);
-// // 					this.ctx.fill();
-// // 					this.ctx.closePath();
-// // 				}
-// // 			}
-// // 		}
-// // 	}
-	
-// // 	draw(item, i){
-// // 		this.ctx.lineCap = 'round';
-// // 		this.ctx.lineJoin="round";
-		
-// // 		var prevItem = app.history[i-2];
-				
-// // 		if(i < 2){
-// // 			return false;
-// // 		}
-
-// // 		if(!item.isDummy && !app.history[i-1].isDummy && !prevItem.isDummy){
-// // 			this.ctx.strokeStyle = item.c;
-// // 			this.ctx.lineWidth = item.r;
-			
-// // 			this.ctx.beginPath();
-// // 			this.ctx.moveTo(prevItem.x, prevItem.y);
-// // 			this.ctx.lineTo(item.x, item.y);
-// // 			this.ctx.stroke();
-// // 			this.ctx.closePath();
-// // 		} else if (!item.isDummy) {			
-// // 			this.ctx.strokeStyle = item.c;
-// // 			this.ctx.lineWidth = item.r;
-			
-// // 			this.ctx.beginPath();
-// // 			this.ctx.moveTo(item.x, item.y);
-// // 			this.ctx.lineTo(item.x, item.y);
-// // 			this.ctx.stroke();
-// // 			this.ctx.closePath();
-// // 		}
-// // 	}
-// // }
-
-// // var draw = new Draw();
-// </script>
-
-// <style lang="stylus" scoped>
-// @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
-
-// * {
-// 	box-sizing: border-box;
-// 	margin: 0;
-// 	padding: 0;
-// }
-
-// body {
-// 	background-color: black;
-// 	color: white;
-// }
-
-// body,
-// button,
-// input {
-// 	font-family: 'Roboto', sans-serif;
-// 	font-size: 14px;
-// 	font-weight: 400;
-// }
-
-// h1,
-// h2,
-// h3,
-// h4,
-// h5{
-// 	font-weight: 500;
-// }
-
-// .text-faded {
-// 	opacity: .5;
-// }
-
-// .cursor {
-// 	position: fixed;
-// 	top: 0;
-// 	left: 0;
-// 	width: 20px;
-// 	height: 20px;
-// 	border-radius: 50%;
-// 	border: 3px solid rgb(30, 30, 30);
-// 	pointer-events: none;
-// 	user-select: none;
-// 	mix-blend-mode: difference;
-// 	opacity: 0;
-// 	transition: opacity 1s;
-// }
-
-// canvas {
-// 	width: 100%;
-// 	height: calc(100vh - 60px);
-// 	background-color: white;
-// 	cursor: none;
-	
-// 	&:hover + .cursor {
-// 		opacity: 1;
-// 	}
-	
-// 	&:active + .cursor {
-// 		border-color: rgb(60, 60, 60);
-// 	}
-// }
-
-// .controls {
-// 	position: fixed;
-// 	z-index: 5;
-// 	bottom: 0;
-// 	left: 0;
-// 	width: 100%;
-// 	height: 60px;
-// 	background-color: rgb(10, 10, 10);
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
-// 	user-select: none;
-// }
-
-// .stat {
-// 	font-size: 20px;
-// 	margin-bottom: 15px;
-// }
-
-// .btn-row {
-// 	position: relative;
-// 	margin-bottom: 5px;
-// 	display: flex;
-// 	justify-content: center;
-// 	flex-wrap: wrap;
-// 	padding: 0 15px;
-// 	border-radius: 4px;
-// }
-
-// .popup {
-// 	position: absolute;
-// 	width: 300px;
-// 	bottom: 58px;
-// 	padding: 30px;
-// 	left: calc(50% - 150px);
-// 	display: flex;
-// 	flex-wrap: wrap;
-// 	justify-content: center;
-// 	background-color: white;
-// 	color: rgb(30, 30, 30);
-// 	border-radius: 10px 10px 0 0;
-// 	border: 1px solid rgb(220, 220, 220);
-// 	border-bottom-width: 0;
-// 	opacity: 0;
-// 	animation: popup .5s forwards cubic-bezier(.2, 2, .4, 1);
-// 	z-index: 2;
-// 	overflow: hidden;
-// 	max-height: 80vh;
-// 	overflow-y: auto;
-	
-// 	.popup-title {
-// 		flex: 0 0 100%;
-// 		text-align: center;
-// 		font-size: 16px;
-// 		color: black;
-// 		opacity: .5;
-// 		margin-bottom: 10px;
-// 	}
-	
-// 	button {
-// 		height: 80px;
-// 		width: 80px;
-// 		text-align: center;
-// 		font-size: 14px;
-// 		color: rgba(0, 0, 0, .4);
-		
-// 		i {
-// 			display: block;
-// 			font-size: 30px;
-// 			margin-bottom: 5px;
-// 			color: rgba(0, 0, 0, .2);
-// 		}
-		
-// 		&.disabled {
-// 			color: rgba(0, 0, 0, .2);
-			
-// 			i {
-// 				color: rgba(0, 0, 0, .1);
-// 			}
-// 		}
-		
-// 		&.active,
-// 		&:active {
-// 			color: rgba(0, 0, 0, .4);
-			
-// 			i {
-// 				color: $prim;
-// 			}
-// 		}
-// 	}
-// }
-
-// @keyframes popup {
-// 	from {
-// 		opacity: 0;
-// 		transform: translateX(40px);
-// 	}
-// 	to {
-// 		opacity: 1;
-// 		transform: none;
-// 	}
-// }
-
-// .welcome-bg {
-// 	position: fixed;
-// 	top: 0;
-// 	left: 0;
-// 	width: 100%;
-// 	height: 100%;
-// 	z-index: 9;
-// 	background-color: $prim;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
-// }
-
-// .fade-up {
-// 	opacity: 0;
-// 	animation: fade-up 1s forwards cubic-bezier(.2, 2, .4, 1);
-// }
-
-// .btn {
-// 	display: inline-block;
-// 	margin-top: 10px;
-// 	padding: 10px 20px;
-// 	font-weight: 400;
-// 	font-size: 16px;
-// 	border-radius: 4px;
-// 	background-color: $prim;
-// 	color: white;
-// 	animation-delay: 1s;
-// 	transition: all .15s;
-// 	cursor: pointer;
-
-// 	&:hover {
-// 		background-color: lighten($prim, 10%);
-// 	}
-// }
-
-// .welcome {
-// 	width: 400px;
-// 	height: 400px;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
-// 	flex-direction: column;
-		
-// 	h1.fade-up {
-// 		font-weight: 300;
-// 		font-size: 40px;
-// 		animation-delay: .25s;
-// 	}
-	
-// 	h2.fade-up {
-// 		font-weight: 400;
-// 		color: rgba(255, 255, 255, .5);
-// 		animation-delay: .5s;
-// 	}
-	
-// 	a.fade-up {
-// 		color: rgba(255, 255, 255, .5);
-// 		display: inline-block;
-// 		margin-top: 20px;
-// 		text-decoration: none;
-// 		animation-delay: .75s;
-// 	}
-	
-// 	.btn.fade-up {
-// 		background-color: rgba(255, 255, 255, .2);
-// 		color: white;
-// 		margin-top: 60px;
-		
-// 		&:hover {
-// 			background-color: rgba(255, 255, 255, .3);
-// 		}
-// 	}
-// }
-
-
-// @keyframes fade-up {
-// 	from {
-// 		transform: translateY(80px);
-// 		opacity: 0;
-// 	}
-// 	to {
-// 		transform: none;
-// 		opacity: 1;
-// 	}
-// }
-
-// .form {
-// 	flex: 0 0 100%;
-	
-// 	input {
-// 		display: block;
-// 		appearance: none;
-// 		border: 0;
-// 		box-shadow: 0;
-// 		outline: 0;
-// 		background-color: rgb(240, 240, 240);
-// 		border-radius: 4px;
-// 		padding: 10px 15px;
-// 		width: 100%;
-// 		margin-bottom: 4px;
-// 	}
-// }
-
-// button {
-// 	appearance: none;
-// 	border: 0;
-// 	border-radius: 0;
-// 	box-shadow: 0;
-// 	width: 40px;
-// 	height: 60px;
-// 	display: inline-block;
-// 	background-color: transparent;
-// 	color: rgb(140, 140, 140);
-// 	font-size: 22px;
-// 	transition: all .15s;
-// 	cursor: pointer;
-// 	outline: 0;
-// 	position: relative;
-	
-// 	.size-icon,
-// 	.color-icon {
-// 		position: absolute;
-// 		top: 10px;
-// 		right: 0;
-// 	}
-	
-// 	.color-icon {
-// 		width: 5px;
-// 		height: 5px;
-// 		border-radius: 50%;
-// 	}
-	
-// 	.size-icon {
-// 		font-size: 6px;
-// 		text-align: right;
-// 	}
-		
-// 	&:hover {
-// 		opacity: .8;
-// 	}
-	
-// 	&:active,
-// 	&.active{
-// 		color: white;
-// 	}
-	
-// 	&.disabled {
-// 		color: rgb(50, 50, 50);
-// 		cursor: not-allowed;
-// 	}
-// }
-
-// .history {
-// 	width: 30px;
-// 	height: 30px;
-// 	background-color: rgb(30, 30, 30);
-// 	border-radius: 50%;
-// 	text-align: center;
-// 	line-height: 30px;
-// 	font-size: 12px;
-// 	overflow: hidden;
-// 	color: rgb(140, 140, 140);
-// }
-	
-// .color-item {
-// 	position: relative;
-// 	display: inline-block;
-// 	cursor: pointer;
-// 	width: 60px;
-// 	height: 60px;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
-
-// 	input {
-// 		position: absolute;
-// 		opacity: 0;
-// 		top: 0;
-// 		left: 0;
-// 		width: 0;
-// 		height: 0;
-// 	}
-	
-// 	input:checked + .color {
-// 		opacity: 1;
-// 		border: 2px solid $prim;
-// 	}
-	
-// 	.color {
-// 		display: block;
-// 		width: 30px;
-// 		height: 30px;
-// 		background-color: white;
-// 		border-radius: 50%;
-		
-// 		&:hover {
-// 			opacity: .8;
-// 		}
-// 	}
-// }
-
-// @keyframes pulsate {
-// 	0%,
-// 	100% {
-// 		transform: none;
-// 	}
-// 	50% {
-// 		transform: scale(1.15);
-// 	}
-// }
-
-// .size-item {
-// 	width: 40px;
-// 	height: 60px;
-// 	display: inline-flex;
-// 	position: relative;
-// 	justify-content: center;
-// 	align-items: center;
-// 	vertical-align: top;
-// 	cursor: pointer;
-	
-// 	input {
-// 		position: absolute;
-// 		top: 0;
-// 		left: 0;
-// 		width: 0;
-// 		height: 0;
-// 		opacity: 0;
-// 	}
-	
-// 	.size {
-// 		background-color: rgb(140, 140, 140);
-// 		display: inline-block;
-// 		border-radius: 50%;
-// 		transition: all .15s;
-// 		transform: translate(-50%, -50%) scale(.6);
-// 		position: absolute;
-// 		top: 50%;
-// 		left: 50%;
-		
-// 		&:hover {
-// 			opacity: .8;
-// 		}
-// 	}
-	
-// 	input:checked + .size {
-// 		background-color: $prim;
-// 	}
-// }
-
-// .saves {
-// 	flex: 0 0 calc(100% + 60px);
-// 	margin: 30px -30px -30px;
-// 	padding: 30px;
-// 	background-color: rgb(240, 240, 240);
-// 	max-height: 250px;
-// 	overflow-y: auto;
-	
-// 	.save-item {
-// 		width: 100%;
-// 		display: flex;
-// 		justify-content: space-between;
-// 		align-items: center;
-// 	}
-// }
-// </style>/*
+<script>
+import {fabric} from 'fabric';
+import Shape from './assets/js/shape';
+import Text from './assets/js/text';
+import Arrow from './assets/js/arrow';
+import CropImage from './assets/js/crop';
+import CanvasHistory from './assets/js/canvasHistory';
+export default {
+    name: 'Editor',
+    props: {
+        canvasWidth: {
+            type: [String,Number],
+            required: true
+        },
+        canvasHeight: {
+            type: [String,Number],
+            required: true
+        },
+        editorId: {
+            type: String,
+            default: 'c',
+            required: false
+        }
+    },
+    data() {
+        return {
+            canvas: null,
+            pointerX: null,
+            pointerY: null,
+            createCircle: false,
+            createRect: false,
+            createArrow: false,
+            createText: false,
+            circle: null,
+            currentActiveMethod: null,
+            currentActiveTool: null,
+            objects: [],
+            width: null,
+            height: null,
+            params: {},
+            color: '#000000',
+            strokeWidth: 7,
+            fontSize: 32,
+            croppedImage: false,
+            history: [],
+        }
+    },
+    mounted() {
+        this.canvas = new fabric.Canvas(this.editorId);
+        this.canvas.setDimensions({width: this.canvasWidth, height: this.canvasHeight});
+        this.canvas.backgroundColor = "#fff";
+        let canvasProperties = {width: this.canvas.width, height: this.canvas.height}
+        let currentCanvas = {json: this.canvas.toJSON(), canvas: canvasProperties};
+        new CanvasHistory(this.canvas, currentCanvas);
+    },
+    methods: {
+        getObjectsById(objectId){
+            let objects = this.canvas.getObjects();
+            let findedObject = [];
+            objects.map((object) => {
+                if(object.id && object.id == objectId) {
+                    findedObject.push(object);
+                }
+            })
+            return findedObject;
+        },
+        changeColor(colorProperty) {
+            this.color = colorProperty;
+            this.set(this.currentActiveTool)
+        },
+        setBackgroundImage(imageUrl, backgroundColor = "#fff") {
+            let img = new Image();
+            this.toDataUrl(imageUrl, (dataUri) => {
+                img.src = dataUri;
+                let inst = this;
+                img.onload = function () {
+                    let image = new fabric.Image(img);
+                    image.scaleToWidth(inst.canvasWidth);
+                    image.scaleToHeight(inst.canvasHeight);
+                    inst.canvas.setBackgroundImage(image, inst.canvas.renderAll.bind(inst.canvas));
+                    let canvasProperties = {width: inst.canvas.width, height: inst.canvas.height};
+                    let currentCanvas = {
+                        json: inst.canvas.toJSON(),
+                        canvas: canvasProperties
+                    };
+                    new CanvasHistory(inst.canvas, currentCanvas)
+                    inst.canvas.renderAll();
+                }
+            });
+        },
+        toDataUrl(url, callback) {
+            let xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                let reader = new FileReader();
+                reader.onloadend = () => {
+                    callback(reader.result);
+                };
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', url);
+            xhr.responseType = 'blob';
+            xhr.send();
+        },
+        clear() {
+            this.canvas.clear();
+            this.cancelCroppingImage()
+        },
+        set(type, params) {
+            switch (type) {
+                case "text":
+                    this.currentActiveTool = type;
+                    this.params = {
+                        fill: (params && params.fill) ? params.fill : this.color,
+                        fontFamily: (params && params.fontFamily) ? params.fontFamily : 'Arial',
+                        fontSize: (params && params.fontSize) ? params.fontSize : this.fontSize,
+                        fontStyle: (params && params.fontStyle) ? params.fontStyle : this.fontStyle,
+                        fontWeight: (params && params.fontWeight) ? params.fontWeight : this.fontWeight,
+                        placeholder: (params && params.placeholder) ? params.placeholder : 'Add Text',
+                        id: (params && params.id) ? params.id : '',
+                    };
+                    this.addText(this.params);
+                    break;
+                case "circle":
+                    this.cancelCroppingImage();
+                    this.currentActiveTool = type;
+                    this.params = {
+                        fill: (params && params.fill) ? params.fill : 'transparent',
+                        stroke: (params && params.stroke) ? params.stroke : this.color,
+                        strokeWidth: (params && params.strokeWidth) ? params.strokeWidth : this.strokeWidth,
+                        disableCircleEditing: (params && params.disableCircleEditing) ? params.disableCircleEditing : false,
+                        top: (params && params.top) ? params.top : 0,
+                        left: (params && params.left) ? params.left : 0,
+                        radius: (params && params.radius) ? params.radius : 20,
+                        strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
+                        noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
+                        strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
+                        id: (params && params.id) ? params.id : '',
+                    };
+                    this.customCircle(type, this.params);
+                    break;
+                case "rect":
+                    this.cancelCroppingImage();
+                    this.currentActiveTool = type;
+                    this.params = {
+                        fill: (params && params.fill) ? params.fill : 'transparent',
+                        stroke: (params && params.stroke) ? params.stroke : this.color,
+                        strokeWidth: (params && params.strokeWidth) ? params.strokeWidth : this.strokeWidth,
+                        angle: (params && params.angle) ? params.angle : 0,
+                        width: (params && params.width) ? params.width : null,
+                        height: (params && params.height) ? params.height : null,
+                        top: (params && params.top) ? params.top : 0,
+                        left: (params && params.left) ? params.left : 0,
+                        opacity: (params && params.opacity) ? params.opacity : 1,
+                        strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
+                        noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
+                        strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
+                        borderRadius: (params && params.borderRadius) ? params.borderRadius : 0,
+                        id: (params && params.id) ? params.id : '',
+                    };
+                    this.customRect(type, this.params);
+                    break;
+                case "comment":
+                    this.cancelCroppingImage();
+                    this.currentActiveTool = type;
+                    this.params = {
+                        fill: (params && params.fill) ? params.fill : 'transparent',
+                        stroke: (params && params.stroke) ? params.stroke : this.color,
+                        strokeWidth: (params && params.strokeWidth) ? params.strokeWidth : this.strokeWidth,
+                        angle: (params && params.angle) ? params.angle : 0,
+                        width: (params && params.width) ? params.width : null,
+                        height: (params && params.height) ? params.height : null,
+                        top: (params && params.top) ? params.top : 0,
+                        left: (params && params.left) ? params.left : 0,
+                        opacity: (params && params.opacity) ? params.opacity : 1,
+                        strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
+                        noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
+                        strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
+                        borderRadius: (params && params.borderRadius) ? params.borderRadius : 0,
+                        id: (params && params.id) ? params.id : '',
+                    };
+                    this.customRect(type, this.params);
+                    break;
+                case "line":
+                    this.cancelCroppingImage();
+                    this.currentActiveTool = type;
+                    this.params = {
+                        fill: (params && params.fill) ? params.fill : 'transparent',
+                        stroke: (params && params.stroke) ? params.stroke : this.color,
+                        strokeWidth: (params && params.strokeWidth) ? params.strokeWidth : this.strokeWidth,
+                        angle: (params && params.angle) ? params.angle : 0,
+                        width: (params && params.width) ? params.width : null,
+                        height: (params && params.height) ? params.height : null,
+                        top: (params && params.top) ? params.top : 0,
+                        left: (params && params.left) ? params.left : 0,
+                        opacity: (params && params.opacity) ? params.opacity : 1,
+                        strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
+                        noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
+                        strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
+                        id: (params && params.id) ? params.id : '',
+                    };
+                    this.customRect(type, this.params);
+                    break;
+                case 'selectMode':
+                    this.currentActiveTool = type;
+                    this.drag();
+                    break;
+                case 'arrow':
+                    this.currentActiveTool = type;
+                    this.params = {
+                        fill: (params && params.fill) ? params.fill : 'transparent',
+                        stroke: (params && params.stroke) ? params.stroke : this.color,
+                        strokeWidth: (params && params.strokeWidth) ? params.strokeWidth : this.strokeWidth,
+                        strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
+                        noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
+                        strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
+                        id: (params && params.id) ? params.id : '',
+                    };
+                    this.drawArrow(this.params);
+                    break;
+                case 'freeDrawing':
+                    this.currentActiveTool = type;
+                    this.params = {
+                        stroke: (params && params.stroke) ? params.stroke : this.color,
+                        strokeWidth: (params && params.strokeWidth) ? params.strokeWidth : this.strokeWidth,
+                        drawingMode: (params && params.drawingMode) ? params.drawingMode : true,
+                        id: (params && params.id) ? params.id : '',
+                    };
+                    this.drawing(this.params);
+                    break;
+                case 'crop':
+                    this.currentActiveTool = type;
+                    this.params = {
+                        width: (params && params.width) ? params.width : 200,
+                        height: (params && params.height) ? params.height : 200,
+                        overlayColor: (params && params.overlayColor) ? params.overlayColor : "#000",
+                        overlayOpacity: (params && params.overlayOpacity) ? params.overlayOpacity : 0.7,
+                        transparentCorner: (params && params.transparentCorner) ? params.transparentCorner : false,
+                        hasRotatingPoint: (params && params.hasRotatingPoint) ? params.hasRotatingPoint : false,
+                        hasControls: (params && params.hasControls) ? params.hasControls : true,
+                        cornerSize: (params && params.cornerSize) ? params.cornerSize : 10,
+                        borderColor: (params && params.borderColor) ? params.borderColor : "#000",
+                        cornerColor: (params && params.cornerColor) ? params.cornerColor : "#000",
+                        cornerStyle: (params && params.cornerStyle) ? params.cornerStyle : "circle",
+                        strokeColor: (params && params.strokeColor) ? params.strokeColor : "#000",
+                        lockUniScaling: (params && params.lockUniScaling) ? params.lockUniScaling : true,
+                        noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
+                        strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true
+                    };
+                    this.currentActiveMethod = this.cropImage;
+                    this.drag();
+                    this.croppedImage = true;
+                    new CropImage(this.canvas, true, false, false, this.params);
+                    break;
+                case 'eraser':
+                    this.canvas.off('mouse:down');
+                    this.currentActiveTool = type;
+                    let inst = this;
+                    this.canvas.isDrawingMode = false;
+                    inst.selectable = true;
+                    this.canvas.on("mouse:down", function () {
+                        if (inst.canvas.getActiveObject()) {
+                            inst.canvas.remove(inst.canvas.getActiveObject());
+                            let canvasProperties = {width: inst.canvas.width, height: inst.canvas.height}
+                            let currentCanvas = {json: inst.canvas.toJSON(), canvas: canvasProperties};
+                            new CanvasHistory(inst.canvas, currentCanvas);
+                        }
+                    });
+                    break;
+                default:
+            }
+        },
+        saveImage() {
+            this.cancelCroppingImage();
+            return this.canvas.toDataURL('image/jpeg', 1);
+        },
+        uploadImage(e) {
+            this.cancelCroppingImage();
+            let inst = this;
+            let reader = new FileReader();
+            reader.onload = function (event) {
+                let imgObj = new Image();
+                imgObj.src = event.target.result;
+                imgObj.onload = function () {
+                    let image = new fabric.Image(imgObj);
+                    if (inst.canvas.width <= image.width || inst.canvas.height <= image.height) {
+                        let canvasAspect = inst.canvas.width / inst.canvas.height;
+                        let imgAspect = image.width / image.height;
+                        let top, left, scaleFactor;
+                        if (canvasAspect >= imgAspect) {
+                            scaleFactor = inst.canvas.height / image.height
+                            top = 0;
+                            left = -((image.width * scaleFactor) - inst.canvas.width) / 2;
+                        } else {
+                            scaleFactor = inst.canvas.width / image.width;
+                            left = 0;
+                            top = -((image.height * scaleFactor) - inst.canvas.height) / 2;
+                        }
+                        inst.canvas.setBackgroundImage(image, inst.canvas.renderAll.bind(inst.canvas), {
+                            top: top,
+                            left: left,
+                            scaleX: scaleFactor,
+                            scaleY: scaleFactor
+                        });
+                        let canvasProperties = {width: inst.canvas.width, height: inst.canvas.height};
+                        let currentCanvas = {
+                            json: inst.canvas.toJSON(),
+                            croppedImage: inst.canvas.toDataURL(),
+                            canvas: canvasProperties
+                        };
+                        new CanvasHistory(inst.canvas, currentCanvas)
+                        inst.canvas.renderAll();
+                    } else {
+                        let center = inst.canvas.getCenter();
+                        inst.canvas.setBackgroundImage(image, inst.canvas.renderAll.bind(inst.canvas), {
+                            top: center.top,
+                            left: center.left,
+                            originX: 'center',
+                            originY: 'center'
+                        });
+                        let canvasProperties = {width: inst.canvas.width, height: inst.canvas.height};
+                        let currentCanvas = {
+                            json: inst.canvas.toJSON(),
+                            croppedImage: inst.canvas.toDataURL(),
+                            canvas: canvasProperties
+                        };
+                        new CanvasHistory(inst.canvas, currentCanvas)
+                        inst.canvas.renderAll();
+                    }
+                }
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        },
+        customCircle(type, params) {
+            this.createArrow = false;
+            new Arrow(this.canvas, false)
+            this.currentActiveMethod = this.customCircle;
+            this.createRect = false;
+            this.canvas.isDrawingMode = false;
+            if (!params.disableCircleEditing) {
+                this.createCircle = true;
+                new Shape(this.canvas, this.createCircle, type, params);
+            } else {
+                this.drawCircle(params);
+            }
+        },
+        customRect(type, params) {
+            this.createArrow = false;
+            new Arrow(this.canvas, false)
+            this.currentActiveMethod = this.customRect;
+            this.canvas.isDrawingMode = false;
+            this.createCircle = false;
+            if (params.width && params.height) {
+                this.drawRect(params);
+            } else {
+                this.createRect = true;
+                new Shape(this.canvas, this.createRect, type, params);
+            }
+        },
+        drawArrow(params) {
+            this.currentActiveMethod = this.drawArrow;
+            this.drag();
+            this.createArrow = true;
+            new Arrow(this.canvas, this.createArrow, params);
+        },
+        cancelCroppingImage() {
+            this.croppedImage = false;
+            new CropImage(this.canvas, false, false, true)
+        },
+        applyCropping() {
+            new CropImage(this.canvas, true, true);
+            this.cancelCroppingImage();
+        },
+        drag() {
+            this.currentActiveMethod = this.drag;
+            this.canvas.isDrawingMode = false;
+            this.canvas.forEachObject(object => {
+                object.selectable = true;
+                object.evented = true;
+            });
+            if (this.createArrow) {
+                this.createArrow = false;
+                new Arrow(this.canvas, false);
+            }
+            if (this.createRect || this.createCircle) {
+                this.createRect = false;
+                this.createCircle = false;
+                new Shape(this.canvas, false);
+            }
+            if (this.createText) {
+                this.createText = false;
+                new Text(this.canvas, false);
+            }
+            this.cancelCroppingImage();
+        },
+        addText(params) {
+            this.currentActiveMethod = this.addText;
+            this.drag();
+            this.createText = true;
+            new Text(this.canvas, this.createText, params);
+        },
+        undo() {
+            if (this.canvas.getActiveObject()) {
+                this.canvas.discardActiveObject().renderAll()
+            }
+            this.drag();
+            this.history = new CanvasHistory();
+            if (this.history.length) {
+                this.objects.push(this.history.pop())
+                if (this.history[this.history.length - 1]) {
+                    if (this.history[this.history.length - 1].canvas) {
+                        let lastCanvasProperties = this.history[this.history.length - 1].canvas;
+                        if (lastCanvasProperties.width != this.canvas.width || lastCanvasProperties.height != this.canvas.height) {
+                            this.canvas.setDimensions({
+                                width: lastCanvasProperties.width,
+                                height: lastCanvasProperties.height
+                            })
+                            JSON.parse(JSON.stringify(this.history[this.history.length - 1]))
+                            this.canvas.loadFromJSON(this.history[this.history.length - 1].json)
+                        }
+                        else{
+                            let canvasObjects = this.history[this.history.length - 1].json.objects;
+                            if(this.canvas._objects.length > 0){
+                                this.objects.push(this.canvas._objects.pop());
+                            }
+                        }
+                    }
+                    if (this.history[this.history.length - 1].croppedImage && this.history[this.history.length - 1].imagePosition) {
+                        let inst = this;
+                        fabric.Image.fromURL(this.history[this.history.length - 1].croppedImage, function (img) {
+                            img.set({
+                                top: -(inst.history[inst.history.length - 1].imagePosition.top),
+                                left: -(inst.history[inst.history.length - 1].imagePosition.left),
+                            });
+                            inst.canvas.setBackgroundImage(img, inst.canvas.renderAll.bind(inst.canvas));
+                        });
+                    } else {
+                        this.setBackgroundImage(this.history[this.history.length - 1].croppedImage)
+                    }
+                    this.canvas.renderAll();
+                }
+            }
+        },
+        redo() {
+            this.drag();
+            if (this.objects.length > 0) {
+                if (this.objects[this.objects.length - 1]) {
+                    if (this.objects[this.objects.length - 1].canvas && !this.objects[this.objects.length - 1].type) {
+                        let lastCanvasProperties = this.objects[this.objects.length - 1].canvas;
+                        if (lastCanvasProperties.width != this.canvas.width || lastCanvasProperties.height != this.canvas.height) {
+                            this.canvas.setDimensions({
+                                width: lastCanvasProperties.width,
+                                height: lastCanvasProperties.height
+                            })
+                        }
+                        JSON.parse(JSON.stringify(this.objects[this.objects.length - 1]))
+                        this.canvas.loadFromJSON(this.objects[this.objects.length - 1].json)
+                    }
+                    else if(this.objects[this.objects.length - 1].type){
+                        this.canvas.add(this.objects.pop())
+                    }
+                    if (this.objects[this.objects.length - 1].imagePosition && this.objects[this.objects.length - 1].croppedImage) {
+                        let currentProperties;
+                        currentProperties = this.objects[this.objects.length - 1].imagePosition;
+                        let inst = this;
+                        fabric.Image.fromURL(this.objects[this.objects.length - 1].croppedImage, function (img) {
+                            inst.canvas.setBackgroundImage(img, inst.canvas.renderAll.bind(inst.canvas));
+                        });
+                    }
+                }
+                new CanvasHistory(false, false, this.objects.pop())
+            }
+        },
+        drawing(params) {
+            if (this.canvas.__eventListeners) {
+                this.canvas.__eventListeners['object:added'] = null;
+            }
+            this.currentActiveMethod = this.drawing;
+            this.drag();
+            this.canvas.isDrawingMode = params.drawingMode;
+            this.canvas.freeDrawingBrush.color = params.stroke;
+            this.canvas.freeDrawingBrush.width = params.strokeWidth;
+            this.canvas.freeDrawingBrush.shadow = new fabric.Shadow({
+                blur: 0,
+                affectStroke: true,
+                color: params.stroke,
+                id: params.id ? params.id : ''
+            });
+            let inst = this;
+            this.canvas.on("object:added", function () {
+                if (inst.canvas.isDrawingMode) {
+                    let canvasProperties = {width: inst.canvas.width, height: inst.canvas.height}
+                    let currentCanvas = {json: inst.canvas.toJSON(), canvas: canvasProperties};
+                    new CanvasHistory(inst.canvas, currentCanvas);
+                }
+            });
+            this.canvas.renderAll();
+        },
+        drawRect(params) {
+            this.drag();
+            this.canvas.discardActiveObject();
+            if (!this.canvas.getActiveObject()) {
+                this.rectangle = new fabric.Rect({
+                    width: params.width,
+                    height: params.height,
+                    strokeWidth: params.strokeWidth,
+                    stroke: params.stroke,
+                    fill: params.fill,
+                    opacity: params.opacity,
+                    left: params.left,
+                    top: params.top,
+                    noScaleCache: params.noScaleCache
+                });
+                this.canvas.add(this.rectangle);
+            }
+        },
+        drawCircle(params) {
+            this.drag();
+            this.canvas.discardActiveObject();
+            this.circle = new fabric.Circle({
+                left: params.left,
+                top: params.top,
+                radius: params.radius,
+                strokeWidth: params.strokeWidth,
+                stroke: params.stroke,
+                fill: params.fill,
+                borderColor: 'yellow',
+                noScaleCache: params.noScaleCache
+            });
+            this.canvas.add(this.circle);
+            this.canvas.renderAll();
+        }
+    }
+}
+</script>
+<style>
+    .upper-canvas{
+        z-index: 1;
+    }
+</style>

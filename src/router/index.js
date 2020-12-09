@@ -11,7 +11,7 @@ import Lesson from '@/components/Lesson'
 import Registration from '@/components/Auth/Registration'
 import Login from '@/components/Auth/Login'
 import Logout from '@/components/Auth/Logout'
-// import Draft from '@/components/Draft'
+import Draft from '@/components/Draft'
 import Profile from '@/components/Profile/Profile'
 import Class from '@/components/Class'
 import CustomTitle from '@/components/CustomTitle'
@@ -34,6 +34,11 @@ export default new Router({
       path: '/',
       name: 'main',
       component: Main
+    },
+    {
+      path: '/draft',
+      name: 'draft',
+      component: Draft
     },
     {
       path: '/class',
@@ -63,11 +68,6 @@ export default new Router({
       name: 'login',
       component: Login
     },
-    // {
-    //   path: '/draft',
-    //   name: 'draft',
-    //   component: Draft
-    // },
     {
       path: '/logout',
       name: 'logout',

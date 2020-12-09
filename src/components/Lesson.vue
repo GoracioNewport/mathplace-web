@@ -1,7 +1,11 @@
 <template lang="pug">
   .content-wrapper
     //- p(style="height:400px;") dsds
-    Editor(:canvasWidth='Number(400)' :canvasHeight='Number(400)' ref='editor' :editorId='Number(1)')
+    //- Editor(style="background:red;" :canvasWidth='Number(400)' :canvasHeight='Number(400)' ref='editor')
+    md-dialog(:md-active.sync='showDialogDraft')
+      Editor(v-if="showDialogDraft" style="background:red;" :canvasWidth='Number(400)' :canvasHeight='Number(400)' ref='editor')
+      md-dialog-actions
+        md-button.md-primary(@click='showDialogDraft = false') Закрыть
 
     md-snackbar(md-position='center' :md-active.sync='this.showSnackbarSend' :md-duration='4000')
       span Ответ сохранен
@@ -73,9 +77,9 @@
         md-list-item.md-button(@click="goBack")
           md-icon arrow_back
           span.md-list-item-text В главное меню
-        //- md-list-item.md-button
-        //-   md-icon create
-        //-   span.md-list-item-text Черновик
+        md-list-item.md-button(to="/draft")
+          md-icon create
+          span.md-list-item-text Черновик
         //- md-list-item.md-button(@click="showComments(tasksInfo.token)")
           md-icon forum
           span.md-list-item-text Комментарии
@@ -478,7 +482,7 @@ export default {
     console.log(this.$refs.editor)
     // let textModeOptions = { id: 'title', fill: 'red', fontFamily: 'Verdana',fontSize: 16, placeholder: 'Type something'}
     // this.$refs.editor.set('text',textModeOptions)
-    this.$refs.editor.set('freeDrawing') // устанавливаем опции для черновика
+    // this.$refs.editor.set('freeDrawing') // устанавливаем опции для черновика
     this.$forceUpdate()
   },
   data () {
@@ -501,6 +505,7 @@ export default {
       thisNumberTask: 0,
       isLoading: true,
       rightAns: false,
+      showDialogDraft: false,
       secondsLesson: 0,
       showComment: false,
       arrayComments: [],
@@ -541,6 +546,11 @@ export default {
       this.myTopics = this.convertToArray(this.getMyTopicsDetailedInfo[id].stats)
       console.log(this.myTopics)
       this.showStats = true
+    },
+    showDraft () {
+      this.showNavigation = false
+      this.showDialogDraft = true
+      this.$refs.editor.set('text') // устанавливаем опции для черновика
     },
     showSnackbarSendWindow () {
       this.showSnackbarSend = true
