@@ -235,7 +235,7 @@
             size = "40",
             placeholder = "Введите ответ",
             class = "ans",
-            v-bind:disabled = "Number(this.taskList[this.activeTask].tries) === 2",
+            v-bind:disabled = "Number(this.taskList[this.activeTask].tries) === 2 && !this.tasksInfo.isHiddenResults",
             v-model = 'answer',
             @keyup.enter = 'sendAnswer',
             v-bind:class = "{ 'unknownTask' : this.tasksInfo.isHiddenResults && Number(this.taskList[this.activeTask].tries) !== 1, 'solvedTask' : Number(this.taskList[this.activeTask].tries) == 2 || Number(this.taskList[this.activeTask].tries) == 3 , 'failedTask' : Number(this.taskList[this.activeTask].tries) == 0 }")
@@ -287,8 +287,8 @@
               :disabled = 'error === "too_late"'
               @click = 'sendAnswer')
                 span(v-if ='this.taskList[this.activeTask].type === "upload"') Загрузить ответ
-                span(v-else-if ='!(this.tasksInfo.isHiddenResults && Number(this.taskList[this.activeTask].tries) !== 1) && (Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof")', @click='showSnackbarSendWindow') Сохранить
-                span(v-else-if ='(this.tasksInfo.isHiddenResults && Number(this.taskList[this.activeTask].tries) !== 1) || (this.activeTask !== (this.taskList.length - 1))') Дальше
+                span(v-else-if ='this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Сохранить
+                span(v-else-if ='(this.taskList[this.activeTask].type === "theory" || this.taskList[this.activeTask].type === "proof") && (this.activeTask !== (this.taskList.length - 1))') Дальше
                 span(v-else) Завершить
             a.solutionButton.but(v-if ='this.taskList[this.activeTask].solutionType !== "hide"' @click='solutionShown = true')
               md-tooltip(md-direction='right') Посмотреть решение
@@ -560,12 +560,12 @@ export default {
     },
     async sendAnswer () { // Боже, как тут много говна... хуй вообще разберешь какой пиздец тут творится
       if (this.taskList[this.activeTask].type === 'upload') {
-        if (typeof this.taskList[this.activeTask].userAnswer === 'object') this.taskList[this.activeTask].uploadAnswer = this.taskList[this.activeTask].userAnswer
+        if (typeof this.taskList[this.activeTask].userAnswer === 'object') this.taskList[this.activeTask].uploadAnswer = Object.values(this.taskList[this.activeTask].userAnswer)
         this.showUploadMenu = true
       } else if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
         if (this.activeTask === (this.taskList.length - 1) && (Number(this.taskList[this.activeTask].tries) === 2 || Number(this.taskList[this.activeTask].tries) === 3)) this.$router.push('/main')
-        else if (Number(this.taskList[this.activeTask].tries) !== 2 && Number(this.taskList[this.activeTask].tries) !== 3) { // Task complition
+        else { // Task complition
           let verdict = 1
 
           // Если урок завершился, то шлем нафиг
@@ -610,17 +610,18 @@ export default {
           this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'grades'})
           this.taskList[this.activeTask].tries = Number(verdict)
           // Обновляем значения последних ответов
-          for (let i = 0; i < this.taskList.length; i++) (typeof this.taskList[i].userAnswer === 'object') ? newStatus[i] = this.taskList[i].userAnswer : newStatus[i] = String(this.taskList[i].userAnswer)
+          for (let i = 0; i < this.taskList.length; i++) (typeof this.taskList[i].userAnswer === 'object') ? newStatus[i] = {...[this.taskList[i].userAnswer]} : newStatus[i] = String(this.taskList[i].userAnswer)
           newStatus[this.activeTask] = String(this.answer)
           this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'lastAnswers'})
           this.taskList[this.activeTask].userAnswer = String(this.answer)
+          // for (let i = 0; i < this.taskList.length; i++) (typeof this.taskList[i].userAnswer === 'object') ? newStatus[i] = Object(this.taskList[i].userAnswer).keys : newStatus[i] = newStatus[i]
           // Проверка для теории и задачи на доказательство, что бы можно было листать задачи по нажатии на кнопку
-          if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof' || (this.tasksInfo.isHiddenResults && Number(this.taskList[this.activeTask].tries) !== 1)) {
+          if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') {
             if (this.activeTask === this.taskList.length - 1) this.$router.push('/main')
             else this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
+          } else {
+            this.showSnackbarSendWindow()
           }
-        } else {
-          this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
         }
       }
     },
