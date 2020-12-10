@@ -51,7 +51,7 @@
                 .theoryComponent(
                   v-for = 'component in currentEditTask.statement'
                 )
-                  p {{currentEditTask}}
+                  //- p {{currentEditTask}}
                   .button.img.delete_button(@click='currentEditTask.statement.splice(currentEditTask.statement.indexOf(component), 1)')
                   .theoryTextField(v-if ='component.type === "text"')
                     vue-editor.theoryText(placeholder = 'Введите текст здесь', v-model = "component.inner" :editorToolbar ='[["bold", "italic", "underline", "strike"], [{ "color": [] }, { "background": [] }], ["link", "video"], ["clean"]]')
