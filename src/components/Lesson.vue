@@ -282,19 +282,19 @@
                   md-tooltip(md-direction='right') Удалить вариант ответа
         .enter
           .send
-            a.solutionButton.but(@click='solutionShown = true')
-              md-tooltip(md-direction='right') Посмотреть решение
-              img(src='@/assets/images/lock.png' alt='Решения')
-                      //- .but
-            //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
             button.submit-button.sub(
               type = 'submit',
               :disabled = 'error === "too_late"'
               @click = 'sendAnswer')
                 span(v-if ='this.taskList[this.activeTask].type === "upload"') Загрузить ответ
-                span(v-else-if ='Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"', @click='showSnackbarSendWindow') Сохранить
-                span(v-else-if = 'this.activeTask !== (this.taskList.length - 1)') Дальше
+                span(v-else-if ='!(this.tasksInfo.isHiddenResults && Number(this.taskList[this.activeTask].tries) !== 1) && (Number(this.taskList[this.activeTask].tries) !== 2 && this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof")', @click='showSnackbarSendWindow') Сохранить
+                span(v-else-if ='(this.tasksInfo.isHiddenResults && Number(this.taskList[this.activeTask].tries) !== 1) || (this.activeTask !== (this.taskList.length - 1))') Дальше
                 span(v-else) Завершить
+            a.solutionButton.but(v-if ='this.taskList[this.activeTask].solutionType !== "hide"' @click='solutionShown = true')
+              md-tooltip(md-direction='right') Посмотреть решение
+              img(src='@/assets/images/lock.png' alt='Решения')
+                      //- .but
+            //-   img(src='@/assets/images/comment_1.png', alt='Комментарии')
     .placeholderScreen(v-else-if ='error === "no_material_author" || error === "no_material_member"')
       .ownerScreen(v-if = 'userId === tasksInfo.author')
         div
@@ -615,7 +615,7 @@ export default {
           this.updateUserTopicStatus({key: this.getCurrentTopic, value: newStatus, field: 'lastAnswers'})
           this.taskList[this.activeTask].userAnswer = String(this.answer)
           // Проверка для теории и задачи на доказательство, что бы можно было листать задачи по нажатии на кнопку
-          if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof') {
+          if (this.taskList[this.activeTask].type === 'theory' || this.taskList[this.activeTask].type === 'proof' || (this.tasksInfo.isHiddenResults && Number(this.taskList[this.activeTask].tries) !== 1)) {
             if (this.activeTask === this.taskList.length - 1) this.$router.push('/main')
             else this.changeActiveTask(this.activeTask + 1, this.taskList[this.activeTask + 1])
           }
@@ -948,7 +948,6 @@ export default {
   .solutionButton
     grid-column 2
     grid-row 1
-    margin auto
   .likeButton
     grid-column 1
     grid-row 1
@@ -1227,9 +1226,8 @@ export default {
     }
 
   .send
-    display grid
-    grid-template-columns 90% 10%
-    grid-template-rows auto
+    display flex
+    justify-content center
     positine relative
     height auto
     width 100%
@@ -1254,7 +1252,7 @@ export default {
     // }
   .sub
     position relative
-    width auto
+    width 80%
     height 70px
     min-height 50px
     display inline-block
