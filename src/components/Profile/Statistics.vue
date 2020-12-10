@@ -60,8 +60,8 @@
               img.solutionImage(v-else :src ='component.inner')
         md-tab(md-label='Ответ ученика' v-if ='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type !== "theory" && myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer !== "proof"')
           .solutionBox
-            //- span {{ myTopics[imageTopic].stats[imageUser] }}
-            .solutionComponent(v-if='Number(myTopics[imageTopic].stats[imageUser].solveStats[imageTask]) === 1')
+            //- span {{ myTopics[imageTopic].stats[imageUser].answers }}
+            .solutionComponent(v-if='(Number(myTopics[imageTopic].stats[imageUser].solveStats[imageTask]) === 1) || (myTopics[imageTopic].stats[imageUser].answers[imageTask] === "null")')
               span.solutionText Ученик пока не решил эту задачу
             .solutionWrapper(v-else)
               .solutionComponent(v-if='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type === "upload"')
