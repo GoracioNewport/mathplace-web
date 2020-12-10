@@ -6,7 +6,7 @@
           .navbar-content
             .header-logo
               router-link(to = '/')
-                img.mathplace-img-logo.md-display-3(src="@/components/images/logo_purple.png")
+                img.mathplace-img-logo.md-display-3(src="@/components/images/logo_1.svg")
               //- router-link(to = '/main').mathplace-logo.md-display-3 MathPlace
             md-button.joinLesson(:class="{ active: menuShow}", @click="joinMenuShow = true") Присоединиться
             //- .button-burger(

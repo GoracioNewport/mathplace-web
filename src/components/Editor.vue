@@ -1,7 +1,10 @@
 <template lang="pug">
     //- div.custom-editor
         //- p dskjdskjdbkj
-    Editor(style="position:relative;width:80%;margin: 0 auto;margin-left:20%;margin-top:100px;text-align: center;" :canvasWidth='Number(400)' :canvasHeight='Number(400)' ref='editor')
+    <div class="custom-editor">
+        <canvas :id="editorId"></canvas>
+    </div>
+    //- Editor(style="position:relative;width:80%;margin: 0 auto;margin-left:20%;margin-top:100px;text-align: center;" :canvasWidth='Number(400)' :canvasHeight='Number(400)' ref='editor')
 </template>
 
 <script>

@@ -3,7 +3,7 @@
     //- p(style="height:400px;") dsds
     //- Editor(style="background:red;" :canvasWidth='Number(400)' :canvasHeight='Number(400)' ref='editor')
     md-dialog(:md-active.sync='showDialogDraft')
-      Editor(v-if="showDialogDraft" style="background:red;" :canvasWidth='Number(400)' :canvasHeight='Number(400)' ref='editor')
+      Editor(v-if="showDialogDraft" :canvasWidth='Number(400)' :canvasHeight='Number(400)' ref='editor' :editorId='Number(1)')
       md-dialog-actions
         md-button.md-primary(@click='showDialogDraft = false') Закрыть
 
@@ -77,7 +77,7 @@
         md-list-item.md-button(@click="goBack")
           md-icon arrow_back
           span.md-list-item-text В главное меню
-        md-list-item.md-button(to="/draft")
+        md-list-item.md-button(@click="showDialogDraft=true")
           md-icon create
           span.md-list-item-text Черновик
         //- md-list-item.md-button(@click="showComments(tasksInfo.token)")
@@ -374,8 +374,8 @@ import Dots from 'vue-material-design-icons/DotsHorizontal.vue'
 import Wrong from 'vue-material-design-icons/Close.vue'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions, mapGetters } from 'vuex'
-import Editor from 'vue-image-markup'
 import pdf from 'vue-pdf'
+import Editor from './Editor'
 import firebase from 'firebase/app'
 import 'firebase/storage'
 

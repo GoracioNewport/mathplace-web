@@ -11,7 +11,7 @@ import Lesson from '@/components/Lesson'
 import Registration from '@/components/Auth/Registration'
 import Login from '@/components/Auth/Login'
 import Logout from '@/components/Auth/Logout'
-import Draft from '@/components/Draft'
+import Editor from '@/components/Editor'
 import Profile from '@/components/Profile/Profile'
 import Class from '@/components/Class'
 import CustomTitle from '@/components/CustomTitle'
@@ -36,9 +36,9 @@ export default new Router({
       component: Main
     },
     {
-      path: '/draft',
-      name: 'draft',
-      component: Draft
+      path: '/editor',
+      name: 'editor',
+      component: Editor
     },
     {
       path: '/class',
