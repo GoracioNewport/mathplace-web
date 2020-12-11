@@ -39,7 +39,7 @@
         md-dialog-actions
           md-button.md-primary(@click='showCreateClass=false') Закрыть
           md-button.md-primary(@click='saveProfile') Сохранить
-      button.designButtonLesson.bottom-button(@click='showCreateClass = true') Присоединиться к уроку
+      //- button.designButtonLesson.bottom-button(@click='showCreateClass = true') Присоединиться к уроку
       .joinCustomTitle(@click="joinMenuShow = !joinMenuShow, showDialog = true")
         button.designButtonLesson.bottom-button Присоединиться к уроку
 

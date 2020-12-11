@@ -138,7 +138,7 @@
             //- md-field.md-toolbar-section-end(md-clearable='')
             //-   md-input(placeholder='Поиск по имени...', v-model='search', @input='searchOnTable')
           md-table-row(slot='md-table-row', slot-scope='{ item }')
-            md-table-cell.nameSlot(md-label='Имя', md-sort-by='name') {{ item.name }}
+            md-table-cell.nameSlot(md-label='Имя  ', md-sort-by='name') {{ item.name }}
             md-table-cell.taskSlot(v-for = '(task, taskIndex) in item.solveStats' :key = 'taskIndex'
             :md-label = '(taskIndex + 1).toString()')
               Dots.answerNo.answerLabel(v-if = 'Number(task) === 1')
@@ -583,8 +583,10 @@ export default {
         this.showUploadMenu = true
       } else if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
-        if (this.activeTask === (this.taskList.length - 1) && (Number(this.taskList[this.activeTask].tries) === 2 || Number(this.taskList[this.activeTask].tries) === 3)) this.$router.push('/main')
-        else { // Task complition
+        if (this.activeTask === (this.taskList.length - 1) && (Number(this.taskList[this.activeTask].tries) === 2 || Number(this.taskList[this.activeTask].tries) === 3)&&false){
+          // this.showSnackbarSendWindow()
+         this.$router.push('/main')
+        }else { // Task complition
           let verdict = 1
 
           // Если урок завершился, то шлем нафиг
