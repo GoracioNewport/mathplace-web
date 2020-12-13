@@ -57,15 +57,15 @@
                   .theoryText(v-if ='component.type === "img"')
                     md-field
                       label Выберите картинку
-                      md-file(name='img', accept='image/*', @md-change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(currentEditTask), currentEditTask.statement.indexOf(component))")
+                      md-file(v-model ='component.inner.name' name='img', accept='image/*', @md-change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(currentEditTask), currentEditTask.statement.indexOf(component))")
                   .theoryTextFile(v-else-if ='component.type === "file"')
                     md-field
                       label Выберите PDF-Файл
                       md-file(name='file', accept='application/pdf', @md-change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(currentEditTask), currentEditTask.statement.indexOf(component))")
 
-                md-button.md-raised.md-primary(@click='addContent(tasks.indexOf(currentEditTask), "text")') Добавить абзац
-                md-button.md-raised.md-primary(@click='addContent(tasks.indexOf(currentEditTask), "img")') Добавить картинку
-                md-button.md-primary(@click='addContent(tasks.indexOf(currentEditTask), "file")') Загрузить PDF-файл
+                md-button.md-raised.md-primary(@click='addContent("text")') Добавить абзац
+                md-button.md-raised.md-primary(@click='addContent("img")') Добавить картинку
+                md-button.md-primary(@click='addContent("file")') Загрузить PDF-файл
           md-tab(md-label='Ответ и решение' v-if ="currentEditTask.type === 'task'")
             .overflowBox
               .taskEditBox(v-if ="currentEditTask.type === 'task'")
@@ -677,13 +677,12 @@ export default {
         } this.showCreateTask = true
       }
     },
-    addContent (id, type) {
+    addContent (type) {
       var data = {
         type: type,
         inner: ''
       }
-      if (typeof id === 'number') this.tasks[id].statement.push(data)
-      else this.tasks[id[0]].tasks[id[1]].statement.push(data)
+      this.currentEditTask.statement.push(data)
     },
     editTask (task) {
       this.currentEditTask = task
