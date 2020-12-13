@@ -8,6 +8,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import {fabric} from 'fabric';
 import Shape from './assets/js/shape';
 import Text from './assets/js/text';
