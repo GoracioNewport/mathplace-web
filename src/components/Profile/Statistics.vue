@@ -70,7 +70,7 @@
                   img.solutionImage(v-else :src ='component.inner')
               .solutionComponent(v-else)
                 span.solutionText {{ (typeof myTopics[imageTopic].stats[imageUser].answers[imageTask] === "string") ? myTopics[imageTopic].stats[imageUser].answers[imageTask] : myTopics[imageTopic].stats[imageUser].answers[imageTask].join(", ") }}
-          .buttonJudgeBox(v-if ='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type === "upload"')
+          .buttonJudgeBox(v-if ='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type !== "theory" && myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type !== "proof"')
             md-button.md-raised(@click ='markSolutionAs("right")').md-primary Правильно
             md-button.md-raised(@click ='markSolutionAs("wrong")').md-accent Неправильно
         md-tab(md-label='Правильный ответ' v-if ='myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type !== "upload" && myTopics[imageTopic].stats[imageUser].userTasks[imageTask].type !== "theory" && myTopics[imageTopic].stats[imageUser].userTasks[imageTask].answer !== "proof"')

@@ -1,5 +1,12 @@
 <template lang="pug">
   .content-wrapper
+    //- p(style="height:400px;") dsds
+    //- Editor(style="background:red;" :canvasWidth='Number(400)' :canvasHeight='Number(400)' ref='editor')
+    md-dialog(:md-active.sync='showDialogDraft')
+      Editor(v-if="showDialogDraft" :canvasWidth='Number(400)' :canvasHeight='Number(400)' ref='editor' :editorId='Number(1)')
+      md-dialog-actions
+        md-button.md-primary(@click='showDialogDraft = false') Закрыть
+
     md-snackbar(md-position='center' :md-active.sync='this.showSnackbarSend' :md-duration='4000')
       span Ответ сохранен
       md-button.md-primary(@click='showSnackbarSend = false') Ок!
@@ -70,9 +77,9 @@
         md-list-item.md-button(@click="goBack")
           md-icon arrow_back
           span.md-list-item-text В главное меню
-        //- md-list-item.md-button
-        //-   md-icon create
-        //-   span.md-list-item-text Черновик
+        md-list-item.md-button(@click="showDialogDraft=true")
+          md-icon create
+          span.md-list-item-text Черновик
         //- md-list-item.md-button(@click="showComments(tasksInfo.token)")
           md-icon forum
           span.md-list-item-text Комментарии
@@ -131,7 +138,7 @@
             //- md-field.md-toolbar-section-end(md-clearable='')
             //-   md-input(placeholder='Поиск по имени...', v-model='search', @input='searchOnTable')
           md-table-row(slot='md-table-row', slot-scope='{ item }')
-            md-table-cell.nameSlot(md-label='Имя', md-sort-by='name') {{ item.name }}
+            md-table-cell.nameSlot(md-label='Имя  ', md-sort-by='name') {{ item.name }}
             md-table-cell.taskSlot(v-for = '(task, taskIndex) in item.solveStats' :key = 'taskIndex'
             :md-label = '(taskIndex + 1).toString()')
               Dots.answerNo.answerLabel(v-if = 'Number(task) === 1')
@@ -368,6 +375,7 @@ import Wrong from 'vue-material-design-icons/Close.vue'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { mapActions, mapGetters } from 'vuex'
 import pdf from 'vue-pdf'
+import Editor from './Editor'
 import firebase from 'firebase/app'
 import 'firebase/storage'
 
@@ -388,6 +396,7 @@ export default {
     Loading,
     VueEditor,
     pdf,
+    Editor,
     Right,
     Dots,
     Wrong
@@ -470,6 +479,10 @@ export default {
     if (this.getUser.like.find(t => t === this.getCurrentTopic)) this.topicLiked = true
     // Отключаем загрузочный оверлей и обновляем все на всякий случай
     this.isLoading = false
+    console.log(this.$refs.editor)
+    // let textModeOptions = { id: 'title', fill: 'red', fontFamily: 'Verdana',fontSize: 16, placeholder: 'Type something'}
+    // this.$refs.editor.set('text',textModeOptions)
+    // this.$refs.editor.set('freeDrawing') // устанавливаем опции для черновика
     this.$forceUpdate()
   },
   data () {
@@ -492,6 +505,7 @@ export default {
       thisNumberTask: 0,
       isLoading: true,
       rightAns: false,
+      showDialogDraft: false,
       secondsLesson: 0,
       showComment: false,
       arrayComments: [],
@@ -533,11 +547,16 @@ export default {
       console.log(this.myTopics)
       this.showStats = true
     },
+    showDraft () {
+      this.showNavigation = false
+      this.showDialogDraft = true
+      this.$refs.editor.set('text') // устанавливаем опции для черновика
+    },
     showSnackbarSendWindow () {
       this.showSnackbarSend = true
-      setTimeout(() => {
-        this.showSnackbarSend = false
-      }, 3000)
+      // setTimeout(() => {
+      //   this.showSnackbarSend = false
+      // }, 3000)
     },
     showBigImage (image) {
       this.showDialogBigImage = true
@@ -564,8 +583,10 @@ export default {
         this.showUploadMenu = true
       } else if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
-        if (this.activeTask === (this.taskList.length - 1) && (Number(this.taskList[this.activeTask].tries) === 2 || Number(this.taskList[this.activeTask].tries) === 3)) this.$router.push('/main')
-        else { // Task complition
+        if (this.activeTask === (this.taskList.length - 1) && (Number(this.taskList[this.activeTask].tries) === 2 || Number(this.taskList[this.activeTask].tries) === 3)&&false){
+          // this.showSnackbarSendWindow()
+         this.$router.push('/main')
+        }else { // Task complition
           let verdict = 1
 
           // Если урок завершился, то шлем нафиг
@@ -1274,9 +1295,10 @@ export default {
     vertical-align middle
     &:hover
       transition: 0.8s;
-      background-color #ffffff
-      color #763DCA
-      border: 2px solid #763DCA;
+      opacity 0.75
+      // background-color #ffffff
+      // color #763DCA
+      // border: 2px solid #763DCA;
 
   .but
     position relative

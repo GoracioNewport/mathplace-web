@@ -26,7 +26,20 @@
       //-     img(src="@/components/images/logic1.png", width= "50px", height = "50px")
       //-   a(href='#graphs', v-smooth-scroll='')
       //-     img(src="@/components/images/graph_icon1.png", width= "50px", height = "50px")
+      md-dialog(:md-active.sync='showCreateClass')
+        md-dialog-title Создать класс
+        .settingsMenuBox(style="margin:20px; margin-top:0px")
+          md-field(style="width:500px" md-inline='')
+            label Введите название класса
+            md-input(v-model='newName')
 
+          md-field(md-inline='')
+            label Введите предмет
+            md-input(v-model='newName')
+        md-dialog-actions
+          md-button.md-primary(@click='showCreateClass=false') Закрыть
+          md-button.md-primary(@click='saveProfile') Сохранить
+      //- button.designButtonLesson.bottom-button(@click='showCreateClass = true') Присоединиться к уроку
       .joinCustomTitle(@click="joinMenuShow = !joinMenuShow, showDialog = true")
         button.designButtonLesson.bottom-button Присоединиться к уроку
 
@@ -391,6 +404,7 @@ export default {
       arrayLogics: [],
       arrayGraphs: [],
       isLoading: true,
+      showCreateClass: false,
       showDialog: false,
       joinMenuShow: false,
       customTopicId: '',
