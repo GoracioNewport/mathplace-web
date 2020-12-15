@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {fabric} from "fabric";
 import CanvasHistory from "./canvasHistory.js";
 

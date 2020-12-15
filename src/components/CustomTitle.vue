@@ -7,15 +7,10 @@
     md-dialog(:md-active.sync='showDrawerGrades')
       md-dialog-title Добавить оценку
       .settingsMenuBox
-        //- .settingsMenuText
-        //-   p Введите имя
         .settingsMenuField(style="margin:10px")
           md-field(md-inline='')
             label Введите оценку
             md-input(v-model='newNameGrade')
-
-        //- .settingsMenuText
-        //-   p Добавьте иконку профиля
         .settingsMenuField(style="margin:10px")
           md-field(md-inline='')
             label Введите количество баллов
@@ -23,26 +18,10 @@
       md-dialog-actions
         md-button.md-primary(@click='showDrawerGrades=false') Закрыть
         md-button.md-primary(@click='addGrade') Сохранить
-    //- md-dialog(:md-active.sync='showCreateTask')
-    //-   md-dialog-title Изменить профиль
-    //-   .componentBox
-    //-     .componentName
-    //-       strong(v-if = 'task.type === "theory"') Теория
-    //-       strong(v-else) Задача
-    //-     //- .taskType
-    //-     //-   label(for='theory') Теория
-    //-     //-     input#theory(type = 'radio', value = 'theory', v-model = "task.type")
-    //-     //-   label(for='task') Задача
-    //-     //-     input#task(type = 'radio', value = 'task', v-model = "task.type")
     md-dialog(:md-active.sync='showCreateTask' v-if='currentEditTask !== undefined')
       md-dialog-title(v-if = 'currentEditTask.type === "theory"') Теория
       md-dialog-title(v-else) Задача
       .componentBox
-        //- .taskType
-        //-   label(for='theory') Теория
-        //-     input#theory(type = 'radio', value = 'theory', v-model = "task.type")
-        //-   label(for='task') Задача
-        //-     input#task(type = 'radio', value = 'task', v-model = "task.type")
 
         md-tabs(md-dynamic-height)
           md-tab(md-label='Условие')
@@ -58,15 +37,15 @@
                   .theoryText(v-if ='component.type === "img"')
                     md-field
                       label Выберите картинку
-                      md-file(name='img', accept='image/*', @md-change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(currentEditTask), currentEditTask.statement.indexOf(component))")
+                      md-file(v-model ='component.inner.name' name='img', accept='image/*', @md-change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(currentEditTask), currentEditTask.statement.indexOf(component))")
                   .theoryTextFile(v-else-if ='component.type === "file"')
                     md-field
                       label Выберите PDF-Файл
                       md-file(name='file', accept='application/pdf', @md-change="onFileSelected", @click="onFileButtonClicked(tasks.indexOf(currentEditTask), currentEditTask.statement.indexOf(component))")
 
-                md-button.md-raised.md-primary(@click='addContent(tasks.indexOf(currentEditTask), "text")') Добавить абзац
-                md-button.md-raised.md-primary(@click='addContent(tasks.indexOf(currentEditTask), "img")') Добавить картинку
-                md-button.md-primary(@click='addContent(tasks.indexOf(currentEditTask), "file")') Загрузить PDF-файл
+                md-button.md-raised.md-primary(@click='addContent("text")') Добавить абзац
+                md-button.md-raised.md-primary(@click='addContent("img")') Добавить картинку
+                md-button.md-primary(@click='addContent("file")') Загрузить PDF-файл
           md-tab(md-label='Ответ и решение' v-if ="currentEditTask.type === 'task'")
             .overflowBox
               .taskEditBox(v-if ="currentEditTask.type === 'task'")
@@ -94,7 +73,6 @@
                     .checkboxesBoxCheckboxes(v-for ='(op, opI) in currentEditTask.options' :key="opI" )
                       md-checkbox(v-model='currentEditTask.answer' :value='op') {{ op }}
                       md-button.removeButton.md-accent.md-raised(@click ='currentEditTask.options.splice(opI, 1); if (currentEditTask.answer.findIndex(f => f === op) !== -1) currentEditTask.answer.splice(currentEditTask.answer.findIndex(f => f === op), 1);') X
-                    //- span {{ task.answer }}
 
                 .md-layout-item.olympTheme2
                   md-field
@@ -102,13 +80,6 @@
                     md-select.olympTheme2(v-model = "currentEditTask.difficulty" placeholder="Выберите сложность")
                       md-option(v-for = '(diff, i) in difficultyList' :key="i" :value="diff") {{ diff }}
                     md-tooltip(md-direction='left') Укажите, чтобы ученикам было проще ориентироваться
-
-                //- label(for='difOne') Легкая
-                //-   input#difOne(type = 'radio', value = '1', v-model = "task.difficulty")
-                //- label(for='difTwo') Средняя
-                //-   input#difTwo(type = 'radio', value = '2', v-model = "task.difficulty")
-                //- label(for='difThree') Трудная
-                //-   input#difThree(type = 'radio', value = '3', v-model = "task.difficulty")
 
                 md-field
                   label(for='solutionType') Тип решения
@@ -680,13 +651,12 @@ export default {
         this.showCreateTask = true
       }
     },
-    addContent (id, type) {
+    addContent (type) {
       var data = {
         type: type,
         inner: ''
       }
-      if (typeof id === 'number') this.tasks[id].statement.push(data)
-      else this.tasks[id[0]].tasks[id[1]].statement.push(data)
+      this.currentEditTask.statement.push(data)
     },
     editTask (task) {
       this.currentEditTask = task

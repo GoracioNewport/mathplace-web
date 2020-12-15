@@ -585,10 +585,11 @@ export default {
         this.showUploadMenu = true
       } else if (this.answer === '' && this.taskList[this.activeTask].type !== 'theory' && this.taskList[this.activeTask].type !== 'proof') alert('Поле для ввода пустое!')
       else {
+        // eslint-disable-next-line
         if (this.activeTask === (this.taskList.length - 1) && (Number(this.taskList[this.activeTask].tries) === 2 || Number(this.taskList[this.activeTask].tries) === 3)&&false){
           // this.showSnackbarSendWindow()
-         this.$router.push('/main')
-        }else { // Task complition
+          this.$router.push('/main')
+        } else { // Task complition
           let verdict = 1
 
           // Если урок завершился, то шлем нафиг
