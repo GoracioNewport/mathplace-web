@@ -294,7 +294,9 @@
               :disabled = 'error === "too_late"'
               @click = 'sendAnswer')
                 span(v-if ='this.taskList[this.activeTask].type === "upload"') Загрузить ответ
-                span(v-else-if ='this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"') Сохранить
+                div(v-else-if ='this.taskList[this.activeTask].type !== "theory" && this.taskList[this.activeTask].type !== "proof"')
+                  span(v-if="tasksInfo.isHiddenResults") Сохранить
+                  span(v-else) Отправить
                 span(v-else-if ='(this.taskList[this.activeTask].type === "theory" || this.taskList[this.activeTask].type === "proof") && (this.activeTask !== (this.taskList.length - 1))') Дальше
                 span(v-else) Завершить
             a.solutionButton.but(v-if ='this.taskList[this.activeTask].solutionType !== "hide"' @click='solutionShown = true')
