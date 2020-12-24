@@ -57,7 +57,8 @@
                   @change="$v.password.$touch()"
                 )
                 .error(v-if="!$v.password.required") Это поле обязательно
-                .error(v-if="!$v.password.minLength") Минимальная длина пароля - {{ $v.password.$params.minLength.min }} символов
+                .error(v-else-if="!$v.password.minLength") Минимальная длина пароля - {{ $v.password.$params.minLength.min }} символов
+                .error(v-else-if="!$v.password.valid") Пароль должен содержать хотя бы одну букву
 
               .form-item(:class="{ 'errorInput': $v.repeatPassword.$error }")
                 input(
@@ -134,7 +135,11 @@ export default {
     },
     password: {
       required,
-      minLength: minLength(6)
+      minLength: minLength(6),
+      valid: function (value) {
+        const containsLetters = /[A-Za-z]/.test(value)
+        return containsLetters
+      }
     },
     repeatPassword: {
       required,
