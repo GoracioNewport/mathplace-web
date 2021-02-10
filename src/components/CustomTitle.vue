@@ -529,7 +529,7 @@ export default {
     tasks: {
       $each: {
         statement: { required: requiredUnless(n => n.type === 'block') },
-        answer: { required: requiredUnless(n => (n.type === 'block' || n.type === 'theory' || n.taskType === 'upload' || n.taskType === 'proof')) },
+        answer: { required: requiredUnless(n => (n.type === 'block' || n.type === 'theory' || n.taskType === 'upload' || n.taskType === 'proof' || n.taskType === 'multipleChoice')) },
         tasks: {
           $each: {
             statement: { required: requiredUnless(n => n.type === 'block') },
@@ -818,6 +818,15 @@ export default {
           rawTask.tasks[i] = await self.parseTask(rawTask.tasks[i])
         }
       }
+
+      console.log(rawTask)
+      // Фиксим все , на .
+      if (typeof rawTask.answer === 'string') rawTask.answer = rawTask.answer.replace(',', '.')
+      else {
+        for (let i = 0; i < rawTask.answer.length; i++) rawTask.answer[i] = rawTask.answer[i].replace(',', '.')
+        if (rawTask.type === 'multipleChoice') for (let i = 0; i < rawTask.options.length; i++) rawTask.options[i] = rawTask.options[i].replace(',', '.')
+      }
+
       // Обработка заготовленных заданий
       if (rawTask.type === 'preMade') task = rawTask.originData
       else task = rawTask

@@ -391,7 +391,7 @@ export default {
       this.collection = to.params.collectionId
       this.$store.dispatch('changeCurrentTopic', this.taskId)
       this.$store.dispatch('changeCollection', this.collection)
-      this.updateUser(['lastTheme', this.getCollection + '_' + this.getCurrentTopic])
+      this.updateUser(['lastTheme', this.getCollection + '|' + this.getCurrentTopic])
     }
   },
   components: {
@@ -408,7 +408,7 @@ export default {
     this.isLoading = true
     this.$store.dispatch('changeCurrentTopic', this.taskId)
     this.$store.dispatch('changeCollection', this.collection)
-    this.updateUser(['lastTheme', this.getCollection + '_' + this.getCurrentTopic])
+    this.updateUser(['lastTheme', this.getCollection + '|' + this.getCurrentTopic])
     this.addUserToTopicList()
     this.userId = this.getUser.id
     await this.fetchLikes(this.collection)
